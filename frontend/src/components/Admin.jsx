@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard } from "lucide-react";
+import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3 } from "lucide-react";
 import Logo from "./Logo";
-import { getAdminLeads } from "../api";
+import { getAdminLeads, getAdminInsights, leadsCsvUrl } from "../api";
 
 export default function Admin() {
   const [token, setToken] = useState(localStorage.getItem("ciq_admin") || "");
   const [authed, setAuthed] = useState(false);
   const [data, setData] = useState(null);
+  const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -14,8 +15,9 @@ export default function Admin() {
     setLoading(true);
     setError(null);
     try {
-      const res = await getAdminLeads(t);
+      const [res, ins] = await Promise.all([getAdminLeads(t), getAdminInsights(t)]);
       setData(res);
+      setInsights(ins);
       setAuthed(true);
       localStorage.setItem("ciq_admin", t);
     } catch (e) {
@@ -24,6 +26,16 @@ export default function Admin() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const downloadCsv = () => {
+    const url = leadsCsvUrl(token);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cardiq-leads.csv";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   };
 
   if (!authed) {
@@ -60,20 +72,55 @@ export default function Admin() {
   }
 
   const leads = data?.leads || [];
+  const maxGoal = Math.max(1, ...((insights?.by_goal || []).map((g) => g.count)));
+
   return (
     <div className="ciq-shell min-h-screen pb-16">
       <header className="ciq-container flex items-center justify-between py-5" style={{ maxWidth: 1000 }}>
         <Logo size="md" />
-        <button onClick={() => load(token)} className="ciq-press flex items-center gap-1.5 rounded-full border bg-white px-3 py-1.5 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
-          <RefreshCw className="h-3.5 w-3.5" /> Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={downloadCsv} className="ciq-press flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>
+            <Download className="h-3.5 w-3.5" /> CSV
+          </button>
+          <button onClick={() => load(token)} className="ciq-press flex items-center gap-1.5 rounded-full border bg-white px-3 py-1.5 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
+            <RefreshCw className="h-3.5 w-3.5" /> Refresh
+          </button>
+        </div>
       </header>
 
       <div className="ciq-container" style={{ maxWidth: 1000 }}>
-        <h1 className="font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Leads</h1>
-        <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{data?.total || 0} total · most recent first</p>
+        {/* stat cards */}
+        <div className="grid grid-cols-3 gap-3">
+          <Stat label="Total leads" value={data?.total || 0} />
+          <Stat label="Results" value={insights?.total_results || 0} />
+          <Stat label="Emails sent" value={insights?.emails_sent || 0} />
+        </div>
 
-        <div className="mt-5 space-y-3">
+        {/* Insights */}
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <InsightCard title="Top matched cards" icon={CreditCard}>
+            {(insights?.by_card || []).length === 0 && <Empty />}
+            <div className="space-y-3">
+              {(insights?.by_card || []).map((c) => (
+                <Bar key={c.label} label={c.label} count={c.count} pct={c.pct} max={100} usePct />
+              ))}
+            </div>
+          </InsightCard>
+
+          <InsightCard title="What people want most" icon={BarChart3}>
+            {(insights?.by_goal || []).length === 0 && <Empty />}
+            <div className="space-y-3">
+              {(insights?.by_goal || []).map((g) => (
+                <Bar key={g.label} label={g.label} count={g.count} pct={g.pct} max={maxGoal} />
+              ))}
+            </div>
+          </InsightCard>
+        </div>
+
+        <h2 className="mt-8 font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Leads</h2>
+        <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>most recent first</p>
+
+        <div className="mt-4 space-y-3">
           {leads.length === 0 && (
             <div className="rounded-2xl border bg-white p-6 text-center text-sm" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>No leads yet.</div>
           )}
@@ -97,6 +144,46 @@ export default function Admin() {
       </div>
     </div>
   );
+}
+
+function Stat({ label, value }) {
+  return (
+    <div className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+      <div className="font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{value}</div>
+      <div className="mt-0.5 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{label}</div>
+    </div>
+  );
+}
+
+function InsightCard({ title, icon: Icon, children }) {
+  return (
+    <div className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+      <div className="mb-3 flex items-center gap-2">
+        <Icon className="h-4 w-4" style={{ color: "var(--ciq-teal-600)" }} />
+        <span className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>{title}</span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function Bar({ label, count, pct, max, usePct }) {
+  const width = usePct ? pct : Math.round((count / max) * 100);
+  return (
+    <div>
+      <div className="mb-1 flex items-center justify-between text-xs">
+        <span className="font-medium" style={{ color: "var(--ciq-ink)" }}>{label}</span>
+        <span style={{ color: "var(--ciq-ink-soft)" }}>{count} · {pct}%</span>
+      </div>
+      <div className="h-2.5 overflow-hidden rounded-full" style={{ background: "#eef0ec" }}>
+        <div className="h-full rounded-full" style={{ width: `${width}%`, background: "linear-gradient(90deg,#0d9488,#2dd4bf)" }} />
+      </div>
+    </div>
+  );
+}
+
+function Empty() {
+  return <div className="text-xs" style={{ color: "var(--ciq-ink-soft)" }}>No data yet.</div>;
 }
 
 function formatDate(iso) {

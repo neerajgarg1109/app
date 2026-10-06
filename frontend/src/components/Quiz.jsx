@@ -1,15 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import Logo from "./Logo";
 import { QUIZ_QUESTIONS } from "../mock/mock";
 
 export default function Quiz({ onComplete, onExit }) {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const saved = (() => {
+    try { return JSON.parse(localStorage.getItem("ciq_quiz_progress") || "null"); } catch (e) { return null; }
+  })();
+  const [step, setStep] = useState(saved?.step || 0);
+  const [answers, setAnswers] = useState(saved?.answers || {});
   const q = QUIZ_QUESTIONS[step];
   const total = QUIZ_QUESTIONS.length;
   const selected = answers[q.id];
   const progress = ((step + (selected ? 1 : 0)) / total) * 100;
+
+  useEffect(() => {
+    try { localStorage.setItem("ciq_quiz_progress", JSON.stringify({ step, answers })); } catch (e) {}
+  }, [step, answers]);
 
   const select = (value) => {
     setAnswers((a) => ({ ...a, [q.id]: value }));

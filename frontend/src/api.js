@@ -30,6 +30,15 @@ export async function getAdminLeads(token) {
   return data; // { total, leads }
 }
 
+export async function getAdminInsights(token) {
+  const { data } = await http.get("/admin/insights", { headers: { "X-Admin-Token": token } });
+  return data; // { total_results, emails_sent, by_card, by_goal }
+}
+
+export function leadsCsvUrl(token) {
+  return `${API}/admin/leads.csv?token=${encodeURIComponent(token)}`;
+}
+
 export async function compareCards(ids) {
   const { data } = await http.post("/cards/compare", { ids });
   return data; // [cards]

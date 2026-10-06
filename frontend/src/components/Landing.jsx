@@ -5,7 +5,7 @@ import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
-export default function Landing({ onStart }) {
+export default function Landing({ onStart, onResume, resumeStep }) {
   return (
     <div className="ciq-shell pb-28">
       <header className="ciq-container flex items-center justify-between py-5">
@@ -53,6 +53,15 @@ export default function Landing({ onStart }) {
         >
           Find my best card <ArrowRight className="h-5 w-5" />
         </button>
+        {resumeStep && (
+          <button
+            onClick={onResume}
+            className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold"
+            style={{ borderColor: "var(--ciq-teal-600)", color: "var(--ciq-teal)" }}
+          >
+            Resume where you left off · Question {resumeStep}
+          </button>
+        )}
       </section>
 
       {/* Problem section */}

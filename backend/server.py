@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Header
+from fastapi import FastAPI, APIRouter, HTTPException, Header, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -178,6 +178,32 @@ def _build_recommendation_email(name: str, card: Dict[str, Any], reasons: List[s
     )
 
 
+def _build_welcome_email(name: str, card_name: str) -> str:
+    return (
+        f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+        f'style="background:#f6f7f5;padding:24px"><tr><td align="center">'
+        f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+        f'style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;'
+        f'font-family:Arial,Helvetica,sans-serif">'
+        f'<tr><td style="background:#0d9488;padding:20px 24px">'
+        f'<span style="color:#ffffff;font-size:20px;font-weight:800">card'
+        f'<span style="color:#5eead4">IQ</span></span></td></tr>'
+        f'<tr><td style="padding:24px">'
+        f'<h1 style="margin:0 0 8px;color:#0f1a17;font-size:22px">Welcome, {escape(name)}!</h1>'
+        f'<p style="margin:0 0 12px;color:#55615c;font-size:14px">Thanks for using cardIQ. We just '
+        f'matched you with <strong style="color:#0f1a17">{escape(card_name)}</strong> based on your answers '
+        f'&mdash; an honest, unbiased pick that fits your life.</p>'
+        f'<p style="margin:0 0 12px;color:#55615c;font-size:14px">A full breakdown of your match and its '
+        f'benefits is on your results screen. You can revisit it any time.</p>'
+        f'<p style="margin:18px 0 6px;color:#55615c;font-size:12px">We are not sponsored by any bank, and '
+        f'we will never share your details or spam you with calls.</p>'
+        f'<p style="margin:0;color:#888;font-size:12px">Sent by cardIQ. We never ask for your password or '
+        f'card details by email.</p>'
+        f'</td></tr></table></td></tr></table>'
+    )
+
+
+
 # ---------------- Models ----------------
 class StatusCheck(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -272,6 +298,18 @@ async def submit_quiz(payload: QuizSubmitIn):
     }
     await db.quiz_results.insert_one(dict(result_doc))
 
+    # Best-effort welcome email the moment a lead submits (does not block the response on failure)
+    try:
+        welcome_html = _build_welcome_email(payload.lead.name, top["card"]["name"])
+        await send_email(
+            to=payload.lead.email,
+            subject="Welcome to cardIQ — your match is ready",
+            html=welcome_html,
+        )
+        await db.quiz_results.update_one({"result_id": result_id}, {"$set": {"welcome_sent": True}})
+    except Exception as e:
+        logger.error(f"Welcome email failed (non-fatal): {e}")
+
     return {
         "result_id": result_id,
         "scored": [
@@ -354,6 +392,92 @@ async def admin_leads(x_admin_token: Optional[str] = Header(None)):
             "email_sent": bool(r.get("email_sent")) if r else False,
         })
     return {"total": len(out), "leads": out}
+
+
+@api_router.get("/admin/leads.csv")
+async def admin_leads_csv(token: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
+    """CSV export. Accepts token via header OR ?token= (so a browser download link works)."""
+    provided = x_admin_token or token
+    if not ADMIN_TOKEN or provided != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(5000)
+    results = await db.quiz_results.find({}, {"_id": 0}).to_list(10000)
+    res_map = {r["result_id"]: r for r in results}
+    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    card_map = {c["id"]: c for c in cards}
+
+    import csv
+    import io
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["Name", "Email", "Phone", "Recommended Card", "Email Sent", "Created At", "Result ID"])
+    for l in leads:
+        r = res_map.get(l.get("result_id"))
+        card = card_map.get(r["recommended_card_id"]) if r else None
+        created = l.get("created_at")
+        writer.writerow([
+            l.get("name", ""),
+            l.get("email", ""),
+            l.get("phone", "") or "",
+            card["name"] if card else "",
+            "yes" if (r and r.get("email_sent")) else "no",
+            created.isoformat() if hasattr(created, "isoformat") else str(created or ""),
+            l.get("result_id", ""),
+        ])
+    csv_data = buf.getvalue()
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=cardiq-leads.csv"},
+    )
+
+
+@api_router.get("/admin/insights")
+async def admin_insights(x_admin_token: Optional[str] = Header(None)):
+    if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    results = await db.quiz_results.find({}, {"_id": 0}).to_list(10000)
+    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    card_map = {c["id"]: c for c in cards}
+
+    total = len(results)
+    card_counts: Dict[str, int] = {}
+    goal_counts: Dict[str, int] = {}
+    emailed = 0
+
+    goal_labels = {
+        "travel": "Travel",
+        "shopping": "Shopping & Food",
+        "fuel": "Bills & Fuel",
+        "cashback": "Flat Cashback",
+    }
+
+    for r in results:
+        cid = r.get("recommended_card_id")
+        if cid:
+            name = card_map.get(cid, {}).get("name", cid)
+            card_counts[name] = card_counts.get(name, 0) + 1
+        goal = (r.get("answers") or {}).get("goal")
+        if goal:
+            label = goal_labels.get(goal, goal.title())
+            goal_counts[label] = goal_counts.get(label, 0) + 1
+        if r.get("email_sent"):
+            emailed += 1
+
+    def to_sorted(d):
+        items = sorted(d.items(), key=lambda kv: kv[1], reverse=True)
+        return [
+            {"label": k, "count": v, "pct": round(v * 100 / total) if total else 0}
+            for k, v in items
+        ]
+
+    return {
+        "total_results": total,
+        "emails_sent": emailed,
+        "by_card": to_sorted(card_counts),
+        "by_goal": to_sorted(goal_counts),
+    }
+
 
 
 app.include_router(api_router)

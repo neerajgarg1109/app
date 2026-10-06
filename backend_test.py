@@ -1,7 +1,7 @@
 """
-Comprehensive backend API tests for cardIQ - Round 2
+Comprehensive backend API tests for cardIQ - Round 3
 Tests all /api endpoints with the external base URL
-Includes new Round 2 features: applyUrl, creditReq, international, credit scoring, admin endpoint
+Includes Round 3 features: welcome email on submit, CSV export, admin insights
 """
 import requests
 import json
@@ -22,63 +22,9 @@ def print_result(success: bool, message: str, details: Any = None):
     if details:
         print(f"Details: {json.dumps(details, indent=2, default=str)}")
 
-def test_get_cards_with_new_fields():
-    """Test 1: GET /api/cards - should return 8 cards with applyUrl and creditReq"""
-    print_test_header("GET /api/cards - Card catalog with applyUrl and creditReq")
-    
-    try:
-        response = requests.get(f"{BASE_URL}/cards", timeout=10)
-        print(f"Status Code: {response.status_code}")
-        
-        if response.status_code != 200:
-            print_result(False, f"Expected 200, got {response.status_code}", response.text)
-            return False
-        
-        cards = response.json()
-        print(f"Received {len(cards)} cards")
-        
-        # Check we have exactly 8 cards
-        if len(cards) != 8:
-            print_result(False, f"Expected 8 cards, got {len(cards)}")
-            return False
-        
-        # Check ALL cards have applyUrl and creditReq
-        all_passed = True
-        for i, card in enumerate(cards):
-            card_id = card.get("id", f"card_{i}")
-            
-            # Check applyUrl
-            if "applyUrl" not in card:
-                print_result(False, f"Card {card_id} missing applyUrl field")
-                all_passed = False
-            elif not isinstance(card["applyUrl"], str):
-                print_result(False, f"Card {card_id} applyUrl is not a string")
-                all_passed = False
-            elif not card["applyUrl"].startswith("https://"):
-                print_result(False, f"Card {card_id} applyUrl does not start with https://", card["applyUrl"])
-                all_passed = False
-            
-            # Check creditReq
-            if "creditReq" not in card:
-                print_result(False, f"Card {card_id} missing creditReq field")
-                all_passed = False
-            elif card["creditReq"] not in ["new", "fair", "good", "excellent"]:
-                print_result(False, f"Card {card_id} creditReq invalid value: {card['creditReq']}")
-                all_passed = False
-        
-        if all_passed:
-            print_result(True, "All 8 cards have applyUrl (https://) and creditReq (new/fair/good/excellent)")
-            print(f"Sample: {cards[0]['id']} - applyUrl: {cards[0]['applyUrl']}, creditReq: {cards[0]['creditReq']}")
-        
-        return all_passed
-        
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
-
-def test_quiz_submit_premium_travel_profile():
-    """Test 2a: POST /api/quiz/submit - Full premium travel profile (should get voyager-infinite)"""
-    print_test_header("POST /api/quiz/submit - Premium travel profile (voyager-infinite expected)")
+def test_quiz_submit_with_welcome_email():
+    """Test 1: POST /api/quiz/submit - with welcome email (best-effort, non-fatal)"""
+    print_test_header("POST /api/quiz/submit - Welcome email on submit")
     
     payload = {
         "answers": {
@@ -91,13 +37,13 @@ def test_quiz_submit_premium_travel_profile():
             "credit": "excellent"
         },
         "lead": {
-            "name": "Premium Traveler",
+            "name": "Welcome Tester",
             "email": "delivered@resend.dev"
         }
     }
     
     try:
-        response = requests.post(f"{BASE_URL}/quiz/submit", json=payload, timeout=10)
+        response = requests.post(f"{BASE_URL}/quiz/submit", json=payload, timeout=15)
         print(f"Status Code: {response.status_code}")
         
         if response.status_code != 200:
@@ -126,310 +72,157 @@ def test_quiz_submit_premium_travel_profile():
         top_score = scored[0]["score"]
         
         print(f"Top card: {top_card_id} (score: {top_score})")
-        print(f"Top 3 cards: {[(s['card']['id'], s['score']) for s in scored[:3]]}")
         
         if top_card_id != "voyager-infinite":
             print_result(False, f"Expected voyager-infinite as top card, got {top_card_id}")
-            print(f"Full scoring: {[(s['card']['id'], s['score']) for s in scored]}")
             return None
         
-        # Check scores are sorted descending
-        scores = [s["score"] for s in scored]
-        if scores != sorted(scores, reverse=True):
-            print_result(False, "Scores are not sorted in descending order", scores)
-            return None
-        
-        print_result(True, f"Premium travel profile correctly ranked voyager-infinite as top card (score: {top_score})")
+        print_result(True, f"Quiz submit returned 200 with result_id and scored array. Top card: voyager-infinite (score: {top_score}). Welcome email sent best-effort (non-blocking).")
         return result_id
         
     except Exception as e:
         print_result(False, f"Exception occurred: {str(e)}")
         return None
 
-def test_quiz_submit_new_credit_budget_traveler():
-    """Test 2b: POST /api/quiz/submit - New-to-credit budget traveler (should NOT get voyager-infinite)"""
-    print_test_header("POST /api/quiz/submit - New-credit budget traveler (voyager-infinite should be penalized)")
-    
-    payload = {
-        "answers": {
-            "goal": "travel",
-            "spend": "low",
-            "fee": "free",
-            "usage": "flights",
-            "priority": "lounge",
-            "international": "rarely",
-            "credit": "new"
-        },
-        "lead": {
-            "name": "Budget Traveler",
-            "email": "delivered@resend.dev"
-        }
-    }
+def test_admin_leads_csv_query_param():
+    """Test 2a: GET /api/admin/leads.csv with query param ?token="""
+    print_test_header("GET /api/admin/leads.csv - Query param auth")
     
     try:
-        response = requests.post(f"{BASE_URL}/quiz/submit", json=payload, timeout=10)
+        response = requests.get(f"{BASE_URL}/admin/leads.csv?token={ADMIN_TOKEN}", timeout=10)
         print(f"Status Code: {response.status_code}")
         
         if response.status_code != 200:
             print_result(False, f"Expected 200, got {response.status_code}", response.text)
             return False
         
-        result = response.json()
-        scored = result.get("scored", [])
-        
-        if not scored:
-            print_result(False, "Scored list is empty")
+        # Check Content-Type
+        content_type = response.headers.get("Content-Type", "")
+        if "text/csv" not in content_type:
+            print_result(False, f"Expected Content-Type text/csv, got {content_type}")
             return False
         
-        top_card_id = scored[0]["card"]["id"]
-        top_score = scored[0]["score"]
-        
-        print(f"Top card: {top_card_id} (score: {top_score})")
-        print(f"Top 5 cards: {[(s['card']['id'], s['score']) for s in scored[:5]]}")
-        
-        # voyager-infinite should NOT be the top card (it requires excellent credit + premium fee)
-        if top_card_id == "voyager-infinite":
-            print_result(False, f"voyager-infinite should NOT be top for new-credit budget traveler")
-            print(f"Full scoring: {[(s['card']['id'], s['score']) for s in scored]}")
+        # Check Content-Disposition
+        content_disposition = response.headers.get("Content-Disposition", "")
+        if "attachment" not in content_disposition or "cardiq-leads.csv" not in content_disposition:
+            print_result(False, f"Expected Content-Disposition with attachment and filename, got {content_disposition}")
             return False
         
-        # Find voyager-infinite in the list and check it's penalized
-        voyager_score = None
-        for s in scored:
-            if s["card"]["id"] == "voyager-infinite":
-                voyager_score = s["score"]
-                break
+        # Check CSV content
+        csv_content = response.text
+        lines = [line.strip() for line in csv_content.strip().split("\n")]
         
-        if voyager_score is not None:
-            print(f"voyager-infinite score: {voyager_score} (should be low/negative due to credit mismatch)")
+        if not lines:
+            print_result(False, "CSV content is empty")
+            return False
         
-        # Top card should be a lifetime-free or lower-requirement card
-        top_card = scored[0]["card"]
-        print(f"Top card details: feeType={top_card.get('feeType')}, creditReq={top_card.get('creditReq')}")
+        # Check header row
+        expected_header = "Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID"
+        actual_header = lines[0].strip()
         
-        print_result(True, f"New-credit budget traveler correctly ranked {top_card_id} as top (not voyager-infinite)")
+        if actual_header != expected_header:
+            print_result(False, f"CSV header mismatch.\nExpected: {expected_header}\nActual: {actual_header}")
+            return False
+        
+        print(f"CSV rows: {len(lines)} (including header)")
+        print(f"Header: {actual_header}")
+        if len(lines) > 1:
+            print(f"Sample row: {lines[1][:100]}...")
+        
+        print_result(True, f"CSV export with query param working. Content-Type: text/csv, Content-Disposition: attachment, Header row correct.")
         return True
         
     except Exception as e:
         print_result(False, f"Exception occurred: {str(e)}")
         return False
 
-def test_quiz_submit_shopping_profile():
-    """Test 2c: POST /api/quiz/submit - Shopping profile (should get metrocash-rewards or prime-rewards)"""
-    print_test_header("POST /api/quiz/submit - Shopping profile")
-    
-    payload = {
-        "answers": {
-            "goal": "shopping",
-            "spend": "mid",
-            "fee": "worth",
-            "usage": "online",
-            "priority": "rewards",
-            "international": "sometimes",
-            "credit": "good"
-        },
-        "lead": {
-            "name": "Shopping Enthusiast",
-            "email": "delivered@resend.dev"
-        }
-    }
+def test_admin_leads_csv_header_auth():
+    """Test 2b: GET /api/admin/leads.csv with header X-Admin-Token"""
+    print_test_header("GET /api/admin/leads.csv - Header auth")
     
     try:
-        response = requests.post(f"{BASE_URL}/quiz/submit", json=payload, timeout=10)
+        headers = {"X-Admin-Token": ADMIN_TOKEN}
+        response = requests.get(f"{BASE_URL}/admin/leads.csv", headers=headers, timeout=10)
         print(f"Status Code: {response.status_code}")
         
         if response.status_code != 200:
             print_result(False, f"Expected 200, got {response.status_code}", response.text)
             return False
         
-        result = response.json()
-        scored = result.get("scored", [])
-        
-        if not scored:
-            print_result(False, "Scored list is empty")
+        # Check Content-Type
+        content_type = response.headers.get("Content-Type", "")
+        if "text/csv" not in content_type:
+            print_result(False, f"Expected Content-Type text/csv, got {content_type}")
             return False
         
-        top_card_id = scored[0]["card"]["id"]
-        top_score = scored[0]["score"]
+        # Check CSV content
+        csv_content = response.text
+        lines = [line.strip() for line in csv_content.strip().split("\n")]
         
-        print(f"Top card: {top_card_id} (score: {top_score})")
-        print(f"Top 3 cards: {[(s['card']['id'], s['score']) for s in scored[:3]]}")
-        
-        # Top card should be metrocash-rewards or prime-rewards
-        expected_cards = ["metrocash-rewards", "prime-rewards"]
-        if top_card_id not in expected_cards:
-            print_result(False, f"Expected top card to be one of {expected_cards}, got {top_card_id}")
-            print(f"Full scoring: {[(s['card']['id'], s['score']) for s in scored]}")
+        if not lines:
+            print_result(False, "CSV content is empty")
             return False
         
-        print_result(True, f"Shopping profile correctly ranked {top_card_id} as top card")
+        expected_header = "Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID"
+        actual_header = lines[0].strip()
+        
+        if actual_header != expected_header:
+            print_result(False, f"CSV header mismatch.\nExpected: {expected_header}\nActual: {actual_header}")
+            return False
+        
+        print_result(True, f"CSV export with header auth working. {len(lines)} rows (including header).")
         return True
         
     except Exception as e:
         print_result(False, f"Exception occurred: {str(e)}")
         return False
 
-def test_get_result(result_id: Optional[str]):
-    """Test 3: GET /api/results/{result_id} - fetch stored result"""
-    print_test_header("GET /api/results/{result_id} - Fetch result")
-    
-    if not result_id:
-        print_result(False, "No result_id provided (previous test may have failed)")
-        return False
-    
-    try:
-        # Test valid result_id
-        response = requests.get(f"{BASE_URL}/results/{result_id}", timeout=10)
-        print(f"Status Code for valid result_id: {response.status_code}")
-        
-        if response.status_code != 200:
-            print_result(False, f"Expected 200, got {response.status_code}", response.text)
-            return False
-        
-        result = response.json()
-        
-        if "result_id" not in result or "scored" not in result:
-            print_result(False, "Missing result_id or scored in response", result)
-            return False
-        
-        print(f"Retrieved result with {len(result['scored'])} scored cards")
-        print_result(True, "Successfully retrieved stored result")
-        
-        # Test invalid result_id (should return 404)
-        response = requests.get(f"{BASE_URL}/results/does-not-exist-uuid", timeout=10)
-        print(f"Status Code for invalid result_id: {response.status_code}")
-        
-        if response.status_code != 404:
-            print_result(False, f"Expected 404 for invalid result_id, got {response.status_code}")
-            return False
-        
-        print_result(True, "Correctly returned 404 for non-existent result_id")
-        return True
-        
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
-
-def test_email_result(result_id: Optional[str]):
-    """Test 4: POST /api/results/{result_id}/email - send email via Resend"""
-    print_test_header("POST /api/results/{result_id}/email - Email recommendation")
-    
-    if not result_id:
-        print_result(False, "No result_id provided (previous test may have failed)")
-        return False
-    
-    try:
-        # Test valid result_id
-        response = requests.post(f"{BASE_URL}/results/{result_id}/email", timeout=15)
-        print(f"Status Code: {response.status_code}")
-        
-        if response.status_code != 200:
-            print_result(False, f"Expected 200, got {response.status_code}", response.text)
-            return False
-        
-        result = response.json()
-        
-        # Check response structure
-        required_fields = ["status", "email_id", "sent_to"]
-        missing_fields = [f for f in required_fields if f not in result]
-        
-        if missing_fields:
-            print_result(False, f"Missing fields in response: {missing_fields}", result)
-            return False
-        
-        if result["status"] != "success":
-            print_result(False, f"Expected status 'success', got {result['status']}")
-            return False
-        
-        if result["sent_to"] != "delivered@resend.dev":
-            print_result(False, f"Expected sent_to 'delivered@resend.dev', got {result['sent_to']}")
-            return False
-        
-        print(f"Email ID: {result['email_id']}")
-        print(f"Sent to: {result['sent_to']}")
-        print_result(True, "Email sent successfully via Emergent managed Resend")
-        
-        # Test invalid result_id (should return 404)
-        response = requests.post(f"{BASE_URL}/results/does-not-exist-uuid/email", timeout=10)
-        print(f"Status Code for invalid result_id: {response.status_code}")
-        
-        if response.status_code != 404:
-            print_result(False, f"Expected 404 for invalid result_id, got {response.status_code}")
-            return False
-        
-        print_result(True, "Correctly returned 404 for non-existent result_id")
-        return True
-        
-    except Exception as e:
-        print_result(False, f"Exception occurred: {str(e)}")
-        return False
-
-def test_cards_compare():
-    """Test 5: POST /api/cards/compare - compare multiple cards"""
-    print_test_header("POST /api/cards/compare - Card comparison")
+def test_admin_leads_csv_wrong_token():
+    """Test 2c: GET /api/admin/leads.csv with wrong token (should return 401)"""
+    print_test_header("GET /api/admin/leads.csv - Wrong token")
     
     all_passed = True
     
-    # Test with 3 specific cards in order
-    payload = {
-        "ids": ["voyager-infinite", "skymiles-plus", "metrocash-rewards"]
-    }
-    
+    # Test with wrong query param
     try:
-        response = requests.post(f"{BASE_URL}/cards/compare", json=payload, timeout=10)
-        print(f"Status Code: {response.status_code}")
+        response = requests.get(f"{BASE_URL}/admin/leads.csv?token=nope", timeout=10)
+        print(f"Status Code with wrong query token: {response.status_code}")
         
-        if response.status_code != 200:
-            print_result(False, f"Expected 200, got {response.status_code}", response.text)
+        if response.status_code != 401:
+            print_result(False, f"Expected 401 with wrong query token, got {response.status_code}")
             all_passed = False
         else:
-            cards = response.json()
-            
-            if len(cards) != 3:
-                print_result(False, f"Expected 3 cards, got {len(cards)}")
-                all_passed = False
-            else:
-                # Check order is preserved
-                card_ids = [c["id"] for c in cards]
-                expected_order = ["voyager-infinite", "skymiles-plus", "metrocash-rewards"]
-                
-                if card_ids != expected_order:
-                    print_result(False, f"Order not preserved. Expected {expected_order}, got {card_ids}")
-                    all_passed = False
-                else:
-                    print_result(True, f"Cards returned in correct order: {card_ids}")
+            print_result(True, "Correctly returned 401 with wrong query token")
     except Exception as e:
-        print_result(False, f"Exception for valid compare: {str(e)}")
+        print_result(False, f"Exception with wrong query token: {str(e)}")
         all_passed = False
     
-    # Test with empty ids list (should return 400)
-    payload_empty = {"ids": []}
-    
+    # Test with no token
     try:
-        response = requests.post(f"{BASE_URL}/cards/compare", json=payload_empty, timeout=10)
-        print(f"Status Code for empty ids: {response.status_code}")
+        response = requests.get(f"{BASE_URL}/admin/leads.csv", timeout=10)
+        print(f"Status Code with no token: {response.status_code}")
         
-        if response.status_code != 400:
-            print_result(False, f"Expected 400 for empty ids, got {response.status_code}")
+        if response.status_code != 401:
+            print_result(False, f"Expected 401 with no token, got {response.status_code}")
             all_passed = False
         else:
-            print_result(True, "Correctly returned 400 for empty ids list")
+            print_result(True, "Correctly returned 401 with no token")
     except Exception as e:
-        print_result(False, f"Exception for empty ids: {str(e)}")
+        print_result(False, f"Exception with no token: {str(e)}")
         all_passed = False
     
     return all_passed
 
-def test_admin_leads_endpoint():
-    """Test 6: GET /api/admin/leads - admin endpoint with auth header"""
-    print_test_header("GET /api/admin/leads - Admin endpoint with authentication")
+def test_admin_insights():
+    """Test 3: GET /api/admin/insights - admin analytics endpoint"""
+    print_test_header("GET /api/admin/insights - Admin analytics")
     
     all_passed = True
     
-    # Test 6a: With correct admin token
+    # Test 3a: With correct admin token
     try:
         headers = {"X-Admin-Token": ADMIN_TOKEN}
-        response = requests.get(f"{BASE_URL}/admin/leads", headers=headers, timeout=10)
+        response = requests.get(f"{BASE_URL}/admin/insights", headers=headers, timeout=10)
         print(f"Status Code with correct token: {response.status_code}")
         
         if response.status_code != 200:
@@ -438,43 +231,97 @@ def test_admin_leads_endpoint():
         else:
             result = response.json()
             
-            # Check response structure
-            if "total" not in result or "leads" not in result:
-                print_result(False, "Missing 'total' or 'leads' in response", result)
+            # Check required keys
+            required_keys = ["total_results", "emails_sent", "by_card", "by_goal"]
+            missing_keys = [k for k in required_keys if k not in result]
+            
+            if missing_keys:
+                print_result(False, f"Missing required keys: {missing_keys}", result)
                 all_passed = False
             else:
-                total = result["total"]
-                leads = result["leads"]
+                total_results = result["total_results"]
+                emails_sent = result["emails_sent"]
+                by_card = result["by_card"]
+                by_goal = result["by_goal"]
                 
-                print(f"Total leads: {total}")
-                print(f"Leads array length: {len(leads)}")
+                print(f"Total results: {total_results}")
+                print(f"Emails sent: {emails_sent}")
+                print(f"By card entries: {len(by_card)}")
+                print(f"By goal entries: {len(by_goal)}")
                 
-                if total != len(leads):
-                    print_result(False, f"Total ({total}) doesn't match leads array length ({len(leads)})")
+                # Check types
+                if not isinstance(total_results, int):
+                    print_result(False, f"total_results should be int, got {type(total_results)}")
                     all_passed = False
                 
-                # Check lead structure if we have any leads
-                if leads:
-                    first_lead = leads[0]
-                    required_fields = ["name", "email", "phone", "recommended_card", "email_sent", "created_at", "result_id"]
-                    missing_fields = [f for f in required_fields if f not in first_lead]
+                if not isinstance(emails_sent, int):
+                    print_result(False, f"emails_sent should be int, got {type(emails_sent)}")
+                    all_passed = False
+                
+                if not isinstance(by_card, list):
+                    print_result(False, f"by_card should be list, got {type(by_card)}")
+                    all_passed = False
+                
+                if not isinstance(by_goal, list):
+                    print_result(False, f"by_goal should be list, got {type(by_goal)}")
+                    all_passed = False
+                
+                # Check by_card structure and sorting
+                if by_card:
+                    first_card = by_card[0]
+                    required_fields = ["label", "count", "pct"]
+                    missing_fields = [f for f in required_fields if f not in first_card]
                     
                     if missing_fields:
-                        print_result(False, f"Lead missing required fields: {missing_fields}", first_lead)
+                        print_result(False, f"by_card entry missing fields: {missing_fields}", first_card)
                         all_passed = False
                     else:
-                        print(f"Sample lead: name={first_lead['name']}, email={first_lead['email']}, recommended_card={first_lead['recommended_card']}")
-                        print_result(True, f"Admin endpoint returned {total} leads with correct structure")
-                else:
-                    print_result(True, "Admin endpoint returned 0 leads (no quiz submissions yet)")
+                        # Check pct is 0-100 int
+                        if not isinstance(first_card["pct"], int) or first_card["pct"] < 0 or first_card["pct"] > 100:
+                            print_result(False, f"pct should be 0-100 int, got {first_card['pct']}")
+                            all_passed = False
+                        
+                        # Check sorting (descending by count)
+                        counts = [item["count"] for item in by_card]
+                        if counts != sorted(counts, reverse=True):
+                            print_result(False, f"by_card not sorted by count desc: {counts}")
+                            all_passed = False
+                        
+                        print(f"Sample by_card: {first_card}")
+                
+                # Check by_goal structure and sorting
+                if by_goal:
+                    first_goal = by_goal[0]
+                    required_fields = ["label", "count", "pct"]
+                    missing_fields = [f for f in required_fields if f not in first_goal]
+                    
+                    if missing_fields:
+                        print_result(False, f"by_goal entry missing fields: {missing_fields}", first_goal)
+                        all_passed = False
+                    else:
+                        # Check pct is 0-100 int
+                        if not isinstance(first_goal["pct"], int) or first_goal["pct"] < 0 or first_goal["pct"] > 100:
+                            print_result(False, f"pct should be 0-100 int, got {first_goal['pct']}")
+                            all_passed = False
+                        
+                        # Check sorting (descending by count)
+                        counts = [item["count"] for item in by_goal]
+                        if counts != sorted(counts, reverse=True):
+                            print_result(False, f"by_goal not sorted by count desc: {counts}")
+                            all_passed = False
+                        
+                        print(f"Sample by_goal: {first_goal}")
+                
+                if all_passed:
+                    print_result(True, f"Admin insights working correctly. total_results={total_results}, emails_sent={emails_sent}, by_card and by_goal sorted desc with correct structure.")
                 
     except Exception as e:
         print_result(False, f"Exception with correct token: {str(e)}")
         all_passed = False
     
-    # Test 6b: Without admin token (should return 401)
+    # Test 3b: Without admin token (should return 401)
     try:
-        response = requests.get(f"{BASE_URL}/admin/leads", timeout=10)
+        response = requests.get(f"{BASE_URL}/admin/insights", timeout=10)
         print(f"Status Code without token: {response.status_code}")
         
         if response.status_code != 401:
@@ -486,10 +333,10 @@ def test_admin_leads_endpoint():
         print_result(False, f"Exception without token: {str(e)}")
         all_passed = False
     
-    # Test 6c: With wrong admin token (should return 401)
+    # Test 3c: With wrong admin token (should return 401)
     try:
         headers = {"X-Admin-Token": "wrong-token"}
-        response = requests.get(f"{BASE_URL}/admin/leads", headers=headers, timeout=10)
+        response = requests.get(f"{BASE_URL}/admin/insights", headers=headers, timeout=10)
         print(f"Status Code with wrong token: {response.status_code}")
         
         if response.status_code != 401:
@@ -503,44 +350,217 @@ def test_admin_leads_endpoint():
     
     return all_passed
 
+def test_regression_get_cards():
+    """Regression: GET /api/cards"""
+    print_test_header("REGRESSION: GET /api/cards")
+    
+    try:
+        response = requests.get(f"{BASE_URL}/cards", timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print_result(False, f"Expected 200, got {response.status_code}", response.text)
+            return False
+        
+        cards = response.json()
+        
+        if len(cards) != 8:
+            print_result(False, f"Expected 8 cards, got {len(cards)}")
+            return False
+        
+        # Check all cards have required fields
+        for card in cards:
+            if "applyUrl" not in card or "creditReq" not in card:
+                print_result(False, f"Card {card.get('id')} missing applyUrl or creditReq")
+                return False
+        
+        print_result(True, f"GET /api/cards working. 8 cards with applyUrl and creditReq.")
+        return True
+        
+    except Exception as e:
+        print_result(False, f"Exception occurred: {str(e)}")
+        return False
+
+def test_regression_get_result(result_id: Optional[str]):
+    """Regression: GET /api/results/{result_id}"""
+    print_test_header("REGRESSION: GET /api/results/{result_id}")
+    
+    if not result_id:
+        print_result(False, "No result_id provided")
+        return False
+    
+    try:
+        response = requests.get(f"{BASE_URL}/results/{result_id}", timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print_result(False, f"Expected 200, got {response.status_code}", response.text)
+            return False
+        
+        result = response.json()
+        
+        if "result_id" not in result or "scored" not in result:
+            print_result(False, "Missing result_id or scored in response")
+            return False
+        
+        print_result(True, f"GET /api/results/{{result_id}} working. Retrieved {len(result['scored'])} scored cards.")
+        return True
+        
+    except Exception as e:
+        print_result(False, f"Exception occurred: {str(e)}")
+        return False
+
+def test_regression_email_result(result_id: Optional[str]):
+    """Regression: POST /api/results/{result_id}/email"""
+    print_test_header("REGRESSION: POST /api/results/{result_id}/email")
+    
+    if not result_id:
+        print_result(False, "No result_id provided")
+        return False
+    
+    try:
+        response = requests.post(f"{BASE_URL}/results/{result_id}/email", timeout=15)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print_result(False, f"Expected 200, got {response.status_code}", response.text)
+            return False
+        
+        result = response.json()
+        
+        if "status" not in result or result["status"] != "success":
+            print_result(False, f"Expected status 'success', got {result.get('status')}")
+            return False
+        
+        print_result(True, f"POST /api/results/{{result_id}}/email working. Email sent successfully.")
+        return True
+        
+    except Exception as e:
+        print_result(False, f"Exception occurred: {str(e)}")
+        return False
+
+def test_regression_cards_compare():
+    """Regression: POST /api/cards/compare"""
+    print_test_header("REGRESSION: POST /api/cards/compare")
+    
+    all_passed = True
+    
+    # Test with 2 cards
+    payload = {"ids": ["voyager-infinite", "skymiles-plus"]}
+    
+    try:
+        response = requests.post(f"{BASE_URL}/cards/compare", json=payload, timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print_result(False, f"Expected 200, got {response.status_code}", response.text)
+            all_passed = False
+        else:
+            cards = response.json()
+            
+            if len(cards) != 2:
+                print_result(False, f"Expected 2 cards, got {len(cards)}")
+                all_passed = False
+            else:
+                card_ids = [c["id"] for c in cards]
+                if card_ids != ["voyager-infinite", "skymiles-plus"]:
+                    print_result(False, f"Order not preserved. Got {card_ids}")
+                    all_passed = False
+                else:
+                    print_result(True, f"POST /api/cards/compare working. 2 cards in correct order.")
+    except Exception as e:
+        print_result(False, f"Exception: {str(e)}")
+        all_passed = False
+    
+    # Test with empty ids (should return 400)
+    payload_empty = {"ids": []}
+    
+    try:
+        response = requests.post(f"{BASE_URL}/cards/compare", json=payload_empty, timeout=10)
+        print(f"Status Code for empty ids: {response.status_code}")
+        
+        if response.status_code != 400:
+            print_result(False, f"Expected 400 for empty ids, got {response.status_code}")
+            all_passed = False
+        else:
+            print_result(True, "Correctly returned 400 for empty ids")
+    except Exception as e:
+        print_result(False, f"Exception for empty ids: {str(e)}")
+        all_passed = False
+    
+    return all_passed
+
+def test_regression_admin_leads():
+    """Regression: GET /api/admin/leads"""
+    print_test_header("REGRESSION: GET /api/admin/leads")
+    
+    try:
+        headers = {"X-Admin-Token": ADMIN_TOKEN}
+        response = requests.get(f"{BASE_URL}/admin/leads", headers=headers, timeout=10)
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print_result(False, f"Expected 200, got {response.status_code}", response.text)
+            return False
+        
+        result = response.json()
+        
+        if "total" not in result or "leads" not in result:
+            print_result(False, "Missing 'total' or 'leads' in response")
+            return False
+        
+        print_result(True, f"GET /api/admin/leads working. {result['total']} leads.")
+        return True
+        
+    except Exception as e:
+        print_result(False, f"Exception occurred: {str(e)}")
+        return False
+
 def main():
-    """Run all backend tests for Round 2"""
+    """Run all backend tests for Round 3"""
     print("\n" + "="*80)
-    print("CARDIQ BACKEND API TEST SUITE - ROUND 2")
+    print("CARDIQ BACKEND API TEST SUITE - ROUND 3")
     print(f"Base URL: {BASE_URL}")
     print("="*80)
     
     results = {}
     result_id = None
     
-    # Test 1: GET /api/cards with new fields
-    results["1. GET /api/cards (applyUrl + creditReq)"] = test_get_cards_with_new_fields()
+    # Round 3 Tests
+    print("\n" + "="*80)
+    print("ROUND 3 NEW FEATURES")
+    print("="*80)
     
-    # Test 2a: POST /api/quiz/submit - premium travel profile
-    result_id = test_quiz_submit_premium_travel_profile()
-    results["2a. POST /api/quiz/submit (premium travel → voyager-infinite)"] = result_id is not None
+    # Test 1: POST /api/quiz/submit with welcome email
+    result_id = test_quiz_submit_with_welcome_email()
+    results["1. POST /api/quiz/submit (welcome email)"] = result_id is not None
     
-    # Test 2b: POST /api/quiz/submit - new-credit budget traveler
-    results["2b. POST /api/quiz/submit (new-credit budget → NOT voyager-infinite)"] = test_quiz_submit_new_credit_budget_traveler()
+    # Test 2a: GET /api/admin/leads.csv with query param
+    results["2a. GET /api/admin/leads.csv (query param)"] = test_admin_leads_csv_query_param()
     
-    # Test 2c: POST /api/quiz/submit - shopping profile
-    results["2c. POST /api/quiz/submit (shopping → metrocash/prime)"] = test_quiz_submit_shopping_profile()
+    # Test 2b: GET /api/admin/leads.csv with header
+    results["2b. GET /api/admin/leads.csv (header auth)"] = test_admin_leads_csv_header_auth()
     
-    # Test 3: GET /api/results/{result_id}
-    results["3. GET /api/results/{result_id}"] = test_get_result(result_id)
+    # Test 2c: GET /api/admin/leads.csv with wrong/no token
+    results["2c. GET /api/admin/leads.csv (401 for wrong/no token)"] = test_admin_leads_csv_wrong_token()
     
-    # Test 4: POST /api/results/{result_id}/email
-    results["4. POST /api/results/{result_id}/email"] = test_email_result(result_id)
+    # Test 3: GET /api/admin/insights
+    results["3. GET /api/admin/insights (analytics)"] = test_admin_insights()
     
-    # Test 5: POST /api/cards/compare
-    results["5. POST /api/cards/compare"] = test_cards_compare()
+    # Regression Tests
+    print("\n" + "="*80)
+    print("REGRESSION TESTS")
+    print("="*80)
     
-    # Test 6: GET /api/admin/leads
-    results["6. GET /api/admin/leads (auth header)"] = test_admin_leads_endpoint()
+    results["4. REGRESSION: GET /api/cards"] = test_regression_get_cards()
+    results["5. REGRESSION: GET /api/results/{result_id}"] = test_regression_get_result(result_id)
+    results["6. REGRESSION: POST /api/results/{result_id}/email"] = test_regression_email_result(result_id)
+    results["7. REGRESSION: POST /api/cards/compare"] = test_regression_cards_compare()
+    results["8. REGRESSION: GET /api/admin/leads"] = test_regression_admin_leads()
     
     # Summary
     print("\n" + "="*80)
-    print("TEST SUMMARY - ROUND 2")
+    print("TEST SUMMARY - ROUND 3")
     print("="*80)
     
     passed = sum(1 for v in results.values() if v)

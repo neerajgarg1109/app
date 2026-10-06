@@ -220,6 +220,49 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASSED: Admin endpoint working correctly. With correct header 'X-Admin-Token: cardiq-admin-2025' returns 200 with {total: 6, leads: [...]} where each lead has all required fields (name, email, phone, recommended_card, email_sent, created_at, result_id). Without header returns 401. With wrong token 'X-Admin-Token: wrong-token' returns 401. Authentication working as expected."
+  - task: "POST /api/quiz/submit - welcome email sent on submit (best-effort)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 3: Welcome email now sent inside POST /api/quiz/submit the moment a lead submits (best-effort, non-fatal). Verify quiz/submit still returns 200 {result_id, scored} and sets welcome_sent on the result."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: POST /api/quiz/submit returns 200 with result_id and scored array. Top card voyager-infinite (score: 131.6) for premium travel profile. Welcome email sent best-effort (non-blocking) - does not break or slow the 200 response. Endpoint working correctly."
+  - task: "GET /api/admin/leads.csv - CSV export with token auth"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 3: GET /api/admin/leads.csv accepts token via query ?token=cardiq-admin-2025 OR header X-Admin-Token; returns text/csv with header row 'Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID' and Content-Disposition attachment; 401 for wrong/missing token."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: GET /api/admin/leads.csv working correctly. (a) With query param ?token=cardiq-admin-2025 returns 200, Content-Type: text/csv, Content-Disposition: attachment; filename=cardiq-leads.csv, header row exactly matches 'Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID'. (b) With header X-Admin-Token: cardiq-admin-2025 returns 200 CSV. (c) With wrong token (?token=nope) returns 401. (d) With no token returns 401. All auth scenarios working as expected."
+  - task: "GET /api/admin/insights - admin analytics endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 3: GET /api/admin/insights with header X-Admin-Token: cardiq-admin-2025 returns {total_results (int), emails_sent (int), by_card:[{label,count,pct}], by_goal:[{label,count,pct}]} sorted desc; pct is 0-100 int. 401 without/with wrong token."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: GET /api/admin/insights working correctly. With correct header X-Admin-Token: cardiq-admin-2025 returns 200 with all required keys: total_results (int), emails_sent (int), by_card (list), by_goal (list). by_card and by_goal have correct structure [{label, count, pct}] where pct is 0-100 int. Lists sorted by count descending. Sample: by_card[0] = {label: 'Voyager Infinite', count: 5, pct: 62}, by_goal[0] = {label: 'Travel', count: 6, pct: 75}. Without header returns 401. With wrong token returns 401. All auth scenarios working correctly."
+
 
 frontend:
   - task: "Full flow Landing -> Quiz -> LeadForm -> Analyzing -> Result with email + compare"
@@ -237,7 +280,7 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 2
+  test_sequence: 3
   run_ui: false
 
 test_plan:
@@ -250,9 +293,12 @@ agent_communication:
     -agent: "main"
     -message: "Backend implemented for cardIQ. Please test all /api endpoints. Scoring sanity: answers {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge} should rank 'voyager-infinite' first. Email endpoint uses Emergent managed Resend; it's fine to actually trigger a send since recipient comes from the lead we create in /quiz/submit (use a test email like delivered@resend.dev via the lead)."
     -agent: "testing"
+    -agent: "testing"
+    -message: "✅ ROUND 3: ALL BACKEND TESTS PASSED (10/10). Comprehensive Round 3 testing completed successfully. NEW FEATURES: (1) POST /api/quiz/submit with welcome email - Returns 200 with result_id and scored array, top card voyager-infinite (score: 131.6). Welcome email sent best-effort (non-blocking), does not break or slow response. (2) GET /api/admin/leads.csv - Works with both query param (?token=cardiq-admin-2025) and header (X-Admin-Token: cardiq-admin-2025). Returns 200 with Content-Type: text/csv, Content-Disposition: attachment; filename=cardiq-leads.csv. Header row exactly matches 'Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID'. Returns 401 for wrong/missing token. (3) GET /api/admin/insights - With correct header returns 200 with {total_results: 8, emails_sent: 4, by_card: [...], by_goal: [...]}. All lists sorted descending by count, pct is 0-100 int. Returns 401 without/with wrong token. REGRESSION TESTS: All existing endpoints working correctly - GET /api/cards (8 cards with applyUrl and creditReq), GET /api/results/{result_id} (retrieves stored results), POST /api/results/{result_id}/email (sends successfully), POST /api/cards/compare (preserves order, 400 for empty), GET /api/admin/leads (returns leads with correct structure). No issues found. Backend is production-ready."
+
     -message: "All 5 backend tasks PASSED. 8 cards returned with all fields; 404s correct; quiz/submit scoring correct (voyager-infinite top for travel, metrocash-rewards top for shopping); validation 422; results fetch + 404; compare ordering + 400 empty; email sent via managed Resend with email_id + sent_to. Backend production-ready."
     -agent: "main"
-    -message: "ROUND 2 additions to test: (1) New admin endpoint GET /api/admin/leads with header 'X-Admin-Token: cardiq-admin-2025' returns {total, leads[]} where each lead has name,email,phone,recommended_card,email_sent,created_at; without/with wrong token returns 401. (2) Cards now include applyUrl + creditReq fields (verify GET /api/cards returns them). (3) Scoring extended with two new answer keys 'international' (often/sometimes/rarely) and 'credit' (excellent/good/fair/new). Sanity: a NEW-credit user asking for premium travel should NOT get the premium 'voyager-infinite' (creditReq excellent) as top — e.g. answers {goal:travel, spend:low, fee:free, usage:flights, priority:lounge, international:rarely, credit:new} should rank a lifetime-free/eligible card above voyager-infinite. A full travel profile {goal:travel,spend:high,fee:premium,usage:flights,priority:lounge,international:often,credit:excellent} should still rank voyager-infinite first. Please retest quiz/submit, cards, compare, results, email, and the new admin endpoint."
+    -message: "ROUND 3 additions to test: (1) Welcome email now sent inside POST /api/quiz/submit the moment a lead submits (best-effort, non-fatal). Verify quiz/submit still returns 200 {result_id, scored} and sets welcome_sent on the result (lead email delivered@resend.dev). (2) GET /api/admin/leads.csv — accepts token via query ?token=cardiq-admin-2025 OR header X-Admin-Token; returns text/csv with header row Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID and Content-Disposition attachment; 401 for wrong/missing token. (3) GET /api/admin/insights (header X-Admin-Token) returns {total_results, emails_sent, by_card:[{label,count,pct}], by_goal:[{label,count,pct}]} sorted desc; 401 without token. Please retest these three plus a regression on quiz/submit, cards, results, email, compare, admin/leads."
     -agent: "testing"
     -message: "✅ ALL BACKEND TESTS PASSED (8/8). All /api endpoints working correctly: 1) GET /api/cards returns 8 cards with proper structure. 2) GET /api/cards/{id} works with 404 for invalid IDs. 3) POST /api/quiz/submit correctly scores travel profile (voyager-infinite top) and shopping profile (metrocash-rewards top), validation working. 4) GET /api/results/{result_id} retrieves stored results with 404 for invalid IDs. 5) POST /api/cards/compare preserves order and returns 400 for empty list. 6) POST /api/results/{result_id}/email successfully sends via Emergent Resend with proper response structure. No issues found. Backend is production-ready."
     -agent: "testing"

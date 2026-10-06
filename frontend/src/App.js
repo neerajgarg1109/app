@@ -51,13 +51,33 @@ function QuizApp() {
   const [resultId, setResultId] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [savedProgress, setSavedProgress] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("ciq_quiz_progress") || "null"); } catch (e) { return null; }
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [screen]);
 
+  const clearProgress = () => {
+    localStorage.removeItem("ciq_quiz_progress");
+    setSavedProgress(null);
+  };
+
+  const startFresh = () => {
+    clearProgress();
+    setScreen("quiz");
+  };
+
+  const exitToLanding = () => {
+    // keep saved progress so the user can resume
+    try { setSavedProgress(JSON.parse(localStorage.getItem("ciq_quiz_progress") || "null")); } catch (e) {}
+    setScreen("landing");
+  };
+
   const handleQuizComplete = (ans) => {
     setAnswers(ans);
+    clearProgress();
     setError(null);
     setScreen("lead");
   };
@@ -83,13 +103,22 @@ function QuizApp() {
     setScored(null);
     setResultId(null);
     setError(null);
+    clearProgress();
     setScreen("landing");
   };
 
+  const hasResume = savedProgress && savedProgress.answers && Object.keys(savedProgress.answers).length > 0;
+
   return (
     <>
-      {screen === "landing" && <Landing onStart={() => setScreen("quiz")} />}
-      {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={restart} />}
+      {screen === "landing" && (
+        <Landing
+          onStart={startFresh}
+          onResume={() => setScreen("quiz")}
+          resumeStep={hasResume ? (savedProgress.step || 0) + 1 : null}
+        />
+      )}
+      {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={exitToLanding} />}
       {screen === "lead" && (
         <LeadForm onSubmit={handleLeadSubmit} onBack={() => setScreen("quiz")} submitting={submitting} error={error} />
       )}
