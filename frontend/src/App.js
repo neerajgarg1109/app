@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import Landing from "./components/Landing";
 import Quiz from "./components/Quiz";
+import LeadForm from "./components/LeadForm";
 import Result from "./components/Result";
-import { recommendCards } from "./mock/mock";
+import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 
 const ANALYZE_STEPS = [
@@ -41,31 +42,58 @@ function Analyzing() {
 }
 
 function App() {
-  const [screen, setScreen] = useState("landing"); // landing | quiz | analyzing | result
+  const [screen, setScreen] = useState("landing"); // landing | quiz | lead | analyzing | result
+  const [answers, setAnswers] = useState(null);
   const [scored, setScored] = useState(null);
+  const [resultId, setResultId] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [screen]);
 
-  const handleComplete = (answers) => {
-    const result = recommendCards(answers);
-    setScored(result);
-    setScreen("analyzing");
-    setTimeout(() => setScreen("result"), 2900);
+  const handleQuizComplete = (ans) => {
+    setAnswers(ans);
+    setError(null);
+    setScreen("lead");
+  };
+
+  const handleLeadSubmit = async (lead) => {
+    setSubmitting(true);
+    setError(null);
+    try {
+      const data = await submitQuiz(answers, lead);
+      setScored(data.scored);
+      setResultId(data.result_id);
+      setScreen("analyzing");
+      setTimeout(() => setScreen("result"), 2900);
+    } catch (e) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const restart = () => {
+    setAnswers(null);
     setScored(null);
+    setResultId(null);
+    setError(null);
     setScreen("landing");
   };
 
   return (
     <div className="App">
       {screen === "landing" && <Landing onStart={() => setScreen("quiz")} />}
-      {screen === "quiz" && <Quiz onComplete={handleComplete} onExit={restart} />}
+      {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={restart} />}
+      {screen === "lead" && (
+        <LeadForm onSubmit={handleLeadSubmit} onBack={() => setScreen("quiz")} submitting={submitting} error={error} />
+      )}
       {screen === "analyzing" && <Analyzing />}
-      {screen === "result" && scored && <Result scored={scored} onRestart={restart} />}
+      {screen === "result" && scored && (
+        <Result scored={scored} resultId={resultId} onRestart={restart} />
+      )}
     </div>
   );
 }

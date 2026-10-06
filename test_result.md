@@ -101,3 +101,110 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "cardIQ - mobile-first credit card finder quiz. Backend: store cards in MongoDB, save quiz results, capture leads, email recommendations (Resend managed), card comparison, refined scoring."
+
+backend:
+  - task: "GET /api/cards and /api/cards/{id} - card catalog from MongoDB (seeded on startup)"
+    implemented: true
+    working: true
+    file: "backend/server.py, backend/cards_seed.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Catalog seeded idempotently on startup. Verify list returns 8 cards and single lookup works + 404 for unknown id."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: GET /api/cards returns exactly 8 cards with all required fields (id, name, network, palette, accent, annualFee, rewardLine, highlights, bestFor, feeType, minSpend, rating). GET /api/cards/voyager-infinite returns correct card. GET /api/cards/does-not-exist returns 404 as expected."
+  - task: "POST /api/quiz/submit - compute recommendation, save lead + quiz_result"
+    implemented: true
+    working: true
+    file: "backend/server.py, backend/cards_seed.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Body {answers, lead:{name,email,phone?}}. Returns {result_id, scored[]}. Verify scoring: travel+premium+lounge+flights+high -> voyager-infinite as top. Verify lead + result persisted."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Travel profile (goal:travel, spend:high, fee:premium, usage:flights, priority:lounge) correctly ranks voyager-infinite as top card with score 109.6. Shopping profile (goal:shopping, spend:mid, fee:worth, usage:online, priority:rewards) correctly ranks metrocash-rewards as top. Validation working: missing email returns 422, invalid email returns 422. Response includes result_id and scored array with card, score, and reasons. Scores sorted descending."
+  - task: "GET /api/results/{result_id} - fetch scored result"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Returns scored for stored answers; 404 for unknown."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: GET /api/results/{valid_result_id} returns 200 with result_id and scored array. GET /api/results/does-not-exist-uuid returns 404 as expected. Result retrieval working correctly."
+  - task: "POST /api/cards/compare - compare multiple cards"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Body {ids:[]}. Returns cards in requested order. Verify ordering + empty list 400."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: POST /api/cards/compare with ids:[voyager-infinite, skymiles-plus, metrocash-rewards] returns 3 cards in exact requested order. Empty ids list returns 400 as expected."
+  - task: "POST /api/results/{result_id}/email - email recommendation via managed Resend"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Recipient read from stored lead (G4). Uses EMERGENT_EMAIL_KEY + EMAIL_FROM_NAME=cardIQ. Verify returns success with email_id; 404 for unknown result_id. Safe to send (lead email controlled)."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: POST /api/results/{valid_result_id}/email returns 200 with status:success, email_id (01a1128f-432d-7309-89eb-0def4f931578), and sent_to:delivered@resend.dev. Email sent successfully via Emergent managed Resend. Invalid result_id returns 404 as expected."
+
+frontend:
+  - task: "Full flow Landing -> Quiz -> LeadForm -> Analyzing -> Result with email + compare"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/App.js and components"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Frontend-only screens verified visually earlier. Backend wiring added; awaiting user permission for automated frontend testing."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus: []
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    -agent: "main"
+    -message: "Backend implemented for cardIQ. Please test all /api endpoints. Scoring sanity: answers {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge} should rank 'voyager-infinite' first. Email endpoint uses Emergent managed Resend; it's fine to actually trigger a send since recipient comes from the lead we create in /quiz/submit (use a test email like delivered@resend.dev via the lead)."
+    -agent: "testing"
+    -message: "All 5 backend tasks PASSED. 8 cards returned with all fields; 404s correct; quiz/submit scoring correct (voyager-infinite top for travel, metrocash-rewards top for shopping); validation 422; results fetch + 404; compare ordering + 400 empty; email sent via managed Resend with email_id + sent_to. Backend production-ready."
+    -agent: "testing"
+    -message: "✅ ALL BACKEND TESTS PASSED (8/8). All /api endpoints working correctly: 1) GET /api/cards returns 8 cards with proper structure. 2) GET /api/cards/{id} works with 404 for invalid IDs. 3) POST /api/quiz/submit correctly scores travel profile (voyager-infinite top) and shopping profile (metrocash-rewards top), validation working. 4) GET /api/results/{result_id} retrieves stored results with 404 for invalid IDs. 5) POST /api/cards/compare preserves order and returns 400 for empty list. 6) POST /api/results/{result_id}/email successfully sends via Emergent Resend with proper response structure. No issues found. Backend is production-ready."

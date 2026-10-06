@@ -1,12 +1,32 @@
-import React from "react";
-import { Check, RotateCcw, Star, ArrowRight, Sparkles, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { Check, RotateCcw, Star, ArrowRight, Sparkles, ChevronRight, Mail, Loader2, GitCompare } from "lucide-react";
 import Logo from "./Logo";
 import CreditCardVisual from "./CreditCardVisual";
+import Compare from "./Compare";
+import { emailResult } from "../api";
 
-export default function Result({ scored, onRestart }) {
+export default function Result({ scored, resultId, onRestart }) {
   const best = scored[0];
   const alternates = scored.slice(1, 3);
   const card = best.card;
+
+  const [emailState, setEmailState] = useState("idle"); // idle | sending | sent | error
+  const [sentTo, setSentTo] = useState("");
+  const [showCompare, setShowCompare] = useState(false);
+
+  const compareCards = scored.slice(0, 3).map((s) => s.card);
+
+  const handleEmail = async () => {
+    if (emailState === "sending" || !resultId) return;
+    setEmailState("sending");
+    try {
+      const data = await emailResult(resultId);
+      setSentTo(data.sent_to || "");
+      setEmailState("sent");
+    } catch (e) {
+      setEmailState("error");
+    }
+  };
 
   return (
     <div className="ciq-shell pb-28">
@@ -29,13 +49,40 @@ export default function Result({ scored, onRestart }) {
         <CreditCardVisual card={card} />
       </section>
 
-      {/* match reasons */}
       <section className="ciq-container mt-5">
         <div className="flex items-center justify-center gap-1 text-sm">
           <Star className="h-4 w-4 fill-current" style={{ color: "var(--ciq-amber)" }} />
           <span className="font-bold" style={{ color: "var(--ciq-ink)" }}>{card.rating}</span>
           <span style={{ color: "var(--ciq-ink-soft)" }}>· {card.annualFee}</span>
         </div>
+
+        {/* action row */}
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <button
+            onClick={handleEmail}
+            disabled={emailState === "sending" || emailState === "sent"}
+            className="ciq-press flex items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold"
+            style={{ borderColor: emailState === "sent" ? "var(--ciq-teal-600)" : "var(--ciq-line)", color: "var(--ciq-ink)" }}
+          >
+            {emailState === "sending" && <Loader2 className="h-4 w-4 ciq-spin" />}
+            {emailState === "sent" ? (<><Check className="h-4 w-4" style={{ color: "var(--ciq-teal-600)" }} /> Emailed</>) :
+             emailState === "sending" ? "Sending…" : (<><Mail className="h-4 w-4" /> Email me this</>)}
+          </button>
+          <button
+            onClick={() => setShowCompare(true)}
+            className="ciq-press flex items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold"
+            style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}
+          >
+            <GitCompare className="h-4 w-4" /> Compare
+          </button>
+        </div>
+        {emailState === "sent" && sentTo && (
+          <p className="mt-2 text-center text-xs" style={{ color: "var(--ciq-teal)" }}>Sent to {sentTo}</p>
+        )}
+        {emailState === "error" && (
+          <p className="mt-2 text-center text-xs" style={{ color: "#b4433f" }}>Couldn't send email. Try again.</p>
+        )}
+
         {best.reasons.length > 0 && (
           <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
             <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Why this fits you</div>
@@ -50,7 +97,6 @@ export default function Result({ scored, onRestart }) {
         )}
       </section>
 
-      {/* key benefits */}
       <section className="ciq-container mt-4">
         <div className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
           <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Key benefits</div>
@@ -67,7 +113,6 @@ export default function Result({ scored, onRestart }) {
         </div>
       </section>
 
-      {/* alternates */}
       {alternates.length > 0 && (
         <section className="ciq-container mt-6">
           <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Runner-ups worth a look</div>
@@ -93,6 +138,8 @@ export default function Result({ scored, onRestart }) {
           </button>
         </div>
       </div>
+
+      {showCompare && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
     </div>
   );
 }
