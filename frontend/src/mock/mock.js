@@ -77,6 +77,29 @@ export const QUIZ_QUESTIONS = [
       { value: "cashback", label: "Simple cashback", perks: [] },
     ],
   },
+  {
+    id: "international",
+    title: "How often do you spend abroad?",
+    subtitle: "Foreign spends and travel change the best fit.",
+    type: "single",
+    options: [
+      { value: "often", label: "Often", perks: ["I travel / shop internationally"] },
+      { value: "sometimes", label: "Sometimes", perks: ["A trip or two a year"] },
+      { value: "rarely", label: "Rarely / never", perks: ["Mostly domestic spends"] },
+    ],
+  },
+  {
+    id: "credit",
+    title: "What's your credit score range?",
+    subtitle: "We'll only match cards you're likely to get.",
+    type: "single",
+    options: [
+      { value: "excellent", label: "Excellent (750+)", perks: ["Unlocks premium cards"] },
+      { value: "good", label: "Good (700\u2013749)", perks: ["Most cards available"] },
+      { value: "fair", label: "Fair (650\u2013699)", perks: ["Solid everyday cards"] },
+      { value: "new", label: "New to credit", perks: ["Starter-friendly picks"] },
+    ],
+  },
 ];
 
 export const CARDS = [

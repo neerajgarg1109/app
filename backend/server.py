@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Header
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -35,6 +35,7 @@ EMAIL_BASE_URL = "https://integrations.emergentagent.com"
 EMAIL_KEY = os.environ.get("EMERGENT_EMAIL_KEY")
 EMAIL_FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "cardIQ")
 EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN")
 
 _SHORTENERS = ("bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "goo.gl", "rebrand.ly")
 _CRED_ASK = ("reply with your password", "reply with the code", "send your password", "cvv",
@@ -327,6 +328,32 @@ async def create_status_check(input: StatusCheckCreate):
 async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**_clean(s)) for s in status_checks]
+
+
+@api_router.get("/admin/leads")
+async def admin_leads(x_admin_token: Optional[str] = Header(None)):
+    if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(2000)
+    results = await db.quiz_results.find({}, {"_id": 0}).to_list(5000)
+    res_map = {r["result_id"]: r for r in results}
+    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    card_map = {c["id"]: c for c in cards}
+
+    out = []
+    for l in leads:
+        r = res_map.get(l.get("result_id"))
+        card = card_map.get(r["recommended_card_id"]) if r else None
+        out.append({
+            "name": l.get("name"),
+            "email": l.get("email"),
+            "phone": l.get("phone"),
+            "created_at": l.get("created_at"),
+            "result_id": l.get("result_id"),
+            "recommended_card": card["name"] if card else "\u2014",
+            "email_sent": bool(r.get("email_sent")) if r else False,
+        })
+    return {"total": len(out), "leads": out}
 
 
 app.include_router(api_router)

@@ -20,6 +20,16 @@ export async function emailResult(resultId) {
   return data; // { status, sent_to }
 }
 
+export async function getResult(resultId) {
+  const { data } = await http.get(`/results/${resultId}`);
+  return data; // { result_id, scored }
+}
+
+export async function getAdminLeads(token) {
+  const { data } = await http.get("/admin/leads", { headers: { "X-Admin-Token": token } });
+  return data; // { total, leads }
+}
+
 export async function compareCards(ids) {
   const { data } = await http.post("/cards/compare", { ids });
   return data; // [cards]

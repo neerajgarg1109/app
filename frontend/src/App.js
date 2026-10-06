@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/Landing";
 import Quiz from "./components/Quiz";
 import LeadForm from "./components/LeadForm";
 import Result from "./components/Result";
+import SharedResult from "./components/SharedResult";
+import Admin from "./components/Admin";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 
@@ -41,7 +44,7 @@ function Analyzing() {
   );
 }
 
-function App() {
+function QuizApp() {
   const [screen, setScreen] = useState("landing"); // landing | quiz | lead | analyzing | result
   const [answers, setAnswers] = useState(null);
   const [scored, setScored] = useState(null);
@@ -84,7 +87,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <>
       {screen === "landing" && <Landing onStart={() => setScreen("quiz")} />}
       {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={restart} />}
       {screen === "lead" && (
@@ -94,6 +97,20 @@ function App() {
       {screen === "result" && scored && (
         <Result scored={scored} resultId={resultId} onRestart={restart} />
       )}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<QuizApp />} />
+          <Route path="/r/:resultId" element={<SharedResult />} />
+          <Route path="/admin" element={<Admin />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

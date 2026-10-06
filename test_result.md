@@ -175,6 +175,51 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASSED: POST /api/results/{valid_result_id}/email returns 200 with status:success, email_id (01a1128f-432d-7309-89eb-0def4f931578), and sent_to:delivered@resend.dev. Email sent successfully via Emergent managed Resend. Invalid result_id returns 404 as expected."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ ROUND 2 PASSED: Email endpoint still working correctly. Returns 200 with status:success, email_id (01a112aa-067e-7a00-8b5f-b1495a044731), sent_to:delivered@resend.dev. 404 for invalid result_id."
+  - task: "Cards include applyUrl and creditReq fields"
+    implemented: true
+    working: true
+    file: "backend/cards_seed.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 2: All 8 cards now include applyUrl (string starting with https://) and creditReq (one of new/fair/good/excellent)."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: All 8 cards have applyUrl field (all start with https://www.example.com/apply/) and creditReq field (values: new/fair/good/excellent). Sample: voyager-infinite has applyUrl: https://www.example.com/apply/voyager-infinite?ref=cardiq, creditReq: excellent."
+  - task: "Scoring v2 with international and credit answer keys"
+    implemented: true
+    working: true
+    file: "backend/cards_seed.py (recommend_cards function)"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 2: Scoring extended with 'international' (often/sometimes/rarely) and 'credit' (excellent/good/fair/new) answer keys. Credit eligibility gate penalizes cards by -30 if user's credit tier is below card requirement."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Scoring v2 working correctly. Premium travel profile {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge, international:often, credit:excellent} correctly ranks voyager-infinite as top (score: 131.6). New-credit budget traveler {goal:travel, spend:low, fee:free, usage:flights, priority:lounge, international:rarely, credit:new} correctly ranks essentials-rupay as top (score: 34.6) and voyager-infinite is penalized to score 19.6 (not top). Shopping profile {goal:shopping, spend:mid, fee:worth, usage:online, priority:rewards, international:sometimes, credit:good} correctly ranks metrocash-rewards as top (score: 117.4). Credit eligibility gate working as expected."
+  - task: "GET /api/admin/leads - admin endpoint with auth header"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 2: New admin endpoint GET /api/admin/leads with header 'X-Admin-Token: cardiq-admin-2025' returns {total, leads:[...]} where each lead has name, email, phone, recommended_card, email_sent, created_at, result_id. Without/with wrong token returns 401."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Admin endpoint working correctly. With correct header 'X-Admin-Token: cardiq-admin-2025' returns 200 with {total: 6, leads: [...]} where each lead has all required fields (name, email, phone, recommended_card, email_sent, created_at, result_id). Without header returns 401. With wrong token 'X-Admin-Token: wrong-token' returns 401. Authentication working as expected."
 
 frontend:
   - task: "Full flow Landing -> Quiz -> LeadForm -> Analyzing -> Result with email + compare"
@@ -192,7 +237,7 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 1
+  test_sequence: 2
   run_ui: false
 
 test_plan:
@@ -206,5 +251,9 @@ agent_communication:
     -message: "Backend implemented for cardIQ. Please test all /api endpoints. Scoring sanity: answers {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge} should rank 'voyager-infinite' first. Email endpoint uses Emergent managed Resend; it's fine to actually trigger a send since recipient comes from the lead we create in /quiz/submit (use a test email like delivered@resend.dev via the lead)."
     -agent: "testing"
     -message: "All 5 backend tasks PASSED. 8 cards returned with all fields; 404s correct; quiz/submit scoring correct (voyager-infinite top for travel, metrocash-rewards top for shopping); validation 422; results fetch + 404; compare ordering + 400 empty; email sent via managed Resend with email_id + sent_to. Backend production-ready."
+    -agent: "main"
+    -message: "ROUND 2 additions to test: (1) New admin endpoint GET /api/admin/leads with header 'X-Admin-Token: cardiq-admin-2025' returns {total, leads[]} where each lead has name,email,phone,recommended_card,email_sent,created_at; without/with wrong token returns 401. (2) Cards now include applyUrl + creditReq fields (verify GET /api/cards returns them). (3) Scoring extended with two new answer keys 'international' (often/sometimes/rarely) and 'credit' (excellent/good/fair/new). Sanity: a NEW-credit user asking for premium travel should NOT get the premium 'voyager-infinite' (creditReq excellent) as top — e.g. answers {goal:travel, spend:low, fee:free, usage:flights, priority:lounge, international:rarely, credit:new} should rank a lifetime-free/eligible card above voyager-infinite. A full travel profile {goal:travel,spend:high,fee:premium,usage:flights,priority:lounge,international:often,credit:excellent} should still rank voyager-infinite first. Please retest quiz/submit, cards, compare, results, email, and the new admin endpoint."
     -agent: "testing"
     -message: "✅ ALL BACKEND TESTS PASSED (8/8). All /api endpoints working correctly: 1) GET /api/cards returns 8 cards with proper structure. 2) GET /api/cards/{id} works with 404 for invalid IDs. 3) POST /api/quiz/submit correctly scores travel profile (voyager-infinite top) and shopping profile (metrocash-rewards top), validation working. 4) GET /api/results/{result_id} retrieves stored results with 404 for invalid IDs. 5) POST /api/cards/compare preserves order and returns 400 for empty list. 6) POST /api/results/{result_id}/email successfully sends via Emergent Resend with proper response structure. No issues found. Backend is production-ready."
+    -agent: "testing"
+    -message: "✅ ROUND 2: ALL BACKEND TESTS PASSED (8/8). Comprehensive testing completed: 1) GET /api/cards - All 8 cards include applyUrl (https://) and creditReq (new/fair/good/excellent). 2a) Premium travel profile {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge, international:often, credit:excellent} correctly ranks voyager-infinite as top (score: 131.6). 2b) New-credit budget traveler {goal:travel, spend:low, fee:free, usage:flights, priority:lounge, international:rarely, credit:new} correctly ranks essentials-rupay as top (score: 34.6), NOT voyager-infinite (penalized to score 19.6). 2c) Shopping profile {goal:shopping, spend:mid, fee:worth, usage:online, priority:rewards, international:sometimes, credit:good} correctly ranks metrocash-rewards as top (score: 117.4). 3) GET /api/results/{result_id} works with 404 for invalid IDs. 4) POST /api/results/{result_id}/email sends successfully via Emergent Resend. 5) POST /api/cards/compare preserves order and returns 400 for empty list. 6) GET /api/admin/leads with header 'X-Admin-Token: cardiq-admin-2025' returns 200 with {total: 6, leads: [...]}, each lead has all required fields. Without/with wrong token returns 401. All Round 2 features working perfectly. Backend is production-ready."

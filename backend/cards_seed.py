@@ -1,5 +1,8 @@
 """cardIQ card catalog + seeding. Single source of truth for card data in MongoDB."""
 
+# NOTE: Cards are realistic DEMO data (original, generic names). applyUrl values are
+# placeholder referral links for demonstration (no real bank affiliation).
+
 CARDS = [
     {
         "id": "voyager-infinite",
@@ -19,7 +22,9 @@ CARDS = [
         "bestFor": ["travel", "flights", "lounge", "forex"],
         "feeType": "premium",
         "minSpend": "high",
+        "creditReq": "excellent",
         "rating": 4.8,
+        "applyUrl": "https://www.example.com/apply/voyager-infinite?ref=cardiq",
     },
     {
         "id": "skymiles-plus",
@@ -39,7 +44,9 @@ CARDS = [
         "bestFor": ["travel", "flights", "lounge"],
         "feeType": "worth",
         "minSpend": "mid",
+        "creditReq": "good",
         "rating": 4.6,
+        "applyUrl": "https://www.example.com/apply/skymiles-plus?ref=cardiq",
     },
     {
         "id": "metrocash-rewards",
@@ -59,7 +66,9 @@ CARDS = [
         "bestFor": ["shopping", "online", "rewards"],
         "feeType": "worth",
         "minSpend": "mid",
+        "creditReq": "good",
         "rating": 4.7,
+        "applyUrl": "https://www.example.com/apply/metrocash-rewards?ref=cardiq",
     },
     {
         "id": "feast-card",
@@ -79,7 +88,9 @@ CARDS = [
         "bestFor": ["shopping", "dining", "rewards"],
         "feeType": "worth",
         "minSpend": "low",
+        "creditReq": "fair",
         "rating": 4.5,
+        "applyUrl": "https://www.example.com/apply/feast-card?ref=cardiq",
     },
     {
         "id": "fuelmax",
@@ -99,7 +110,9 @@ CARDS = [
         "bestFor": ["fuel", "cashback"],
         "feeType": "worth",
         "minSpend": "low",
+        "creditReq": "fair",
         "rating": 4.4,
+        "applyUrl": "https://www.example.com/apply/fuelmax?ref=cardiq",
     },
     {
         "id": "everyday-cashback",
@@ -119,7 +132,9 @@ CARDS = [
         "bestFor": ["cashback", "online", "fuel"],
         "feeType": "free",
         "minSpend": "low",
+        "creditReq": "fair",
         "rating": 4.6,
+        "applyUrl": "https://www.example.com/apply/everyday-cashback?ref=cardiq",
     },
     {
         "id": "prime-rewards",
@@ -139,7 +154,9 @@ CARDS = [
         "bestFor": ["shopping", "online", "rewards"],
         "feeType": "worth",
         "minSpend": "mid",
+        "creditReq": "good",
         "rating": 4.5,
+        "applyUrl": "https://www.example.com/apply/prime-rewards?ref=cardiq",
     },
     {
         "id": "essentials-rupay",
@@ -159,13 +176,15 @@ CARDS = [
         "bestFor": ["fuel", "cashback"],
         "feeType": "free",
         "minSpend": "low",
+        "creditReq": "new",
         "rating": 4.3,
+        "applyUrl": "https://www.example.com/apply/essentials-rupay?ref=cardiq",
     },
 ]
 
 
 async def seed_cards(db):
-    """Idempotent upsert of the card catalog."""
+    """Idempotent upsert of the card catalog (always refresh to latest fields)."""
     for card in CARDS:
         await db.cards.update_one({"id": card["id"]}, {"$set": card}, upsert=True)
 
@@ -185,6 +204,7 @@ _PRIORITY_REASON = {
     "cashback": "Straightforward cashback you asked for",
 }
 _TIER = {"low": 0, "mid": 1, "high": 2, "vhigh": 3}
+_CREDIT = {"new": 0, "fair": 1, "good": 2, "excellent": 3}
 
 
 def recommend_cards(answers, cards):
@@ -193,6 +213,8 @@ def recommend_cards(answers, cards):
     priority = answers.get("priority")
     fee = answers.get("fee")
     spend = answers.get("spend")
+    international = answers.get("international")
+    credit = answers.get("credit")
 
     scored = []
     for card in cards:
@@ -221,6 +243,26 @@ def recommend_cards(answers, cards):
             want = _TIER[spend]
             need = _TIER.get(card.get("minSpend", "low"), 0)
             score += 10 if want >= need else -12
+
+        # International usage boosts forex / travel cards
+        if international == "often":
+            if any(x in best_for for x in ("forex", "flights", "travel")):
+                score += 14
+                reasons.append("Low forex for your overseas spends")
+        elif international == "rarely":
+            if "forex" in best_for:
+                score -= 4
+
+        # Credit eligibility gate
+        if credit and credit in _CREDIT:
+            user_tier = _CREDIT[credit]
+            req = _CREDIT.get(card.get("creditReq", "new"), 0)
+            if user_tier >= req:
+                score += 8
+                if req >= 2:
+                    reasons.append("Fits your credit profile")
+            else:
+                score -= 30  # likely not eligible
 
         # Rating nudges ties
         score += (card.get("rating", 0) - 4.0) * 2
