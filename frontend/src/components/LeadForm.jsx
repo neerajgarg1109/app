@@ -1,15 +1,29 @@
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight, Loader2, Lock, Mail, User, Phone } from "lucide-react";
 import Logo from "./Logo";
+import { savePartial } from "../api";
 
-export default function LeadForm({ onSubmit, onBack, submitting, error }) {
+export default function LeadForm({ onSubmit, onBack, submitting, error, answers = {} }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [touched, setTouched] = useState(false);
+  const [savedPartial, setSavedPartial] = useState(false);
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const valid = name.trim().length > 1 && emailValid;
+
+  const maybeSavePartial = () => {
+    if (emailValid && !savedPartial) {
+      setSavedPartial(true);
+      savePartial({
+        name: name.trim() || undefined,
+        email: email.trim(),
+        answers,
+        step: Object.keys(answers).length,
+      }).catch(() => setSavedPartial(false));
+    }
+  };
 
   const handle = () => {
     setTouched(true);
@@ -42,7 +56,7 @@ export default function LeadForm({ onSubmit, onBack, submitting, error }) {
 
         <div className="mt-6 space-y-4">
           <Field icon={User} label="Full name" value={name} onChange={setName} placeholder="e.g. Aarav Sharma" />
-          <Field icon={Mail} label="Email" value={email} onChange={setEmail} placeholder="you@email.com" type="email"
+          <Field icon={Mail} label="Email" value={email} onChange={setEmail} onBlur={maybeSavePartial} placeholder="you@email.com" type="email"
                  invalid={touched && !emailValid} invalidMsg="Enter a valid email" />
           <Field icon={Phone} label="Phone (optional)" value={phone} onChange={setPhone} placeholder="+91 …" type="tel" />
         </div>
@@ -68,7 +82,7 @@ export default function LeadForm({ onSubmit, onBack, submitting, error }) {
   );
 }
 
-function Field({ icon: Icon, label, value, onChange, placeholder, type = "text", invalid, invalidMsg }) {
+function Field({ icon: Icon, label, value, onChange, onBlur, placeholder, type = "text", invalid, invalidMsg }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-sm font-semibold" style={{ color: "var(--ciq-ink)" }}>{label}</span>
@@ -81,6 +95,7 @@ function Field({ icon: Icon, label, value, onChange, placeholder, type = "text",
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
           placeholder={placeholder}
           className="w-full bg-transparent text-[15px] outline-none"
           style={{ color: "var(--ciq-ink)" }}

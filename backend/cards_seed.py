@@ -274,4 +274,7 @@ def recommend_cards(answers, cards):
         })
 
     scored.sort(key=lambda x: x["score"], reverse=True)
+    # Confidence: map absolute score to a friendly 0-100 (perfect match ~ 130 pts)
+    for s in scored:
+        s["confidence"] = max(35, min(99, round(s["score"] / 130 * 100)))
     return scored

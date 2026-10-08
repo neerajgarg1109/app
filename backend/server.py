@@ -298,6 +298,11 @@ async def submit_quiz(payload: QuizSubmitIn):
     }
     await db.quiz_results.insert_one(dict(result_doc))
 
+    # Mark any matching partial session as completed (so no reminder is sent)
+    await db.partial_sessions.update_one(
+        {"email": payload.lead.email}, {"$set": {"completed": True}}
+    )
+
     # Best-effort welcome email the moment a lead submits (does not block the response on failure)
     try:
         welcome_html = _build_welcome_email(payload.lead.name, top["card"]["name"])
@@ -313,7 +318,7 @@ async def submit_quiz(payload: QuizSubmitIn):
     return {
         "result_id": result_id,
         "scored": [
-            {"card": s["card"], "score": s["score"], "reasons": s["reasons"]}
+            {"card": s["card"], "score": s["score"], "confidence": s.get("confidence"), "reasons": s["reasons"]}
             for s in scored
         ],
     }
@@ -329,7 +334,7 @@ async def get_result(result_id: str):
     return {
         "result_id": result_id,
         "scored": [
-            {"card": s["card"], "score": s["score"], "reasons": s["reasons"]}
+            {"card": s["card"], "score": s["score"], "confidence": s.get("confidence"), "reasons": s["reasons"]}
             for s in scored
         ],
     }
@@ -368,11 +373,31 @@ async def get_status_checks():
     return [StatusCheck(**_clean(s)) for s in status_checks]
 
 
+def _date_query(date_from: Optional[str], date_to: Optional[str]) -> dict:
+    """Build a created_at mongo filter from YYYY-MM-DD strings (inclusive range, UTC)."""
+    from datetime import timedelta
+    cond = {}
+    if date_from:
+        try:
+            cond["$gte"] = datetime.fromisoformat(date_from).replace(tzinfo=timezone.utc)
+        except ValueError:
+            pass
+    if date_to:
+        try:
+            end = datetime.fromisoformat(date_to).replace(tzinfo=timezone.utc) + timedelta(days=1)
+            cond["$lt"] = end
+        except ValueError:
+            pass
+    return {"created_at": cond} if cond else {}
+
+
+
 @api_router.get("/admin/leads")
-async def admin_leads(x_admin_token: Optional[str] = Header(None)):
+async def admin_leads(date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
     if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(2000)
+    q = _date_query(date_from, date_to)
+    leads = await db.leads.find(q, {"_id": 0}).sort("created_at", -1).to_list(2000)
     results = await db.quiz_results.find({}, {"_id": 0}).to_list(5000)
     res_map = {r["result_id"]: r for r in results}
     cards = await db.cards.find({}, {"_id": 0}).to_list(100)
@@ -395,12 +420,13 @@ async def admin_leads(x_admin_token: Optional[str] = Header(None)):
 
 
 @api_router.get("/admin/leads.csv")
-async def admin_leads_csv(token: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
+async def admin_leads_csv(token: Optional[str] = None, date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
     """CSV export. Accepts token via header OR ?token= (so a browser download link works)."""
     provided = x_admin_token or token
     if not ADMIN_TOKEN or provided != ADMIN_TOKEN:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    leads = await db.leads.find({}, {"_id": 0}).sort("created_at", -1).to_list(5000)
+    q = _date_query(date_from, date_to)
+    leads = await db.leads.find(q, {"_id": 0}).sort("created_at", -1).to_list(5000)
     results = await db.quiz_results.find({}, {"_id": 0}).to_list(10000)
     res_map = {r["result_id"]: r for r in results}
     cards = await db.cards.find({}, {"_id": 0}).to_list(100)
@@ -433,10 +459,11 @@ async def admin_leads_csv(token: Optional[str] = None, x_admin_token: Optional[s
 
 
 @api_router.get("/admin/insights")
-async def admin_insights(x_admin_token: Optional[str] = Header(None)):
+async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
     if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
         raise HTTPException(status_code=401, detail="Unauthorized")
-    results = await db.quiz_results.find({}, {"_id": 0}).to_list(10000)
+    q = _date_query(date_from, date_to)
+    results = await db.quiz_results.find(q, {"_id": 0}).to_list(10000)
     cards = await db.cards.find({}, {"_id": 0}).to_list(100)
     card_map = {c["id"]: c for c in cards}
 
@@ -471,12 +498,87 @@ async def admin_insights(x_admin_token: Optional[str] = Header(None)):
             for k, v in items
         ]
 
+    incomplete = await db.partial_sessions.count_documents({"completed": {"$ne": True}})
+
     return {
         "total_results": total,
         "emails_sent": emailed,
         "by_card": to_sorted(card_counts),
         "by_goal": to_sorted(goal_counts),
+        "incomplete_sessions": incomplete,
     }
+
+
+class PartialIn(BaseModel):
+    name: Optional[str] = None
+    email: EmailStr
+    answers: Dict[str, str] = {}
+    step: int = 0
+
+
+@api_router.post("/quiz/partial")
+async def save_partial(payload: PartialIn):
+    """Record a started-but-unfinished quiz keyed by email (for reminder emails)."""
+    now = datetime.now(timezone.utc)
+    await db.partial_sessions.update_one(
+        {"email": payload.email},
+        {
+            "$set": {
+                "email": payload.email,
+                "name": payload.name,
+                "answers": payload.answers,
+                "step": payload.step,
+                "completed": False,
+                "updated_at": now,
+            },
+            "$setOnInsert": {"created_at": now, "reminder_sent": False},
+        },
+        upsert=True,
+    )
+    return {"status": "saved"}
+
+
+def _build_reminder_email(name: str) -> str:
+    return (
+        f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+        f'style="background:#f6f7f5;padding:24px"><tr><td align="center">'
+        f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" '
+        f'style="max-width:520px;background:#ffffff;border-radius:16px;overflow:hidden;'
+        f'font-family:Arial,Helvetica,sans-serif">'
+        f'<tr><td style="background:#0d9488;padding:20px 24px">'
+        f'<span style="color:#ffffff;font-size:20px;font-weight:800">card'
+        f'<span style="color:#5eead4">IQ</span></span></td></tr>'
+        f'<tr><td style="padding:24px">'
+        f'<h1 style="margin:0 0 8px;color:#0f1a17;font-size:22px">You are one step away, {escape(name)}!</h1>'
+        f'<p style="margin:0 0 12px;color:#55615c;font-size:14px">You started finding your perfect credit '
+        f'card with cardIQ but did not finish. It only takes about 60 seconds, and your answers are saved.</p>'
+        f'<p style="margin:0 0 12px;color:#55615c;font-size:14px">Come back any time to reveal your single, '
+        f'unbiased recommendation.</p>'
+        f'<p style="margin:18px 0 0;color:#888;font-size:12px">Sent by cardIQ. We never ask for your password '
+        f'or card details by email.</p>'
+        f'</td></tr></table></td></tr></table>'
+    )
+
+
+@api_router.post("/admin/send-reminders")
+async def send_reminders(x_admin_token: Optional[str] = Header(None)):
+    if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    pending = await db.partial_sessions.find(
+        {"completed": {"$ne": True}, "reminder_sent": {"$ne": True}}, {"_id": 0}
+    ).to_list(1000)
+    sent = 0
+    for p in pending:
+        try:
+            html = _build_reminder_email(p.get("name") or "there")
+            await send_email(to=p["email"], subject="Finish finding your cardIQ match", html=html)
+            await db.partial_sessions.update_one(
+                {"email": p["email"]}, {"$set": {"reminder_sent": True}}
+            )
+            sent += 1
+        except Exception as e:
+            logger.error(f"Reminder email failed for {p.get('email')}: {e}")
+    return {"status": "success", "reminders_sent": sent, "pending": len(pending)}
 
 
 

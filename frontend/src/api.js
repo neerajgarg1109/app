@@ -15,6 +15,17 @@ export async function submitQuiz(answers, lead) {
   return data; // { result_id, scored }
 }
 
+export async function savePartial(payload) {
+  // payload: { name?, email, answers, step }
+  const { data } = await http.post("/quiz/partial", payload);
+  return data;
+}
+
+export async function sendReminders(token) {
+  const { data } = await http.post("/admin/send-reminders", {}, { headers: { "X-Admin-Token": token } });
+  return data; // { reminders_sent, pending }
+}
+
 export async function emailResult(resultId) {
   const { data } = await http.post(`/results/${resultId}/email`);
   return data; // { status, sent_to }
@@ -25,18 +36,19 @@ export async function getResult(resultId) {
   return data; // { result_id, scored }
 }
 
-export async function getAdminLeads(token) {
-  const { data } = await http.get("/admin/leads", { headers: { "X-Admin-Token": token } });
+export async function getAdminLeads(token, params = {}) {
+  const { data } = await http.get("/admin/leads", { headers: { "X-Admin-Token": token }, params });
   return data; // { total, leads }
 }
 
-export async function getAdminInsights(token) {
-  const { data } = await http.get("/admin/insights", { headers: { "X-Admin-Token": token } });
-  return data; // { total_results, emails_sent, by_card, by_goal }
+export async function getAdminInsights(token, params = {}) {
+  const { data } = await http.get("/admin/insights", { headers: { "X-Admin-Token": token }, params });
+  return data; // { total_results, emails_sent, by_card, by_goal, incomplete_sessions }
 }
 
-export function leadsCsvUrl(token) {
-  return `${API}/admin/leads.csv?token=${encodeURIComponent(token)}`;
+export function leadsCsvUrl(token, params = {}) {
+  const q = new URLSearchParams({ token, ...params }).toString();
+  return `${API}/admin/leads.csv?${q}`;
 }
 
 export async function compareCards(ids) {

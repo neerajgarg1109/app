@@ -120,7 +120,7 @@ function QuizApp() {
       )}
       {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={exitToLanding} />}
       {screen === "lead" && (
-        <LeadForm onSubmit={handleLeadSubmit} onBack={() => setScreen("quiz")} submitting={submitting} error={error} />
+        <LeadForm onSubmit={handleLeadSubmit} onBack={() => setScreen("quiz")} submitting={submitting} error={error} answers={answers || {}} />
       )}
       {screen === "analyzing" && <Analyzing />}
       {screen === "result" && scored && (

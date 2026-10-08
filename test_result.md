@@ -262,6 +262,76 @@ backend:
         -working: true
         -agent: "testing"
         -comment: "✅ PASSED: GET /api/admin/insights working correctly. With correct header X-Admin-Token: cardiq-admin-2025 returns 200 with all required keys: total_results (int), emails_sent (int), by_card (list), by_goal (list). by_card and by_goal have correct structure [{label, count, pct}] where pct is 0-100 int. Lists sorted by count descending. Sample: by_card[0] = {label: 'Voyager Infinite', count: 5, pct: 62}, by_goal[0] = {label: 'Travel', count: 6, pct: 75}. Without header returns 401. With wrong token returns 401. All auth scenarios working correctly."
+  - task: "Confidence field in scored responses (POST /api/quiz/submit and GET /api/results/{id})"
+    implemented: true
+    working: true
+    file: "backend/cards_seed.py, backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 4: Each scored item in POST /api/quiz/submit and GET /api/results/{id} now includes integer 'confidence' field (35-99). Perfect travel profile top card should have confidence ~99 (>=90)."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Confidence field working correctly. POST /api/quiz/submit with perfect travel profile {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge, international:often, credit:excellent} returns top card voyager-infinite with confidence=99 (>=90). All 8 scored items include confidence field (int 35-99). GET /api/results/{result_id} also returns all scored items with confidence field. Values observed: voyager-infinite=99, skymiles-plus=89, others=35."
+  - task: "Date filters on admin endpoints (date_from, date_to)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 4: GET /api/admin/leads, /api/admin/insights, and /api/admin/leads.csv accept query params date_from & date_to (YYYY-MM-DD, inclusive). Verify date_from=2030-01-01 returns 0 leads / empty insights; wide range returns all."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Date filters working correctly on all admin endpoints. (a) GET /api/admin/leads?date_from=2030-01-01 returns total=0. (b) GET /api/admin/insights?date_from=2030-01-01 returns total_results=0, by_card=[], by_goal=[]. (c) GET /api/admin/leads.csv?token=cardiq-admin-2025&date_from=2030-01-01 returns 200 text/csv with only header row (no data rows). (d) GET /api/admin/leads (no date filter) returns total=10 (>=1). All date filtering working as expected."
+  - task: "Partial sessions (POST /api/quiz/partial)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 4: POST /api/quiz/partial {name?,email,answers,step} returns {status:saved} and upserts by email (no auth required). Calling POST /api/quiz/submit with the SAME lead email marks that partial as completed."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Partial sessions working correctly. POST /api/quiz/partial with {name:'R4 Abandon', email:'partial-r4@resend.dev', answers:{goal:'shopping'}, step:1} returns 200 {status:'saved'}. No auth required. Subsequent POST /api/quiz/submit with same email (partial-r4@resend.dev) successfully completes the partial session (returns 200 with result_id). Partial marked as completed=true in database."
+  - task: "incomplete_sessions in GET /api/admin/insights"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 4: GET /api/admin/insights now includes 'incomplete_sessions' (count of partials not completed)."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: incomplete_sessions field working correctly. GET /api/admin/insights returns incomplete_sessions count. After creating partial session, incomplete_sessions=2 (>=1). After completing partial via POST /api/quiz/submit with same email, incomplete_sessions decreased from 2 to 1. Count accurately reflects uncompleted partial sessions."
+  - task: "POST /api/admin/send-reminders - send reminder emails to incomplete partials"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "ROUND 4: POST /api/admin/send-reminders (header X-Admin-Token) sends reminder emails to not-completed, not-reminded partials and returns {status:success, reminders_sent (int), pending (int)}; 401 without token. Should not re-send to already-reminded partials."
+        -working: true
+        -agent: "testing"
+        -comment: "✅ PASSED: Reminder endpoint working correctly. (a) POST /api/admin/send-reminders with header X-Admin-Token:cardiq-admin-2025 returns 200 {status:'success', reminders_sent:1, pending:1}. Reminder email sent to partial-r4@resend.dev. (b) Without header returns 401 as expected. (c) Calling POST /api/admin/send-reminders AGAIN returns reminders_sent=0 (no re-send to already-reminded partial). reminder_sent flag correctly prevents duplicate reminders. All scenarios working as expected."
 
 
 frontend:
@@ -280,7 +350,7 @@ frontend:
 metadata:
   created_by: "main_agent"
   version: "1.0"
-  test_sequence: 3
+  test_sequence: 4
   run_ui: false
 
 test_plan:
@@ -298,8 +368,10 @@ agent_communication:
 
     -message: "All 5 backend tasks PASSED. 8 cards returned with all fields; 404s correct; quiz/submit scoring correct (voyager-infinite top for travel, metrocash-rewards top for shopping); validation 422; results fetch + 404; compare ordering + 400 empty; email sent via managed Resend with email_id + sent_to. Backend production-ready."
     -agent: "main"
-    -message: "ROUND 3 additions to test: (1) Welcome email now sent inside POST /api/quiz/submit the moment a lead submits (best-effort, non-fatal). Verify quiz/submit still returns 200 {result_id, scored} and sets welcome_sent on the result (lead email delivered@resend.dev). (2) GET /api/admin/leads.csv — accepts token via query ?token=cardiq-admin-2025 OR header X-Admin-Token; returns text/csv with header row Name,Email,Phone,Recommended Card,Email Sent,Created At,Result ID and Content-Disposition attachment; 401 for wrong/missing token. (3) GET /api/admin/insights (header X-Admin-Token) returns {total_results, emails_sent, by_card:[{label,count,pct}], by_goal:[{label,count,pct}]} sorted desc; 401 without token. Please retest these three plus a regression on quiz/submit, cards, results, email, compare, admin/leads."
+    -message: "ROUND 4 additions to test: (1) Scored responses now include 'confidence' (int 35-99) per item in POST /api/quiz/submit and GET /api/results/{id}. Verify a perfect travel profile top card has confidence ~99. (2) Date filters: GET /api/admin/leads, /api/admin/insights, and /api/admin/leads.csv accept query params date_from & date_to (YYYY-MM-DD, inclusive). Verify date_from=2030-01-01 returns 0 leads / empty insights; a wide range returns all. (3) Partial sessions: POST /api/quiz/partial {name?,email,answers,step} returns {status:saved} and upserts by email (no auth). Calling POST /api/quiz/submit with the SAME lead email marks that partial completed. (4) GET /api/admin/insights now includes 'incomplete_sessions' (count of partials not completed). (5) POST /api/admin/send-reminders (header X-Admin-Token) sends reminder emails to not-completed, not-reminded partials and returns {reminders_sent, pending}; 401 without token. Flow test: create a partial with email partial-r4@resend.dev (do NOT submit), confirm incomplete_sessions increments, call send-reminders (expect reminders_sent>=1), call again (expect reminders_sent for that one = 0 since reminder_sent now true). Also regression: cards, compare, email, admin/leads, admin/leads.csv auth. Note: use @resend.dev emails for any sends."
     -agent: "testing"
     -message: "✅ ALL BACKEND TESTS PASSED (8/8). All /api endpoints working correctly: 1) GET /api/cards returns 8 cards with proper structure. 2) GET /api/cards/{id} works with 404 for invalid IDs. 3) POST /api/quiz/submit correctly scores travel profile (voyager-infinite top) and shopping profile (metrocash-rewards top), validation working. 4) GET /api/results/{result_id} retrieves stored results with 404 for invalid IDs. 5) POST /api/cards/compare preserves order and returns 400 for empty list. 6) POST /api/results/{result_id}/email successfully sends via Emergent Resend with proper response structure. No issues found. Backend is production-ready."
     -agent: "testing"
     -message: "✅ ROUND 2: ALL BACKEND TESTS PASSED (8/8). Comprehensive testing completed: 1) GET /api/cards - All 8 cards include applyUrl (https://) and creditReq (new/fair/good/excellent). 2a) Premium travel profile {goal:travel, spend:high, fee:premium, usage:flights, priority:lounge, international:often, credit:excellent} correctly ranks voyager-infinite as top (score: 131.6). 2b) New-credit budget traveler {goal:travel, spend:low, fee:free, usage:flights, priority:lounge, international:rarely, credit:new} correctly ranks essentials-rupay as top (score: 34.6), NOT voyager-infinite (penalized to score 19.6). 2c) Shopping profile {goal:shopping, spend:mid, fee:worth, usage:online, priority:rewards, international:sometimes, credit:good} correctly ranks metrocash-rewards as top (score: 117.4). 3) GET /api/results/{result_id} works with 404 for invalid IDs. 4) POST /api/results/{result_id}/email sends successfully via Emergent Resend. 5) POST /api/cards/compare preserves order and returns 400 for empty list. 6) GET /api/admin/leads with header 'X-Admin-Token: cardiq-admin-2025' returns 200 with {total: 6, leads: [...]}, each lead has all required fields. Without/with wrong token returns 401. All Round 2 features working perfectly. Backend is production-ready."
+    -agent: "testing"
+    -message: "✅ ROUND 4: ALL BACKEND TESTS PASSED (4/4). Comprehensive Round 4 testing completed successfully. NEW FEATURES: (1) Confidence field - POST /api/quiz/submit with perfect travel profile returns top card voyager-infinite with confidence=99 (>=90). All scored items include confidence (int 35-99). GET /api/results/{result_id} also includes confidence in all scored items. (2) Date filters - All admin endpoints correctly filter by date: GET /api/admin/leads?date_from=2030-01-01 returns total=0; GET /api/admin/insights?date_from=2030-01-01 returns total_results=0, by_card=[], by_goal=[]; GET /api/admin/leads.csv?date_from=2030-01-01 returns only header row. Without date filter returns all data (total=10). (3) Partial sessions + reminders - Full flow working: POST /api/quiz/partial returns {status:'saved'} (no auth); GET /api/admin/insights shows incomplete_sessions=2; POST /api/admin/send-reminders returns reminders_sent=1 (email sent to partial-r4@resend.dev); 2nd call returns reminders_sent=0 (no re-send); POST /api/quiz/submit with same email completes partial; incomplete_sessions decreased from 2 to 1. Without auth header returns 401. (4) REGRESSION TESTS - All existing endpoints working: GET /api/cards (8 cards), POST /api/cards/compare (2 cards in order, 400 for empty), POST /api/results/{result_id}/email (200 success), GET /api/admin/leads.csv with wrong token (401). No issues found. Backend is production-ready."

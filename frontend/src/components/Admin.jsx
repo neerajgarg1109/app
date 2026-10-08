@@ -1,7 +1,23 @@
 import React, { useState } from "react";
-import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3 } from "lucide-react";
+import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3, Send, Clock } from "lucide-react";
 import Logo from "./Logo";
-import { getAdminLeads, getAdminInsights, leadsCsvUrl } from "../api";
+import { getAdminLeads, getAdminInsights, leadsCsvUrl, sendReminders } from "../api";
+
+const PRESETS = [
+  { key: "all", label: "All time" },
+  { key: "today", label: "Today" },
+  { key: "7d", label: "7 days" },
+  { key: "30d", label: "30 days" },
+];
+
+function rangeFor(key) {
+  const today = new Date();
+  const iso = (d) => d.toISOString().slice(0, 10);
+  if (key === "today") return { date_from: iso(today), date_to: iso(today) };
+  if (key === "7d") { const f = new Date(today); f.setDate(f.getDate() - 6); return { date_from: iso(f), date_to: iso(today) }; }
+  if (key === "30d") { const f = new Date(today); f.setDate(f.getDate() - 29); return { date_from: iso(f), date_to: iso(today) }; }
+  return {};
+}
 
 export default function Admin() {
   const [token, setToken] = useState(localStorage.getItem("ciq_admin") || "");
@@ -10,12 +26,16 @@ export default function Admin() {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [preset, setPreset] = useState("all");
+  const [reminderMsg, setReminderMsg] = useState(null);
+  const [sending, setSending] = useState(false);
 
-  const load = async (t) => {
+  const load = async (t, presetKey = preset) => {
     setLoading(true);
     setError(null);
+    const params = rangeFor(presetKey);
     try {
-      const [res, ins] = await Promise.all([getAdminLeads(t), getAdminInsights(t)]);
+      const [res, ins] = await Promise.all([getAdminLeads(t, params), getAdminInsights(t, params)]);
       setData(res);
       setInsights(ins);
       setAuthed(true);
@@ -28,14 +48,27 @@ export default function Admin() {
     }
   };
 
+  const applyPreset = (key) => { setPreset(key); load(token, key); };
+
   const downloadCsv = () => {
-    const url = leadsCsvUrl(token);
+    const url = leadsCsvUrl(token, rangeFor(preset));
     const a = document.createElement("a");
-    a.href = url;
-    a.download = "cardiq-leads.csv";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    a.href = url; a.download = "cardiq-leads.csv";
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+
+  const runReminders = async () => {
+    setSending(true);
+    setReminderMsg(null);
+    try {
+      const r = await sendReminders(token);
+      setReminderMsg(r.reminders_sent > 0 ? `Sent ${r.reminders_sent} reminder email(s).` : "No pending reminders to send.");
+      load(token);
+    } catch (e) {
+      setReminderMsg("Failed to send reminders.");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (!authed) {
@@ -73,6 +106,7 @@ export default function Admin() {
 
   const leads = data?.leads || [];
   const maxGoal = Math.max(1, ...((insights?.by_goal || []).map((g) => g.count)));
+  const incomplete = insights?.incomplete_sessions || 0;
 
   return (
     <div className="ciq-shell min-h-screen pb-16">
@@ -89,12 +123,48 @@ export default function Admin() {
       </header>
 
       <div className="ciq-container" style={{ maxWidth: 1000 }}>
+        {/* date presets */}
+        <div className="flex flex-wrap gap-2">
+          {PRESETS.map((p) => (
+            <button
+              key={p.key}
+              onClick={() => applyPreset(p.key)}
+              className="ciq-press rounded-full px-3.5 py-1.5 text-sm font-semibold"
+              style={{
+                background: preset === p.key ? "var(--ciq-teal-600)" : "#fff",
+                color: preset === p.key ? "#fff" : "var(--ciq-ink)",
+                border: `1px solid ${preset === p.key ? "var(--ciq-teal-600)" : "var(--ciq-line)"}`,
+              }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+
         {/* stat cards */}
-        <div className="grid grid-cols-3 gap-3">
-          <Stat label="Total leads" value={data?.total || 0} />
+        <div className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Stat label="Leads" value={data?.total || 0} />
           <Stat label="Results" value={insights?.total_results || 0} />
           <Stat label="Emails sent" value={insights?.emails_sent || 0} />
+          <Stat label="Incomplete" value={incomplete} />
         </div>
+
+        {/* reminders */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+          <div className="flex items-center gap-2 text-sm" style={{ color: "var(--ciq-ink)" }}>
+            <Clock className="h-4 w-4" style={{ color: "var(--ciq-amber)" }} />
+            <span><strong>{incomplete}</strong> people started but didn't finish</span>
+          </div>
+          <button
+            onClick={runReminders}
+            disabled={sending || incomplete === 0}
+            className="ciq-press flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold text-white"
+            style={{ background: "var(--ciq-teal-600)", opacity: incomplete === 0 ? 0.5 : 1 }}
+          >
+            {sending ? <Loader2 className="h-4 w-4 ciq-spin" /> : <Send className="h-4 w-4" />} Send reminders
+          </button>
+        </div>
+        {reminderMsg && <p className="mt-2 text-sm" style={{ color: "var(--ciq-teal)" }}>{reminderMsg}</p>}
 
         {/* Insights */}
         <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -122,7 +192,7 @@ export default function Admin() {
 
         <div className="mt-4 space-y-3">
           {leads.length === 0 && (
-            <div className="rounded-2xl border bg-white p-6 text-center text-sm" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>No leads yet.</div>
+            <div className="rounded-2xl border bg-white p-6 text-center text-sm" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>No leads in this period.</div>
           )}
           {leads.map((l, i) => (
             <div key={i} className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
