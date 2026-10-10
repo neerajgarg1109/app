@@ -16,7 +16,7 @@ from typing import List, Dict, Optional, Any
 import uuid
 from datetime import datetime, timezone
 
-from cards_seed import seed_cards, recommend_cards
+from cards_seed import seed_cards, recommend_cards, CATALOG_QUERY, RECOMMENDABLE_QUERY
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -243,7 +243,7 @@ async def root():
 
 @api_router.get("/cards")
 async def get_cards():
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    cards = await db.cards.find(CATALOG_QUERY, {"_id": 0}).to_list(None)
     return cards
 
 
@@ -267,11 +267,13 @@ async def compare_cards(payload: CompareIn):
 
 @api_router.post("/quiz/submit")
 async def submit_quiz(payload: QuizSubmitIn):
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    cards = await db.cards.find(RECOMMENDABLE_QUERY, {"_id": 0}).to_list(None)
     if not cards:
         raise HTTPException(status_code=503, detail="Card catalog unavailable")
 
     scored = recommend_cards(payload.answers, cards)
+    if not scored:
+        raise HTTPException(status_code=503, detail="No cards currently available for application")
     top = scored[0]
     result_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
@@ -292,6 +294,8 @@ async def submit_quiz(payload: QuizSubmitIn):
         "answers": payload.answers,
         "recommended_card_id": top["card"]["id"],
         "scored_ids": [s["card"]["id"] for s in scored],
+        # Keep shared results and emails stable when issuer facts change later.
+        "scored": scored,
         "lead_id": lead_id,
         "email_sent": False,
         "created_at": now,
@@ -324,13 +328,25 @@ async def submit_quiz(payload: QuizSubmitIn):
     }
 
 
+async def scored_result(result):
+    if result.get("scored"):
+        return result["scored"]
+    # Older results store IDs only. Archived demo records remain available here.
+    ids = result.get("scored_ids")
+    query = {"id": {"$in": ids}} if ids else RECOMMENDABLE_QUERY
+    cards = await db.cards.find(query, {"_id": 0}).to_list(None)
+    scored = recommend_cards(result["answers"], cards, include_unavailable=bool(ids))
+    if not scored:
+        raise HTTPException(status_code=410, detail="Cards for this result are no longer available")
+    return scored
+
+
 @api_router.get("/results/{result_id}")
 async def get_result(result_id: str):
     result = await db.quiz_results.find_one({"result_id": result_id}, {"_id": 0})
     if not result:
         raise HTTPException(status_code=404, detail="Result not found")
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
-    scored = recommend_cards(result["answers"], cards)
+    scored = await scored_result(result)
     return {
         "result_id": result_id,
         "scored": [
@@ -350,8 +366,7 @@ async def email_result(result_id: str):
     if not lead or not lead.get("email"):
         raise HTTPException(status_code=404, detail="No contact on file for this result")
 
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
-    scored = recommend_cards(result["answers"], cards)
+    scored = await scored_result(result)
     top = scored[0]
     subject = f"Your cardIQ match: {top['card']['name']}"
     html = _build_recommendation_email(lead.get("name", "there"), top["card"], top["reasons"])
@@ -400,7 +415,7 @@ async def admin_leads(date_from: Optional[str] = None, date_to: Optional[str] = 
     leads = await db.leads.find(q, {"_id": 0}).sort("created_at", -1).to_list(2000)
     results = await db.quiz_results.find({}, {"_id": 0}).to_list(5000)
     res_map = {r["result_id"]: r for r in results}
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    cards = await db.cards.find({}, {"_id": 0}).to_list(None)
     card_map = {c["id"]: c for c in cards}
 
     out = []
@@ -429,7 +444,7 @@ async def admin_leads_csv(token: Optional[str] = None, date_from: Optional[str] 
     leads = await db.leads.find(q, {"_id": 0}).sort("created_at", -1).to_list(5000)
     results = await db.quiz_results.find({}, {"_id": 0}).to_list(10000)
     res_map = {r["result_id"]: r for r in results}
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    cards = await db.cards.find({}, {"_id": 0}).to_list(None)
     card_map = {c["id"]: c for c in cards}
 
     import csv
@@ -464,7 +479,7 @@ async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str]
         raise HTTPException(status_code=401, detail="Unauthorized")
     q = _date_query(date_from, date_to)
     results = await db.quiz_results.find(q, {"_id": 0}).to_list(10000)
-    cards = await db.cards.find({}, {"_id": 0}).to_list(100)
+    cards = await db.cards.find({}, {"_id": 0}).to_list(None)
     card_map = {c["id"]: c for c in cards}
 
     total = len(results)

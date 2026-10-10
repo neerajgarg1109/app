@@ -9,6 +9,7 @@ export default function Result({ scored, resultId, onRestart, shared = false }) 
   const best = scored[0];
   const alternates = scored.slice(1, 3);
   const card = best.card;
+  const applicationsUnavailable = card.active === false || card.applicationsOpen === false;
 
   const [emailState, setEmailState] = useState("idle"); // idle | sending | sent | error
   const [sentTo, setSentTo] = useState("");
@@ -46,7 +47,7 @@ export default function Result({ scored, resultId, onRestart, shared = false }) 
   };
 
   const handleApply = () => {
-    if (card.applyUrl) window.open(card.applyUrl, "_blank", "noopener,noreferrer");
+    if (!applicationsUnavailable && card.applyUrl) window.open(card.applyUrl, "_blank", "noopener,noreferrer");
   };
 
   const [imgState, setImgState] = useState("idle"); // idle | working | done
@@ -173,9 +174,17 @@ export default function Result({ scored, resultId, onRestart, shared = false }) 
       <section className="ciq-container mt-5">
         <div className="flex items-center justify-center gap-1 text-sm">
           <Star className="h-4 w-4 fill-current" style={{ color: "var(--ciq-amber)" }} />
-          <span className="font-bold" style={{ color: "var(--ciq-ink)" }}>{card.rating}</span>
+          <span className="font-bold" style={{ color: "var(--ciq-ink)" }} title={card.ratingBasis || "cardIQ editorial rating"}>{card.rating} · cardIQ rating</span>
           <span style={{ color: "var(--ciq-ink-soft)" }}>· {card.annualFee}</span>
         </div>
+
+        {card.verifiedOn && (
+          <div className="mt-3 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>
+            <p>Issuer details checked {card.verifiedOn}. Joining fee: {card.joiningFee}. {card.termsNote}</p>
+            <p className="mt-1">Match scores and cardIQ ratings are editorial estimates, not approval odds or customer reviews. The bank decides eligibility.</p>
+            <a href={card.applyUrl} target="_blank" rel="noopener noreferrer" className="underline">Check current issuer terms</a>
+          </div>
+        )}
 
         {/* action row */}
         <div className="mt-4 grid grid-cols-3 gap-2.5">
@@ -274,8 +283,8 @@ export default function Result({ scored, resultId, onRestart, shared = false }) 
 
       <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-white/90 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
         <div className="ciq-container py-3">
-          <button onClick={handleApply} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white" style={{ background: "var(--ciq-teal-600)", boxShadow: "0 16px 30px -14px rgba(13,148,136,0.7)" }}>
-            Apply for {card.name} <ExternalLink className="h-5 w-5" />
+          <button onClick={handleApply} disabled={applicationsUnavailable} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)", boxShadow: "0 16px 30px -14px rgba(13,148,136,0.7)" }}>
+            {applicationsUnavailable ? "Applications unavailable" : `Apply for ${card.name}`} <ExternalLink className="h-5 w-5" />
           </button>
         </div>
       </div>

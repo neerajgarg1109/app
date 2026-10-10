@@ -7,10 +7,15 @@ Tests confidence field, date filters, partial sessions, reminders, and regressio
 import requests
 import json
 import sys
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+from backend.cards_seed import CARDS
 
-# Base URL from frontend/.env
-BASE_URL = "https://portable-monzy.preview.emergentagent.com/api"
-ADMIN_TOKEN = "cardiq-admin-2025"
+# Use the local backend unless an explicit test target is supplied.
+load_dotenv(Path(__file__).parent / "backend" / ".env")
+BASE_URL = os.environ.get("CARDIQ_TEST_BASE_URL", "http://127.0.0.1:8000/api")
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN", "")
 
 def print_test(name):
     print(f"\n{'='*80}")
@@ -75,9 +80,10 @@ def test_confidence_field():
         print(f"Top card: {top['card']['id']} (name: {top['card']['name']})")
         print(f"Top card score: {top['score']}")
         
-        # Verify top card is voyager-infinite
-        if top['card']['id'] != 'voyager-infinite':
-            print_result(False, f"Expected voyager-infinite as top card, got {top['card']['id']}")
+        # A premium travel profile must match an available premium travel card.
+        if not (top['card'].get('applicationsOpen') and top['card']['feeType'] == 'premium'
+                and 'travel' in top['card']['bestFor']):
+            print_result(False, f"Expected an available premium travel card, got {top['card']['id']}")
             return False
         
         # Check confidence field exists in all scored items
@@ -105,7 +111,7 @@ def test_confidence_field():
             print_result(False, f"Top card confidence {top_confidence} is less than 90 (expected ~99)")
             return False
         
-        print_result(True, f"POST /api/quiz/submit: Top card voyager-infinite with confidence {top_confidence} (>=90)")
+        print_result(True, f"POST /api/quiz/submit: Top premium travel card with confidence {top_confidence} (>=90)")
         
         # Now test GET /api/results/{result_id}
         print(f"\nTesting GET /api/results/{result_id}")
@@ -486,8 +492,8 @@ def test_regression():
     
     all_passed = True
     
-    # 4a: GET /api/cards (8 cards)
-    print("\n4a. GET /api/cards should return 8 cards")
+    # 4a: GET /api/cards (current sourced catalog)
+    print(f"\n4a. GET /api/cards should return {len(CARDS)} cards")
     try:
         resp = requests.get(f"{BASE_URL}/cards", timeout=30)
         print(f"Status: {resp.status_code}")
@@ -499,11 +505,11 @@ def test_regression():
             cards = resp.json()
             print(f"Number of cards: {len(cards)}")
             
-            if len(cards) != 8:
-                print_result(False, f"Expected 8 cards, got {len(cards)}")
+            if len(cards) != len(CARDS):
+                print_result(False, f"Expected {len(CARDS)} cards, got {len(cards)}")
                 all_passed = False
             else:
-                print_result(True, "GET /api/cards returns 8 cards")
+                print_result(True, f"GET /api/cards returns {len(CARDS)} cards")
         
     except Exception as e:
         print_result(False, f"Exception: {str(e)}")
@@ -512,7 +518,7 @@ def test_regression():
     # 4b: POST /api/cards/compare with 2 cards
     print("\n4b. POST /api/cards/compare with 2 cards in order")
     try:
-        payload = {"ids": ["voyager-infinite", "skymiles-plus"]}
+        payload = {"ids": ["sbi-elite", "sbi-cashback-sbi"]}
         resp = requests.post(f"{BASE_URL}/cards/compare", json=payload, timeout=30)
         print(f"Status: {resp.status_code}")
         
@@ -526,7 +532,7 @@ def test_regression():
             if len(cards) != 2:
                 print_result(False, f"Expected 2 cards, got {len(cards)}")
                 all_passed = False
-            elif cards[0]["id"] != "voyager-infinite" or cards[1]["id"] != "skymiles-plus":
+            elif [card["id"] for card in cards] != payload["ids"]:
                 print_result(False, f"Cards not in requested order: {[c['id'] for c in cards]}")
                 all_passed = False
             else:
@@ -626,7 +632,7 @@ def main():
     print("cardIQ Backend Testing - Round 4")
     print("="*80)
     print(f"Base URL: {BASE_URL}")
-    print(f"Admin Token: {ADMIN_TOKEN}")
+    print("Admin token: configured" if ADMIN_TOKEN else "Admin token: missing")
     
     results = {}
     

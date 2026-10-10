@@ -6,8 +6,9 @@ export default function Compare({ cards, onClose }) {
   const rows = [
     { label: "Best for", get: (c) => (c.rewardLine || "") },
     { label: "Annual fee", get: (c) => c.annualFee },
+    { label: "Joining fee", get: (c) => c.joiningFee || "See issuer" },
     { label: "Network", get: (c) => c.network },
-    { label: "Rating", get: (c) => `${c.rating} / 5`, star: true },
+    { label: "cardIQ rating", get: (c) => `${c.rating} / 5`, star: true },
   ];
 
   return (
