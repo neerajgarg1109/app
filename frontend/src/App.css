@@ -15,18 +15,18 @@
 .ciq-track {
   height: 6px;
   border-radius: 999px;
-  background: #e6e8e3;
+  background: #e6e3f7;
   overflow: hidden;
 }
 .ciq-track-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #0d9488, #2dd4bf);
+  background: linear-gradient(90deg, #5b4ff0, #8b5cf6, #22c7b8);
   transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Text selection */
 ::selection {
-  background: #0d9488;
+  background: #5b4ff0;
   color: #fff;
 }

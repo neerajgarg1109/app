@@ -11,8 +11,13 @@ export async function getCards() {
 }
 
 export async function submitQuiz(answers, lead) {
-  const { data } = await http.post("/quiz/submit", { answers, lead });
+  const { data } = await http.post("/quiz/submit", lead ? { answers, lead } : { answers });
   return data; // { result_id, scored }
+}
+
+export async function attachResultLead(resultId, lead) {
+  const { data } = await http.post(`/results/${resultId}/lead`, lead);
+  return data;
 }
 
 export async function savePartial(payload) {
@@ -46,6 +51,70 @@ export async function getAdminInsights(token, params = {}) {
   return data; // { total_results, emails_sent, by_card, by_goal, incomplete_sessions }
 }
 
+export async function getAdminCards(token) {
+  const { data } = await http.get("/admin/cards", { headers: { "X-Admin-Token": token } });
+  return data; // { cards }
+}
+
+export async function createAdminCard(token, card) {
+  const { data } = await http.post("/admin/cards", card, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function updateAdminCard(token, cardId, card) {
+  const { data } = await http.put(`/admin/cards/${encodeURIComponent(cardId)}`, card, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function publishAdminCard(token, cardId) {
+  const { data } = await http.post(`/admin/cards/${encodeURIComponent(cardId)}/publish`, {}, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function discardAdminCardDraft(token, cardId) {
+  const { data } = await http.delete(`/admin/cards/${encodeURIComponent(cardId)}/draft`, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function getAdminCardHistory(token, cardId) {
+  const { data } = await http.get(`/admin/cards/${encodeURIComponent(cardId)}/history`, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function rollbackAdminCard(token, cardId, versionId) {
+  const { data } = await http.post(`/admin/cards/${encodeURIComponent(cardId)}/rollback/${encodeURIComponent(versionId)}`, {}, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function archiveAdminCard(token, cardId, restore = false) {
+  const { data } = await http.post(`/admin/cards/${encodeURIComponent(cardId)}/${restore ? "restore" : "archive"}`, {}, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function previewAdminCardRecommendation(token, cardId, answers) {
+  const { data } = await http.post(`/admin/cards/${encodeURIComponent(cardId)}/recommendation-preview`, { answers }, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function exportAdminCards(token, format) {
+  const { data } = await http.get("/admin/cards-export", { headers: { "X-Admin-Token": token }, params: { format }, responseType: format === "csv" ? "blob" : "json" });
+  return data;
+}
+
+export async function importAdminCards(token, cards, dryRun = true) {
+  const { data } = await http.post("/admin/cards-import", cards, { headers: { "X-Admin-Token": token }, params: { dry_run: dryRun } });
+  return data;
+}
+
+export async function updateAdminCardApplyLink(token, cardId, applyUrl) {
+  const { data } = await http.put(
+    `/admin/cards/${encodeURIComponent(cardId)}/apply-link`,
+    { apply_url: applyUrl || null },
+    { headers: { "X-Admin-Token": token } },
+  );
+  return data;
+}
+
 export function leadsCsvUrl(token, params = {}) {
   const q = new URLSearchParams({ token, ...params }).toString();
   return `${API}/admin/leads.csv?${q}`;
@@ -54,4 +123,59 @@ export function leadsCsvUrl(token, params = {}) {
 export async function compareCards(ids) {
   const { data } = await http.post("/cards/compare", { ids });
   return data; // [cards]
+}
+
+export async function trackApplyClick(cardId, resultId) {
+  const { data } = await http.post(`/cards/${encodeURIComponent(cardId)}/apply-click`, { result_id: resultId || null });
+  return data;
+}
+
+export async function reportCardInformation(cardId, issue, email) {
+  const { data } = await http.post(`/cards/${encodeURIComponent(cardId)}/report`, { issue, email: email || null });
+  return data;
+}
+
+export async function scheduleReviewFollowup(cardId, email, resultId) {
+  const { data } = await http.post(`/cards/${encodeURIComponent(cardId)}/review-followup`, { email, result_id: resultId || null, review_consent: true });
+  return data;
+}
+
+export async function submitExperienceFeedback(rating, feedback, resultId, cardId) {
+  const { data } = await http.post("/experience-feedback", {
+    rating,
+    feedback: feedback.trim() || null,
+    result_id: resultId || null,
+    card_id: cardId || null,
+  });
+  return data;
+}
+
+export async function getCommunityRating(cardId) {
+  const { data } = await http.get(`/cards/${encodeURIComponent(cardId)}/community-rating`);
+  return data;
+}
+
+export async function getReviewInvitation(token) {
+  const { data } = await http.get(`/reviews/invite/${encodeURIComponent(token)}`);
+  return data;
+}
+
+export async function submitCardholderReview(token, review) {
+  const { data } = await http.post(`/reviews/invite/${encodeURIComponent(token)}`, review);
+  return data;
+}
+
+export async function getAdminCardReviews(token) {
+  const { data } = await http.get("/admin/card-reviews", { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function moderateAdminCardReview(token, reviewId, status) {
+  const { data } = await http.put(`/admin/card-reviews/${encodeURIComponent(reviewId)}`, { status }, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function sendAdminReviewReminders(token) {
+  const { data } = await http.post("/admin/send-review-reminders", {}, { headers: { "X-Admin-Token": token } });
+  return data;
 }

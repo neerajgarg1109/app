@@ -9,7 +9,7 @@ Frontend quiz + recommendation now backed by FastAPI + MongoDB. Questions stay i
 - Frontend keeps: `QUIZ_QUESTIONS`, `TRUST_POINTS`, `PROBLEMS` (static).
 
 ## MongoDB collections
-- `cards`: 192 sourced records in `backend/cards_catalog.json`, upserted by `cards_seed.py`. Known demos are archived with `active: false`; paused applications have `applicationsOpen: false`. Products with invitation, upgrade, banking relationship, professional or partner-channel prerequisites have `recommendationEligible: false` and a factual `eligibilityNote`; the quiz cannot establish these prerequisites.
+- `cards`: 254 sourced records in `backend/cards_catalog.json`, upserted by `cards_seed.py`. Known demos are archived with `active: false`; paused applications have `applicationsOpen: false`. Products with invitation, upgrade, banking relationship, professional or partner-channel prerequisites have `recommendationEligible: false` and a factual `eligibilityNote`; the quiz cannot establish these prerequisites.
 - `quiz_results`: { result_id, answers, recommended_card_id, scored_ids, scored, lead_id, email_sent, created_at }. New `scored` snapshots preserve historical issuer facts; older results resolve their stored IDs.
 - `leads`: { lead_id, name, email, phone, result_id, created_at }
 

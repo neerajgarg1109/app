@@ -13,7 +13,7 @@ export default function Logo({ size = "md", onClick }) {
         style={{
           width: dims.box,
           height: dims.box,
-          background: "linear-gradient(140deg, #0d9488, #0f766e)",
+          background: "linear-gradient(140deg, #6d5dfc, #4638cc 58%, #12b8aa)",
         }}
       >
         <span
@@ -21,7 +21,7 @@ export default function Logo({ size = "md", onClick }) {
           style={{
             width: dims.box * 0.42,
             height: dims.box * 0.3,
-            background: "linear-gradient(120deg,#5eead4,#2dd4bf)",
+            background: "linear-gradient(120deg,#ffd166,#ff8f70)",
             top: dims.box * 0.22,
             left: dims.box * 0.2,
             boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)",

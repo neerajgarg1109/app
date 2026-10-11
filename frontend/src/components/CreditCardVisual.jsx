@@ -1,9 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Wifi } from "lucide-react";
 
-// Original CSS-rendered credit card (no third-party card art).
+const OFFICIAL_CARD_IMAGES = {
+  "kotak-kotak-cashback-plus-credit-card": "/cards/kotak-cashback-plus.jpg",
+  "axis-scapia-axis-bank-credit-card": "/cards/scapia-axis-bank.jpg",
+};
+
 export default function CreditCardVisual({ card, floating = false, number = "8841 2290 7756 0194" }) {
   const [c1, c2] = card.palette;
+  const imageUrl = card.imageUrl || OFFICIAL_CARD_IMAGES[card.id];
+  const [imageFailed, setImageFailed] = useState(false);
+
+  useEffect(() => setImageFailed(false), [imageUrl]);
+
+  if (imageUrl && !imageFailed) {
+    return (
+      <div
+        className={`relative grid w-full place-items-center overflow-hidden rounded-2xl border bg-white p-5 ${floating ? "ciq-float" : ""}`}
+        style={{
+          aspectRatio: "1.586 / 1",
+          borderColor: "var(--ciq-line)",
+          boxShadow: "0 24px 50px -22px rgba(15,26,23,0.35)",
+        }}
+      >
+        <img
+          src={imageUrl}
+          alt={`${card.name} card`}
+          className="h-full w-full object-contain"
+          onError={() => setImageFailed(true)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={`relative w-full rounded-2xl p-5 text-white overflow-hidden ${floating ? "ciq-float" : ""}`}

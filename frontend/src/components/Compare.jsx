@@ -4,10 +4,15 @@ import { X, Check, Star } from "lucide-react";
 export default function Compare({ cards, onClose }) {
   if (!cards || cards.length === 0) return null;
   const rows = [
+    { label: "Match", get: (c) => `${c._confidence}%` },
+    { label: "First-year potential", get: (c) => c._valueEstimate ? `Up to ${money(c._valueEstimate.headlinePotential)}` : "Not available" },
+    { label: "Estimated net value", get: (c) => c._valueEstimate ? `${money(c._valueEstimate.netLow)}–${money(c._valueEstimate.netHigh)}` : "Not available" },
     { label: "Best for", get: (c) => (c.rewardLine || "") },
     { label: "Annual fee", get: (c) => c.annualFee },
     { label: "Joining fee", get: (c) => c.joiningFee || "See issuer" },
     { label: "Network", get: (c) => c.network },
+    { label: "Forex / travel", get: (c) => (c.highlights || []).find((h) => /forex|foreign|international|lounge/i.test(h)) || "No highlighted benefit" },
+    { label: "Important limit", get: (c) => (c.highlights || []).find((h) => /cap|limit|exclude|minimum|waiv/i.test(h)) || "See issuer terms" },
     { label: "cardIQ rating", get: (c) => `${c.rating} / 5`, star: true },
   ];
 
@@ -75,3 +80,5 @@ export default function Compare({ cards, onClose }) {
     </div>
   );
 }
+
+function money(value) { return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value); }

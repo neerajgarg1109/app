@@ -3,18 +3,19 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/Landing";
 import Quiz from "./components/Quiz";
-import LeadForm from "./components/LeadForm";
 import Result from "./components/Result";
 import SharedResult from "./components/SharedResult";
 import Admin from "./components/Admin";
+import CardReview from "./components/CardReview";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 
 const ANALYZE_STEPS = [
-  "Reading your answers",
-  "Scanning 40+ cards",
-  "Filtering out sponsored noise",
-  "Locking your best match",
+  "Matching your priorities and spending",
+  "Comparing fees and waiver thresholds",
+  "Checking reward caps and exclusions",
+  "Reviewing eligibility indicators",
+  "Selecting your strongest explainable match",
 ];
 
 function Analyzing() {
@@ -29,12 +30,12 @@ function Analyzing() {
         <div className="relative mx-auto grid h-24 w-24 place-items-center">
           <span className="absolute h-24 w-24 rounded-full ciq-ring" style={{ background: "rgba(13,148,136,0.25)" }} />
           <span className="absolute h-24 w-24 rounded-full ciq-ring" style={{ background: "rgba(13,148,136,0.18)", animationDelay: "0.5s" }} />
-          <span className="grid h-16 w-16 place-items-center rounded-full text-white" style={{ background: "linear-gradient(140deg,#0d9488,#0f766e)" }}>
+          <span className="grid h-16 w-16 place-items-center rounded-full text-white" style={{ background: "linear-gradient(140deg,#6d5dfc,#4538c8 60%,#12b8aa)" }}>
             <Loader2 className="h-7 w-7 ciq-spin" />
           </span>
         </div>
         <h2 className="mt-8 font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>
-          Finding your perfect card…
+          Building your evidence-backed match…
         </h2>
         <p className="mt-2 text-sm font-medium transition-all" style={{ color: "var(--ciq-teal)" }}>
           {ANALYZE_STEPS[i]}
@@ -45,12 +46,15 @@ function Analyzing() {
 }
 
 function QuizApp() {
-  const [screen, setScreen] = useState("landing"); // landing | quiz | lead | analyzing | result
+  const [screen, setScreen] = useState("landing"); // landing | quiz | analyzing | result
   const [answers, setAnswers] = useState(null);
   const [scored, setScored] = useState(null);
   const [resultId, setResultId] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [refining, setRefining] = useState(false);
+  const [savedResult, setSavedResult] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("ciq_saved_result") || "null"); } catch (e) { return null; }
+  });
   const [savedProgress, setSavedProgress] = useState(() => {
     try { return JSON.parse(localStorage.getItem("ciq_quiz_progress") || "null"); } catch (e) { return null; }
   });
@@ -75,26 +79,25 @@ function QuizApp() {
     setScreen("landing");
   };
 
-  const handleQuizComplete = (ans) => {
+  const handleQuizComplete = async (ans) => {
     setAnswers(ans);
     clearProgress();
     setError(null);
-    setScreen("lead");
-  };
-
-  const handleLeadSubmit = async (lead) => {
-    setSubmitting(true);
-    setError(null);
+    setScreen("analyzing");
     try {
-      const data = await submitQuiz(answers, lead);
+      const [data] = await Promise.all([
+        submitQuiz(ans),
+        new Promise((resolve) => setTimeout(resolve, 1600)),
+      ]);
+      if (!data?.scored?.length) {
+        throw new Error("The matching service returned no recommendations.");
+      }
       setScored(data.scored);
       setResultId(data.result_id);
-      setScreen("analyzing");
-      setTimeout(() => setScreen("result"), 2900);
+      setScreen("result");
     } catch (e) {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
+      setError("We couldn't reach the matching service. Please try again.");
+      setScreen("quiz");
     }
   };
 
@@ -107,6 +110,21 @@ function QuizApp() {
     setScreen("landing");
   };
 
+  const refineResult = async (changes) => {
+    setRefining(true);
+    try {
+      const nextAnswers = { ...answers, ...changes };
+      const data = await submitQuiz(nextAnswers);
+      setAnswers(nextAnswers); setScored(data.scored); setResultId(data.result_id);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally { setRefining(false); }
+  };
+
+  const saveResult = (name) => {
+    const saved = { resultId, cardName: name, savedAt: new Date().toISOString() };
+    localStorage.setItem("ciq_saved_result", JSON.stringify(saved)); setSavedResult(saved);
+  };
+
   const hasResume = savedProgress && savedProgress.answers && Object.keys(savedProgress.answers).length > 0;
 
   return (
@@ -116,15 +134,13 @@ function QuizApp() {
           onStart={startFresh}
           onResume={() => setScreen("quiz")}
           resumeStep={hasResume ? (savedProgress.step || 0) + 1 : null}
+          savedResult={savedResult}
         />
       )}
-      {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={exitToLanding} />}
-      {screen === "lead" && (
-        <LeadForm onSubmit={handleLeadSubmit} onBack={() => setScreen("quiz")} submitting={submitting} error={error} answers={answers || {}} />
-      )}
+      {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={exitToLanding} error={error} />}
       {screen === "analyzing" && <Analyzing />}
       {screen === "result" && scored && (
-        <Result scored={scored} resultId={resultId} onRestart={restart} />
+        <Result scored={scored} resultId={resultId} answers={answers} refining={refining} onRefine={refineResult} onSaveResult={saveResult} onRestart={restart} />
       )}
     </>
   );
@@ -138,6 +154,7 @@ function App() {
           <Route path="/" element={<QuizApp />} />
           <Route path="/r/:resultId" element={<SharedResult />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/review/:token" element={<CardReview />} />
         </Routes>
       </BrowserRouter>
     </div>

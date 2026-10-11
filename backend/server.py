@@ -11,10 +11,13 @@ from html import escape
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 from pathlib import Path
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, field_validator
 from typing import List, Dict, Optional, Any
 import uuid
-from datetime import datetime, timezone
+import secrets
+import hashlib
+import unicodedata
+from datetime import datetime, timezone, timedelta
 
 from cards_seed import seed_cards, recommend_cards, CATALOG_QUERY, RECOMMENDABLE_QUERY
 
@@ -25,10 +28,22 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-app = FastAPI()
+app = FastAPI(title="cardIQ API", version="1.0.0")
 api_router = APIRouter(prefix="/api")
 
 logger = logging.getLogger(__name__)
+
+
+@app.get("/")
+async def service_root():
+    """Give people opening the API port directly a useful landing response."""
+    return {
+        "message": "cardIQ API",
+        "version": "v1",
+        "api": "/api/",
+        "docs": "/docs",
+        "customer_portal": "http://localhost:3000/",
+    }
 
 # ---------------- Email (Emergent managed Resend) ----------------
 EMAIL_BASE_URL = "https://integrations.emergentagent.com"
@@ -36,6 +51,10 @@ EMAIL_KEY = os.environ.get("EMERGENT_EMAIL_KEY")
 EMAIL_FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "cardIQ")
 EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN")
+ADMIN_VIEWER_TOKEN = os.environ.get("ADMIN_VIEWER_TOKEN")
+ADMIN_EDITOR_TOKEN = os.environ.get("ADMIN_EDITOR_TOKEN")
+ADMIN_PUBLISHER_TOKEN = os.environ.get("ADMIN_PUBLISHER_TOKEN")
+PUBLIC_APP_URL = os.environ.get("PUBLIC_APP_URL", "https://cardiq.in").rstrip("/")
 
 _SHORTENERS = ("bit.ly", "tinyurl.com", "t.co", "is.gd", "cutt.ly", "goo.gl", "rebrand.ly")
 _CRED_ASK = ("reply with your password", "reply with the code", "send your password", "cvv",
@@ -219,20 +238,213 @@ class LeadIn(BaseModel):
     name: str
     email: EmailStr
     phone: Optional[str] = None
+    contact_consent: bool = False
+
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, value: str) -> str:
+        value = " ".join(value.split())
+        letters = [char for char in value if char.isalpha()]
+        if not 2 <= len(value) <= 80 or len(letters) < 2:
+            raise ValueError("Enter a name between 2 and 80 characters")
+        if any(not (char.isalpha() or unicodedata.category(char).startswith("M") or char in " .'-") for char in value):
+            raise ValueError("Name can contain letters, spaces, apostrophes, hyphens and full stops only")
+        compact = "".join(letters).casefold()
+        if compact in {"asdf", "qwerty", "zxcv", "test", "unknown", "none", "random"} or re.search(r"(.)\1{3,}", compact):
+            raise ValueError("Enter your real name")
+        return value
+
+    @field_validator("phone")
+    @classmethod
+    def validate_phone(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        digits = re.sub(r"[\s()\-]", "", value)
+        if digits.startswith("+91"):
+            digits = digits[3:]
+        elif digits.startswith("91") and len(digits) == 12:
+            digits = digits[2:]
+        if not re.fullmatch(r"[6-9]\d{9}", digits):
+            raise ValueError("Enter a valid 10-digit Indian mobile number")
+        return f"+91{digits}"
 
 
 class QuizSubmitIn(BaseModel):
     answers: Dict[str, str]
-    lead: LeadIn
+    lead: Optional[LeadIn] = None
 
 
 class CompareIn(BaseModel):
     ids: List[str]
 
 
+class ApplyClickIn(BaseModel):
+    result_id: Optional[str] = None
+
+
+class CardReportIn(BaseModel):
+    issue: str
+    email: Optional[EmailStr] = None
+
+
+class ReviewFollowupIn(BaseModel):
+    email: EmailStr
+    result_id: Optional[str] = None
+    review_consent: bool
+
+
+class ExperienceFeedbackIn(BaseModel):
+    rating: int
+    feedback: Optional[str] = None
+    result_id: Optional[str] = None
+    card_id: Optional[str] = None
+
+
+class CardholderReviewIn(BaseModel):
+    overall: int
+    rewards: int
+    redemption: int
+    service: int
+    app_experience: int
+    acceptance: int
+    current_holder: bool
+    comments: Optional[str] = None
+
+
+class ReviewModerationIn(BaseModel):
+    status: str
+
+
+class ApplyLinkIn(BaseModel):
+    apply_url: Optional[str] = None
+
+
+class AdminCardIn(BaseModel):
+    name: str
+    issuer: str
+    variants: List[str] = Field(default_factory=list)
+    productGroupId: Optional[str] = None
+    variantName: Optional[str] = None
+    network: str = "Issuer-selected variant"
+    tagline: str = ""
+    annualFee: str = "No annual fee"
+    annualFeeAmount: int = 0
+    joiningFee: str = "No joining fee"
+    joiningFeeAmount: int = 0
+    rewardLine: str
+    highlights: List[str] = Field(default_factory=list)
+    bestFor: List[str] = Field(default_factory=list)
+    feeType: str = "free"
+    minSpend: str = "low"
+    creditReq: str = "good"
+    rating: float = 4.0
+    applyUrl: str
+    imageUrl: Optional[str] = None
+    active: bool = True
+    applicationsOpen: bool = True
+
+
+class RecommendationPreviewIn(BaseModel):
+    answers: Dict[str, str]
+
+
 def _clean(doc: dict) -> dict:
     doc.pop("_id", None)
     return doc
+
+
+def _token_expired(value: Optional[datetime]) -> bool:
+    if not value:
+        return True
+    if value.tzinfo is None:
+        value = value.replace(tzinfo=timezone.utc)
+    return value < datetime.now(timezone.utc)
+
+
+def _card_for_client(card: dict) -> dict:
+    """Expose an admin override as applyUrl while retaining the sourced issuer URL."""
+    public = dict(card)
+    override = public.pop("applyUrlOverride", None)
+    public["officialApplyUrl"] = public.get("applyUrl")
+    if override:
+        public["applyUrl"] = override
+    return public
+
+
+def _require_admin(token: Optional[str], minimum: str = "viewer") -> str:
+    roles = {ADMIN_VIEWER_TOKEN: "viewer", ADMIN_EDITOR_TOKEN: "editor", ADMIN_PUBLISHER_TOKEN: "publisher", ADMIN_TOKEN: "owner"}
+    roles.pop(None, None)
+    role = roles.get(token)
+    levels = {"viewer": 0, "editor": 1, "publisher": 2, "owner": 3}
+    if not role:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    if levels[role] < levels[minimum]:
+        raise HTTPException(status_code=403, detail=f"{minimum.title()} permission required")
+    return role
+
+
+def _validated_apply_url(value: Optional[str]) -> Optional[str]:
+    value = (value or "").strip()
+    if not value:
+        return None
+    parsed = urlparse(value)
+    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+        raise HTTPException(status_code=422, detail="Apply link must be an absolute HTTPS URL")
+    if len(value) > 2048:
+        raise HTTPException(status_code=422, detail="Apply link is too long")
+    return value
+
+
+def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict] = None) -> dict:
+    values = payload.dict()
+    name, issuer = values["name"].strip(), values["issuer"].strip()
+    if not name or not issuer or not values["rewardLine"].strip():
+        raise HTTPException(status_code=422, detail="Name, issuer and reward summary are required")
+    if values["feeType"] not in {"free", "worth", "premium"}:
+        raise HTTPException(status_code=422, detail="Invalid fee type")
+    if values["minSpend"] not in {"low", "mid", "high", "vhigh"}:
+        raise HTTPException(status_code=422, detail="Invalid minimum spend tier")
+    if values["creditReq"] not in {"new", "fair", "good", "excellent"}:
+        raise HTTPException(status_code=422, detail="Invalid credit requirement")
+    if not 0 <= values["rating"] <= 5 or values["annualFeeAmount"] < 0 or values["joiningFeeAmount"] < 0:
+        raise HTTPException(status_code=422, detail="Fees and rating must be valid positive values")
+    values["applyUrl"] = _validated_apply_url(values["applyUrl"])
+    values["name"], values["issuer"] = name, issuer
+    values["variants"] = list(dict.fromkeys(v.strip() for v in values["variants"] if v.strip()))
+    values["highlights"] = [v.strip() for v in values["highlights"] if v.strip()]
+    values["bestFor"] = list(dict.fromkeys(v.strip().lower() for v in values["bestFor"] if v.strip()))
+    values["productGroupId"] = (values.get("productGroupId") or "").strip() or None
+    values["variantName"] = (values.get("variantName") or "").strip() or None
+    values.update({
+        "id": card_id,
+        "palette": (existing or {}).get("palette", ["#172554", "#1e40af"]),
+        "accent": (existing or {}).get("accent", "#fbbf24"),
+        "ratingBasis": (existing or {}).get("ratingBasis", "Neutral cardIQ editorial baseline, not a customer or issuer rating."),
+        "sourceUrls": list(dict.fromkeys([values["applyUrl"], *((existing or {}).get("sourceUrls", []))])),
+        "verifiedOn": datetime.now(timezone.utc).date().isoformat(),
+        "availabilityNote": (existing or {}).get("availabilityNote", "Subject to issuer availability and approval."),
+        "secured": (existing or {}).get("secured", False),
+        "termsNote": (existing or {}).get("termsNote", "Eligible transactions only; issuer exclusions, reward caps and benefit conditions apply."),
+        "adminManaged": True,
+    })
+    return values
+
+
+def _admin_card(card: dict) -> dict:
+    stored = _clean(dict(card))
+    draft = stored.get("draft")
+    public = {**stored, **draft} if draft else stored
+    public.setdefault("variants", [public.get("network")] if public.get("network") else [])
+    public.update({
+        "official_apply_url": public.get("applyUrl"),
+        "custom_apply_url": public.get("applyUrlOverride"),
+        "effective_apply_url": public.get("applyUrlOverride") or public.get("applyUrl"),
+        "has_draft": bool(draft),
+        "publication_status": "draft" if draft else stored.get("publicationStatus", "published"),
+        "is_new_draft": bool(draft and stored.get("publicationStatus") == "draft"),
+        "draft": draft,
+    })
+    return public
 
 
 # ---------------- Routes ----------------
@@ -244,7 +456,104 @@ async def root():
 @api_router.get("/cards")
 async def get_cards():
     cards = await db.cards.find(CATALOG_QUERY, {"_id": 0}).to_list(None)
-    return cards
+    return [_card_for_client(card) for card in cards]
+
+
+@api_router.post("/cards/{card_id}/apply-click")
+async def track_apply_click(card_id: str, payload: ApplyClickIn):
+    card = await db.cards.find_one({"id": card_id, **CATALOG_QUERY}, {"_id": 1})
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+    await db.apply_events.insert_one({"event_id": str(uuid.uuid4()), "card_id": card_id, "result_id": payload.result_id, "created_at": datetime.now(timezone.utc)})
+    return {"status": "recorded"}
+
+
+@api_router.post("/cards/{card_id}/report")
+async def report_card_information(card_id: str, payload: CardReportIn):
+    issue = payload.issue.strip()
+    if len(issue) < 10 or len(issue) > 1000:
+        raise HTTPException(status_code=422, detail="Please describe the issue in 10–1,000 characters")
+    if not await db.cards.find_one({"id": card_id}, {"_id": 1}):
+        raise HTTPException(status_code=404, detail="Card not found")
+    await db.card_reports.insert_one({"report_id": str(uuid.uuid4()), "card_id": card_id, "issue": issue, "email": str(payload.email) if payload.email else None, "status": "open", "created_at": datetime.now(timezone.utc)})
+    return {"status": "received"}
+
+
+@api_router.post("/cards/{card_id}/review-followup")
+async def create_review_followup(card_id: str, payload: ReviewFollowupIn):
+    if not payload.review_consent:
+        raise HTTPException(status_code=422, detail="Review-reminder consent is required")
+    if not await db.cards.find_one({"id": card_id, **CATALOG_QUERY}, {"_id": 1}):
+        raise HTTPException(status_code=404, detail="Card not found")
+    now = datetime.now(timezone.utc)
+    followup_id = str(uuid.uuid4())
+    await db.review_followups.update_one(
+        {"email": str(payload.email).lower(), "card_id": card_id},
+        {"$set": {"followup_id": followup_id, "email": str(payload.email).lower(), "card_id": card_id,
+                  "result_id": payload.result_id, "review_consent": True, "marketing_consent": False,
+                  "due_at": now + timedelta(days=75), "updated_at": now, "reminder_sent": False,
+                  "review_submitted": False}, "$setOnInsert": {"created_at": now}},
+        upsert=True,
+    )
+    return {"status": "scheduled", "due_in_days": 75}
+
+
+@api_router.post("/experience-feedback", status_code=201)
+async def create_experience_feedback(payload: ExperienceFeedbackIn):
+    feedback = (payload.feedback or "").strip()
+    if payload.rating < 1 or payload.rating > 5:
+        raise HTTPException(status_code=422, detail="Rating must be between 1 and 5")
+    if len(feedback) > 1500:
+        raise HTTPException(status_code=422, detail="Feedback must be 1,500 characters or fewer")
+    if payload.card_id and not await db.cards.find_one({"id": payload.card_id}, {"_id": 1}):
+        raise HTTPException(status_code=404, detail="Card not found")
+    await db.experience_feedback.insert_one({
+        "feedback_id": str(uuid.uuid4()),
+        "rating": payload.rating,
+        "feedback": feedback or None,
+        "result_id": payload.result_id,
+        "card_id": payload.card_id,
+        "created_at": datetime.now(timezone.utc),
+    })
+    return {"status": "received"}
+
+
+@api_router.get("/cards/{card_id}/community-rating")
+async def community_rating(card_id: str):
+    reviews = await db.cardholder_reviews.find({"card_id": card_id, "status": "approved"}, {"_id": 0}).to_list(None)
+    count = len(reviews)
+    if count < 20:
+        return {"published": False, "count": count, "minimum": 20}
+    dimensions = ["overall", "rewards", "redemption", "service", "app_experience", "acceptance"]
+    averages = {key: round(sum(review[key] for review in reviews) / count, 1) for key in dimensions}
+    return {"published": True, "count": count, "minimum": 20, **averages}
+
+
+@api_router.get("/reviews/invite/{token}")
+async def review_invitation(token: str):
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    invite = await db.review_followups.find_one({"token_hash": token_hash}, {"_id": 0})
+    if not invite or invite.get("review_submitted") or _token_expired(invite.get("token_expires_at")):
+        raise HTTPException(status_code=404, detail="Review link is invalid or expired")
+    card = await db.cards.find_one({"id": invite["card_id"]}, {"_id": 0, "id": 1, "name": 1, "issuer": 1})
+    return {"card": card}
+
+
+@api_router.post("/reviews/invite/{token}")
+async def submit_cardholder_review(token: str, payload: CardholderReviewIn):
+    ratings = [payload.overall, payload.rewards, payload.redemption, payload.service, payload.app_experience, payload.acceptance]
+    if not payload.current_holder or any(value < 1 or value > 5 for value in ratings):
+        raise HTTPException(status_code=422, detail="Current cardholder confirmation and ratings from 1–5 are required")
+    token_hash = hashlib.sha256(token.encode()).hexdigest()
+    invite = await db.review_followups.find_one({"token_hash": token_hash, "review_submitted": False})
+    if not invite or _token_expired(invite.get("token_expires_at")):
+        raise HTTPException(status_code=404, detail="Review link is invalid or expired")
+    review = payload.dict()
+    review.update({"review_id": str(uuid.uuid4()), "card_id": invite["card_id"], "followup_id": invite["followup_id"],
+                   "status": "pending", "created_at": datetime.now(timezone.utc)})
+    await db.cardholder_reviews.insert_one(review)
+    await db.review_followups.update_one({"followup_id": invite["followup_id"]}, {"$set": {"review_submitted": True}, "$unset": {"token_hash": ""}})
+    return {"status": "submitted_for_review"}
 
 
 @api_router.get("/cards/{card_id}")
@@ -252,7 +561,7 @@ async def get_card(card_id: str):
     card = await db.cards.find_one({"id": card_id}, {"_id": 0})
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
-    return card
+    return _card_for_client(card)
 
 
 @api_router.post("/cards/compare")
@@ -262,7 +571,7 @@ async def compare_cards(payload: CompareIn):
     cards = await db.cards.find({"id": {"$in": payload.ids}}, {"_id": 0}).to_list(20)
     order = {cid: i for i, cid in enumerate(payload.ids)}
     cards.sort(key=lambda c: order.get(c["id"], 999))
-    return cards
+    return [_card_for_client(card) for card in cards]
 
 
 @api_router.post("/quiz/submit")
@@ -271,23 +580,27 @@ async def submit_quiz(payload: QuizSubmitIn):
     if not cards:
         raise HTTPException(status_code=503, detail="Card catalog unavailable")
 
-    scored = recommend_cards(payload.answers, cards)
+    scored = recommend_cards(payload.answers, [_card_for_client(card) for card in cards])
     if not scored:
         raise HTTPException(status_code=503, detail="No cards currently available for application")
     top = scored[0]
     result_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
 
-    lead_id = str(uuid.uuid4())
-    lead_doc = {
-        "lead_id": lead_id,
-        "name": payload.lead.name,
-        "email": payload.lead.email,
-        "phone": payload.lead.phone,
-        "result_id": result_id,
-        "created_at": now,
-    }
-    await db.leads.insert_one(dict(lead_doc))
+    lead_id = None
+    if payload.lead:
+        lead_id = str(uuid.uuid4())
+        lead_doc = {
+            "lead_id": lead_id,
+            "name": payload.lead.name,
+            "email": payload.lead.email,
+            "phone": payload.lead.phone,
+            "contact_consent": payload.lead.contact_consent,
+            "consent_recorded_at": now if payload.lead.contact_consent else None,
+            "result_id": result_id,
+            "created_at": now,
+        }
+        await db.leads.insert_one(dict(lead_doc))
 
     result_doc = {
         "result_id": result_id,
@@ -303,39 +616,91 @@ async def submit_quiz(payload: QuizSubmitIn):
     await db.quiz_results.insert_one(dict(result_doc))
 
     # Mark any matching partial session as completed (so no reminder is sent)
-    await db.partial_sessions.update_one(
-        {"email": payload.lead.email}, {"$set": {"completed": True}}
-    )
+    if payload.lead:
+        await db.partial_sessions.update_one(
+            {"email": payload.lead.email}, {"$set": {"completed": True}}
+        )
 
     # Best-effort welcome email the moment a lead submits (does not block the response on failure)
-    try:
-        welcome_html = _build_welcome_email(payload.lead.name, top["card"]["name"])
-        await send_email(
-            to=payload.lead.email,
-            subject="Welcome to cardIQ — your match is ready",
-            html=welcome_html,
-        )
-        await db.quiz_results.update_one({"result_id": result_id}, {"$set": {"welcome_sent": True}})
-    except Exception as e:
-        logger.error(f"Welcome email failed (non-fatal): {e}")
+    if payload.lead:
+        try:
+            welcome_html = _build_welcome_email(payload.lead.name, top["card"]["name"])
+            await send_email(
+                to=payload.lead.email,
+                subject="Welcome to cardIQ — your match is ready",
+                html=welcome_html,
+            )
+            await db.quiz_results.update_one({"result_id": result_id}, {"$set": {"welcome_sent": True}})
+        except Exception as e:
+            logger.error(f"Welcome email failed (non-fatal): {e}")
 
     return {
         "result_id": result_id,
         "scored": [
-            {"card": s["card"], "score": s["score"], "confidence": s.get("confidence"), "reasons": s["reasons"]}
+            {"card": s["card"], "score": s["score"], "confidence": s.get("confidence"), "reasons": s["reasons"], "valueEstimate": s.get("valueEstimate")}
             for s in scored
         ],
     }
 
 
+@api_router.post("/results/{result_id}/lead")
+async def attach_result_lead(result_id: str, payload: LeadIn):
+    result = await db.quiz_results.find_one({"result_id": result_id}, {"_id": 0})
+    if not result:
+        raise HTTPException(status_code=404, detail="Result not found")
+    lead_id = result.get("lead_id") or str(uuid.uuid4())
+    now = datetime.now(timezone.utc)
+    await db.leads.update_one(
+        {"lead_id": lead_id},
+        {"$set": {
+            "lead_id": lead_id,
+            "name": payload.name,
+            "email": payload.email,
+            "phone": payload.phone,
+            "contact_consent": payload.contact_consent,
+            "consent_recorded_at": now if payload.contact_consent else None,
+            "result_id": result_id,
+            "created_at": now,
+        }},
+        upsert=True,
+    )
+    await db.quiz_results.update_one({"result_id": result_id}, {"$set": {"lead_id": lead_id}})
+    await db.partial_sessions.update_one(
+        {"email": payload.email}, {"$set": {"completed": True}}
+    )
+    return {"status": "saved", "lead_id": lead_id}
+
+
 async def scored_result(result):
     if result.get("scored"):
-        return result["scored"]
+        scored = result["scored"]
+        ids = [s["card"]["id"] for s in scored]
+        current = await db.cards.find(
+            {"id": {"$in": ids}}, {"_id": 0, "id": 1, "applyUrlOverride": 1, "imageUrl": 1, "imageSourceUrl": 1}
+        ).to_list(None)
+        current_by_id = {c["id"]: c for c in current}
+        refreshed = []
+        for item in scored:
+            updated = dict(item)
+            card = dict(item["card"])
+            official = card.get("officialApplyUrl", card.get("applyUrl"))
+            card["officialApplyUrl"] = official
+            latest = current_by_id.get(card["id"], {})
+            card["applyUrl"] = latest.get("applyUrlOverride") or official
+            if latest.get("imageUrl"):
+                card["imageUrl"] = latest["imageUrl"]
+                card["imageSourceUrl"] = latest.get("imageSourceUrl")
+            updated["card"] = card
+            refreshed.append(updated)
+        return refreshed
     # Older results store IDs only. Archived demo records remain available here.
     ids = result.get("scored_ids")
     query = {"id": {"$in": ids}} if ids else RECOMMENDABLE_QUERY
     cards = await db.cards.find(query, {"_id": 0}).to_list(None)
-    scored = recommend_cards(result["answers"], cards, include_unavailable=bool(ids))
+    scored = recommend_cards(
+        result["answers"], [_card_for_client(card) for card in cards],
+        include_unavailable=bool(ids),
+    )
     if not scored:
         raise HTTPException(status_code=410, detail="Cards for this result are no longer available")
     return scored
@@ -350,7 +715,7 @@ async def get_result(result_id: str):
     return {
         "result_id": result_id,
         "scored": [
-            {"card": s["card"], "score": s["score"], "confidence": s.get("confidence"), "reasons": s["reasons"]}
+            {"card": s["card"], "score": s["score"], "confidence": s.get("confidence"), "reasons": s["reasons"], "valueEstimate": s.get("valueEstimate")}
             for s in scored
         ],
     }
@@ -406,11 +771,194 @@ def _date_query(date_from: Optional[str], date_to: Optional[str]) -> dict:
     return {"created_at": cond} if cond else {}
 
 
+@api_router.get("/admin/cards")
+async def admin_cards(x_admin_token: Optional[str] = Header(None)):
+    role = _require_admin(x_admin_token)
+    cards = await db.cards.find({"$or": [CATALOG_QUERY, {"publicationStatus": {"$exists": True}}]}, {"_id": 0}).sort("name", 1).to_list(None)
+    return {"cards": [_admin_card(card) for card in cards], "role": role}
+
+
+@api_router.post("/admin/cards", status_code=201)
+async def create_admin_card(payload: AdminCardIn, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    base = re.sub(r"[^a-z0-9]+", "-", f"{payload.issuer}-{payload.name}".lower()).strip("-")[:80] or str(uuid.uuid4())
+    card_id, suffix = base, 2
+    while await db.cards.find_one({"id": card_id}, {"_id": 1}):
+        card_id, suffix = f"{base}-{suffix}", suffix + 1
+    draft = _admin_card_doc(payload, card_id)
+    doc = {
+        "id": card_id, "name": draft["name"], "issuer": draft["issuer"],
+        "active": False, "applicationsOpen": False, "adminManaged": True,
+        "publicationStatus": "draft", "draft": draft,
+    }
+    await db.cards.insert_one(doc)
+    return _admin_card(doc)
+
+
+@api_router.put("/admin/cards/{card_id}")
+async def update_admin_card(card_id: str, payload: AdminCardIn, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    existing = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Card not found")
+    doc = _admin_card_doc(payload, card_id, existing)
+    await db.cards.update_one({"id": card_id}, {"$set": {"draft": doc}})
+    updated = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    return _admin_card(updated)
+
+
+@api_router.post("/admin/cards/{card_id}/publish")
+async def publish_admin_card(card_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    card = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+    draft = card.get("draft")
+    if not draft:
+        raise HTTPException(status_code=409, detail="This card has no draft to publish")
+    if card.get("publicationStatus") != "draft":
+        snapshot = {key: value for key, value in card.items() if key not in {"_id", "draft"}}
+        await db.card_versions.insert_one({
+            "version_id": str(uuid.uuid4()), "card_id": card_id,
+            "created_at": datetime.now(timezone.utc), "snapshot": snapshot,
+        })
+    draft.update({"id": card_id, "adminManaged": True, "publicationStatus": "published"})
+    await db.cards.update_one({"id": card_id}, {"$set": draft, "$unset": {"draft": ""}})
+    return _admin_card(await db.cards.find_one({"id": card_id}, {"_id": 0}))
+
+
+@api_router.get("/admin/cards/{card_id}/history")
+async def admin_card_history(card_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    versions = await db.card_versions.find({"card_id": card_id}, {"_id": 0, "snapshot": 0}).sort("created_at", -1).to_list(50)
+    return {"versions": versions}
+
+
+@api_router.post("/admin/cards/{card_id}/rollback/{version_id}")
+async def rollback_admin_card(card_id: str, version_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    version = await db.card_versions.find_one({"card_id": card_id, "version_id": version_id}, {"_id": 0})
+    if not version:
+        raise HTTPException(status_code=404, detail="Version not found")
+    draft = version["snapshot"]
+    draft["id"] = card_id
+    await db.cards.update_one({"id": card_id}, {"$set": {"draft": draft}})
+    return _admin_card(await db.cards.find_one({"id": card_id}, {"_id": 0}))
+
+
+@api_router.post("/admin/cards/{card_id}/archive")
+async def archive_admin_card(card_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    card = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+    snapshot = {key: value for key, value in card.items() if key not in {"_id", "draft"}}
+    await db.card_versions.insert_one({"version_id": str(uuid.uuid4()), "card_id": card_id, "created_at": datetime.now(timezone.utc), "snapshot": snapshot})
+    await db.cards.update_one({"id": card_id}, {"$set": {"active": False, "applicationsOpen": False, "publicationStatus": "archived", "adminManaged": True}, "$unset": {"draft": ""}})
+    return _admin_card(await db.cards.find_one({"id": card_id}, {"_id": 0}))
+
+
+@api_router.post("/admin/cards/{card_id}/restore")
+async def restore_admin_card(card_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    result = await db.cards.update_one({"id": card_id, "publicationStatus": "archived"}, {"$set": {"active": True, "applicationsOpen": True, "publicationStatus": "published", "adminManaged": True}})
+    if not result.matched_count:
+        raise HTTPException(status_code=404, detail="Archived card not found")
+    return _admin_card(await db.cards.find_one({"id": card_id}, {"_id": 0}))
+
+
+@api_router.delete("/admin/cards/{card_id}/draft")
+async def discard_admin_card_draft(card_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    card = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    if not card or not card.get("draft"):
+        raise HTTPException(status_code=404, detail="Draft not found")
+    if card.get("publicationStatus") == "draft":
+        await db.cards.delete_one({"id": card_id})
+        return {"deleted": True, "id": card_id}
+    await db.cards.update_one({"id": card_id}, {"$unset": {"draft": ""}})
+    return _admin_card(await db.cards.find_one({"id": card_id}, {"_id": 0}))
+
+
+@api_router.post("/admin/cards/{card_id}/recommendation-preview")
+async def preview_card_recommendation(card_id: str, payload: RecommendationPreviewIn, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    target = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    if not target:
+        raise HTTPException(status_code=404, detail="Card not found")
+    candidate = target.get("draft") or target
+    cards = await db.cards.find(RECOMMENDABLE_QUERY, {"_id": 0}).to_list(None)
+    cards = [candidate if card["id"] == card_id else card for card in cards]
+    if not any(card["id"] == card_id for card in cards):
+        cards.append(candidate)
+    scored = recommend_cards(payload.answers, cards)
+    rank = next((index + 1 for index, item in enumerate(scored) if item["card"]["id"] == card_id), None)
+    match = next((item for item in scored if item["card"]["id"] == card_id), None)
+    return {"rank": rank, "total": len(scored), "confidence": match.get("confidence") if match else None, "reasons": match.get("reasons", []) if match else [], "top_card": scored[0]["card"]["name"] if scored else None}
+
+
+@api_router.get("/admin/cards-export")
+async def export_admin_cards(format: str = "json", x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    cards = await db.cards.find(CATALOG_QUERY, {"_id": 0, "draft": 0}).sort("issuer", 1).to_list(None)
+    if format == "json":
+        return {"cards": cards}
+    if format != "csv":
+        raise HTTPException(status_code=422, detail="Format must be json or csv")
+    import csv, io
+    fields = ["id", "name", "issuer", "variantName", "productGroupId", "network", "annualFee", "joiningFee", "rewardLine", "applyUrl", "verifiedOn", "active", "applicationsOpen"]
+    buf = io.StringIO()
+    writer = csv.DictWriter(buf, fieldnames=fields)
+    writer.writeheader()
+    for card in cards:
+        writer.writerow({key: card.get(key, "") for key in fields})
+    return Response(content=buf.getvalue(), media_type="text/csv", headers={"Content-Disposition": "attachment; filename=cardiq-cards.csv"})
+
+
+@api_router.post("/admin/cards-import")
+async def import_admin_cards(payload: List[AdminCardIn], dry_run: bool = True, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    if len(payload) > 1000:
+        raise HTTPException(status_code=422, detail="Import is limited to 1,000 cards")
+    if dry_run:
+        return {"valid": True, "cards": len(payload), "message": "Validation passed; import will create drafts only."}
+    created = []
+    for item in payload:
+        base = re.sub(r"[^a-z0-9]+", "-", f"{item.issuer}-{item.name}".lower()).strip("-")[:80] or str(uuid.uuid4())
+        card_id, suffix = base, 2
+        while await db.cards.find_one({"id": card_id}, {"_id": 1}):
+            card_id, suffix = f"{base}-{suffix}", suffix + 1
+        draft = _admin_card_doc(item, card_id)
+        await db.cards.insert_one({"id": card_id, "name": draft["name"], "issuer": draft["issuer"], "active": False, "applicationsOpen": False, "adminManaged": True, "publicationStatus": "draft", "draft": draft})
+        created.append(card_id)
+    return {"created": len(created), "ids": created}
+
+
+@api_router.put("/admin/cards/{card_id}/apply-link")
+async def update_admin_card_apply_link(
+    card_id: str,
+    payload: ApplyLinkIn,
+    x_admin_token: Optional[str] = Header(None),
+):
+    _require_admin(x_admin_token, "editor")
+    apply_url = _validated_apply_url(payload.apply_url)
+    update = {"$set": {"applyUrlOverride": apply_url}} if apply_url else {"$unset": {"applyUrlOverride": ""}}
+    result = await db.cards.update_one({"id": card_id, **CATALOG_QUERY}, update)
+    if not result.matched_count:
+        raise HTTPException(status_code=404, detail="Card not found")
+    card = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    return {
+        "id": card["id"],
+        "official_apply_url": card.get("applyUrl"),
+        "custom_apply_url": card.get("applyUrlOverride"),
+        "effective_apply_url": card.get("applyUrlOverride") or card.get("applyUrl"),
+    }
+
+
 
 @api_router.get("/admin/leads")
 async def admin_leads(date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
-    if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    _require_admin(x_admin_token)
     q = _date_query(date_from, date_to)
     leads = await db.leads.find(q, {"_id": 0}).sort("created_at", -1).to_list(2000)
     results = await db.quiz_results.find({}, {"_id": 0}).to_list(5000)
@@ -438,8 +986,7 @@ async def admin_leads(date_from: Optional[str] = None, date_to: Optional[str] = 
 async def admin_leads_csv(token: Optional[str] = None, date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
     """CSV export. Accepts token via header OR ?token= (so a browser download link works)."""
     provided = x_admin_token or token
-    if not ADMIN_TOKEN or provided != ADMIN_TOKEN:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    _require_admin(provided)
     q = _date_query(date_from, date_to)
     leads = await db.leads.find(q, {"_id": 0}).sort("created_at", -1).to_list(5000)
     results = await db.quiz_results.find({}, {"_id": 0}).to_list(10000)
@@ -475,8 +1022,7 @@ async def admin_leads_csv(token: Optional[str] = None, date_from: Optional[str] 
 
 @api_router.get("/admin/insights")
 async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
-    if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    _require_admin(x_admin_token)
     q = _date_query(date_from, date_to)
     results = await db.quiz_results.find(q, {"_id": 0}).to_list(10000)
     cards = await db.cards.find({}, {"_id": 0}).to_list(None)
@@ -577,8 +1123,7 @@ def _build_reminder_email(name: str) -> str:
 
 @api_router.post("/admin/send-reminders")
 async def send_reminders(x_admin_token: Optional[str] = Header(None)):
-    if not ADMIN_TOKEN or x_admin_token != ADMIN_TOKEN:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+    _require_admin(x_admin_token, "editor")
     pending = await db.partial_sessions.find(
         {"completed": {"$ne": True}, "reminder_sent": {"$ne": True}}, {"_id": 0}
     ).to_list(1000)
@@ -594,6 +1139,54 @@ async def send_reminders(x_admin_token: Optional[str] = Header(None)):
         except Exception as e:
             logger.error(f"Reminder email failed for {p.get('email')}: {e}")
     return {"status": "success", "reminders_sent": sent, "pending": len(pending)}
+
+
+@api_router.get("/admin/card-reviews")
+async def admin_card_reviews(x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    reviews = await db.cardholder_reviews.find({}, {"_id": 0}).sort("created_at", -1).to_list(2000)
+    cards = await db.cards.find({}, {"_id": 0, "id": 1, "name": 1}).to_list(None)
+    names = {card["id"]: card["name"] for card in cards}
+    for review in reviews:
+        review["card_name"] = names.get(review["card_id"], review["card_id"])
+    return {"reviews": reviews}
+
+
+@api_router.put("/admin/card-reviews/{review_id}")
+async def moderate_card_review(review_id: str, payload: ReviewModerationIn, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    if payload.status not in {"approved", "rejected"}:
+        raise HTTPException(status_code=422, detail="Status must be approved or rejected")
+    result = await db.cardholder_reviews.update_one({"review_id": review_id}, {"$set": {"status": payload.status, "moderated_at": datetime.now(timezone.utc)}})
+    if not result.matched_count:
+        raise HTTPException(status_code=404, detail="Review not found")
+    return {"status": payload.status}
+
+
+@api_router.post("/admin/send-review-reminders")
+async def send_review_reminders(x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    now = datetime.now(timezone.utc)
+    due = await db.review_followups.find({"due_at": {"$lte": now}, "reminder_sent": False, "review_submitted": False, "review_consent": True}, {"_id": 0}).to_list(1000)
+    cards = await db.cards.find({}, {"_id": 0, "id": 1, "name": 1}).to_list(None)
+    names = {card["id"]: card["name"] for card in cards}
+    sent = 0
+    for followup in due:
+        token = secrets.token_urlsafe(32)
+        url = f"{PUBLIC_APP_URL}/review/{token}"
+        card_name = names.get(followup["card_id"], "your card")
+        html = (f'<table role="presentation" width="100%" style="font-family:Arial,sans-serif;background:#f6f7f5;padding:24px"><tr><td>'
+                f'<h1 style="color:#0f1a17;font-size:22px">How is {escape(card_name)} working for you?</h1>'
+                f'<p style="color:#55615c">Your experience can help other customers make a better decision. This link can be used once.</p>'
+                f'<a href="{url}" style="display:inline-block;background:#0d9488;color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none">Review this card</a>'
+                f'<p style="color:#888;font-size:12px">This is the one review reminder you requested. It is not a marketing subscription.</p></td></tr></table>')
+        try:
+            await send_email(to=followup["email"], subject=f"Review your {card_name}", html=html)
+            await db.review_followups.update_one({"followup_id": followup["followup_id"]}, {"$set": {"reminder_sent": True, "reminder_sent_at": now, "token_hash": hashlib.sha256(token.encode()).hexdigest(), "token_expires_at": now + timedelta(days=30)}})
+            sent += 1
+        except Exception as exc:
+            logger.error(f"Review reminder failed for followup {followup['followup_id']}: {exc}")
+    return {"due": len(due), "sent": sent}
 
 
 

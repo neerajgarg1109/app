@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
+import { getCards } from "../api";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
-export default function Landing({ onStart, onResume, resumeStep }) {
+export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
+  const [catalogStats, setCatalogStats] = useState({ cards: 254, issuers: 20 });
+
+  useEffect(() => {
+    let active = true;
+    getCards()
+      .then((cards) => {
+        if (!active || !Array.isArray(cards)) return;
+        setCatalogStats({
+          cards: cards.length,
+          issuers: new Set(cards.map((card) => card.issuer).filter(Boolean)).size,
+        });
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
   return (
-    <div className="ciq-shell pb-28">
+    <div className="ciq-shell pb-40">
       <header className="ciq-container flex items-center justify-between py-5">
         <Logo size="md" />
         <button
           onClick={onStart}
-          className="ciq-press rounded-full px-4 py-2 text-sm font-semibold text-white"
-          style={{ background: "var(--ciq-teal-600)" }}
+          className="ciq-press ciq-primary-gradient ciq-soft-glow rounded-full px-4 py-2 text-sm font-semibold text-white"
         >
           Get started
         </button>
@@ -23,22 +39,35 @@ export default function Landing({ onStart, onResume, resumeStep }) {
       <section className="ciq-container pt-6 text-center ciq-fade-up">
         <div
           className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold"
-          style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}
+          style={{ background: "linear-gradient(90deg,#eeeaff,#e4faf6)", color: "var(--ciq-teal)" }}
         >
-          <Sparkles className="h-3.5 w-3.5" /> Unbiased, AI-matched picks
+          <Sparkles className="h-3.5 w-3.5" /> Independent. Evidence-led. Built around you.
         </div>
         <h1 className="font-display text-[34px] leading-[1.1] font-extrabold" style={{ color: "var(--ciq-ink)" }}>
-          Find the <span style={{ color: "var(--ciq-teal-600)" }}>one</span> credit card that fits your life
+          Your clearest path to the <span className="ciq-gradient-text">right credit card</span>
         </h1>
         <p className="mx-auto mt-4 max-w-sm text-[15px]" style={{ color: "var(--ciq-ink-soft)" }}>
-          No endless lists. No paid rankings. Answer a few smart questions and get a single recommendation that's actually right for you.
+          CardIQ checks {catalogStats.cards} cards across {catalogStats.issuers} issuers, weighs the fees and fine print against how you spend, and explains one confident recommendation.
         </p>
+
+        <div className="ciq-soft-glow mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border bg-white/90 text-center backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
+          {[
+            [String(catalogStats.cards), "cards reviewed"],
+            [String(catalogStats.issuers), "issuers covered"],
+            ["Oct 2026", "details checked"],
+          ].map(([value, label], index) => (
+            <div key={label} className="ciq-stat px-2 py-3" style={{ borderLeft: index ? "1px solid var(--ciq-line)" : "none" }}>
+              <div className="font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>{value}</div>
+              <div className="mt-0.5 text-[10px] leading-tight" style={{ color: "var(--ciq-ink-soft)" }}>{label}</div>
+            </div>
+          ))}
+        </div>
 
         <div className="mt-6 flex flex-col gap-2">
           {TRUST_POINTS.map((t) => {
             const Icon = ICONS[t.icon];
             return (
-              <div key={t.text} className="flex items-center justify-center gap-2 text-sm font-medium" style={{ color: "var(--ciq-ink)" }}>
+              <div key={t.text} className="ciq-trust-point flex items-center justify-center gap-2 text-sm font-medium" style={{ color: "var(--ciq-ink)" }}>
                 <Icon className="h-4 w-4" style={{ color: "var(--ciq-teal-600)" }} />
                 {t.text}
               </div>
@@ -48,10 +77,9 @@ export default function Landing({ onStart, onResume, resumeStep }) {
 
         <button
           onClick={onStart}
-          className="ciq-press mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-base font-semibold text-white"
-          style={{ background: "var(--ciq-teal-600)", boxShadow: "0 16px 30px -14px rgba(13,148,136,0.7)" }}
+          className="ciq-press ciq-primary-gradient ciq-soft-glow mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-base font-semibold text-white"
         >
-          Find my best card <ArrowRight className="h-5 w-5" />
+          Find my strongest match <ArrowRight className="h-5 w-5" />
         </button>
         {resumeStep && (
           <button
@@ -62,15 +90,20 @@ export default function Landing({ onStart, onResume, resumeStep }) {
             Resume where you left off · Question {resumeStep}
           </button>
         )}
+        {savedResult?.resultId && (
+          <a href={`/r/${savedResult.resultId}`} className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
+            Open saved result · {savedResult.cardName}
+          </a>
+        )}
       </section>
 
       {/* Problem section */}
       <section className="ciq-container mt-16">
         <h2 className="font-display text-2xl font-extrabold text-center" style={{ color: "var(--ciq-ink)" }}>
-          Every card site looks the same
+          A recommendation you can verify
         </h2>
         <p className="mt-2 text-center text-sm" style={{ color: "var(--ciq-ink-soft)" }}>
-          And somehow the “best” card is always the one they get paid to show you.
+          See why a card fits, what it costs and what could reduce its value—before you leave for the issuer’s site.
         </p>
         <div className="mt-6 grid grid-cols-2 gap-3">
           {PROBLEMS.map((p) => {
@@ -78,12 +111,12 @@ export default function Landing({ onStart, onResume, resumeStep }) {
             return (
               <div
                 key={p.title}
-                className="rounded-2xl border bg-white p-4"
+                className="ciq-feature-card rounded-2xl border bg-white p-4"
                 style={{ borderColor: "var(--ciq-line)" }}
               >
                 <div
                   className="grid h-9 w-9 place-items-center rounded-xl"
-                  style={{ background: "#fdecec", color: "#d9534f" }}
+                  style={{ background: "linear-gradient(145deg,#fff0ed,#ffe8f2)", color: "var(--ciq-coral)" }}
                 >
                   <Icon className="h-4.5 w-4.5" />
                 </div>
@@ -96,17 +129,17 @@ export default function Landing({ onStart, onResume, resumeStep }) {
       </section>
 
       {/* How cardIQ is different */}
-      <section className="ciq-container mt-12">
+      <section className="ciq-container" style={{ marginTop: 32 }}>
         <div
-          className="rounded-3xl p-6 text-white"
-          style={{ background: "linear-gradient(160deg,#0f766e,#0d9488)" }}
+          className="ciq-trust-panel rounded-3xl p-6 text-white"
+          style={{ background: "linear-gradient(145deg,#33268f 0%,#604ee8 55%,#0e9e98 130%)", boxShadow: "0 24px 55px -30px rgba(61,45,184,.8)" }}
         >
-          <h2 className="font-display text-2xl font-extrabold">cardIQ flips the model.</h2>
+          <h2 className="font-display text-2xl font-extrabold">Built to earn your trust.</h2>
           <p className="mt-2 text-sm text-white/85">
-            Instead of showing you 100 cards, we ask a few smart questions and give you the one card that actually fits your life.
+            We turn a catalog of {catalogStats.cards} cards into one reasoned recommendation, using your priorities—not a sponsored leaderboard.
           </p>
           <ul className="mt-5 space-y-3">
-            {["One honest recommendation, not a sponsored list", "We never sell your data to banks", "Zero spam calls — your details stay yours"].map((x) => (
+            {["Card facts traced to issuer and official partner sources", "Fees, exclusions and trade-offs shown clearly", "No bank can pay to improve its match score"].map((x) => (
               <li key={x} className="flex items-start gap-2 text-sm">
                 <span className="mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-full bg-white/20">
                   <Check className="h-3 w-3" />
@@ -123,10 +156,9 @@ export default function Landing({ onStart, onResume, resumeStep }) {
         <div className="ciq-container py-3">
           <button
             onClick={onStart}
-            className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white"
-            style={{ background: "var(--ciq-teal-600)" }}
+            className="ciq-press ciq-primary-gradient inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white"
           >
-            Find my best card <ArrowRight className="h-5 w-5" />
+            Get my evidence-backed match <ArrowRight className="h-5 w-5" />
           </button>
         </div>
       </div>

@@ -1,6 +1,6 @@
 # Indian credit card catalog
 
-Issuer details checked on 9 October 2026. The catalog contains 192 distinct products from SBI Card, Axis Bank, ICICI Bank, IDFC FIRST Bank, American Express India, HDFC Bank, AU Small Finance Bank Federal Bank, RBL Bank, IndusInd Bank, HSBC India and Kotak Mahindra Bank. Three American Express products are retained for reference but excluded from new recommendations while their official pages say applications are paused.
+Issuer details checked through 11 October 2026. The catalog contains 254 distinct products from 20 regulated issuers, including products distributed by fintech co-brand partners. Three American Express products are retained for reference but excluded from new recommendations while their official pages say applications are paused.
 
 ## Data and interpretation
 
@@ -16,7 +16,19 @@ Issuer details checked on 9 October 2026. The catalog contains 192 distinct prod
 
 Verify current product availability, fees, caps, exclusions, lounge qualification and product URLs before changing data. Refresh `verifiedOn`, `sourceUrls` and `applicationsOpen` together. SBI’s current product pages load their details from official `/json/templatedata/…` endpoints; those URLs are cited as well as the product pages.
 
-Startup upserts all 192 records and marks only the eight known demo IDs inactive. It does not delete demo documents, leads, results or user-added cards. Current `/api/cards` excludes archived demos; new recommendations also exclude paused applications and products whose invitation or existing-card eligibility is not established by the quiz. Direct card lookups remain available for history. New results store scored card snapshots so later issuer updates do not silently change shared pages or email recommendations. Legacy results resolve their saved card IDs, including archived demos.
+Startup upserts all 254 records and marks only the eight known demo IDs inactive. It does not delete demo documents, leads, results or user-added cards. Current `/api/cards` excludes archived demos; new recommendations also exclude paused applications and products whose invitation or existing-card eligibility is not established by the quiz. Direct card lookups remain available for history. New results store scored card snapshots so later issuer updates do not silently change shared pages or email recommendations. Legacy results resolve their saved card IDs, including archived demos.
+
+## Expansion of 10 fintech co-branded consumer cards
+
+Verified on 11 October 2026 using issuing-bank product pages, key-fact statements and official partner application pages. This batch adds consumer products distributed by Kredit.Pe, SalarySe, Zaggle, OneCard, Scapia, Paisabazaar and super.money. Each record names the regulated bank in `issuer` and the technology/distribution company in `coBrandPartner`. Kredit.Pe's YES BANK ACE channel is not duplicated because ACE is already in the catalog. Zaggle corporate, commercial and prepaid products are excluded; only its PNB retail product is included. Records carry `catalogBatch: expansion-fintech-cobrand-10-2026-10-11`.
+
+## Expansion of 34 PNB, BOBCARD, IDBI Bank and YES BANK cards
+
+Verified on 11 October 2026 against the issuers' live card catalogs, product pages and key-fact disclosures. This batch adds seven Punjab National Bank, fifteen BOBCARD, four IDBI Bank and eight YES BANK personal products, taking the catalog to 244 cards across 16 issuers. Corporate, business, micro-enterprise and PM SVANidhi products are excluded. BOBCARD TIARA remains searchable but is excluded from general recommendations because its customer-segment eligibility cannot be established by the quiz. Records carry `catalogBatch: expansion-pnb-bob-idbi-yes-34-2026-10-11`.
+
+## Expansion of 18 HDFC personal cards
+
+Verified on 11 October 2026 against HDFC Bank's active personal-card catalog and individual product pages. This batch adds 18 currently marketed consumer products, taking the catalog to 210 cards. Business products and legacy pages that are still reachable but no longer appear in the active product selection are excluded. INFINIA Metal and the companion UPI RuPay product are retained for catalog lookup but excluded from general recommendations because invitation or existing-card eligibility cannot be established by the quiz. Records carry `catalogBatch: expansion-hdfc-18-2026-10-11`.
 
 ## Expansion of 40 cards
 

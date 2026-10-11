@@ -1,0 +1,1177 @@
+[
+  {
+    "id": "sbi-cashback-sbi",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/cashback-card-face-min.png"
+  },
+  {
+    "id": "sbi-elite",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/elite-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/prime-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-simplyclick",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card-face/front/vertical/simply-click-card-face-min.png"
+  },
+  {
+    "id": "sbi-simplysave",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card-face/front/vertical/simply-save-card-face-min.png"
+  },
+  {
+    "id": "sbi-bpcl",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/bpcl-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-bpcl-octane",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/bpcl-octane-vertical.png"
+  },
+  {
+    "id": "sbi-air-india-signature",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/air-india-signature-vertical.png"
+  },
+  {
+    "id": "sbi-pulse",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/pulse-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-titan",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/titan-sbi-card-vertical.png"
+  },
+  {
+    "id": "axis-axis-bank-atlas-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/atlas/webp/visa-card2.webp"
+  },
+  {
+    "id": "axis-axis-bank-ace-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-flipkart-axisbank-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card",
+    "candidates": 2
+  },
+  {
+    "id": "axis-airtel-axis-bank-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-indianoil-axis-bank-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/indianoil-axis-bank-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-axis-bank-select-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/card/phase-2-cards_copy-and-without-copy/axis-bank-select-credit-card_copy/20_hero-pages_set-02_axis-bank_rewamp-banner_feedback_desktop_1366-x-400-px_04-dec-2024_1-to-100-copy.webp?sfvrsn=b7302d75_1"
+  },
+  {
+    "id": "axis-axis-bank-my-zone-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/axis-bank-my-zone-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-axis-bank-neo-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/1-product-page---listing-page-desktop_1366x4003e707c67906f4d69a560008108a70318.webp?sfvrsn=ae1f3116_1"
+  },
+  {
+    "id": "axis-axis-bank-magnus-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/magnus/jpg/card-front-lg.jpg?sfvrsn=520b583d_1"
+  },
+  {
+    "id": "axis-axis-horizon-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/axis-horizon-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-rewards-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/rewards-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-fibe-axis-bank-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/fibe-axis-bank-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-privilege",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/axis-bank-privilege-amex-credit-card-1366x400-w1.webp?sfvrsn=4f2b0a14_2"
+  },
+  {
+    "id": "icici-amazon-pay-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/cards/amazon/amazon-card-banner.webp"
+  },
+  {
+    "id": "icici-sapphiro-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/cards/sapphiro-credit-card/sapphiro-desktop.webp"
+  },
+  {
+    "id": "icici-rubyx-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/rubyx-02.webp"
+  },
+  {
+    "id": "icici-coral-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/pdp/coral.webp"
+  },
+  {
+    "id": "icici-platinum-chip-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/credit-card/platinum-chip/platinum-desktop.webp"
+  },
+  {
+    "id": "icici-hpcl-super-saver",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/hpcl-supersaver.webp"
+  },
+  {
+    "id": "icici-hpcl-coral-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/images/cards/hpcl-coral/coral-desktop.webp"
+  },
+  {
+    "id": "icici-emeralde-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/emeralde.webp"
+  },
+  {
+    "id": "icici-emeralde-private-metal-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/emaralde-private.webp"
+  },
+  {
+    "id": "icici-emirates-rubyx-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/credit-card/emirates-rubyx.webp"
+  },
+  {
+    "id": "icici-emirates-sapphiro",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/credit-card/emirates-sapphiro.webp"
+  },
+  {
+    "id": "icici-makemytrip-makemytrip-icici-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/cards/mmt-credit-card/makemytrip-desk-banner.png"
+  },
+  {
+    "id": "idfc-millennia",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/first-cc-rewamp/first-millennia/Tripstacc-Hotel-image-card-001.png"
+  },
+  {
+    "id": "idfc-select",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/first-cc-rewamp/first-select/Select-Banner2-mobile.png"
+  },
+  {
+    "id": "idfc-wealth",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/header-revamp/CC/Wealth-rhs.png"
+  },
+  {
+    "id": "idfc-wow",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/wow-rewamp/fwbbanle-img11.png"
+  },
+  {
+    "id": "idfc-hpcl-power-fuel-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/optimize/cc-landing-page/features1.svg"
+  },
+  {
+    "id": "idfc-power-plus",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/optimize/cc-landing-page/features1.svg"
+  },
+  {
+    "id": "idfc-metal-credit-card-ashva",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/heritage-cc/ashva-cc/ashva/Embrace-006.png"
+  },
+  {
+    "id": "idfc-metal-credit-card-mayura",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/heritage-cc/mayura-cc/images-new-006.png"
+  },
+  {
+    "id": "idfc-metal-credit-card-gaj",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/gaj-cc/Digital-UPI-Image-002.png"
+  },
+  {
+    "id": "idfc-swyp-emi-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/swyp-revamp/select-power-img.png"
+  },
+  {
+    "id": "idfc-secured-rupay-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/blog/credit-card/features-and-benefits-of-rupay-credit-card-on-upi-717x404.jpg"
+  },
+  {
+    "id": "idfc-wow-black-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/first-wow-black-cc/dual-card-img2.png"
+  },
+  {
+    "id": "amex-platinum-travel-credit-card",
+    "status": "unresolved",
+    "page": "https://www.americanexpress.com/in/credit-cards/platinum-travel-credit-card/",
+    "candidates": 0
+  },
+  {
+    "id": "amex-membership-rewards-credit-card",
+    "status": "existing",
+    "source": "https://icm.aexp-static.com/Internet/internationalcardshop/en_in/images/cards/Membership_Rewards_Card.png"
+  },
+  {
+    "id": "amex-smart-earn-credit-card",
+    "status": "unresolved",
+    "page": "https://www.americanexpress.com/in/credit-cards/smart-earn-credit-card/",
+    "candidates": 0
+  },
+  {
+    "id": "hdfc-tata-neu-infinity",
+    "status": "existing",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/tata-neu-i-compare-card?fmt=webp-alpha"
+  },
+  {
+    "id": "hdfc-tata-neu-plus",
+    "status": "existing",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/tata-upi-benefits?fmt=webp-alpha"
+  },
+  {
+    "id": "axis-axis-bank-freecharge-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/phase-1-banner/axis-bank-freecharge-credit-card/325-pages_credit-card-freecharge_desktop_1366x400-px-copy.webp?sfvrsn=3a642bbb_1"
+  },
+  {
+    "id": "axis-axis-bank-freecharge-plus-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/card/phase-2-cards_copy-and-without-copy/axis-bank-freecharge-plus-credit-card_copy/axis-bank-rewamp-phase-2-cards-credit-cards-shopping-axis-bank-freecharge-plus-credit-card-1366x400-desktop62945166-f2e0-4053-a340-551e833f0ee2.webp?sfvrsn=de8b5ba3_1"
+  },
+  {
+    "id": "axis-axis-bank-kwik-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/banners/kwik-credit-cards/cuv-tracker_rest-of-the-pages_kwik-credit-card_desktop_1366x400-px-copy.webp?sfvrsn=61a9dd04_1"
+  },
+  {
+    "id": "axis-axis-bank-shoppers-stop-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/shopper-stop-credit-card-desktop-1366x400-v1.webp?sfvrsn=6e37d2ea_1"
+  },
+  {
+    "id": "axis-flipkart-axis-bank-super-elite-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/flipkart-axis-bank-super-elite-credit-card",
+    "candidates": 2
+  },
+  {
+    "id": "axis-google-pay-flex-axis-bank-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/google-pay-flex-axis-bank-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-indianoil-premium-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/indianoil.webp"
+  },
+  {
+    "id": "axis-indigo-axis-bank-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/indigo-axis-bank-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-indigo-axis-bank-premium-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/indigo-axis-bank-premium-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-lic-axis-bank-platinum-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/platinum.webp"
+  },
+  {
+    "id": "axis-lic-axis-bank-signature-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/lic-axis-bank-signature-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-miles-more-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/card/phase-2-cards_copy-and-without-copy/miles-and-more-axis-bank-credit-card_copy/23_hero-pages_set-02_axis-bank_rewamp-banner_feedback_desktop_1366-x-400-px_04-dec-2024_1-to-100-copy.webp?sfvrsn=c90d969_1"
+  },
+  {
+    "id": "axis-my-zone-easy-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/my-zone-easy-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-privilege-easy-credit-card",
+    "status": "unresolved",
+    "page": "https://www.axis.bank.in/cards/credit-card/privilege-easy-credit-card",
+    "candidates": 1
+  },
+  {
+    "id": "axis-samsung-axis-bank-signature-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/card/phase-2-cards_copy-and-without-copy/samsung-axis-bank-signature-credit-card_copy/samsung-axis-bank-signature-credit-card-1366-x-400-desktop.webp?sfvrsn=bc6b8bb9_1"
+  },
+  {
+    "id": "axis-scapia-axis-bank-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/press--release/jpg/axis-bank-and-scapia-launch-03-09-2026.jpg"
+  },
+  {
+    "id": "axis-spicejet-axis-bank-voyage-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/card/phase-2-cards_copy-and-without-copy/spicejet-axis-bank-voyage-credit-card_copy/shopping-spicejet-axis-bank-voyage-black-credit-card-1366-x-400-desktop.webp?sfvrsn=54fb32d0_1"
+  },
+  {
+    "id": "axis-spicejet-axis-bank-voyage-black-credit-card",
+    "status": "existing",
+    "source": "https://www.axis.bank.in/images/default-source/credit-card/s-2_cuv-tracker_rest-of-the-pages_spicejet-voyage-black-credit-card_desktop_1366x400-px-copy.webp?sfvrsn=8373b140_1"
+  },
+  {
+    "id": "au-altura-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/altura-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-altura-plus-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/altura-plus-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-ananta-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/ananta-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-cheq-au-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/cheq-au-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-ixigo-au-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/ixigo-au-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-laksya-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/laksya-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-lit-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/lit-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-nomo-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/nomo-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-paytm-au-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/paytm-au-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-prathama-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/prathama-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-swipeup-program-xcite-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/swipeup-program/xcite-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-swipeup-program-xcite-ace-credit-card",
+    "status": "existing",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/shutterstock-2222991019?fmt=webp"
+  },
+  {
+    "id": "au-swipeup-program-xcite-ultra-credit-card",
+    "status": "existing",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/xcite-ultra-masthead?fmt=webp"
+  },
+  {
+    "id": "au-tejas-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/tejas-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-vetta-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/vetta-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-zenith-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/zenith-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-zenith-plus-credit-card",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/premium-banking/credit-cards/zenith-plus-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "au-instapay",
+    "status": "unresolved",
+    "page": "https://www.au.bank.in/personal-banking/credit-cards/instapay-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "federal-celesta-credit-card",
+    "status": "unresolved",
+    "page": "https://www.federal.bank.in/celesta-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "federal-imperio-credit-card",
+    "status": "unresolved",
+    "page": "https://www.federal.bank.in/imperio-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "federal-signet-credit-card",
+    "status": "unresolved",
+    "page": "https://www.federal.bank.in/signet-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "federal-wave",
+    "status": "unresolved",
+    "page": "https://www.federal.bank.in/rupay-wave-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "sbi-shaurya-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/shaurya-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-shaurya-select-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/shaurya-select-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-apollo-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/apollo-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-apollo-sbi-card-select",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/apollo-select-card-face-min.png"
+  },
+  {
+    "id": "sbi-air-india-sbi-platinum-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/air-india-platinum-vertical.png"
+  },
+  {
+    "id": "sbi-sbi-card-unnati",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/unnati-card/unnati-card/for-website-optimized/horizontal-converted-to-vertical/unnavi-vertical.png"
+  },
+  {
+    "id": "sbi-irctc-premier-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/irctc-premier-vertical.png"
+  },
+  {
+    "id": "sbi-irctc-sbi-platinum-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/irctc-platinum-vertical.png"
+  },
+  {
+    "id": "sbi-doctors-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/doctor-sbi-vertical.png"
+  },
+  {
+    "id": "sbi-doctors-ima-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/doctor-sbi-ima-vertical.png"
+  },
+  {
+    "id": "sbi-phonepe-sbi-card-purple",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/phonepe-purple-card-face-min.png"
+  },
+  {
+    "id": "sbi-phonepe-sbi-card-select-black",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/phonepe-select-black-card-face-min.png"
+  },
+  {
+    "id": "sbi-reliance-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/reliance-base-card-face-min.png"
+  },
+  {
+    "id": "sbi-reliance-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/reliance-prime-card-face-min.png"
+  },
+  {
+    "id": "sbi-paytm-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/paytm-sbi-card-vertical.png"
+  },
+  {
+    "id": "sbi-paytm-sbi-card-select",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/paytm-sbi-card-select-vertical.png"
+  },
+  {
+    "id": "sbi-krisflyer-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/product-detail-assets/krisflyer-blue-sbi-card/website-optimized/krisflyer-card-face-min.png"
+  },
+  {
+    "id": "sbi-krisflyer-sbi-card-apex",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/krisflyer-apex-card-face-min.png"
+  },
+  {
+    "id": "sbi-tata-neu-plus-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card-face/front/vertical/tata-neu-card-face-min.png"
+  },
+  {
+    "id": "sbi-tata-neu-infinity-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/tata-neu-infinity-card-face-min.png"
+  },
+  {
+    "id": "sbi-indigo-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/product-detail-assets/indigo-cards/for-website-optimized/indigo-base-front-card-face.png"
+  },
+  {
+    "id": "sbi-indigo-sbi-card-elite",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/product-detail-assets/indigo-cards/for-website-optimized/indigo-elite-front-card-face.png"
+  },
+  {
+    "id": "sbi-google-pay-flex-sbicard",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/gpay/flex-google-sbi-card-front.png"
+  },
+  {
+    "id": "sbi-flipkart-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/flipkart-card-face-min.png"
+  },
+  {
+    "id": "sbi-sbi-card-miles",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/miles-new-card-face-min.png"
+  },
+  {
+    "id": "sbi-sbi-card-miles-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/miles-prime-card-face-min.png"
+  },
+  {
+    "id": "sbi-sbi-card-miles-elite",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/miles-elite-card-face-min.png"
+  },
+  {
+    "id": "sbi-bom-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/bank-of-maharastra-prime.png"
+  },
+  {
+    "id": "sbi-bom-simplysave-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/bank-of-maharashtra-simply-save-min.png"
+  },
+  {
+    "id": "sbi-uco-bank-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/uco-bank-prime-vertical.png"
+  },
+  {
+    "id": "sbi-uco-bank-simplysave-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/uco-bank-simply-save-vertical.png"
+  },
+  {
+    "id": "sbi-psb-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/psb-card-prime-vertical.png"
+  },
+  {
+    "id": "sbi-psb-simplysave-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/psb-card-simply-save-vertical.png"
+  },
+  {
+    "id": "sbi-city-union-bank-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/city-union-vertical.png"
+  },
+  {
+    "id": "sbi-city-union-bank-simplysave-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/city-union-bank-simply-save.png"
+  },
+  {
+    "id": "sbi-karnataka-bank-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/karnataka-bank-prime-vertical.png"
+  },
+  {
+    "id": "sbi-karnataka-bank-simplysave-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/karnataka-bank-simply-save-vertical.png"
+  },
+  {
+    "id": "sbi-south-indian-bank-sbi-card-prime",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/South-Indian-Bank-SBI-Card-PRIME-New-01-min.png"
+  },
+  {
+    "id": "sbi-south-indian-bank-simplysave-sbi-card",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/south-indian-bank-simply-save-min.png"
+  },
+  {
+    "id": "sbi-uco-bank-sbi-card-elite",
+    "status": "existing",
+    "source": "https://www.sbicard.com/static-resources/img/card/card-face-assets/for-website/front/vertical/horizontal-converted-to-vertical/uco-bank-elite-vertical.png"
+  },
+  {
+    "id": "rbl-apex",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/rbl-bank-apex-credit-card-welcome-benefits.webp"
+  },
+  {
+    "id": "rbl-aspire-banking",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/rbl-bank-aspire-banking-credit-card-movies-offer.webp"
+  },
+  {
+    "id": "rbl-signature-banking",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/signature-banking-credit-card-fuel-surcharge-waiver.webp"
+  },
+  {
+    "id": "rbl-cookies",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/cookies-credit-card",
+    "candidates": 5
+  },
+  {
+    "id": "rbl-icon",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/icon-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-indianoil-rbl-bank",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/2024-08/iocl-free-card-free-fuel.png"
+  },
+  {
+    "id": "rbl-indianoil-rbl-bank-xtra",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/2024-08/iocl-xtra-free-card-free-fuel.png"
+  },
+  {
+    "id": "rbl-irctc-rbl-bank",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/irctc-rbl-bank-credit-card-reward.webp"
+  },
+  {
+    "id": "rbl-jalsa",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/rbl-bank-jalsa-credit-card-rewards.webp"
+  },
+  {
+    "id": "rbl-platinum-maxima",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/platinum-maxima-credit-card-welcome-benefits.webp"
+  },
+  {
+    "id": "rbl-platinum-maxima-plus",
+    "status": "existing",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/s3fs-public/inline-images/Platinum-Maxima-Plus_Keybenefits1.png?VersionId=EEPQCzRiTW9O6fAKbREyrSIWh_J.zlAb"
+  },
+  {
+    "id": "rbl-platinum-delight",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/platinum-delight-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-rbl-bank-bankbazaar-savemax-pro",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-bankbazaar-savemax-pro-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-rbl-bank-patanjali-vishisht",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-patanjali-vishisht-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-rbl-bank-patanjali-swarn",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-patanjali-swarn-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-rbl-bank-play",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-play-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-rbl-bank-quick-pay",
+    "status": "unresolved",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-quick-pay-credit-card",
+    "candidates": 0
+  },
+  {
+    "id": "rbl-rbl-bank-shoppers-stop-gold",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/rbl-bank-shoppers-stop-gold-credit-card-welcome-benefits.webp"
+  },
+  {
+    "id": "rbl-rbl-bank-shoppers-stop-platinum",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/rbl-bank-shoppers-stop-platinum-credit-card-welcome-benefits.webp"
+  },
+  {
+    "id": "rbl-rbl-bank-shoppers-stop-black",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/rbl-bank-shoppers-stop-black-credit-card-welcome-benefits.webp"
+  },
+  {
+    "id": "rbl-shoprite",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/2024-10/shoprite.png"
+  },
+  {
+    "id": "rbl-tvs-credit-rbl-bank",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/2024-10/tvs-credit-rbl-bank-credit-card-monthly-movie-treats.png"
+  },
+  {
+    "id": "rbl-tvs-credit-rbl-bank-gold",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/2024-10/tvs-credit-rbl-bank-gold-credit-card-milestones.png"
+  },
+  {
+    "id": "rbl-world-safari",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/search-world-safari-card.webp"
+  },
+  {
+    "id": "rbl-world-safari-lite",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/world-safari-lite-credit-card-zero-forex-markup.webp"
+  },
+  {
+    "id": "rbl-world-safari-plus",
+    "status": "existing",
+    "source": "https://webassets.rbl.bank.in/document/images/webp/world-safari-plus-credit-card-lounge-access.webp"
+  },
+  {
+    "id": "idfc-classic",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/first-cc-rewamp/first-classic/idfc-first-bank-credit-card-features-blog-03.webp"
+  },
+  {
+    "id": "idfc-FIRSTPrivateCreditCard",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/credit-card/first-private-landing-page/rewards.webp"
+  },
+  {
+    "id": "idfc-diamond-reserve-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/diamond-reserve/dresbanmi-card.png"
+  },
+  {
+    "id": "idfc-hello-cashback-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/header-revamp/CC/hello-cashback-banner.png"
+  },
+  {
+    "id": "idfc-quantum-plus-credit-card",
+    "status": "unresolved",
+    "page": "https://www.idfcfirst.bank.in/credit-card/quantum-plus-credit-card",
+    "candidates": 2
+  },
+  {
+    "id": "idfc-indigo-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/cc-indigo/indtcard-img2.png"
+  },
+  {
+    "id": "idfc-lic-credit-card",
+    "status": "existing",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/lic-cc/select-card.webp"
+  },
+  {
+    "id": "icici-adani-icici-credit-card-platinum-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/adani-platinum.webp"
+  },
+  {
+    "id": "icici-adani-icici-credit-card-signature-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/adani-signature.webp"
+  },
+  {
+    "id": "icici-csk-card",
+    "status": "unresolved",
+    "page": "https://www.icici.bank.in/personal-banking/cards/credit-card/csk-card",
+    "candidates": 0
+  },
+  {
+    "id": "icici-emirates-emeralde-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/credit-card/emirates-emeralde.webp"
+  },
+  {
+    "id": "icici-parakram-cards-parakram",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/parakram.webp"
+  },
+  {
+    "id": "icici-parakram-cards-parakram-select",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/credit-card/desktop/parakram-select.webp"
+  },
+  {
+    "id": "icici-times-black-icici-credit-card",
+    "status": "existing",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/cards/credit-card/times-black-banner.webp"
+  },
+  {
+    "id": "indusind-legend-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/productCategory/desktopImage/creditCard/Legend_card-image_396x257px.png"
+  },
+  {
+    "id": "indusind-nexxt-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/productCategory/desktopImage/creditCard/nexxt-credit-card.jpg"
+  },
+  {
+    "id": "indusind-pinnacle-world-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/feature_banners/pinnacle-world-credit-card/pinnacle_redeempoints.jpg"
+  },
+  {
+    "id": "indusind-tiger-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/banner-images/tiger-credit-card/magnificent-rewards.jpg"
+  },
+  {
+    "id": "indusind-eazydiner-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/feature_banners/club-vistara/rewards-redemption-Vistara.jpg"
+  },
+  {
+    "id": "indusind-eazydiner-platinum-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/feature_banners/club-vistara/RP-2.jpg"
+  },
+  {
+    "id": "indusind-platinum-visa-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/productCategory/desktopImage/creditCard/Platinum_card-image_396x257px.png"
+  },
+  {
+    "id": "indusind-platinum-rupay-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/productCategory/desktopImage/creditCard/Platinum-Rupay-Video-Thumbnail-Banner-640x360.png"
+  },
+  {
+    "id": "indusind-jio-bp-mobility-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/banner-images/jio-bp-credit-card/Web-imagef_1182x318WEBP.webp"
+  },
+  {
+    "id": "indusind-CRED-IndusInd-Bank-ruPay-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/banner-images/cred-indusind-bank-rupay-credit-card/reward-tiles.webp"
+  },
+  {
+    "id": "indusind-samman-credit-card",
+    "status": "existing",
+    "source": "https://www.indusind.bank.in/content/dam/indusind-platform-images/productCategory/desktopImage/creditCard/Samman-card-img-397x257px.jpg"
+  },
+  {
+    "id": "hsbc-live-plus",
+    "status": "existing",
+    "source": "https://www.hsbc.bank.in/content/dam/hsbc/in/images/16-9/21398-live-plus-visa-infinite-2000X1125.jpg"
+  },
+  {
+    "id": "hsbc-travelone",
+    "status": "existing",
+    "source": "https://www.hsbc.bank.in/content/dam/hsbc/in/images/16-9/15957-hsbc-travelone-credit-t1-front-1280x720.jpg"
+  },
+  {
+    "id": "hsbc-premier",
+    "status": "existing",
+    "source": "https://www.hsbc.bank.in/content/dam/hsbc/in/images/premier/16-9/18544-hsbc-premier-credit-card-cropped-hex-left-1600x900.jpg"
+  },
+  {
+    "id": "hsbc-taj",
+    "status": "existing",
+    "source": "https://www.hsbc.bank.in/content/dam/hsbc/in/images/account/16-9/15990-india-hsbc-taj-card-face-vertical-2000x1125.jpg"
+  },
+  {
+    "id": "hsbc-visa-platinum",
+    "status": "existing",
+    "source": "https://www.hsbc.bank.in/content/dam/hsbc/in/images/credit-card/16-9/18405-platinum-revamp-1600x900.jpg"
+  },
+  {
+    "id": "hsbc-rupay-cashback-credit-card",
+    "status": "existing",
+    "source": "https://www.hsbc.bank.in/content/dam/hsbc/in/images/16-9/17279-rupay-cashback-grey-1600x900.jpg"
+  },
+  {
+    "id": "kotak-kotak-cashback-plus-credit-card",
+    "status": "existing",
+    "source": "https://cards.kotak.com/"
+  },
+  {
+    "id": "kotak-kotak-air-plus-credit-card",
+    "status": "existing",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/herosliderbanner/air-plus-travel-purchase-d.jpg"
+  },
+  {
+    "id": "kotak-league-platinum-card",
+    "status": "existing",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/svg-icons/payment--gift_card.svg"
+  },
+  {
+    "id": "hdfc-millennia-credit-card",
+    "status": "imported",
+    "source": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/calculators/millennia-credit-card-savings-calculator/millennia_Card_Facia.png",
+    "size": [
+      266,
+      220
+    ],
+    "score": 12
+  },
+  {
+    "id": "hdfc-moneyback-plus-credit-card",
+    "status": "unresolved",
+    "page": "https://www.hdfc.bank.in/credit-cards/moneyback-plus-credit-card",
+    "candidates": 6
+  },
+  {
+    "id": "hdfc-freedom-credit-card",
+    "status": "unresolved",
+    "page": "https://www.hdfc.bank.in/credit-cards/freedom-credit-card",
+    "candidates": 6
+  },
+  {
+    "id": "hdfc-phonepe-hdfc-bank-uno-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/card-facias-gen?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-phonepe-hdfc-bank-ultimo-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/card-facias-gen?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-infinia-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/infinia-credit-card?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-diners-club-black-metal-edition-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/hero-banner-d?fmt=webp",
+    "size": [
+      500,
+      300
+    ],
+    "score": 27
+  },
+  {
+    "id": "hdfc-pixel-play-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/pixel-play-credit-card-desktop?fmt=webp",
+    "size": [
+      500,
+      300
+    ],
+    "score": 12
+  },
+  {
+    "id": "hdfc-pixel-go-credit-card",
+    "status": "unresolved",
+    "page": "https://www.hdfc.bank.in/credit-cards/pixel-go-credit-card",
+    "candidates": 2
+  },
+  {
+    "id": "hdfc-hdfc-bank-upi-rupay-credit-card",
+    "status": "imported",
+    "source": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/calculators/upi-rupay-credit-card-savings-calculator/upi_rupay_facia.png",
+    "size": [
+      266,
+      218
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-regalia-gold-credit-card",
+    "status": "imported",
+    "source": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/calculators/regalia-gold-loan-calculator/facie-regalia-gold.png",
+    "size": [
+      274,
+      228
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-diners-privilege-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/diners-privilege-credit-card-benefit-carousel-welcome-benefits?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-swiggy-hdfc-bank-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/swiggy-desktop-banner-v2-1920x550?fmt=webp",
+    "size": [
+      500,
+      300
+    ],
+    "score": 12
+  },
+  {
+    "id": "hdfc-swiggy-ornge-hdfc-bank-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/facia?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-swiggy-blck-hdfc-bank-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/facia-swiggy-blck-cc?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-marriott-bonvoy-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/Card-Facia-Marriott-Bonvoy?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 17
+  },
+  {
+    "id": "hdfc-indianoil-hdfc-bank-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/transaction-benefits-additional-benefits?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 12
+  },
+  {
+    "id": "hdfc-irctc-credit-card",
+    "status": "imported",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/Card-Facia-IRCTC?fmt=webp-alpha",
+    "size": [
+      500,
+      300
+    ],
+    "score": 12
+  }
+]

@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { ArrowLeft, Check } from "lucide-react";
 import Logo from "./Logo";
 import { QUIZ_QUESTIONS } from "../mock/mock";
 
-export default function Quiz({ onComplete, onExit }) {
+export default function Quiz({ onComplete, onExit, error }) {
   const saved = (() => {
     try { return JSON.parse(localStorage.getItem("ciq_quiz_progress") || "null"); } catch (e) { return null; }
   })();
   const [step, setStep] = useState(saved?.step || 0);
   const [answers, setAnswers] = useState(saved?.answers || {});
+  const advanceTimer = useRef(null);
   const q = QUIZ_QUESTIONS[step];
   const total = QUIZ_QUESTIONS.length;
   const selected = answers[q.id];
@@ -18,20 +19,20 @@ export default function Quiz({ onComplete, onExit }) {
     try { localStorage.setItem("ciq_quiz_progress", JSON.stringify({ step, answers })); } catch (e) {}
   }, [step, answers]);
 
-  const select = (value) => {
-    setAnswers((a) => ({ ...a, [q.id]: value }));
-  };
+  useEffect(() => () => clearTimeout(advanceTimer.current), []);
 
-  const next = () => {
-    if (!selected) return;
-    if (step === total - 1) {
-      onComplete(answers);
-    } else {
-      setStep((s) => s + 1);
-    }
+  const select = (value) => {
+    const updated = { ...answers, [q.id]: value };
+    setAnswers(updated);
+    clearTimeout(advanceTimer.current);
+    advanceTimer.current = setTimeout(() => {
+      if (step === total - 1) onComplete(updated);
+      else setStep((current) => current + 1);
+    }, 360);
   };
 
   const back = () => {
+    clearTimeout(advanceTimer.current);
     if (step === 0) {
       onExit();
     } else {
@@ -40,7 +41,7 @@ export default function Quiz({ onComplete, onExit }) {
   };
 
   return (
-    <div className="ciq-shell flex min-h-screen flex-col pb-28">
+    <div className="ciq-shell flex min-h-screen flex-col pb-10">
       <header className="ciq-container flex items-center justify-between py-5">
         <button onClick={back} className="ciq-press grid h-9 w-9 place-items-center rounded-full border bg-white" style={{ borderColor: "var(--ciq-line)" }}>
           <ArrowLeft className="h-4 w-4" style={{ color: "var(--ciq-ink)" }} />
@@ -56,6 +57,7 @@ export default function Quiz({ onComplete, onExit }) {
       <div key={q.id} className="ciq-container mt-8 flex-1 ciq-fade-up">
         <h2 className="font-display text-[26px] leading-tight font-extrabold" style={{ color: "var(--ciq-ink)" }}>{q.title}</h2>
         <p className="mt-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{q.subtitle}</p>
+        {error && <p className="mt-3 rounded-xl px-3 py-2 text-sm" style={{ background: "#fdecec", color: "#b4433f" }}>{error}</p>}
 
         <div className="mt-6 space-y-3">
           {q.options.map((opt) => {
@@ -67,7 +69,7 @@ export default function Quiz({ onComplete, onExit }) {
                 className="ciq-card-hover ciq-press w-full rounded-2xl border bg-white p-4 text-left"
                 style={{
                   borderColor: active ? "var(--ciq-teal-600)" : "var(--ciq-line)",
-                  boxShadow: active ? "0 0 0 3px rgba(13,148,136,0.15)" : "0 1px 2px rgba(15,26,23,0.04)",
+                  boxShadow: active ? "0 0 0 3px rgba(91,79,240,0.16), 0 14px 28px -22px rgba(69,56,200,.65)" : "0 1px 2px rgba(23,32,51,0.04)",
                 }}
               >
                 <div className="flex items-center justify-between">
@@ -95,19 +97,9 @@ export default function Quiz({ onComplete, onExit }) {
             );
           })}
         </div>
-      </div>
-
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-white/90 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
-        <div className="ciq-container py-3">
-          <button
-            onClick={next}
-            disabled={!selected}
-            className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white transition-opacity"
-            style={{ background: "var(--ciq-teal-600)", opacity: selected ? 1 : 0.45 }}
-          >
-            {step === total - 1 ? "See my match" : "Continue"} <ArrowRight className="h-5 w-5" />
-          </button>
-        </div>
+        <p className="mt-5 text-center text-xs font-medium" style={{ color: "var(--ciq-ink-soft)" }}>
+          Select an answer to continue automatically
+        </p>
       </div>
     </div>
   );
