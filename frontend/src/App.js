@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/Landing";
 import Quiz from "./components/Quiz";
 import Result from "./components/Result";
@@ -149,14 +149,14 @@ function QuizApp() {
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<QuizApp />} />
           <Route path="/r/:resultId" element={<SharedResult />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/review/:token" element={<CardReview />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }

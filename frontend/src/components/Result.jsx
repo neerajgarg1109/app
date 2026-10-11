@@ -81,7 +81,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
   };
 
   const handleShare = async () => {
-    const url = `${window.location.origin}/r/${resultId}`;
+    const url = `${window.location.origin}${process.env.PUBLIC_URL}/#/r/${resultId}`;
     const shareData = { title: "My cardIQ match", text: `My best credit card match is ${card.name}`, url };
     try {
       if (navigator.share) {

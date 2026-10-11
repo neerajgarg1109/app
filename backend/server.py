@@ -42,7 +42,7 @@ async def service_root():
         "version": "v1",
         "api": "/api/",
         "docs": "/docs",
-        "customer_portal": "http://localhost:3000/",
+        "customer_portal": PUBLIC_APP_URL,
     }
 
 # ---------------- Email (Emergent managed Resend) ----------------
@@ -1192,10 +1192,12 @@ async def send_review_reminders(x_admin_token: Optional[str] = Header(None)):
 
 app.include_router(api_router)
 
+cors_origins = [origin.strip() for origin in os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",") if origin.strip()]
+allow_all_origins = "*" in cors_origins
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=["*"],
+    allow_credentials=not allow_all_origins,
+    allow_origins=["*"] if allow_all_origins else cors_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

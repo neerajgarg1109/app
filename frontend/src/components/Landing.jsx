@@ -91,7 +91,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           </button>
         )}
         {savedResult?.resultId && (
-          <a href={`/r/${savedResult.resultId}`} className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
+          <a href={`${process.env.PUBLIC_URL}/#/r/${savedResult.resultId}`} className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
             Open saved result · {savedResult.cardName}
           </a>
         )}
