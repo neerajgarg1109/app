@@ -9,6 +9,7 @@ import Admin from "./components/Admin";
 import CardReview from "./components/CardReview";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
+import { recordProductEvent } from "./productAnalytics";
 
 const ANALYZE_STEPS = [
   "Matching your priorities and spending",
@@ -63,6 +64,8 @@ function QuizApp() {
     window.scrollTo(0, 0);
   }, [screen]);
 
+  useEffect(() => { recordProductEvent("landing_view"); }, []);
+
   const clearProgress = () => {
     localStorage.removeItem("ciq_quiz_progress");
     setSavedProgress(null);
@@ -70,6 +73,7 @@ function QuizApp() {
 
   const startFresh = () => {
     clearProgress();
+    recordProductEvent("quiz_started");
     setScreen("quiz");
   };
 
@@ -94,6 +98,7 @@ function QuizApp() {
       }
       setScored(data.scored);
       setResultId(data.result_id);
+      recordProductEvent("result_viewed", data.result_id);
       setScreen("result");
     } catch (e) {
       setError("We couldn't reach the matching service. Please try again.");

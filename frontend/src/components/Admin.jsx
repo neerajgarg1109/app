@@ -240,6 +240,15 @@ export default function Admin() {
   const leads = data?.leads || [];
   const maxGoal = Math.max(1, ...((insights?.by_goal || []).map((g) => g.count)));
   const incomplete = insights?.incomplete_sessions || 0;
+  const funnel = insights?.funnel || {};
+  const funnelStages = [
+    ["Landing visitors", funnel.landing_view || 0],
+    ["Quiz starts", funnel.quiz_started || 0],
+    ["Results viewed", funnel.result_viewed || 0],
+    ["Leads shared", funnel.lead_submitted || 0],
+    ["Apply clicks", funnel.apply_clicked || 0],
+  ];
+  const funnelBase = Math.max(1, funnel.landing_view || 0);
   const normalizedSearch = cardSearch.trim().toLowerCase();
   const filteredCards = adminCards.filter((card) => !normalizedSearch
     || card.name.toLowerCase().includes(normalizedSearch)
@@ -324,6 +333,13 @@ export default function Admin() {
           <Stat label="Results" value={insights?.total_results || 0} />
           <Stat label="Emails sent" value={insights?.emails_sent || 0} />
           <Stat label="Incomplete" value={incomplete} />
+        </div>
+
+        <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+          <div className="flex items-start justify-between gap-3"><div><h2 className="font-display text-base font-extrabold">Customer funnel</h2><p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Anonymous first-party counts. No form contents or session recordings.</p></div><span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase" style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}>v2 baseline</span></div>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
+            {funnelStages.map(([label, value]) => <div key={label} className="rounded-xl p-3" style={{ background: "#f7f8f6" }}><div className="font-display text-xl font-extrabold">{value}</div><div className="mt-1 text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>{label}</div><div className="mt-1 text-xs font-bold" style={{ color: "var(--ciq-teal)" }}>{Math.round(value * 100 / funnelBase)}%</div></div>)}
+          </div>
         </div>
 
         {/* reminders */}

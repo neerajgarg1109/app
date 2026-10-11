@@ -354,10 +354,26 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert len(expanded.json()["scored"]) == len(CARDS)
                 leads = (await api.get("/api/admin/leads", headers=headers)).json()["leads"]
                 assert next(l for l in leads if l["result_id"] == "expanded-legacy")["recommended_card"] == CARDS[-1]["name"]
+                for event in ("landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"):
+                    tracked = await api.post("/api/product-events", json={
+                        "event": event, "session_id": "anonymous-session-1234", "result_id": result["result_id"],
+                    })
+                    assert tracked.status_code == 202
+                # Events are idempotent for one session/result combination.
+                await api.post("/api/product-events", json={
+                    "event": "landing_view", "session_id": "anonymous-session-1234", "result_id": result["result_id"],
+                })
+                assert await database.product_events.count_documents({"session_id": "anonymous-session-1234"}) == 5
+                assert (await api.post("/api/product-events", json={
+                    "event": "unknown", "session_id": "anonymous-session-1234",
+                })).status_code == 422
                 csv = await api.get("/api/admin/leads.csv", headers=headers)
                 assert csv.status_code == 200 and CARDS[-1]["name"] in csv.text
                 insights = await api.get("/api/admin/insights", headers=headers)
                 assert insights.status_code == 200 and CARDS[-1]["name"] in insights.text
+                assert insights.json()["funnel"] == {event: 1 for event in (
+                    "landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"
+                )}
         finally:
             await client.drop_database(name)
             client.close()

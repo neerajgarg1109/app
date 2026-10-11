@@ -6,7 +6,7 @@ const OFFICIAL_CARD_IMAGES = {
   "axis-scapia-axis-bank-credit-card": "/cards/scapia-axis-bank.jpg",
 };
 
-export default function CreditCardVisual({ card, floating = false, number = "8841 2290 7756 0194" }) {
+export default function CreditCardVisual({ card, floating = false }) {
   const [c1, c2] = card.palette;
   const imageUrl = card.imageUrl || OFFICIAL_CARD_IMAGES[card.id];
   const [imageFailed, setImageFailed] = useState(false);
@@ -68,14 +68,14 @@ export default function CreditCardVisual({ card, floating = false, number = "884
         <div className="absolute inset-y-1 left-1/2 w-px -translate-x-1/2 bg-black/20" />
       </div>
 
-      <div className="relative mt-4 font-mono text-base sm:text-lg tracking-[0.18em] drop-shadow-sm">
-        {number}
+      <div className="relative mt-4 font-display text-base font-extrabold sm:text-lg drop-shadow-sm">
+        {card.name}
       </div>
 
       <div className="relative mt-3 flex items-end justify-between">
         <div>
-          <div className="text-[10px] uppercase tracking-widest opacity-70">Card holder</div>
-          <div className="text-sm font-semibold">YOUR NAME</div>
+          <div className="text-[10px] uppercase tracking-widest opacity-70">Issuer</div>
+          <div className="text-sm font-semibold">{card.issuer}</div>
         </div>
         <div className="text-right">
           <div className="text-[10px] uppercase tracking-widest opacity-70">Network</div>

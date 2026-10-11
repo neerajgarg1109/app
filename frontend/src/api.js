@@ -150,6 +150,15 @@ export async function submitExperienceFeedback(rating, feedback, resultId, cardI
   return data;
 }
 
+export async function trackProductEvent(event, sessionId, resultId = null) {
+  const { data } = await http.post("/product-events", {
+    event,
+    session_id: sessionId,
+    result_id: resultId,
+  });
+  return data;
+}
+
 export async function getCommunityRating(cardId) {
   const { data } = await http.get(`/cards/${encodeURIComponent(cardId)}/community-rating`);
   return data;

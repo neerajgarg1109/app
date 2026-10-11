@@ -5,6 +5,7 @@ import CreditCardVisual from "./CreditCardVisual";
 import Compare from "./Compare";
 import { attachResultLead, emailResult, trackApplyClick, reportCardInformation, scheduleReviewFollowup, getCommunityRating, submitExperienceFeedback } from "../api";
 import { contactNameError, contactPhoneError, contactEmailError } from "../contactValidation";
+import { recordProductEvent } from "../productAnalytics";
 
 export default function Result({ scored, resultId, answers, refining = false, onRefine, onSaveResult, onRestart, shared = false }) {
   const best = scored[0];
@@ -43,13 +44,6 @@ export default function Result({ scored, resultId, answers, refining = false, on
   const [experienceState, setExperienceState] = useState("idle");
 
   useEffect(() => { getCommunityRating(card.id).then(setCommunity).catch(() => {}); }, [card.id]);
-  useEffect(() => {
-    if (shared || !resultId) return undefined;
-    const promptKey = `ciq_contact_prompt_${resultId}`;
-    if (sessionStorage.getItem(promptKey)) return undefined;
-    const timer = window.setTimeout(() => setShowEmailForm(true), 1200);
-    return () => window.clearTimeout(timer);
-  }, [resultId, shared]);
 
   const compareCards = scored.slice(0, 3).map((s) => ({ ...s.card, _confidence: s.confidence, _valueEstimate: s.valueEstimate, _reasons: s.reasons }));
 
@@ -68,6 +62,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
       const data = await emailResult(resultId);
       setSentTo(data.sent_to || "");
       setEmailState("sent");
+      recordProductEvent("lead_submitted", resultId);
       sessionStorage.setItem(`ciq_contact_prompt_${resultId}`, "submitted");
       setShowEmailForm(false);
     } catch (e) {
@@ -105,6 +100,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
       if (withReminder) await scheduleReviewFollowup(card.id, reviewEmail, resultId);
       localStorage.setItem("ciq_last_handoff", JSON.stringify({ resultId, cardName: card.name, at: new Date().toISOString(), reviewReminder: withReminder }));
       trackApplyClick(card.id, resultId).catch(() => {});
+      recordProductEvent("apply_clicked", resultId);
       if (target) target.location = card.applyUrl; else window.location.href = card.applyUrl;
       setShowHandoff(false);
     } catch (e) {

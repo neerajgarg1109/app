@@ -3,12 +3,14 @@ import { createRoot } from "react-dom/client";
 import Result from "./Result";
 import {
   attachResultLead, emailResult, getCommunityRating, submitExperienceFeedback, trackApplyClick,
+  trackProductEvent,
 } from "../api";
 
 jest.mock("../api", () => ({
   attachResultLead: jest.fn(), emailResult: jest.fn(), trackApplyClick: jest.fn(),
   reportCardInformation: jest.fn(), scheduleReviewFollowup: jest.fn(),
   getCommunityRating: jest.fn(), submitExperienceFeedback: jest.fn(),
+  trackProductEvent: jest.fn(),
 }));
 
 global.IS_REACT_ACT_ENVIRONMENT = true;
@@ -56,6 +58,7 @@ describe("Result customer flows", () => {
     emailResult.mockResolvedValue({ status: "success", sent_to: "person@example.com" });
     submitExperienceFeedback.mockResolvedValue({ status: "received" });
     trackApplyClick.mockResolvedValue({ status: "recorded" });
+    trackProductEvent.mockResolvedValue({ status: "recorded" });
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
@@ -69,8 +72,10 @@ describe("Result customer flows", () => {
     jest.useRealTimers();
   });
 
-  test("automatically offers contact capture and allows a frictionless skip", async () => {
+  test("keeps the result uninterrupted and offers optional contact capture", async () => {
     await act(async () => jest.advanceTimersByTime(1201));
+    expect(container.textContent).not.toContain("Keep your match handy");
+    await act(async () => button(container, "Email").click());
     expect(container.textContent).toContain("Keep your match handy");
     await act(async () => button(container, "See my result without sharing details").click());
     expect(container.textContent).not.toContain("Keep your match handy");
@@ -78,7 +83,7 @@ describe("Result customer flows", () => {
   });
 
   test("blocks invalid contacts and submits a valid consented lead", async () => {
-    await act(async () => jest.advanceTimersByTime(1201));
+    await act(async () => button(container, "Email").click());
     await act(async () => button(container, "Save and email my result").click());
     expect(container.textContent).toContain("Enter your full name.");
     expect(container.textContent).toContain("Enter a valid 10-digit Indian mobile number.");

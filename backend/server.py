@@ -300,6 +300,27 @@ class ExperienceFeedbackIn(BaseModel):
     card_id: Optional[str] = None
 
 
+class ProductEventIn(BaseModel):
+    event: str
+    session_id: str
+    result_id: Optional[str] = None
+
+    @field_validator("event")
+    @classmethod
+    def validate_event(cls, value: str) -> str:
+        allowed = {"landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"}
+        if value not in allowed:
+            raise ValueError("Unsupported product event")
+        return value
+
+    @field_validator("session_id")
+    @classmethod
+    def validate_session_id(cls, value: str) -> str:
+        if not re.fullmatch(r"[A-Za-z0-9_-]{16,80}", value):
+            raise ValueError("Invalid anonymous session identifier")
+        return value
+
+
 class CardholderReviewIn(BaseModel):
     overall: int
     rewards: int
@@ -516,6 +537,24 @@ async def create_experience_feedback(payload: ExperienceFeedbackIn):
         "created_at": datetime.now(timezone.utc),
     })
     return {"status": "received"}
+
+
+@api_router.post("/product-events", status_code=202)
+async def record_product_event(payload: ProductEventIn):
+    """Record a deduplicated, anonymous funnel event without arbitrary metadata."""
+    now = datetime.now(timezone.utc)
+    await db.product_events.update_one(
+        {"event": payload.event, "session_id": payload.session_id, "result_id": payload.result_id},
+        {"$setOnInsert": {
+            "event_id": str(uuid.uuid4()),
+            "event": payload.event,
+            "session_id": payload.session_id,
+            "result_id": payload.result_id,
+            "created_at": now,
+        }},
+        upsert=True,
+    )
+    return {"status": "recorded"}
 
 
 @api_router.get("/cards/{card_id}/community-rating")
@@ -1061,12 +1100,18 @@ async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str]
 
     incomplete = await db.partial_sessions.count_documents({"completed": {"$ne": True}})
 
+    funnel_events = ["landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"]
+    funnel = {}
+    for event in funnel_events:
+        funnel[event] = len(await db.product_events.distinct("session_id", {**q, "event": event}))
+
     return {
         "total_results": total,
         "emails_sent": emailed,
         "by_card": to_sorted(card_counts),
         "by_goal": to_sorted(goal_counts),
         "incomplete_sessions": incomplete,
+        "funnel": funnel,
     }
 
 
@@ -1211,6 +1256,12 @@ logging.basicConfig(
 @app.on_event("startup")
 async def on_startup():
     await seed_cards(db)
+    await db.product_events.create_index(
+        [("event", 1), ("session_id", 1), ("result_id", 1)],
+        unique=True,
+        name="unique_product_funnel_event",
+    )
+    await db.product_events.create_index("created_at", name="product_event_created_at")
     logger.info("cardIQ card catalog seeded")
 
 
