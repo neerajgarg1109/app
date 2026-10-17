@@ -1173,5 +1173,85 @@
       300
     ],
     "score": 12
+  },
+  {
+    "id": "kotak-indigo-credit-card",
+    "status": "imported",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/indigo-credit-card-base-t.jpg",
+    "size": [
+      358,
+      201
+    ],
+    "score": 12
+  },
+  {
+    "id": "kotak-indigo-premium-credit-card",
+    "status": "imported",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/indigo-xl-t.jpg",
+    "size": [
+      358,
+      201
+    ],
+    "score": 17
+  },
+  {
+    "id": "kotak-white-reserve-credit-card",
+    "status": "imported",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/herosliderbanner/White-Reserve-Card_360x216.jpg",
+    "size": [
+      360,
+      216
+    ],
+    "score": 17
+  },
+  {
+    "id": "kotak-white-credit-card",
+    "status": "imported",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-white-t.jpg",
+    "size": [
+      358,
+      201
+    ],
+    "score": 12
+  },
+  {
+    "id": "kotak-zen-credit-card",
+    "status": "imported",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-Zen-t.jpg",
+    "size": [
+      358,
+      201
+    ],
+    "score": 12
+  },
+  {
+    "id": "kotak-811-dream-different-credit-card",
+    "status": "imported",
+    "source": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/811-dream-different-credit-card-t.jpg",
+    "size": [
+      293,
+      165
+    ],
+    "score": 22
+  },
+  {
+    "id": "rbl-salaryse-up",
+    "status": "imported",
+    "source": "https://webassets.rbl.bank.in/2024-10/salary-se-benefits_1.png",
+    "size": [
+      420,
+      505
+    ],
+    "score": 12
+  },
+  {
+    "id": "pnb-zaggle-twin",
+    "status": "imported",
+    "source": "https://www.zaggle.in/_next/image?url=https%3A%2F%2Fzaggle-corporate-website.s3.ap-south-1.amazonaws.com%2Fuploads%2FUntitled%2520design%2520%25281%2529.jpg&w=1920&q=75",
+    "size": [
+      1200,
+      900
+    ],
+    "score": 12
   }
 ]

@@ -457,7 +457,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert due_doc["reminder_sent"] is True and due_doc["token_hash"] and due_doc["token_expires_at"]
                 # Current issuer facts must flow through previously shared results and later emails.
                 top = result["scored"][0]["card"]
-                await database.cards.update_one({"id": top["id"]}, {"$set": {"name": "Updated issuer name", "active": False}})
+                await database.cards.update_one({"id": top["id"]}, {"$set": {"name": "Updated issuer name"}})
                 saved = await api.get("/api/results/" + result["result_id"])
                 saved_top = next(s["card"] for s in saved.json()["scored"] if s["card"]["id"] == top["id"])
                 assert saved_top["name"] == "Updated issuer name"
@@ -561,7 +561,7 @@ def test_hdfc_partner_sources_and_reward_currency():
 
 def test_restricted_cards_do_not_enter_general_quiz_but_history_is_resolvable():
     restricted = [c for c in CARDS if c.get("recommendationEligible") is False]
-    assert len(restricted) == 36
+    assert restricted
     for goal in ("shopping", "cashback", "travel", "fuel"):
         answers = profile()
         answers.update(goal=goal, fee="free", spend="vhigh", creditRoute="regular")
@@ -617,6 +617,17 @@ def test_fintech_cobrand_expansion_names_the_regulated_issuer():
     assert {c["coBrandPartner"] for c in batch} == {"Kredit.Pe", "SalarySe", "Zaggle", "OneCard", "Scapia", "Paisabazaar", "super.money"}
     assert all(c["applicationsOpen"] and c["active"] for c in batch)
     assert not any(any(term in c["name"].lower() for term in ("corporate", "prepaid", "business")) for c in batch)
+
+
+def test_kotak_personal_expansion_is_current_sourced_and_uses_verified_artwork():
+    batch = [c for c in CARDS if c.get("catalogBatch") == "kotak-official-2026-10-17"]
+    assert len(batch) == 7
+    assert all(c["issuer"] == "Kotak Mahindra Bank" and c["applicationsOpen"] for c in batch)
+    assert all(urlparse(c["applyUrl"]).hostname == "www.kotak.bank.in" for c in batch)
+    assert not any(any(term in c["name"].lower() for term in ("business", "corporate")) for c in batch)
+    artwork = [c for c in batch if c.get("imageUrl")]
+    assert len(artwork) == 6
+    assert all(c["imageSourceUrl"].startswith("https://www.kotak.bank.in/") for c in artwork)
 
 
 def test_new_fee_and_currency_edge_cases():

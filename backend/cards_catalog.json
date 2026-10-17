@@ -18637,7 +18637,9 @@
           "reason": "A similarly priced alternative for comparing reward points and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-salaryse-up-7fa0df26b4.png",
+    "imageSourceUrl": "https://webassets.rbl.bank.in/2024-10/salary-se-benefits_1.png"
   },
   {
     "id": "cub-salaryse-level-up",
@@ -18854,7 +18856,9 @@
           "reason": "A similarly priced alternative for comparing reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/pnb-zaggle-twin-b2613b6b49.jpg",
+    "imageSourceUrl": "https://www.zaggle.in/_next/image?url=https%3A%2F%2Fzaggle-corporate-website.s3.ap-south-1.amazonaws.com%2Fuploads%2FUntitled%2520design%2520%25281%2529.jpg&w=1920&q=75"
   },
   {
     "id": "federal-one",
@@ -19213,5 +19217,535 @@
         }
       ]
     }
+  },
+  {
+    "id": "kotak-indigo-credit-card",
+    "name": "IndiGo Kotak Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "Up to 19 IndiGo BluChips per ₹100 on IndiGo bookings; 2 on dining and entertainment; 1 on other eligible spends",
+    "network": "Issuer-selected variant",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "₹1,500 + GST",
+    "annualFeeAmount": 1500,
+    "joiningFee": "₹1,500 + GST",
+    "joiningFeeAmount": 1500,
+    "rewardLine": "Up to 19 IndiGo BluChips per ₹100 on IndiGo bookings; 2 on dining and entertainment; 1 on other eligible spends",
+    "highlights": [
+      "Welcome voucher of 2,500 IndiGo BluChips.",
+      "Spend milestones can provide vouchers worth up to 7,500 IndiGo BluChips.",
+      "Welcome, milestone and renewal vouchers expire six months after issue; reward exclusions apply."
+    ],
+    "bestFor": [
+      "travel",
+      "flights",
+      "dining",
+      "rewards"
+    ],
+    "feeType": "worth",
+    "minSpend": "mid",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/indigo-credit-card.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/indigo-credit-card.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "A mid-fee airline card for regular IndiGo flyers who can use BluChips and milestone vouchers before they expire.",
+      "idealFor": [
+        "Regular IndiGo flyers.",
+        "People comfortable redeeming rewards inside the IndiGo programme."
+      ],
+      "strengths": [
+        "Up to 19 IndiGo BluChips per ₹100 on eligible IndiGo bookings."
+      ],
+      "tradeoffs": [
+        "The ₹1,500 annual fee has no published spend waiver.",
+        "Bonus vouchers have six-month validity and value is concentrated in IndiGo."
+      ],
+      "verdict": "Shortlist it when IndiGo is already your normal airline; occasional flyers should compare a flexible travel-rewards card.",
+      "alternatives": [
+        {
+          "id": "kotak-kotak-air-plus-credit-card",
+          "name": "Kotak Air+",
+          "reason": "Compare for travel value that is not tied to one airline."
+        },
+        {
+          "id": "idfc-indigo-credit-card",
+          "name": "IDFC FIRST IndiGo Credit Card",
+          "reason": "Compare another IndiGo-linked earning structure and fee."
+        }
+      ]
+    },
+    "rewardCurrency": "IndiGo BluChips",
+    "imageUrl": "/cards/kotak-indigo-credit-card-80e31fa6ff.jpg",
+    "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/indigo-credit-card-base-t.jpg"
+  },
+  {
+    "id": "kotak-indigo-premium-credit-card",
+    "name": "IndiGo Kotak Premium Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "Up to 21 IndiGo BluChips per ₹100 on IndiGo bookings with premium welcome, milestone and lounge benefits",
+    "network": "Issuer-selected variant",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "₹3,000 + GST",
+    "annualFeeAmount": 3000,
+    "joiningFee": "₹3,000 + GST",
+    "joiningFeeAmount": 3000,
+    "rewardLine": "Up to 21 IndiGo BluChips per ₹100 on IndiGo bookings with premium welcome, milestone and lounge benefits",
+    "highlights": [
+      "Welcome benefit includes 4,000 IndiGo BluChips and a 6E Eats voucher.",
+      "Spend milestones can provide vouchers worth up to 16,000 IndiGo BluChips.",
+      "The premium variant adds airport-lounge benefits; issuer conditions and reward exclusions apply."
+    ],
+    "bestFor": [
+      "travel",
+      "flights",
+      "lounge",
+      "rewards"
+    ],
+    "feeType": "worth",
+    "minSpend": "high",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/indigo-credit-card.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/indigo-credit-card.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "The premium IndiGo option raises the fee and concentrates more value in BluChips, milestones and travel privileges.",
+      "idealFor": [
+        "Frequent IndiGo flyers able to reach the published milestones.",
+        "Travellers who will use the included lounge benefit."
+      ],
+      "strengths": [
+        "Up to 21 IndiGo BluChips per ₹100 on eligible IndiGo bookings."
+      ],
+      "tradeoffs": [
+        "The ₹3,000 annual fee requires consistent IndiGo use.",
+        "Reward value and bonus-voucher validity remain tied to the IndiGo programme."
+      ],
+      "verdict": "Choose the premium variant only when the additional BluChips, milestones and lounge use clearly exceed the extra fee.",
+      "alternatives": [
+        {
+          "id": "kotak-indigo-credit-card",
+          "name": "IndiGo Kotak Credit Card",
+          "reason": "Compare the lower-fee variant before paying for premium benefits."
+        },
+        {
+          "id": "kotak-kotak-air-plus-credit-card",
+          "name": "Kotak Air+",
+          "reason": "Compare a less airline-specific travel currency."
+        }
+      ]
+    },
+    "rewardCurrency": "IndiGo BluChips",
+    "imageUrl": "/cards/kotak-indigo-premium-credit-card-22878019c8.jpg",
+    "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/indigo-xl-t.jpg"
+  },
+  {
+    "id": "kotak-white-reserve-credit-card",
+    "name": "Kotak White Reserve Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "White Pass milestone value, unlimited global lounge access and premium travel and lifestyle privileges",
+    "network": "Issuer-selected variant",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "₹12,500 + GST (waived on ₹10 lakh eligible annual spend)",
+    "annualFeeAmount": 12500,
+    "joiningFee": "₹12,500 + GST",
+    "joiningFeeAmount": 12500,
+    "rewardLine": "White Pass milestone value, unlimited global lounge access and premium travel and lifestyle privileges",
+    "highlights": [
+      "Unlimited global lounge access for primary and add-on cardholders, subject to programme terms.",
+      "2% foreign-currency markup and two complimentary golf rounds each month at selected courses.",
+      "Issuer value illustrations assume very high annual spending; actual value depends on benefit use."
+    ],
+    "bestFor": [
+      "premium",
+      "travel",
+      "lounge",
+      "forex",
+      "golf"
+    ],
+    "feeType": "premium",
+    "minSpend": "vhigh",
+    "creditReq": "excellent",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/white-reserve-credit-card.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/white-reserve-credit-card.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "A high-fee metal card built for affluent customers who can use global lounges, milestone value and premium services repeatedly.",
+      "idealFor": [
+        "High-spending international travellers.",
+        "Households that can use add-on lounge access and premium privileges."
+      ],
+      "strengths": [
+        "Unlimited global lounge access plus a 2% forex markup."
+      ],
+      "tradeoffs": [
+        "The ₹12,500 fee is substantial and the waiver requires ₹10 lakh of eligible annual spend.",
+        "Kotak's headline value illustration assumes spending as high as ₹30 lakh a year."
+      ],
+      "verdict": "It can justify its fee for frequent premium travellers, but low or moderate spenders should not rely on the issuer's maximum-value illustration.",
+      "alternatives": [
+        {
+          "id": "hdfc-infinia-credit-card",
+          "name": "HDFC Bank INFINIA Metal Edition",
+          "reason": "Compare premium travel redemption, lounge access and qualification requirements."
+        },
+        {
+          "id": "idfc-diamond-reserve-credit-card",
+          "name": "IDFC FIRST Diamond Reserve",
+          "reason": "Compare another high-fee premium travel proposition."
+        }
+      ]
+    },
+    "loungeBenefits": [
+      "Unlimited global airport-lounge access for primary and eligible add-on cardholders, subject to issuer conditions."
+    ],
+    "forexMarkup": "2% + applicable taxes",
+    "imageUrl": "/cards/kotak-white-reserve-credit-card-a3eae20116.jpg",
+    "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/herosliderbanner/White-Reserve-Card_360x216.jpg"
+  },
+  {
+    "id": "kotak-upi-rupay-credit-card",
+    "name": "Kotak UPI RuPay Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "3 Kotak Reward Points per ₹100 on eligible UPI and regular card transactions",
+    "network": "RuPay",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "No annual fee",
+    "annualFeeAmount": 0,
+    "joiningFee": "No joining fee",
+    "joiningFeeAmount": 0,
+    "rewardLine": "3 Kotak Reward Points per ₹100 on eligible UPI and regular card transactions",
+    "highlights": [
+      "Virtual-only RuPay credit card available to eligible existing Kotak credit-card customers.",
+      "Cash redemption is ₹0.07 per point with a 2,000-point minimum; other catalogue redemptions may value points differently.",
+      "No rewards on rent, fuel, railway, wallet, EMI, education, insurance, government or online gaming; utility rewards are capped by eligible spend."
+    ],
+    "bestFor": [
+      "upi",
+      "lifetime-free",
+      "rewards"
+    ],
+    "feeType": "free",
+    "minSpend": "low",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-upi-rupay-credit-card.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-upi-rupay-credit-card.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": false,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "A lifetime-free virtual companion card for existing Kotak cardholders who want to route eligible merchant UPI payments through credit.",
+      "idealFor": [
+        "Existing Kotak credit-card customers using merchant UPI.",
+        "People who want a no-fee virtual RuPay companion card."
+      ],
+      "strengths": [
+        "No joining or annual fee and rewards on eligible UPI transactions."
+      ],
+      "tradeoffs": [
+        "It is not a standalone entry card: eligibility requires an existing Kotak credit card.",
+        "The cash-equivalent reward rate is modest and many common categories are excluded."
+      ],
+      "verdict": "Useful as a free UPI companion, not as a reason by itself to start a Kotak credit-card relationship.",
+      "alternatives": [
+        {
+          "id": "indusind-platinum-rupay-credit-card",
+          "name": "IndusInd Bank Platinum RuPay",
+          "reason": "Compare a RuPay option that may work as a primary card."
+        },
+        {
+          "id": "hdfc-hdfc-bank-upi-rupay-credit-card",
+          "name": "HDFC Bank UPI RuPay Credit Card",
+          "reason": "Compare eligibility and UPI reward value."
+        }
+      ]
+    },
+    "eligibilityNote": "Available only to eligible existing Kotak credit-card customers.",
+    "rewardCurrency": "Kotak Reward Points"
+  },
+  {
+    "id": "kotak-white-credit-card",
+    "name": "Kotak White Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "White Pass milestone rewards with domestic and international airport-lounge access",
+    "network": "Issuer-selected variant",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "₹3,000 + GST (waived on ₹5 lakh eligible annual spend)",
+    "annualFeeAmount": 3000,
+    "joiningFee": "₹3,000 + GST",
+    "joiningFeeAmount": 3000,
+    "rewardLine": "White Pass milestone rewards with domestic and international airport-lounge access",
+    "highlights": [
+      "Eight domestic lounge visits annually, limited to two per quarter, plus four international visits under issuer conditions.",
+      "Introductory welcome voucher worth ₹1,500 on ₹30,000 spend within 60 days.",
+      "Kotak's value illustration assumes ₹1 lakh monthly spend; actual value depends on milestone and lounge use."
+    ],
+    "bestFor": [
+      "premium",
+      "travel",
+      "lounge",
+      "rewards"
+    ],
+    "feeType": "worth",
+    "minSpend": "high",
+    "creditReq": "excellent",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/white-credit-card.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/white-credit-card.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "A milestone-led premium card for customers who can use airport lounges and sustain the spending required for White Pass value.",
+      "idealFor": [
+        "Frequent domestic travellers with some international lounge use.",
+        "Customers spending enough to reach White Pass milestones and the fee waiver."
+      ],
+      "strengths": [
+        "A mix of domestic and international lounge visits at a mid-premium fee."
+      ],
+      "tradeoffs": [
+        "The ₹5 lakh fee-waiver threshold is much higher than many mid-fee cards.",
+        "The issuer's maximum value illustration assumes ₹12 lakh annual spending."
+      ],
+      "verdict": "Consider it for lounge and milestone use, but calculate value using your own spending rather than the issuer's illustration.",
+      "alternatives": [
+        {
+          "id": "kotak-white-reserve-credit-card",
+          "name": "Kotak White Reserve Credit Card",
+          "reason": "Compare only if unlimited lounge access and premium services justify a much higher fee."
+        },
+        {
+          "id": "idfc-metal-credit-card-ashva",
+          "name": "IDFC FIRST Ashva",
+          "reason": "Compare a different mid-premium travel and reward structure."
+        }
+      ]
+    },
+    "loungeBenefits": [
+      "Up to eight domestic visits a year and four international visits, subject to quarterly and programme conditions."
+    ],
+    "imageUrl": "/cards/kotak-white-credit-card-0f926c3844.jpg",
+    "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-white-t.jpg"
+  },
+  {
+    "id": "kotak-zen-credit-card",
+    "name": "Kotak Zen Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "10 Zen Points per ₹150 on eligible shopping and 5 per ₹150 on other eligible purchases",
+    "network": "Issuer-selected variant",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "₹1,500 + GST (waived on ₹1.5 lakh eligible annual spend)",
+    "annualFeeAmount": 1500,
+    "joiningFee": "₹1,500 + GST",
+    "joiningFeeAmount": 1500,
+    "rewardLine": "10 Zen Points per ₹150 on eligible shopping and 5 per ₹150 on other eligible purchases",
+    "highlights": [
+      "Milestones award 7,500 points at ₹3 lakh annual spend and another 7,500 at ₹6 lakh.",
+      "Includes domestic and international lounge visits subject to issuer programme conditions.",
+      "Cash redemption is ₹0.20 per Zen Point with a minimum redemption threshold; exclusions apply."
+    ],
+    "bestFor": [
+      "shopping",
+      "rewards",
+      "lounge",
+      "travel"
+    ],
+    "feeType": "worth",
+    "minSpend": "mid",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/zen-signature-credit-card/features.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/zen-signature-credit-card/features.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "A shopping-and-milestone card whose fee is relatively easy to waive, with lounge access adding value for occasional travellers.",
+      "idealFor": [
+        "Shoppers who can spend at least ₹1.5 lakh a year to waive the fee.",
+        "Customers likely to reach the ₹3 lakh or ₹6 lakh milestones."
+      ],
+      "strengths": [
+        "Accelerated shopping rewards plus milestone points and lounge access."
+      ],
+      "tradeoffs": [
+        "Cash redemption reduces each Zen Point to ₹0.20.",
+        "The strongest value requires reaching annual milestones, not just ordinary spending."
+      ],
+      "verdict": "A credible mid-fee option when shopping and milestone spend align; otherwise compare simpler cashback cards.",
+      "alternatives": [
+        {
+          "id": "kotak-kotak-cashback-plus-credit-card",
+          "name": "Kotak Cashback+",
+          "reason": "Compare simpler cashback with a lower annual fee."
+        },
+        {
+          "id": "hdfc-millennia-credit-card",
+          "name": "HDFC Bank Millennia",
+          "reason": "Compare online-shopping rewards and fee-waiver requirements."
+        }
+      ]
+    },
+    "rewardCurrency": "Zen Points",
+    "imageUrl": "/cards/kotak-zen-credit-card-c140dc472a.jpg",
+    "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-Zen-t.jpg"
+  },
+  {
+    "id": "kotak-811-dream-different-credit-card",
+    "name": "Kotak 811 Dream Different Credit Card",
+    "issuer": "Kotak Mahindra Bank",
+    "tagline": "2 reward points per ₹100 online and 1 per ₹100 on other eligible purchases",
+    "network": "Visa Platinum",
+    "palette": [
+      "#6b0f1a",
+      "#b91c1c"
+    ],
+    "accent": "#fde68a",
+    "annualFee": "No annual fee",
+    "annualFeeAmount": 0,
+    "joiningFee": "No joining fee",
+    "joiningFeeAmount": 0,
+    "rewardLine": "2 reward points per ₹100 online and 1 per ₹100 on other eligible purchases",
+    "highlights": [
+      "Credit limit can be up to 90% of the supporting Kotak term deposit.",
+      "Interest-free cash withdrawal can extend up to 48 days, but a processing fee applies to each withdrawal.",
+      "Fuel and railway surcharge waivers are capped; reward exclusions and secured-card conditions apply."
+    ],
+    "bestFor": [
+      "secured",
+      "credit-building",
+      "lifetime-free",
+      "online"
+    ],
+    "feeType": "free",
+    "minSpend": "low",
+    "creditReq": "new",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/811-dream-different-credit-card/milestone-program.html",
+    "sourceUrls": [
+      "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/811-dream-different-credit-card/milestone-program.html"
+    ],
+    "verifiedOn": "2026-10-17",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to Kotak Mahindra Bank availability, eligibility and approval.",
+    "secured": true,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "kotak-official-2026-10-17",
+    "termsNote": "Eligible transactions only; merchant classification, issuer exclusions, reward caps, redemption charges and benefit conditions apply. Check the linked issuer terms before applying.",
+    "editorial": {
+      "summary": "A lifetime-free FD-backed card for building or rebuilding credit while retaining basic online rewards and cash-access features.",
+      "idealFor": [
+        "People without sufficient unsecured-card eligibility.",
+        "Kotak customers comfortable placing a term deposit as security."
+      ],
+      "strengths": [
+        "No joining or annual fee, with a credit limit linked to the supporting deposit."
+      ],
+      "tradeoffs": [
+        "The fixed deposit remains committed as security for the card.",
+        "Reward value is secondary and cash withdrawal still carries a processing charge."
+      ],
+      "verdict": "A practical credit-building route when the deposit requirement is acceptable; compare deposit terms before focusing on rewards.",
+      "alternatives": [
+        {
+          "id": "idfc-wow",
+          "name": "IDFC FIRST WOW!",
+          "reason": "Compare another lifetime-free FD-backed card and its forex proposition."
+        },
+        {
+          "id": "idfc-secured-rupay-credit-card",
+          "name": "IDFC FIRST EA₹N",
+          "reason": "Compare another secured route with RuPay support."
+        }
+      ]
+    },
+    "eligibilityNote": "Issued against an eligible Kotak term deposit; the bank determines the final credit limit and approval.",
+    "rewardCurrency": "Kotak Reward Points",
+    "imageUrl": "/cards/kotak-811-dream-different-credit-card-818394a743.jpg",
+    "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/811-dream-different-credit-card-t.jpg"
   }
 ]

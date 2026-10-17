@@ -20,6 +20,14 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "backend" / "cards_catalog.json"
 OUTPUT = ROOT / "frontend" / "public" / "cards"
 STOP = {"bank", "credit", "card", "cards", "the", "and", "plus", "india", "limited"}
+CURATED_IMAGES = {
+    "kotak-indigo-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/indigo-credit-card-base-t.jpg",
+    "kotak-indigo-premium-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/indigo-xl-t.jpg",
+    "kotak-white-reserve-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/herosliderbanner/White-Reserve-Card_360x216.jpg",
+    "kotak-white-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-white-t.jpg",
+    "kotak-zen-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-Zen-t.jpg",
+    "kotak-811-dream-different-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/811-dream-different-credit-card-t.jpg",
+}
 
 
 class Images(HTMLParser):
@@ -83,14 +91,25 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--limit", type=int)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--ids", nargs="*", help="Only process these catalogue card IDs")
+    parser.add_argument("--debug", action="store_true", help="Print candidate image diagnostics")
     args = parser.parse_args()
     cards = json.loads(CATALOG.read_text())
     session = requests.Session()
     session.headers["User-Agent"] = "Mozilla/5.0 cardIQ catalog image verifier"
     OUTPUT.mkdir(parents=True, exist_ok=True)
+    report_path = ROOT / "docs" / "card-image-import-report.json"
+    prior_report = []
+    if args.ids and report_path.exists():
+        try:
+            prior_report = json.loads(report_path.read_text())
+        except Exception:
+            prior_report = []
     report = []
     attempted = 0
     for card in cards:
+        if args.ids and card["id"] not in args.ids:
+            continue
         if card.get("imageUrl") and not args.overwrite:
             report.append({"id": card["id"], "status": "existing", "source": card.get("imageSourceUrl")})
             continue
@@ -104,6 +123,10 @@ def main():
             parser_ = Images(); parser_.feed(response.text)
             # Product pages choose their Open Graph image specifically for sharing.
             trusted_urls = {urljoin(page, raw) for raw, label in parser_.items if label in {"og:image", "twitter:image"}}
+            curated = CURATED_IMAGES.get(card["id"])
+            if curated:
+                trusted_urls.add(curated)
+                parser_.items.append((curated, card["name"]))
             # SBI exposes the authoritative face asset in its official product JSON.
             for source in card.get("sourceUrls", []):
                 if source.endswith(".json"):
@@ -124,6 +147,8 @@ def main():
                 if urlparse(url).scheme == "https" and not generic and (url in trusted_urls or overlap >= 2):
                     candidates.append((rank, url, alt))
             candidates.sort(reverse=True)
+            if args.debug:
+                print({"id": card["id"], "candidate_urls": [{"score": rank, "url": url, "alt": alt} for rank, url, alt in candidates[:12]]})
             accepted = None
             for rank, url, alt in candidates[:12]:
                 try:
@@ -131,12 +156,15 @@ def main():
                     asset.raise_for_status()
                     info = image_info(asset.content, asset.headers.get("content-type", ""))
                     if not info:
+                        if args.debug: print({"url": url, "rejected": "unsupported image"})
                         continue
                     ext, width, height = info
                     if width < 240 or height < 140:
+                        if args.debug: print({"url": url, "rejected": "too small", "size": [width, height]})
                         continue
                     ratio = width / height
                     if not 0.5 <= ratio <= 2.8:
+                        if args.debug: print({"url": url, "rejected": "aspect ratio", "size": [width, height]})
                         continue
                     digest = hashlib.sha256(asset.content).hexdigest()[:10]
                     filename = f"{card['id']}-{digest}.{ext}"
@@ -152,7 +180,12 @@ def main():
             report.append({"id": card["id"], "status": "error", "page": page, "error": str(exc)})
         print(report[-1])
     CATALOG.write_text(json.dumps(cards, ensure_ascii=False, indent=2) + "\n")
-    (ROOT / "docs" / "card-image-import-report.json").write_text(json.dumps(report, indent=2) + "\n")
+    if args.ids:
+        updated = {item["id"]: item for item in report}
+        merged = [updated.pop(item["id"], item) for item in prior_report]
+        merged.extend(updated.values())
+        report = merged
+    report_path.write_text(json.dumps(report, indent=2) + "\n")
     imported = sum(item["status"] in {"existing", "imported"} for item in report)
     print(f"Image coverage: {imported}/{len(cards)}")
 
