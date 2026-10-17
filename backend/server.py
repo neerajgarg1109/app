@@ -279,6 +279,24 @@ class CompareIn(BaseModel):
     ids: List[str]
 
 
+class ValueCalculatorIn(BaseModel):
+    online: int = Field(default=0, ge=0, le=2_000_000)
+    dining: int = Field(default=0, ge=0, le=2_000_000)
+    travel: int = Field(default=0, ge=0, le=2_000_000)
+    fuel: int = Field(default=0, ge=0, le=2_000_000)
+    international: int = Field(default=0, ge=0, le=2_000_000)
+    other: int = Field(default=0, ge=0, le=2_000_000)
+    lounge_visits: int = Field(default=0, ge=0, le=100)
+    fee_preference: str = "worth"
+
+    @field_validator("fee_preference")
+    @classmethod
+    def validate_fee_preference(cls, value: str) -> str:
+        if value not in {"free", "worth", "premium"}:
+            raise ValueError("Unsupported fee preference")
+        return value
+
+
 class ApplyClickIn(BaseModel):
     result_id: Optional[str] = None
 
@@ -312,7 +330,7 @@ class ProductEventIn(BaseModel):
     @field_validator("event")
     @classmethod
     def validate_event(cls, value: str) -> str:
-        allowed = {"landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked", "content_shared"}
+        allowed = {"landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked", "content_shared", "calculator_completed"}
         if value not in allowed:
             raise ValueError("Unsupported product event")
         return value
@@ -751,6 +769,56 @@ async def compare_cards(payload: CompareIn):
     order = {cid: i for i, cid in enumerate(payload.ids)}
     cards.sort(key=lambda c: order.get(c["id"], 999))
     return [_card_for_client(card) for card in cards]
+
+
+@api_router.post("/tools/value-calculator")
+async def calculate_card_value(payload: ValueCalculatorIn):
+    spends = {
+        "online": payload.online,
+        "dining": payload.dining,
+        "travel": payload.travel,
+        "fuel": payload.fuel,
+        "international": payload.international,
+        "other": payload.other,
+    }
+    monthly_spend = sum(spends.values())
+    if monthly_spend <= 0:
+        raise HTTPException(status_code=422, detail="Enter at least one monthly spend amount")
+    primary = max(spends, key=spends.get)
+    goal = {"travel": "travel", "international": "travel", "fuel": "fuel", "online": "shopping"}.get(primary, "cashback")
+    usage = {"travel": "flights", "international": "flights", "fuel": "fuel", "dining": "dining"}.get(primary, "online")
+    priority = "forex" if payload.international == max(spends.values()) and payload.international else "lounge" if payload.travel == max(spends.values()) and payload.travel else "cashback" if primary in {"online", "other"} else "rewards"
+    spend_band = "low" if monthly_spend < 20_000 else "mid" if monthly_spend < 50_000 else "high" if monthly_spend < 100_000 else "vhigh"
+    answers = {
+        "goal": goal,
+        "usage": usage,
+        "priority": priority,
+        "fee": payload.fee_preference,
+        "spend": spend_band,
+        "creditRoute": "either",
+        "monthlySpend": str(monthly_spend),
+        "onlineSpend": str(payload.online),
+        "diningSpend": str(payload.dining),
+        "travelSpend": str(payload.travel),
+        "fuelSpend": str(payload.fuel),
+        "internationalSpend": str(payload.international),
+        "loungeVisits": str(payload.lounge_visits),
+    }
+    cards = await db.cards.find(RECOMMENDABLE_QUERY, {"_id": 0}).to_list(None)
+    if not cards:
+        raise HTTPException(status_code=503, detail="Card catalog unavailable")
+    scored = recommend_cards(answers, [_card_for_client(card) for card in cards])[:10]
+    return {
+        "monthlySpend": monthly_spend,
+        "annualSpend": monthly_spend * 12,
+        "assumptions": {
+            "primaryCategory": primary,
+            "feePreference": payload.fee_preference,
+            "loungeVisitValue": 700,
+            "model": "CardIQ editorial range",
+        },
+        "results": scored,
+    }
 
 
 @api_router.post("/quiz/submit")

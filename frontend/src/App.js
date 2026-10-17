@@ -8,6 +8,7 @@ import SharedResult from "./components/SharedResult";
 import Admin from "./components/Admin";
 import CardReview from "./components/CardReview";
 import CardExplorer from "./components/CardExplorer";
+import ValueCalculator from "./components/ValueCalculator";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 import { recordProductEvent } from "./productAnalytics";
@@ -163,6 +164,7 @@ function App() {
           <Route path="/review/:token" element={<CardReview />} />
           <Route path="/cards" element={<CardExplorer />} />
           <Route path="/cards/:cardId" element={<CardExplorer />} />
+          <Route path="/calculator" element={<ValueCalculator />} />
         </Routes>
       </HashRouter>
     </div>

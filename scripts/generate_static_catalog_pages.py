@@ -73,6 +73,7 @@ def clean_generated_routes():
     """Remove stale generated routes while preserving CRA assets such as card images."""
     shutil.rmtree(BUILD / "categories", ignore_errors=True)
     shutil.rmtree(BUILD / "issuers", ignore_errors=True)
+    shutil.rmtree(BUILD / "calculator", ignore_errors=True)
     cards_directory = BUILD / "cards"
     if cards_directory.exists():
         for child in cards_directory.iterdir():
@@ -195,6 +196,7 @@ for category in CATEGORIES:
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
 catalog_body = f'''<h1>Explore Indian credit cards</h1><p>Browse CardIQ’s sourced catalogue by use case or issuer. Each card page brings together fees, rewards, important limitations, source links and a transparent editorial view.</p>
+<p><a class="cta" href="{ORIGIN}/calculator/">Estimate annual card value</a></p>
 <h2>Browse by category</h2><ul>{category_links}</ul><h2>Browse by issuer</h2><ul>{issuer_links}</ul><h2>All cards</h2>{card_links(CARDS)}'''
 catalog_description = f"Browse {len(CARDS)} Indian credit cards by category and issuer, with sourced fees, benefits, limitations and editorial guidance."
 write(Path("catalog"), page("Indian credit card catalogue | CardIQ", catalog_description, f"{ORIGIN}/catalog/", f"{ORIGIN}/#/cards", catalog_body))
@@ -208,7 +210,13 @@ methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 <p class="muted">Methodology reviewed 17 October 2026.</p>'''
 write(Path("methodology"), page("CardIQ editorial methodology and disclosures", "Learn how CardIQ sources card facts, generates editorial analysis, ranks recommendations and separates issuer revenue from match scores.", f"{ORIGIN}/methodology/", f"{ORIGIN}/#/cards", methodology_body))
 
-sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/"]
+calculator_body = '''<h1>Credit card value calculator for India</h1>
+<p>Compare Indian credit cards using your own monthly spending instead of headline reward rates. Enter approximate spending for online shopping, dining, travel, fuel, international purchases and everything else. No login or contact details are required.</p>
+<h2>What the estimate considers</h2><ul><li>Your annualised card spending</li><li>How well each card’s documented categories match your spending</li><li>Published annual fees and fee-waiver thresholds</li><li>Explicitly priced welcome or milestone benefits</li><li>Your expected airport-lounge use</li></ul>
+<h2>What can change the result</h2><p>Merchant classification, monthly reward caps, excluded transactions, redemption choices and issuer rule changes can reduce actual value. CardIQ therefore shows an editorial range rather than promising an exact return. The issuing bank’s current terms remain authoritative.</p>'''
+write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))
+
+sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/"]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
 sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]

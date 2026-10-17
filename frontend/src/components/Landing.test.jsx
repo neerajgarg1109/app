@@ -25,6 +25,7 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.textContent).toContain("card categories");
   expect(container.textContent).toContain("More than a card quiz");
   expect(container.textContent).toContain("Compare with my card");
+  expect(container.textContent).toContain("Calculate my annual value");
   const methodology = Array.from(container.querySelectorAll("a")).find((link) => link.textContent.includes("methodology"));
   expect(methodology.getAttribute("href")).toContain("/methodology/");
   await act(async () => root.unmount());

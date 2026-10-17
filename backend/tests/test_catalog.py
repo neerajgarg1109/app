@@ -268,6 +268,18 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert (await api.get("/api/admin/cards", headers=viewer_headers)).status_code == 200
                 admin_catalog = await api.get("/api/admin/cards", headers=headers)
                 assert admin_catalog.status_code == 200 and len(admin_catalog.json()["cards"]) == len(CARDS)
+                calculator = await api.post("/api/tools/value-calculator", json={
+                    "online": 30000, "dining": 8000, "travel": 12000, "fuel": 5000,
+                    "international": 2000, "other": 10000, "lounge_visits": 4,
+                    "fee_preference": "worth",
+                })
+                assert calculator.status_code == 200
+                calculation = calculator.json()
+                assert calculation["monthlySpend"] == 67000 and calculation["annualSpend"] == 804000
+                assert len(calculation["results"]) == 10
+                assert all(item["valueEstimate"]["isPersonalized"] for item in calculation["results"])
+                assert (await api.post("/api/tools/value-calculator", json={})).status_code == 422
+                assert (await api.post("/api/tools/value-calculator", json={"online": -1})).status_code == 422
                 managed_payload = {
                     "name": "Admin Test Card", "issuer": "Test Bank", "variants": ["Visa", "RuPay"],
                     "network": "Visa", "rewardLine": "Test rewards", "applyUrl": "https://bank.example.org/card",

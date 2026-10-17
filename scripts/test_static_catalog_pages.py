@@ -43,7 +43,7 @@ class Document(HTMLParser):
 
 
 def generated_pages():
-    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology"]
+    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator"]
     return [path for root in roots for path in root.glob("*/index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
 
 
@@ -100,6 +100,12 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / "methodology" / "index.html").read_text().lower()
         for disclosure in ("sources and updates", "structured editorial assessment", "earn revenue", "cannot pay to increase"):
             self.assertIn(disclosure, source)
+
+    def test_calculator_has_indexable_intent_and_honest_limitations(self):
+        source = (BUILD / "calculator" / "index.html").read_text().lower()
+        for phrase in ("credit card value calculator for india", "annual fees", "reward caps", "no login"):
+            self.assertIn(phrase, source)
+        self.assertIn(f'{ORIGIN}/#/calculator', source)
 
     def test_every_public_page_has_social_sharing_for_its_canonical_url(self):
         for path, document in self.documents.items():

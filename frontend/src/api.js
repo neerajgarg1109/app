@@ -132,6 +132,11 @@ export async function compareCards(ids) {
   return data; // [cards]
 }
 
+export async function calculateCardValue(spending) {
+  const { data } = await http.post("/tools/value-calculator", spending);
+  return data;
+}
+
 export async function trackApplyClick(cardId, resultId) {
   const { data } = await http.post(`/cards/${encodeURIComponent(cardId)}/apply-click`, { result_id: resultId || null });
   return data;

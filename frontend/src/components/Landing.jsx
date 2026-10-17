@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check, Search, GitCompare, Newspaper, Building2 } from "lucide-react";
+import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check, Search, GitCompare, Newspaper, Building2, Calculator } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
 import { getCards, getResult } from "../api";
@@ -10,6 +10,7 @@ const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCa
 
 const INTENTS = [
   { title: "Help me choose", text: "Get a recommendation based on how you spend.", icon: Sparkles, action: "quiz" },
+  { title: "Calculate my annual value", text: "Rank cards using your monthly spending and annual fees.", icon: Calculator, to: "/calculator" },
   { title: "Research a card", text: "Search fees, rewards, exclusions and our verdict.", icon: Search, to: "/cards" },
   { title: "Compare with my card", text: "Mark a card you own and compare alternatives.", icon: GitCompare, to: "/cards?mode=compare" },
   { title: "See recent card updates", text: "Start with the most recently verified cards.", icon: Newspaper, to: "/cards?sort=recent" },
