@@ -86,6 +86,9 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Trade-offs to understand");
     expect(container.textContent).toContain("Worth shortlisting for consistent online use.");
     expect(container.textContent).toContain("Compare before deciding");
+    const analysis = Array.from(container.querySelectorAll("h3")).find((item) => item.textContent === "Detailed CardIQ analysis");
+    const apply = Array.from(container.querySelectorAll("button")).find((item) => item.textContent.includes("Apply on Alpha Bank"));
+    expect(analysis.compareDocumentPosition(apply) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test("filters by category and compares any two selected cards", async () => {
