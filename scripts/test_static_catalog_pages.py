@@ -59,8 +59,10 @@ class StaticCatalogTests(unittest.TestCase):
         for path in pages:
             source = path.read_text()
             self.assertIn("CardIQ editorial view", source)
-            self.assertIn("A good fit when", source)
-            self.assertIn("Think twice when", source)
+            self.assertIn("Our take", source)
+            self.assertIn("Who it suits", source)
+            self.assertIn("Trade-offs to understand", source)
+            self.assertIn("CardIQ verdict", source)
             self.assertIn("Issuer source", source)
             self.assertNotRegex(source.lower(), r"likely to meet|guaranteed approval|approval odds")
 
@@ -93,7 +95,7 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_methodology_discloses_sources_automation_and_revenue(self):
         source = (BUILD / "methodology" / "index.html").read_text().lower()
-        for disclosure in ("sources and updates", "generated consistently", "earn revenue", "cannot pay to increase"):
+        for disclosure in ("sources and updates", "structured editorial assessment", "earn revenue", "cannot pay to increase"):
             self.assertIn(disclosure, source)
 
     def test_every_public_page_has_social_sharing_for_its_canonical_url(self):

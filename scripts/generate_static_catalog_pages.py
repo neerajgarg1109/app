@@ -108,6 +108,22 @@ def card_links(cards):
 
 
 def editorial_analysis(card):
+    stored = card.get("editorial") or {}
+    if stored.get("summary") and stored.get("verdict"):
+        list_html = lambda items: "".join(f"<li>{html.escape(item)}</li>" for item in items)
+        alternatives = "".join(
+            f'<li><a href="{ORIGIN}/cards/{html.escape(item["id"])}/">{html.escape(item["name"])}</a> — {html.escape(item["reason"])}</li>'
+            for item in stored.get("alternatives", [])
+        )
+        alternatives_section = f'<h3>Compare before deciding</h3><ul>{alternatives}</ul>' if alternatives else ""
+        return (
+            f'<section><h2>CardIQ editorial view</h2><h3>Our take</h3><p>{html.escape(stored["summary"])}</p>'
+            f'<div class="grid"><div class="card"><h3>Who it suits</h3><ul>{list_html(stored.get("idealFor", []))}</ul></div>'
+            f'<div class="card"><h3>Key strengths</h3><ul>{list_html(stored.get("strengths", []))}</ul></div></div>'
+            f'<h3>Trade-offs to understand</h3><ul>{list_html(stored.get("tradeoffs", []))}</ul>'
+            f'<h3>CardIQ verdict</h3><p>{html.escape(stored["verdict"])}</p>{alternatives_section}'
+            '<p class="muted">This independent editorial assessment is maintained separately from issuer facts and paid placement. Verify current terms before applying.</p></section>'
+        )
     labels = {"cashback": "cashback", "shopping": "shopping", "online": "online purchases", "travel": "travel", "dining": "dining", "lounge": "airport lounge access", "rewards": "reward points", "forex": "international spending", "fuel": "fuel", "grocery": "groceries", "upi": "UPI payments", "secured": "building credit"}
     interests = [labels.get(tag, tag.replace("-", " ")) for tag in (card.get("bestFor") or [])[:3]]
     audience = (", ".join(interests[:-1]) + " and " + interests[-1]) if len(interests) > 1 else (interests[0] if interests else "its published reward proposition")
@@ -173,7 +189,7 @@ write(Path("catalog"), page("Indian credit card catalogue | CardIQ", catalog_des
 methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 <p>CardIQ helps Indian customers compare credit cards and understand the trade-offs before visiting an issuer. We may earn revenue when a customer continues to an application, but payment does not improve a card’s match score or editorial treatment.</p>
 <h2>Sources and updates</h2><p>Fees, rewards, caps, exclusions and availability are documented from issuing-bank pages, key-fact statements, terms, and official co-brand partner pages. Every card shows its source links and the date its details were checked. Issuer terms remain authoritative.</p>
-<h2>Editorial analysis</h2><p>CardIQ’s editorial view is generated consistently from the sourced catalogue fields: the card’s intended use cases, fee level, waiver condition and material limitations. It does not use customer contact information, represent approval odds or replace financial advice.</p>
+<h2>Editorial analysis</h2><p>CardIQ maintains a structured editorial assessment for every card: our take, who it suits, key strengths, trade-offs, verdict and useful alternatives. Editors review this layer when material card facts change. It does not use customer contact information, represent approval odds or replace financial advice.</p>
 <h2>Recommendations and revenue</h2><p>Quiz matches use customer-selected priorities and catalogue attributes. Issuers cannot pay to increase a match score. Application approval, credit limits and final product terms are decided by the issuing bank.</p>
 <h2>Corrections</h2><p>Benefits can change. Customers should verify the linked issuer terms before applying and can report outdated information from a CardIQ result page.</p>
 <p class="muted">Methodology reviewed 17 October 2026.</p>'''

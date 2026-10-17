@@ -22,6 +22,12 @@ const cards = [
     applicationsOpen: true, active: true, applyUrl: "https://example.com/apply",
     sourceUrls: ["https://example.com/terms"], termsNote: "Issuer terms apply.",
     affiliateDisclosureRequired: true,
+    editorial: {
+      summary: "A focused cashback card for regular online spending.",
+      idealFor: ["People who prioritise online cashback."], strengths: ["Strong eligible online earn rate."],
+      tradeoffs: ["A monthly cashback cap applies."], verdict: "Worth shortlisting for consistent online use.",
+      alternatives: [{ id: "travel-card", name: "Travel Plus", reason: "Compare when travel benefits matter more." }],
+    },
   },
   {
     id: "travel-card", name: "Travel Plus", issuer: "Beta Bank", tagline: "Travel",
@@ -76,6 +82,10 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Cashback capped at ₹1,000 monthly.");
     expect(container.textContent).toContain("Issuer source 1");
     expect(container.textContent).toContain("may earn a commission");
+    expect(container.textContent).toContain("A focused cashback card for regular online spending.");
+    expect(container.textContent).toContain("Trade-offs to understand");
+    expect(container.textContent).toContain("Worth shortlisting for consistent online use.");
+    expect(container.textContent).toContain("Compare before deciding");
   });
 
   test("filters by category and compares any two selected cards", async () => {

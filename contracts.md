@@ -10,6 +10,7 @@ Frontend quiz + recommendation now backed by FastAPI + MongoDB. Questions stay i
 
 ## MongoDB collections
 - `cards`: sourced records in `backend/cards_catalog.json`, upserted by `cards_seed.py`; the live API is the runtime source for customer and scheduled SEO builds. Known demos are archived with `active: false`; paused applications have `applicationsOpen: false`. Products with invitation, upgrade, banking relationship, professional or partner-channel prerequisites have `recommendationEligible: false` and a factual `eligibilityNote`; the quiz cannot establish these prerequisites.
+- Every card carries a separate structured `editorial` object with summary, audience, strengths, trade-offs, verdict and alternatives. Admin fact edits require explicit editorial review before a draft can be saved.
 - `quiz_results`: { result_id, answers, recommended_card_id, scored_ids, scored, lead_id, email_sent, created_at }. Snapshots provide a fallback for removed historical cards; current cards are refreshed and rescored when a result or email is opened so corrections propagate.
 - `leads`: { lead_id, name, email, phone, result_id, created_at }
 - `apply_events`: immutable handoff snapshots containing card, result, official/partner link type, partner, campaign, tracking id, destination and expected payout at click time.

@@ -4,6 +4,7 @@ import importlib
 import hashlib
 import json
 import os
+import re
 import uuid
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
@@ -142,6 +143,7 @@ def test_saved_results_drop_newly_unavailable_cards_when_an_alternative_exists(m
 
 def test_catalog_has_sourced_unique_real_cards():
     assert CARDS and len(CARDS) == len({c["id"] for c in CARDS})
+    card_ids = {card["id"] for card in CARDS}
     for card in CARDS:
         assert card["id"] not in DEMO_IDS
         assert card["feeType"] in {"free", "worth", "premium"}
@@ -153,12 +155,29 @@ def test_catalog_has_sourced_unique_real_cards():
         if card.get("recommendationEligible") is False:
             assert card["eligibilityNote"] and card["applicationsOpen"]
         assert card["ratingBasis"] and 0 <= card["rating"] <= 5
+        editorial = card.get("editorial") or {}
+        assert editorial.get("summary") and editorial.get("verdict")
+        assert editorial.get("idealFor") and editorial.get("strengths") and editorial.get("tradeoffs")
+        assert all(set(item) == {"id", "name", "reason"} and item["id"] in card_ids and item["id"] != card["id"] for item in editorial.get("alternatives", []))
+        assert not re.search(r"guaranteed|approval odds|will be approved", json.dumps(editorial), re.I)
         assert card["applyUrl"] in card["sourceUrls"]
         for source in card["sourceUrls"]:
             parsed = urlparse(source)
             assert parsed.scheme == "https" and parsed.hostname
             assert parsed.hostname not in {"example.com", "www.example.com"}
             assert parsed.username is None
+
+
+def test_card_fact_edits_require_editorial_confirmation():
+    server = importlib.import_module("server")
+    existing = deepcopy(CARDS[0])
+    payload = {key: value for key, value in existing.items() if key in server.AdminCardIn.model_fields}
+    payload["rewardLine"] = "A materially changed rewards proposition"
+    with pytest.raises(server.HTTPException, match="Review the editorial"):
+        server._admin_card_doc(server.AdminCardIn(**payload), existing["id"], existing)
+    payload["editorialReviewed"] = True
+    updated = server._admin_card_doc(server.AdminCardIn(**payload), existing["id"], existing)
+    assert updated["rewardLine"] == "A materially changed rewards proposition"
 
 
 def test_scoring_excludes_paused_and_archived_cards():
@@ -558,7 +577,7 @@ def test_restricted_cards_do_not_enter_general_quiz_but_history_is_resolvable():
 def test_expansion_preserves_existing_92_and_adds_distinct_products():
     # Freeze pre-expansion product facts while allowing sourced presentation assets.
     frozen = [
-        {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl"}}
+        {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial"}}
         for card in CARDS[:92]
     ]
     encoded = json.dumps(frozen, sort_keys=True, ensure_ascii=False).encode()

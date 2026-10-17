@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Header, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo.errors import OperationFailure
 import os
 import re
 import ipaddress
@@ -369,6 +370,21 @@ class ApplyLinkIn(BaseModel):
     expected_payout: Optional[float] = None
 
 
+class EditorialAlternativeIn(BaseModel):
+    id: str
+    name: str
+    reason: str
+
+
+class EditorialContentIn(BaseModel):
+    summary: str
+    idealFor: List[str] = Field(default_factory=list)
+    strengths: List[str] = Field(default_factory=list)
+    tradeoffs: List[str] = Field(default_factory=list)
+    verdict: str
+    alternatives: List[EditorialAlternativeIn] = Field(default_factory=list)
+
+
 class AdminCardIn(BaseModel):
     name: str
     issuer: str
@@ -398,6 +414,8 @@ class AdminCardIn(BaseModel):
     minSpend: str = "low"
     creditReq: str = "good"
     rating: float = 4.0
+    editorial: Optional[EditorialContentIn] = None
+    editorialReviewed: bool = False
     applyUrl: str
     imageUrl: Optional[str] = None
     active: bool = True
@@ -488,7 +506,8 @@ def _apply_link_update(payload: ApplyLinkIn) -> dict:
 
 
 def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict] = None) -> dict:
-    values = payload.dict()
+    values = payload.model_dump()
+    editorial_reviewed = values.pop("editorialReviewed", False)
     name, issuer = values["name"].strip(), values["issuer"].strip()
     if not name or not issuer or not values["rewardLine"].strip():
         raise HTTPException(status_code=422, detail="Name, issuer and reward summary are required")
@@ -509,6 +528,31 @@ def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict]
     values["sourceUrls"] = list(dict.fromkeys(filter(None, [_validated_apply_url(v) for v in values["sourceUrls"]])))
     for text_field in ("rewardCurrency", "rewardRedemption", "forexMarkup", "fuelBenefits", "eligibilityNote"):
         values[text_field] = (values.get(text_field) or "").strip() or None
+    if values.get("editorial"):
+        editorial = values["editorial"]
+        editorial["summary"] = editorial["summary"].strip()
+        editorial["verdict"] = editorial["verdict"].strip()
+        for field in ("idealFor", "strengths", "tradeoffs"):
+            editorial[field] = [item.strip() for item in editorial[field] if item.strip()]
+        editorial["alternatives"] = [
+            {key: item[key].strip() for key in ("id", "name", "reason")}
+            for item in editorial["alternatives"] if all(item.get(key, "").strip() for key in ("id", "name", "reason"))
+        ][:3]
+        if not editorial["summary"] or not editorial["verdict"]:
+            raise HTTPException(status_code=422, detail="Editorial summary and verdict are required")
+    editorial_scalar_fields = (
+        "name", "issuer", "annualFee", "annualFeeAmount", "joiningFee", "joiningFeeAmount",
+        "rewardLine", "rewardCurrency", "rewardRedemption", "forexMarkup", "fuelBenefits",
+        "eligibilityNote", "applicationsOpen",
+    )
+    editorial_list_fields = ("highlights", "welcomeBenefits", "milestoneBenefits", "loungeBenefits", "exclusions", "bestFor")
+    facts_changed = existing and (
+        any((existing.get(field) or None) != (values.get(field) or None) for field in editorial_scalar_fields)
+        or any((existing.get(field) or []) != (values.get(field) or []) for field in editorial_list_fields)
+    )
+    if facts_changed and existing.get("editorial"):
+        if existing.get("editorial") == values.get("editorial") and not editorial_reviewed:
+            raise HTTPException(status_code=422, detail="Card facts changed. Review the editorial and confirm it before saving the draft")
     values["productGroupId"] = (values.get("productGroupId") or "").strip() or None
     values["variantName"] = (values.get("variantName") or "").strip() or None
     values.update({
@@ -1372,8 +1416,12 @@ logging.basicConfig(
 @app.on_event("startup")
 async def on_startup():
     await seed_cards(db)
+    try:
+        await db.product_events.drop_index("unique_product_funnel_event")
+    except OperationFailure:
+        pass
     await db.product_events.create_index(
-        [("event", 1), ("session_id", 1), ("result_id", 1)],
+        [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1)],
         unique=True,
         name="unique_product_funnel_event",
     )

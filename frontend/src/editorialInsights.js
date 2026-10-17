@@ -5,6 +5,17 @@ const LABELS = {
 };
 
 export function editorialInsights(card) {
+  if (card.editorial?.summary && card.editorial?.verdict) {
+    return {
+      summary: card.editorial.summary,
+      idealFor: card.editorial.idealFor || [],
+      strengths: card.editorial.strengths || [],
+      tradeoffs: card.editorial.tradeoffs || [],
+      verdict: card.editorial.verdict,
+      alternatives: card.editorial.alternatives || [],
+      stored: true,
+    };
+  }
   const tags = (card.bestFor || []).slice(0, 3).map((tag) => LABELS[tag] || tag.replaceAll("-", " "));
   const audience = naturalList(tags);
   const annualFee = Number(card.annualFeeAmount || 0);
@@ -27,7 +38,14 @@ export function editorialInsights(card) {
   if (annualFee > 0) thinkTwice.push("You would not use the card enough to offset its annual fee and applicable GST.");
   if (!thinkTwice.length) thinkTwice.push("Most of your spending falls outside the card's eligible reward categories.");
 
-  return { verdict, goodFit, thinkTwice: [...new Set(thinkTwice)].slice(0, 2) };
+  const tradeoffs = [...new Set(thinkTwice)].slice(0, 2);
+  return {
+    summary: verdict, idealFor: goodFit, strengths: [card.rewardLine].filter(Boolean), tradeoffs,
+    verdict,
+    alternatives: [], stored: false,
+    // Compatibility aliases for older callers and tests.
+    goodFit, thinkTwice: tradeoffs,
+  };
 }
 
 function extractSentence(value, pattern) {

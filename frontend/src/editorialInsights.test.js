@@ -23,3 +23,12 @@ test("explains the distinct economics of free and secured cards", () => {
   expect(free.verdict).toContain("no-annual-fee structure");
   expect(secured.verdict).toContain("building credit");
 });
+
+test("prefers the maintained editorial layer over generated fallback copy", () => {
+  const editorial = {
+    summary: "A researched summary.", idealFor: ["Frequent travellers."], strengths: ["Useful lounge access."],
+    tradeoffs: ["A quarterly cap applies."], verdict: "Worth comparing for regular travel.",
+    alternatives: [{ id: "other-card", name: "Other Card", reason: "Lower fee." }],
+  };
+  expect(editorialInsights({ name: "Card", editorial })).toMatchObject({ ...editorial, stored: true });
+});

@@ -568,6 +568,8 @@ const NEW_CARD = {
   rewardLine: "", highlights: [], bestFor: [], feeType: "free", minSpend: "low",
   welcomeBenefits: [], milestoneBenefits: [], loungeBenefits: [], exclusions: [],
   rewardCurrency: "", rewardRedemption: "", forexMarkup: "", fuelBenefits: "", eligibilityNote: "", sourceUrls: [],
+  editorial: { summary: "", idealFor: [], strengths: [], tradeoffs: [], verdict: "", alternatives: [] },
+  editorialReviewed: false,
   creditReq: "good", rating: 4, applyUrl: "", imageUrl: "", active: true, applicationsOpen: true,
 };
 
@@ -597,6 +599,8 @@ function DraftPreview({ card, canEdit, canPublish, saving, onClose, onPublish, o
         <PreviewFact label="Reward summary" value={card.rewardLine} wide />
         <PreviewFact label="Rating" value={`${card.rating}/5`} />
         <PreviewFact label="Status after publishing" value={card.active && card.applicationsOpen ? "Live and recommendable" : "Not shown in recommendations"} />
+        <PreviewFact label="Editorial take" value={card.editorial?.summary} wide />
+        <PreviewFact label="Editorial verdict" value={card.editorial?.verdict} wide />
       </div>
       {(card.highlights || []).length > 0 && <div className="mt-4 rounded-2xl border p-4" style={{ borderColor: "var(--ciq-line)" }}><div className="text-xs font-bold uppercase tracking-wide">Highlights</div><ul className="mt-2 list-disc space-y-1 pl-5 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{card.highlights.map((item) => <li key={item}>{item}</li>)}</ul></div>}
       <div className="mt-4 rounded-2xl border p-4" style={{ borderColor: "var(--ciq-line)" }}><div className="text-xs font-bold uppercase tracking-wide">Recommendation impact</div><p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Test where this draft ranks for a representative customer.</p><div className="mt-3 flex flex-wrap gap-2">{Object.entries(PREVIEW_PROFILES).map(([label, answers]) => <button key={label} disabled={checking} onClick={() => checkImpact(answers)} className="rounded-lg border px-2.5 py-1.5 text-xs font-semibold" style={{ borderColor: "var(--ciq-line)" }}>{label}</button>)}</div>{checking && <div className="mt-3 text-xs">Calculating…</div>}{impact && <div className="mt-3 rounded-xl p-3 text-sm" style={{ background: "#eef9f6" }}><strong>Rank #{impact.rank || "—"}</strong> of {impact.total} · {impact.confidence ?? "—"}% match<div className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Top card: {impact.top_card}</div></div>}</div>
@@ -616,8 +620,9 @@ function PreviewFact({ label, value, wide }) {
 function CheckPublishIcon() { return <Save className="h-4 w-4" />; }
 
 function CardEditor({ card, saving, onClose, onSave }) {
-  const [form, setForm] = useState({ ...NEW_CARD, ...card, applyUrl: card.applyUrl || card.official_apply_url || "" });
+  const [form, setForm] = useState({ ...NEW_CARD, ...card, editorial: { ...NEW_CARD.editorial, ...(card.editorial || {}) }, applyUrl: card.applyUrl || card.official_apply_url || "" });
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const setEditorial = (key, value) => setForm((current) => ({ ...current, editorial: { ...current.editorial, [key]: value } }));
   const submit = (e) => {
     e.preventDefault();
     onSave({
@@ -627,6 +632,11 @@ function CardEditor({ card, saving, onClose, onSave }) {
       welcomeBenefits: lines(form.welcomeBenefits), milestoneBenefits: lines(form.milestoneBenefits),
       loungeBenefits: lines(form.loungeBenefits), exclusions: lines(form.exclusions), sourceUrls: lines(form.sourceUrls),
       bestFor: Array.isArray(form.bestFor) ? form.bestFor : String(form.bestFor || "").split(",").map((v) => v.trim()).filter(Boolean),
+      editorial: form.editorial.summary || form.editorial.verdict ? {
+        ...form.editorial,
+        idealFor: lines(form.editorial.idealFor), strengths: lines(form.editorial.strengths), tradeoffs: lines(form.editorial.tradeoffs),
+        alternatives: parseAlternatives(form.editorial.alternatives),
+      } : null,
       annualFeeAmount: Number(form.annualFeeAmount), joiningFeeAmount: Number(form.joiningFeeAmount), rating: Number(form.rating),
     });
   };
@@ -666,6 +676,19 @@ function CardEditor({ card, saving, onClose, onSave }) {
         <label className={`${labelClass} sm:col-span-2`}>Reward exclusions <span className="font-normal">(one per line)</span><textarea rows="3" className={inputClass} value={listText(form.exclusions)} onChange={(e) => set("exclusions", e.target.value)} /></label>
         <label className={`${labelClass} sm:col-span-2`}>Fuel benefit<textarea rows="2" className={inputClass} value={form.fuelBenefits || ""} onChange={(e) => set("fuelBenefits", e.target.value)} /></label>
         <label className={`${labelClass} sm:col-span-2`}>Eligibility note<textarea rows="2" className={inputClass} value={form.eligibilityNote || ""} onChange={(e) => set("eligibilityNote", e.target.value)} /></label>
+        <div className="sm:col-span-2 rounded-2xl border p-4" style={{ borderColor: "var(--ciq-line)", background: "#f7fbfa" }}>
+          <div className="font-display text-sm font-extrabold">CardIQ editorial</div>
+          <p className="mt-1 text-xs font-normal" style={{ color: "var(--ciq-ink-soft)" }}>Independent analysis shown on the card page. Edit this separately from issuer-sourced facts.</p>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <label className={`${labelClass} sm:col-span-2`}>Our take<textarea rows="3" className={inputClass} value={form.editorial.summary} onChange={(e) => setEditorial("summary", e.target.value)} /></label>
+            <label className={labelClass}>Who it suits <span className="font-normal">(one per line)</span><textarea rows="5" className={inputClass} value={listText(form.editorial.idealFor)} onChange={(e) => setEditorial("idealFor", e.target.value)} /></label>
+            <label className={labelClass}>Key strengths <span className="font-normal">(one per line)</span><textarea rows="5" className={inputClass} value={listText(form.editorial.strengths)} onChange={(e) => setEditorial("strengths", e.target.value)} /></label>
+            <label className={`${labelClass} sm:col-span-2`}>Trade-offs <span className="font-normal">(one per line)</span><textarea rows="4" className={inputClass} value={listText(form.editorial.tradeoffs)} onChange={(e) => setEditorial("tradeoffs", e.target.value)} /></label>
+            <label className={`${labelClass} sm:col-span-2`}>Verdict<textarea rows="3" className={inputClass} value={form.editorial.verdict} onChange={(e) => setEditorial("verdict", e.target.value)} /></label>
+            <label className={`${labelClass} sm:col-span-2`}>Alternatives <span className="font-normal">(one per line: card-id | name | reason)</span><textarea rows="4" className={inputClass} value={alternativesText(form.editorial.alternatives)} onChange={(e) => setEditorial("alternatives", e.target.value)} /></label>
+          </div>
+          {card.id && <label className="mt-4 flex items-start gap-2 text-xs font-semibold"><input type="checkbox" checked={Boolean(form.editorialReviewed)} onChange={(e) => set("editorialReviewed", e.target.checked)} /><span>I reviewed this editorial against any fee, reward, benefit or availability changes in this draft.</span></label>}
+        </div>
         <label className={`${labelClass} sm:col-span-2`}>Issuer source URLs <span className="font-normal">(one HTTPS URL per line)</span><textarea rows="3" className={inputClass} value={listText(form.sourceUrls)} onChange={(e) => set("sourceUrls", e.target.value)} /></label>
         <label className={`${labelClass} sm:col-span-2`}>Official apply URL<input required type="url" className={inputClass} value={form.applyUrl} onChange={(e) => set("applyUrl", e.target.value)} placeholder="https://issuer.example/card" /></label>
         <label className={`${labelClass} sm:col-span-2`}>Card image URL<input className={inputClass} value={form.imageUrl || ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="/cards/card.png or https://…" /></label>
@@ -684,6 +707,11 @@ function CardEditor({ card, saving, onClose, onSave }) {
 
 function lines(value) { return Array.isArray(value) ? value : String(value || "").split("\n").map((item) => item.trim()).filter(Boolean); }
 function listText(value) { return Array.isArray(value) ? value.join("\n") : value || ""; }
+function alternativesText(value) { return Array.isArray(value) ? value.map((item) => `${item.id} | ${item.name} | ${item.reason}`).join("\n") : value || ""; }
+function parseAlternatives(value) {
+  if (Array.isArray(value)) return value;
+  return lines(value).map((line) => { const [id, name, ...reason] = line.split("|").map((item) => item.trim()); return { id, name, reason: reason.join(" | ") }; }).filter((item) => item.id && item.name && item.reason);
+}
 
 function Stat({ label, value }) {
   return (

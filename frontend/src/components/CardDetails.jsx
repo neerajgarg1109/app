@@ -28,14 +28,17 @@ export default function CardDetails({ card, heading = "Card details", compact = 
 
       <section className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
         <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>CardIQ editorial view</div>
-        <h3 className="mt-1 font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>Who should consider this card?</h3>
-        <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{editorial.verdict}</p>
+        <h3 className="mt-1 font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>Our take</h3>
+        <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{editorial.summary}</p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <EditorialList title="A good fit when" items={editorial.goodFit} />
-          <EditorialList title="Think twice when" items={editorial.thinkTwice} />
+          <EditorialList title="Who it suits" items={editorial.idealFor} />
+          <EditorialList title="Key strengths" items={editorial.strengths} />
         </div>
+        <div className="mt-4"><EditorialList title="Trade-offs to understand" items={editorial.tradeoffs} /></div>
+        <div className="mt-4 rounded-xl p-3" style={{ background: "#f2faf7" }}><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>CardIQ verdict</div><p className="mt-1.5 text-sm font-semibold leading-relaxed">{editorial.verdict}</p></div>
+        {editorial.alternatives.length > 0 && <div className="mt-4"><div className="text-xs font-bold">Compare before deciding</div><div className="mt-2 space-y-2">{editorial.alternatives.map((alternative) => <a key={alternative.id} href={`${process.env.PUBLIC_URL}/#/cards/${encodeURIComponent(alternative.id)}`} className="block rounded-xl border p-3" style={{ borderColor: "var(--ciq-line)" }}><div className="text-sm font-bold" style={{ color: "var(--ciq-teal)" }}>{alternative.name}</div><div className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{alternative.reason}</div></a>)}</div></div>}
         <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>
-          This editorial view is generated from the sourced fees, rewards and conditions shown on this page. It is not approval advice or a paid ranking.
+          This editorial assessment is maintained separately from issuer facts and never changes paid ranking. Verify current terms before applying.
         </p>
       </section>
 
