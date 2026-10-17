@@ -11,6 +11,7 @@ from itertools import product
 from urllib.parse import urlparse
 
 import httpx
+import pytest
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from cards_seed import CARDS, CATALOG_QUERY, DEMO_IDS, RECOMMENDABLE_QUERY, recommend_cards, seed_cards
@@ -54,6 +55,36 @@ def test_public_card_uses_only_live_partner_links_and_hides_campaign_metadata():
         assert public["applyUrl"] == official_url
         assert public["applicationLinkType"] == "official"
         assert public["affiliateDisclosureRequired"] is False
+
+
+def test_partner_link_configuration_validates_state_and_commercial_metadata():
+    server = importlib.import_module("server")
+    with pytest.raises(server.HTTPException, match="status must be testing, live or paused"):
+        server._apply_link_update(server.ApplyLinkIn(apply_url="https://partner.example/apply", status="draft"))
+    with pytest.raises(server.HTTPException, match="Partner name is required"):
+        server._apply_link_update(server.ApplyLinkIn(apply_url="https://partner.example/apply", status="live"))
+    with pytest.raises(server.HTTPException, match="Expected payout cannot be negative"):
+        server._apply_link_update(server.ApplyLinkIn(
+            apply_url="https://partner.example/apply", partner_name="Network", status="live", expected_payout=-1,
+        ))
+
+    testing = server._apply_link_update(server.ApplyLinkIn(
+        apply_url=" https://partner.example/apply ", campaign_id=" launch ", tracking_id=" result ",
+        status="testing", expected_payout=750,
+    ))["$set"]
+    assert testing["applyUrlOverride"] == "https://partner.example/apply"
+    assert testing["applyPartner"] is None
+    assert testing["applyCampaignId"] == "launch"
+    assert testing["applyTrackingId"] == "result"
+    assert testing["applyLinkStatus"] == "testing"
+    assert testing["expectedPayout"] == 750
+    assert testing["applyLinkUpdatedAt"].tzinfo is not None
+
+    reset = server._apply_link_update(server.ApplyLinkIn(apply_url=None))
+    assert set(reset["$unset"]) == {
+        "applyUrlOverride", "applyPartner", "applyCampaignId", "applyTrackingId",
+        "applyLinkStatus", "expectedPayout", "applyLinkUpdatedAt",
+    }
 
 
 def test_catalog_has_254_sourced_unique_real_cards():

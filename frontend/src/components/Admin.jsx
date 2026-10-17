@@ -131,7 +131,7 @@ export default function Admin() {
       setAdminCards((cards) => editingCard?.id
         ? cards.map((card) => card.id === saved.id ? saved : card)
         : [...cards, saved].sort((a, b) => a.name.localeCompare(b.name)));
-      setLinkDrafts((drafts) => ({ ...drafts, [saved.id]: saved.custom_apply_url || "" }));
+      setLinkDrafts((drafts) => ({ ...drafts, [saved.id]: linkDraft(saved) }));
       setEditingCard(null);
       setLinkMsg({ type: "success", text: `${saved.name} saved as a draft. Preview and publish it when ready.` });
     } catch (e) {

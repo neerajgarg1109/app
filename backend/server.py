@@ -462,6 +462,31 @@ def _validated_apply_url(value: Optional[str]) -> Optional[str]:
     return value
 
 
+def _apply_link_update(payload: ApplyLinkIn) -> dict:
+    """Validate partner-link configuration and return the Mongo update document."""
+    apply_url = _validated_apply_url(payload.apply_url)
+    if payload.status not in {"testing", "live", "paused"}:
+        raise HTTPException(status_code=422, detail="Partner link status must be testing, live or paused")
+    partner_name = (payload.partner_name or "").strip() or None
+    campaign_id = (payload.campaign_id or "").strip() or None
+    tracking_id = (payload.tracking_id or "").strip() or None
+    if apply_url and payload.status == "live" and not partner_name:
+        raise HTTPException(status_code=422, detail="Partner name is required before a link goes live")
+    if payload.expected_payout is not None and payload.expected_payout < 0:
+        raise HTTPException(status_code=422, detail="Expected payout cannot be negative")
+    if apply_url:
+        return {"$set": {
+            "applyUrlOverride": apply_url, "applyPartner": partner_name,
+            "applyCampaignId": campaign_id, "applyTrackingId": tracking_id,
+            "applyLinkStatus": payload.status, "expectedPayout": payload.expected_payout,
+            "applyLinkUpdatedAt": datetime.now(timezone.utc),
+        }}
+    return {"$unset": {key: "" for key in (
+        "applyUrlOverride", "applyPartner", "applyCampaignId", "applyTrackingId",
+        "applyLinkStatus", "expectedPayout", "applyLinkUpdatedAt",
+    )}}
+
+
 def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict] = None) -> dict:
     values = payload.dict()
     name, issuer = values["name"].strip(), values["issuer"].strip()
@@ -1055,28 +1080,7 @@ async def update_admin_card_apply_link(
     x_admin_token: Optional[str] = Header(None),
 ):
     _require_admin(x_admin_token, "editor")
-    apply_url = _validated_apply_url(payload.apply_url)
-    if payload.status not in {"testing", "live", "paused"}:
-        raise HTTPException(status_code=422, detail="Partner link status must be testing, live or paused")
-    partner_name = (payload.partner_name or "").strip() or None
-    campaign_id = (payload.campaign_id or "").strip() or None
-    tracking_id = (payload.tracking_id or "").strip() or None
-    if apply_url and payload.status == "live" and not partner_name:
-        raise HTTPException(status_code=422, detail="Partner name is required before a link goes live")
-    if payload.expected_payout is not None and payload.expected_payout < 0:
-        raise HTTPException(status_code=422, detail="Expected payout cannot be negative")
-    if apply_url:
-        update = {"$set": {
-            "applyUrlOverride": apply_url, "applyPartner": partner_name,
-            "applyCampaignId": campaign_id, "applyTrackingId": tracking_id,
-            "applyLinkStatus": payload.status, "expectedPayout": payload.expected_payout,
-            "applyLinkUpdatedAt": datetime.now(timezone.utc),
-        }}
-    else:
-        update = {"$unset": {key: "" for key in (
-            "applyUrlOverride", "applyPartner", "applyCampaignId", "applyTrackingId",
-            "applyLinkStatus", "expectedPayout", "applyLinkUpdatedAt",
-        )}}
+    update = _apply_link_update(payload)
     result = await db.cards.update_one({"id": card_id, **CATALOG_QUERY}, update)
     if not result.matched_count:
         raise HTTPException(status_code=404, detail="Card not found")

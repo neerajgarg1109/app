@@ -137,6 +137,13 @@ describe("Result customer flows", () => {
     open.mockRestore();
   });
 
+  test("discloses monetised application links without implying paid ranking", async () => {
+    await act(async () => root.render(<Result scored={[{
+      ...scored[0], card: { ...card, applicationLinkType: "partner", affiliateDisclosureRequired: true },
+    }]} resultId="result-1" answers={{}} onRestart={jest.fn()} />));
+    expect(container.textContent).toContain("CardIQ may earn a commission. Rankings are unaffected.");
+  });
+
   test("shows every verified top-card detail and opens complete alternate features", async () => {
     await act(async () => root.render(<Result scored={[...scored, { card: alternateCard, confidence: 81, reasons: ["Travel fit"] }]} resultId="result-1" answers={{}} onRestart={jest.fn()} />));
     expect(container.textContent).toContain("All verified benefits and conditions");
