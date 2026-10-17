@@ -1,21 +1,32 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ExternalLink, Loader2, Search, X } from "lucide-react";
+import { ArrowLeft, Check, GitCompare, Loader2, Search, X } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { getCards, trackApplyClick } from "../api";
 import { recordProductEvent } from "../productAnalytics";
 import Logo from "./Logo";
 import CardDetails from "./CardDetails";
+import Compare from "./Compare";
 
 const PAGE_SIZE = 24;
+const POPULAR_CATEGORIES = [
+  ["cashback", "Cashback"], ["travel", "Travel"], ["lounge", "Lounge"], ["free", "Lifetime free"],
+  ["fuel", "Fuel"], ["upi", "UPI / RuPay"], ["secured", "Secured"], ["premium", "Premium"],
+];
 
 export default function CardExplorer() {
   const { cardId } = useParams();
   const [cards, setCards] = useState([]);
   const [query, setQuery] = useState("");
-  const [issuer, setIssuer] = useState("all");
+  const initialFilters = hashFilters();
+  const [issuer, setIssuer] = useState(initialFilters.issuer || "all");
+  const [category, setCategory] = useState(initialFilters.category || "all");
   const [visible, setVisible] = useState(PAGE_SIZE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [compareIds, setCompareIds] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("ciq_compare_cards") || "[]").slice(0, 3); } catch (error) { return []; }
+  });
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -28,14 +39,23 @@ export default function CardExplorer() {
     const needle = query.trim().toLowerCase();
     return cards.filter((card) => {
       if (issuer !== "all" && card.issuer !== issuer) return false;
+      if (category !== "all" && !matchesCategory(card, category)) return false;
       if (!needle) return true;
       const searchable = [card.name, card.issuer, card.network, card.rewardLine, ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
       return searchable.includes(needle);
     });
-  }, [cards, issuer, query]);
+  }, [cards, issuer, category, query]);
   const selected = cardId ? cards.find((card) => card.id === cardId) : null;
+  const compareCards = compareIds.map((id) => cards.find((card) => card.id === id)).filter(Boolean);
 
-  useEffect(() => { setVisible(PAGE_SIZE); }, [query, issuer]);
+  useEffect(() => { setVisible(PAGE_SIZE); }, [query, issuer, category]);
+  useEffect(() => { localStorage.setItem("ciq_compare_cards", JSON.stringify(compareIds)); }, [compareIds]);
+
+  const toggleCompare = (cardIdToToggle) => {
+    setCompareIds((current) => current.includes(cardIdToToggle)
+      ? current.filter((id) => id !== cardIdToToggle)
+      : current.length < 3 ? [...current, cardIdToToggle] : current);
+  };
 
   const apply = (card) => {
     if (!card?.applyUrl || card.active === false || card.applicationsOpen === false) return;
@@ -45,7 +65,7 @@ export default function CardExplorer() {
   };
 
   return (
-    <div className="ciq-shell min-h-screen pb-16">
+    <div className="ciq-shell min-h-screen pb-32">
       <header className="ciq-container flex items-center justify-between py-5">
         <Logo size="md" />
         <Link to="/" className="ciq-press inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}><ArrowLeft className="h-4 w-4" /> Home</Link>
@@ -70,13 +90,33 @@ export default function CardExplorer() {
           </select>
         </section>
 
+        {!loading && !error && <>
+          <section className="mt-4">
+            <div className="text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>Browse by category</div>
+            <div className="mt-2 flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+              <button type="button" onClick={() => setCategory("all")} className="flex-shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold" style={{ borderColor: category === "all" ? "var(--ciq-teal-600)" : "var(--ciq-line)", background: category === "all" ? "var(--ciq-teal-600)" : "#fff", color: category === "all" ? "#fff" : "var(--ciq-ink)" }}>All cards</button>
+              {POPULAR_CATEGORIES.map(([value, label]) => <button type="button" key={value} onClick={() => setCategory(value)} className="flex-shrink-0 rounded-full border px-3 py-1.5 text-xs font-semibold" style={{ borderColor: category === value ? "var(--ciq-teal-600)" : "var(--ciq-line)", background: category === value ? "var(--ciq-teal-600)" : "#fff", color: category === value ? "#fff" : "var(--ciq-ink)" }}>{label}</button>)}
+            </div>
+          </section>
+          <details className="mt-4 rounded-2xl border bg-white p-3" style={{ borderColor: "var(--ciq-line)" }}>
+            <summary className="cursor-pointer text-sm font-bold">Browse {issuers.length} issuers</summary>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              <button type="button" onClick={() => setIssuer("all")} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === "all" ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>All issuers <span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{cards.length} cards</span></button>
+              {issuers.map((name) => { const count = cards.filter((card) => card.issuer === name).length; return <button type="button" key={name} onClick={() => setIssuer(name)} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === name ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>{name}<span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{count} card{count === 1 ? "" : "s"}</span></button>; })}
+            </div>
+          </details>
+        </>}
+
         {loading && <div className="grid min-h-[40vh] place-items-center"><Loader2 className="h-7 w-7 ciq-spin" style={{ color: "var(--ciq-teal)" }} /></div>}
         {error && <div className="mt-8 rounded-2xl border bg-white p-5 text-center text-sm" style={{ borderColor: "var(--ciq-line)" }}>We couldn’t load the catalogue. Please try again.</div>}
         {!loading && !error && <>
           <div className="mt-4 flex items-center justify-between text-xs" style={{ color: "var(--ciq-ink-soft)" }}><span>{filtered.length} card{filtered.length === 1 ? "" : "s"} found</span><span>Details checked by CardIQ</span></div>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {filtered.slice(0, visible).map((card) => (
-              <Link key={card.id} to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press rounded-2xl border bg-white p-4 text-left" style={{ borderColor: "var(--ciq-line)" }}>
+            {filtered.slice(0, visible).map((card) => {
+              const comparing = compareIds.includes(card.id);
+              const compareFull = compareIds.length >= 3 && !comparing;
+              return <article key={card.id} className="rounded-2xl border bg-white p-4 text-left" style={{ borderColor: comparing ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>
+              <Link to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press block">
                 <div className="flex items-start gap-3">
                   <div className="h-12 w-20 flex-shrink-0 rounded-xl" style={{ background: `linear-gradient(135deg, ${card.palette?.[0] || "#172554"}, ${card.palette?.[1] || "#1e40af"})` }} />
                   <div className="min-w-0 flex-1"><div className="font-display text-sm font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</div><div className="mt-0.5 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</div></div>
@@ -84,7 +124,9 @@ export default function CardExplorer() {
                 <p className="mt-3 text-xs font-semibold leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{card.rewardLine}</p>
                 <div className="mt-3 flex items-center justify-between gap-3 border-t pt-3 text-xs" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}><span>{card.annualFee || "Fee not specified"}</span><span className="flex-shrink-0 font-bold" style={{ color: "var(--ciq-teal)" }}>Full details</span></div>
               </Link>
-            ))}
+              <button type="button" disabled={compareFull} onClick={() => toggleCompare(card.id)} className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-semibold disabled:opacity-40" style={{ borderColor: comparing ? "var(--ciq-teal-600)" : "var(--ciq-line)", color: comparing ? "var(--ciq-teal)" : "var(--ciq-ink)" }}>{comparing ? <><Check className="h-3.5 w-3.5" /> Added to compare</> : <><GitCompare className="h-3.5 w-3.5" /> {compareFull ? "Compare tray full" : "Add to compare"}</>}</button>
+              </article>;
+            })}
           </div>
           {filtered.length === 0 && <div className="mt-8 rounded-2xl border bg-white p-6 text-center"><div className="font-display font-bold">No matching cards</div><p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Try a card name, issuer, benefit or a broader search.</p></div>}
           {visible < filtered.length && <button type="button" onClick={() => setVisible((count) => count + PAGE_SIZE)} className="ciq-press mt-5 w-full rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Show more cards</button>}
@@ -102,6 +144,24 @@ export default function CardExplorer() {
           </div>
         </div>
       )}
+      {compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">Compare {compareCards.length} of 3 cards</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => card.name).join(" · ")}</div></div><button type="button" onClick={() => setCompareIds([])} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={() => setShowCompare(true)} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
+      {showCompare && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
     </div>
   );
+}
+
+function matchesCategory(card, category) {
+  const text = [card.name, card.rewardLine, card.feeType, card.network, ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
+  if (category === "free") return card.annualFeeAmount === 0 || /lifetime free|no annual fee/.test(text);
+  if (category === "secured") return card.secured === true || /fixed deposit|secured/.test(text);
+  if (category === "premium") return card.feeType === "premium" || card.annualFeeAmount >= 5000;
+  if (category === "upi") return /rupay|upi/.test(text);
+  return text.includes(category);
+}
+
+function hashFilters() {
+  try {
+    const query = window.location.hash.split("?")[1] || "";
+    return Object.fromEntries(new URLSearchParams(query));
+  } catch (error) { return {}; }
 }

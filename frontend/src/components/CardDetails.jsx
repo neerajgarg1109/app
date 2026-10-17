@@ -21,6 +21,8 @@ export default function CardDetails({ card, heading = "Card details", compact = 
         </p>
       </div>
 
+      <StructuredBenefits card={card} />
+
       {!compact && <CreditCardVisual card={card} />}
 
       <div className="rounded-2xl p-4" style={{ background: "#f2faf7" }}>
@@ -78,6 +80,28 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       )}
     </div>
   );
+}
+
+function StructuredBenefits({ card }) {
+  const sections = [
+    ["Welcome benefits", card.welcomeBenefits],
+    ["Milestone benefits", card.milestoneBenefits],
+    ["Lounge access", card.loungeBenefits],
+    ["Reward exclusions", card.exclusions],
+  ].filter(([, items]) => Array.isArray(items) && items.length);
+  const facts = [
+    ["Reward currency", card.rewardCurrency],
+    ["Reward redemption", card.rewardRedemption],
+    ["Forex markup", card.forexMarkup || (typeof card.forexMarkupPercent === "number" ? `${card.forexMarkupPercent}% + applicable taxes` : null)],
+    ["Fuel benefit", card.fuelBenefits],
+    ["Eligibility note", card.eligibilityNote],
+  ].filter(([, value]) => value);
+  if (!sections.length && !facts.length) return null;
+  return <div className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+    <div className="font-display text-sm font-bold">Structured benefit details</div>
+    {facts.map(([label, value]) => <div key={label} className="mt-3 border-t pt-3 text-sm" style={{ borderColor: "var(--ciq-line)" }}><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>{label}</div><div className="mt-1 leading-relaxed">{value}</div></div>)}
+    {sections.map(([label, items]) => <div key={label} className="mt-3 border-t pt-3" style={{ borderColor: "var(--ciq-line)" }}><div className="text-xs font-bold">{label}</div><ul className="mt-1.5 list-disc space-y-1 pl-5 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}
+  </div>;
 }
 
 function creditLabel(value) {

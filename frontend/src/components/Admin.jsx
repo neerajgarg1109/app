@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3, Send, Clock, Link2, Search, Save, LayoutDashboard, Users, Building2, Plus, Pencil, X, History, Archive, Upload, Activity, MessageSquare } from "lucide-react";
 import Logo from "./Logo";
 import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders } from "../api";
+import { catalogQualityIssues } from "../catalogQuality";
 
 const PRESETS = [
   { key: "all", label: "All time" },
@@ -260,16 +261,7 @@ export default function Admin() {
   }, {})).sort(([left], [right]) => left.localeCompare(right));
   const canEdit = ["editor", "publisher", "owner"].includes(adminRole);
   const canPublish = ["publisher", "owner"].includes(adminRole);
-  const duplicateNames = new Set(adminCards.filter((card, index, cards) => cards.findIndex((other) => other.name.toLowerCase() === card.name.toLowerCase()) !== index).map((card) => card.name.toLowerCase()));
-  const healthIssues = adminCards.flatMap((card) => {
-    const issues = [];
-    if (!card.imageUrl) issues.push("Missing card image");
-    if (!card.applyUrl && !card.official_apply_url) issues.push("Missing official apply link");
-    if (!(card.highlights || []).length) issues.push("No benefit highlights");
-    if (!card.verifiedOn || Date.now() - new Date(card.verifiedOn).getTime() > 180 * 86400000) issues.push("Details need re-verification");
-    if (duplicateNames.has(card.name.toLowerCase())) issues.push("Possible duplicate product");
-    return issues.map((issue) => ({ card, issue }));
-  });
+  const healthIssues = catalogQualityIssues(adminCards);
 
   return (
     <div className="ciq-shell min-h-screen pb-16">
@@ -545,6 +537,8 @@ const NEW_CARD = {
   name: "", issuer: "", variants: [], productGroupId: "", variantName: "", network: "Visa", tagline: "",
   annualFee: "No annual fee", annualFeeAmount: 0, joiningFee: "No joining fee", joiningFeeAmount: 0,
   rewardLine: "", highlights: [], bestFor: [], feeType: "free", minSpend: "low",
+  welcomeBenefits: [], milestoneBenefits: [], loungeBenefits: [], exclusions: [],
+  rewardCurrency: "", rewardRedemption: "", forexMarkup: "", fuelBenefits: "", eligibilityNote: "", sourceUrls: [],
   creditReq: "good", rating: 4, applyUrl: "", imageUrl: "", active: true, applicationsOpen: true,
 };
 
@@ -601,6 +595,8 @@ function CardEditor({ card, saving, onClose, onSave }) {
       ...form,
       variants: Array.isArray(form.variants) ? form.variants : String(form.variants || "").split(",").map((v) => v.trim()).filter(Boolean),
       highlights: Array.isArray(form.highlights) ? form.highlights : String(form.highlights || "").split("\n").map((v) => v.trim()).filter(Boolean),
+      welcomeBenefits: lines(form.welcomeBenefits), milestoneBenefits: lines(form.milestoneBenefits),
+      loungeBenefits: lines(form.loungeBenefits), exclusions: lines(form.exclusions), sourceUrls: lines(form.sourceUrls),
       bestFor: Array.isArray(form.bestFor) ? form.bestFor : String(form.bestFor || "").split(",").map((v) => v.trim()).filter(Boolean),
       annualFeeAmount: Number(form.annualFeeAmount), joiningFeeAmount: Number(form.joiningFeeAmount), rating: Number(form.rating),
     });
@@ -632,6 +628,16 @@ function CardEditor({ card, saving, onClose, onSave }) {
         <label className={labelClass}>CardIQ rating<input min="0" max="5" step="0.1" type="number" className={inputClass} value={form.rating} onChange={(e) => set("rating", e.target.value)} /></label>
         <label className={`${labelClass} sm:col-span-2`}>Best for <span className="font-normal">(comma-separated)</span><input className={inputClass} value={Array.isArray(form.bestFor) ? form.bestFor.join(", ") : form.bestFor} onChange={(e) => set("bestFor", e.target.value)} placeholder="cashback, shopping, online" /></label>
         <label className={`${labelClass} sm:col-span-2`}>Highlights <span className="font-normal">(one per line)</span><textarea rows="4" className={inputClass} value={Array.isArray(form.highlights) ? form.highlights.join("\n") : form.highlights} onChange={(e) => set("highlights", e.target.value)} /></label>
+        <label className={labelClass}>Reward currency<input className={inputClass} value={form.rewardCurrency || ""} onChange={(e) => set("rewardCurrency", e.target.value)} placeholder="Cashback, Reward Points, Air Miles" /></label>
+        <label className={labelClass}>Forex markup<input className={inputClass} value={form.forexMarkup || ""} onChange={(e) => set("forexMarkup", e.target.value)} placeholder="3.5% + GST" /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Reward redemption<textarea rows="2" className={inputClass} value={form.rewardRedemption || ""} onChange={(e) => set("rewardRedemption", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Welcome benefits <span className="font-normal">(one per line)</span><textarea rows="3" className={inputClass} value={listText(form.welcomeBenefits)} onChange={(e) => set("welcomeBenefits", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Milestone benefits <span className="font-normal">(one per line)</span><textarea rows="3" className={inputClass} value={listText(form.milestoneBenefits)} onChange={(e) => set("milestoneBenefits", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Lounge benefits <span className="font-normal">(one per line)</span><textarea rows="3" className={inputClass} value={listText(form.loungeBenefits)} onChange={(e) => set("loungeBenefits", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Reward exclusions <span className="font-normal">(one per line)</span><textarea rows="3" className={inputClass} value={listText(form.exclusions)} onChange={(e) => set("exclusions", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Fuel benefit<textarea rows="2" className={inputClass} value={form.fuelBenefits || ""} onChange={(e) => set("fuelBenefits", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Eligibility note<textarea rows="2" className={inputClass} value={form.eligibilityNote || ""} onChange={(e) => set("eligibilityNote", e.target.value)} /></label>
+        <label className={`${labelClass} sm:col-span-2`}>Issuer source URLs <span className="font-normal">(one HTTPS URL per line)</span><textarea rows="3" className={inputClass} value={listText(form.sourceUrls)} onChange={(e) => set("sourceUrls", e.target.value)} /></label>
         <label className={`${labelClass} sm:col-span-2`}>Official apply URL<input required type="url" className={inputClass} value={form.applyUrl} onChange={(e) => set("applyUrl", e.target.value)} placeholder="https://issuer.example/card" /></label>
         <label className={`${labelClass} sm:col-span-2`}>Card image URL<input className={inputClass} value={form.imageUrl || ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="/cards/card.png or https://…" /></label>
       </div>
@@ -646,6 +652,9 @@ function CardEditor({ card, saving, onClose, onSave }) {
     </form>
   </div>;
 }
+
+function lines(value) { return Array.isArray(value) ? value : String(value || "").split("\n").map((item) => item.trim()).filter(Boolean); }
+function listText(value) { return Array.isArray(value) ? value.join("\n") : value || ""; }
 
 function Stat({ label, value }) {
   return (

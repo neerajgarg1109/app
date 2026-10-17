@@ -31,6 +31,7 @@ jobs:
       - run: yarn build
         env:
           REACT_APP_BACKEND_URL: https://cardiq-api-g2ir.onrender.com
+      - run: python3 ../scripts/generate_static_catalog_pages.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/build

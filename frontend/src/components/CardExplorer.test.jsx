@@ -43,6 +43,7 @@ describe("CardExplorer", () => {
 
   beforeEach(() => {
     mockCardId = undefined;
+    localStorage.clear();
     getCards.mockResolvedValue(cards);
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -73,5 +74,24 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Everything we know about this card");
     expect(container.textContent).toContain("Cashback capped at ₹1,000 monthly.");
     expect(container.textContent).toContain("Issuer source 1");
+  });
+
+  test("filters by category and compares any two selected cards", async () => {
+    await act(async () => root.render(<CardExplorer />));
+    await act(async () => Promise.resolve());
+    const cashback = Array.from(container.querySelectorAll("button")).find((item) => item.textContent === "Cashback");
+    await act(async () => cashback.click());
+    expect(container.textContent).toContain("Everyday Cashback");
+    expect(container.textContent).not.toContain("Travel Plus");
+    const allCards = Array.from(container.querySelectorAll("button")).find((item) => item.textContent === "All cards");
+    await act(async () => allCards.click());
+    const addButtons = Array.from(container.querySelectorAll("button")).filter((item) => item.textContent.includes("Add to compare"));
+    await act(async () => { addButtons[0].click(); addButtons[1].click(); });
+    expect(container.textContent).toContain("Compare 2 of 3 cards");
+    const compare = Array.from(container.querySelectorAll("button")).find((item) => item.textContent === "Compare");
+    await act(async () => compare.click());
+    expect(container.textContent).toContain("Compare cards");
+    expect(container.textContent).toContain("Everyday Cashback");
+    expect(container.textContent).toContain("Travel Plus");
   });
 });

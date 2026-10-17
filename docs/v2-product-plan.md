@@ -49,6 +49,8 @@ Acceptance criteria:
 
 - Public searchable card catalogue and direct card-detail links, with no quiz required.
 - Complete verified details for the winner and both alternative recommendations.
+- Category and issuer discovery, persistent three-card comparison and structured benefit/source fields.
+- Crawlable static entry documents for card, issuer and category routes on GitHub Pages.
 - Model issuer-specific earn rules, category caps, exclusions, point values, milestones and fee waivers.
 - Show value assumptions before the headline number and distinguish guaranteed, conditional and estimated value.
 - Explain why the winner beats each alternative, not only why it generally fits.

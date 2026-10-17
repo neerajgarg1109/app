@@ -139,9 +139,18 @@ def test_migration_and_api_round_trip(monkeypatch):
                 managed_payload = {
                     "name": "Admin Test Card", "issuer": "Test Bank", "variants": ["Visa", "RuPay"],
                     "network": "Visa", "rewardLine": "Test rewards", "applyUrl": "https://bank.example.org/card",
+                    "rewardCurrency": "Test Points", "rewardRedemption": "One point is worth ₹0.50.",
+                    "welcomeBenefits": ["1,000 points after eligible first spend"],
+                    "milestoneBenefits": ["Voucher on ₹1 lakh annual spend"],
+                    "loungeBenefits": ["Two domestic visits each quarter"],
+                    "exclusions": ["No rewards on rent"], "forexMarkup": "2% + GST",
+                    "fuelBenefits": "1% surcharge waiver", "eligibilityNote": "Issuer approval applies.",
+                    "sourceUrls": ["https://bank.example.org/card/terms"],
                 }
                 created_card = await api.post("/api/admin/cards", json=managed_payload, headers=headers)
                 assert created_card.status_code == 201 and created_card.json()["variants"] == ["Visa", "RuPay"]
+                assert created_card.json()["welcomeBenefits"] == managed_payload["welcomeBenefits"]
+                assert "https://bank.example.org/card/terms" in created_card.json()["sourceUrls"]
                 assert (await api.post("/api/admin/cards", json=managed_payload, headers=viewer_headers)).status_code == 403
                 managed_id = created_card.json()["id"]
                 managed_payload.update({"name": "Edited Admin Test Card", "variants": ["Mastercard"]})

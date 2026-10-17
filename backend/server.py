@@ -354,6 +354,16 @@ class AdminCardIn(BaseModel):
     joiningFeeAmount: int = 0
     rewardLine: str
     highlights: List[str] = Field(default_factory=list)
+    welcomeBenefits: List[str] = Field(default_factory=list)
+    milestoneBenefits: List[str] = Field(default_factory=list)
+    loungeBenefits: List[str] = Field(default_factory=list)
+    exclusions: List[str] = Field(default_factory=list)
+    rewardCurrency: Optional[str] = None
+    rewardRedemption: Optional[str] = None
+    forexMarkup: Optional[str] = None
+    fuelBenefits: Optional[str] = None
+    eligibilityNote: Optional[str] = None
+    sourceUrls: List[str] = Field(default_factory=list)
     bestFor: List[str] = Field(default_factory=list)
     feeType: str = "free"
     minSpend: str = "low"
@@ -432,8 +442,12 @@ def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict]
     values["applyUrl"] = _validated_apply_url(values["applyUrl"])
     values["name"], values["issuer"] = name, issuer
     values["variants"] = list(dict.fromkeys(v.strip() for v in values["variants"] if v.strip()))
-    values["highlights"] = [v.strip() for v in values["highlights"] if v.strip()]
+    for list_field in ("highlights", "welcomeBenefits", "milestoneBenefits", "loungeBenefits", "exclusions"):
+        values[list_field] = [v.strip() for v in values[list_field] if v.strip()]
     values["bestFor"] = list(dict.fromkeys(v.strip().lower() for v in values["bestFor"] if v.strip()))
+    values["sourceUrls"] = list(dict.fromkeys(filter(None, [_validated_apply_url(v) for v in values["sourceUrls"]])))
+    for text_field in ("rewardCurrency", "rewardRedemption", "forexMarkup", "fuelBenefits", "eligibilityNote"):
+        values[text_field] = (values.get(text_field) or "").strip() or None
     values["productGroupId"] = (values.get("productGroupId") or "").strip() or None
     values["variantName"] = (values.get("variantName") or "").strip() or None
     values.update({
@@ -441,7 +455,7 @@ def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict]
         "palette": (existing or {}).get("palette", ["#172554", "#1e40af"]),
         "accent": (existing or {}).get("accent", "#fbbf24"),
         "ratingBasis": (existing or {}).get("ratingBasis", "Neutral cardIQ editorial baseline, not a customer or issuer rating."),
-        "sourceUrls": list(dict.fromkeys([values["applyUrl"], *((existing or {}).get("sourceUrls", []))])),
+        "sourceUrls": list(dict.fromkeys([values["applyUrl"], *values["sourceUrls"], *((existing or {}).get("sourceUrls", []))])),
         "verifiedOn": datetime.now(timezone.utc).date().isoformat(),
         "availabilityNote": (existing or {}).get("availabilityNote", "Subject to issuer availability and approval."),
         "secured": (existing or {}).get("secured", False),
