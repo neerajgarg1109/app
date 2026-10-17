@@ -1,0 +1,6 @@
+[
+  {"issuer":"SBI Card","phone":"1800 180 1290","email":"customercare@sbicard.com","supportUrl":"https://www.sbicard.com/en/contact-us/personal.page","closureUrl":"https://www.sbicard.com/en/faq/closing-of-credit-card-account.page","checkedOn":"2026-10-17"},
+  {"issuer":"ICICI Bank","phone":"1800 1080","email":"customer.care@icicibank.com","supportUrl":"https://www.icicibank.com/customer-care","closureUrl":"https://www.icicibank.com/personal-banking/faq/card/credit-card-faqs","checkedOn":"2026-10-17"},
+  {"issuer":"Axis Bank","phone":"1860 500 5555","supportUrl":"https://www.axisbank.com/contact-us","closureUrl":"https://www.axisbank.com/docs/default-source/default-document-library/rbi-mandate-card-closure-faq.pdf","checkedOn":"2026-10-17"},
+  {"issuer":"HDFC Bank","supportUrl":"https://www.hdfcbank.com/personal/need-help/contact-us","checkedOn":"2026-10-17"}
+]
