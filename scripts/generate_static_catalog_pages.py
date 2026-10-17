@@ -74,6 +74,9 @@ def clean_generated_routes():
     shutil.rmtree(BUILD / "categories", ignore_errors=True)
     shutil.rmtree(BUILD / "issuers", ignore_errors=True)
     shutil.rmtree(BUILD / "calculator", ignore_errors=True)
+    shutil.rmtree(BUILD / "compare", ignore_errors=True)
+    shutil.rmtree(BUILD / "updates", ignore_errors=True)
+    shutil.rmtree(BUILD / "lounges", ignore_errors=True)
     cards_directory = BUILD / "cards"
     if cards_directory.exists():
         for child in cards_directory.iterdir():
@@ -151,6 +154,7 @@ def editorial_analysis(card):
 
 
 clean_generated_routes()
+cards_by_id = {card["id"]: card for card in CARDS}
 
 for card in CARDS:
     name, issuer = card["name"], card["issuer"]
@@ -193,10 +197,80 @@ for category in CATEGORIES:
     body = f'<h1>{html.escape(category["label"])} credit cards in India</h1><p>{html.escape(description)}</p><p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches)}'
     write(Path("categories") / category["id"], page(f'{category["label"]} credit cards in India | CardIQ', description, f'{ORIGIN}/categories/{category["id"]}/', destination, body))
 
+# Only publish comparisons that both cards' maintained editorial records recommend.
+# This prevents the SEO layer from manufacturing arbitrary or thin pairings.
+directed_alternatives = {
+    (card["id"], alternative["id"])
+    for card in CARDS
+    for alternative in (card.get("editorial") or {}).get("alternatives", [])
+    if alternative.get("id") in cards_by_id
+}
+comparison_pairs = sorted({
+    tuple(sorted((left, right)))
+    for left, right in directed_alternatives
+    if left != right and (right, left) in directed_alternatives
+})
+comparison_links = []
+for left_id, right_id in comparison_pairs:
+    left, right = cards_by_id[left_id], cards_by_id[right_id]
+    comparison_slug = f"{left_id}-vs-{right_id}"
+    canonical = f"{ORIGIN}/compare/{comparison_slug}/"
+    destination = f"{ORIGIN}/#/cards?compare={quote(left_id)},{quote(right_id)}"
+    title = f'{left["name"]} vs {right["name"]}: fees, rewards and benefits | CardIQ'
+    description = f'Compare {left["name"]} and {right["name"]} on annual fees, joining fees, rewards, benefits and important limitations.'
+    reasons = []
+    for card, target in ((left, right_id), (right, left_id)):
+        reason = next((item.get("reason") for item in (card.get("editorial") or {}).get("alternatives", []) if item.get("id") == target), None)
+        if reason and reason not in reasons:
+            reasons.append(reason)
+    decision = "".join(f"<li>{html.escape(reason)}</li>" for reason in reasons)
+    columns = "".join(
+        f'<article class="card"><h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
+        f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(card.get("rewardLine", ""))}</p>'
+        f'<p><strong>Annual fee:</strong> {html.escape(card.get("annualFee", "Not specified"))}</p>'
+        f'<p><strong>Joining fee:</strong> {html.escape(card.get("joiningFee", "Not specified"))}</p>'
+        f'<p><strong>Network:</strong> {html.escape(card.get("network", "Issuer-selected"))}</p>'
+        f'<h3>CardIQ view</h3><p>{html.escape((card.get("editorial") or {}).get("summary", "Review the documented benefits and conditions before deciding."))}</p></article>'
+        for card in (left, right)
+    )
+    body = f'<h1>{html.escape(left["name"])} vs {html.escape(right["name"])}</h1><p>{html.escape(description)}</p><div class="grid">{columns}</div><h2>Key decision</h2><ul>{decision}</ul><p class="muted">Facts were last checked {html.escape(max(left.get("verifiedOn", ""), right.get("verifiedOn", "")))}. Follow each card page to the linked issuer terms before applying.</p>'
+    schema = {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebPage", "name": title, "description": description, "url": canonical, "inLanguage": "en-IN"},
+        {"@type": "ItemList", "name": f'{left["name"]} and {right["name"]}', "itemListElement": [
+            {"@type": "ListItem", "position": 1, "url": f'{ORIGIN}/cards/{left_id}/', "name": left["name"]},
+            {"@type": "ListItem", "position": 2, "url": f'{ORIGIN}/cards/{right_id}/', "name": right["name"]},
+        ]},
+    ]}
+    write(Path("compare") / comparison_slug, page(title, description, canonical, destination, body, structured_data=schema))
+    comparison_links.append(f'<li><a href="{canonical}">{html.escape(left["name"])} vs {html.escape(right["name"])}</a></li>')
+
+compare_description = f"Browse {len(comparison_pairs)} maintained head-to-head Indian credit card comparisons with fees, rewards, benefits and trade-offs."
+compare_body = f'<h1>Indian credit card comparisons</h1><p>{html.escape(compare_description)}</p><p class="muted">These pairings come from CardIQ’s maintained editorial alternatives—not automatically generated combinations.</p><ul>{"".join(comparison_links)}</ul>'
+write(Path("compare"), page("Compare Indian credit cards side by side | CardIQ", compare_description, f"{ORIGIN}/compare/", f"{ORIGIN}/#/cards", compare_body))
+
+# A verification history is useful and accurate; it must not be presented as a launch date.
+verification_dates = sorted({card.get("verifiedOn") for card in CARDS if card.get("verifiedOn")}, reverse=True)
+update_links = []
+for verified_on in verification_dates:
+    matches = [card for card in CARDS if card.get("verifiedOn") == verified_on]
+    description = f"See {len(matches)} Indian credit card records whose issuer or official-partner details CardIQ checked on {verified_on}."
+    body = f'<h1>Card details checked on {html.escape(verified_on)}</h1><p>{html.escape(description)}</p><p class="muted">This is a verification date, not necessarily a product launch or benefit-change date.</p>{card_links(matches)}'
+    write(Path("updates") / verified_on, page(f"Credit card catalogue checks: {verified_on} | CardIQ", description, f"{ORIGIN}/updates/{verified_on}/", f"{ORIGIN}/#/cards?sort=recent", body))
+    update_links.append(f'<li><a href="{ORIGIN}/updates/{verified_on}/">{html.escape(verified_on)} — {len(matches)} card records checked</a></li>')
+updates_description = "Follow CardIQ’s dated Indian credit card catalogue checks without confusing verification dates with card launch dates."
+updates_body = f'<h1>CardIQ catalogue updates</h1><p>{html.escape(updates_description)}</p><ul>{"".join(update_links)}</ul>'
+write(Path("updates"), page("Indian credit card catalogue updates | CardIQ", updates_description, f"{ORIGIN}/updates/", f"{ORIGIN}/#/cards?sort=recent", updates_body))
+
+lounge_cards = [card for card in CARDS if "lounge" in " ".join([*(card.get("bestFor") or []), *(card.get("highlights") or []), *(card.get("loungeBenefits") or [])]).lower()]
+lounge_description = f"Explore {len(lounge_cards)} Indian credit cards whose sourced catalogue details mention airport lounge access or lounge benefits."
+lounge_body = f'<h1>Airport lounge credit cards in India</h1><p>{html.escape(lounge_description)}</p><p class="muted">Access rules can depend on airport, terminal, network, spend thresholds and quarterly limits. Confirm current eligibility in the linked issuer terms before travelling.</p>{card_links(lounge_cards)}'
+write(Path("lounges"), page("Airport lounge credit cards in India | CardIQ", lounge_description, f"{ORIGIN}/lounges/", f"{ORIGIN}/#/cards?category=travel", lounge_body))
+
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
 catalog_body = f'''<h1>Explore Indian credit cards</h1><p>Browse CardIQ’s sourced catalogue by use case or issuer. Each card page brings together fees, rewards, important limitations, source links and a transparent editorial view.</p>
 <p><a class="cta" href="{ORIGIN}/calculator/">Estimate annual card value</a></p>
+<p><a href="{ORIGIN}/compare/">Head-to-head comparisons</a> · <a href="{ORIGIN}/updates/">Catalogue updates</a> · <a href="{ORIGIN}/lounges/">Airport lounge cards</a></p>
 <h2>Browse by category</h2><ul>{category_links}</ul><h2>Browse by issuer</h2><ul>{issuer_links}</ul><h2>All cards</h2>{card_links(CARDS)}'''
 catalog_description = f"Browse {len(CARDS)} Indian credit cards by category and issuer, with sourced fees, benefits, limitations and editorial guidance."
 write(Path("catalog"), page("Indian credit card catalogue | CardIQ", catalog_description, f"{ORIGIN}/catalog/", f"{ORIGIN}/#/cards", catalog_body))
@@ -216,14 +290,16 @@ calculator_body = '''<h1>Credit card value calculator for India</h1>
 <h2>What can change the result</h2><p>Merchant classification, monthly reward caps, excluded transactions, redemption choices and issuer rule changes can reduce actual value. CardIQ therefore shows an editorial range rather than promising an exact return. The issuing bank’s current terms remain authoritative.</p>'''
 write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))
 
-sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/"]
+sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/"]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
 sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]
+sitemap_urls += [f'{ORIGIN}/compare/{left}-vs-{right}/' for left, right in comparison_pairs]
+sitemap_urls += [f'{ORIGIN}/updates/{verified_on}/' for verified_on in verification_dates]
 (BUILD / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(f"  <url><loc>{html.escape(url)}</loc></url>" for url in sitemap_urls) + "\n</urlset>\n")
 (BUILD / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n")
 (BUILD / "catalog-manifest.json").write_text(json.dumps({
     "source": CATALOG_SOURCE, "origin": ORIGIN, "card_ids": [card["id"] for card in CARDS],
 }, indent=2))
 
-print(f"Generated {len(CARDS)} card, {len(issuers)} issuer and {len(published_categories)} useful category pages")
+print(f"Generated {len(CARDS)} card, {len(issuers)} issuer, {len(published_categories)} category and {len(comparison_pairs)} comparison pages")

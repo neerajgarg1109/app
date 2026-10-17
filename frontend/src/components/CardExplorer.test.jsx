@@ -50,6 +50,7 @@ describe("CardExplorer", () => {
 
   beforeEach(() => {
     mockCardId = undefined;
+    window.location.hash = "";
     localStorage.clear();
     getCards.mockResolvedValue(cards);
     container = document.createElement("div");
@@ -119,5 +120,14 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("This is my card");
     expect(container.textContent).toContain("Compare with your card");
     expect(container.textContent).toContain("Your card: Everyday Cashback");
+  });
+
+  test("opens an indexable comparison deep link with both cards selected", async () => {
+    window.location.hash = "#/cards?compare=cashback-card,travel-card";
+    await act(async () => root.render(<CardExplorer />));
+    await act(async () => Promise.resolve());
+    expect(container.textContent).toContain("Compare cards");
+    expect(container.textContent).toContain("Everyday Cashback");
+    expect(container.textContent).toContain("Travel Plus");
   });
 });

@@ -25,9 +25,11 @@ export default function CardExplorer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [compareIds, setCompareIds] = useState(() => {
+    const linked = String(initialFilters.compare || "").split(",").map((id) => id.trim()).filter(Boolean).slice(0, 3);
+    if (linked.length >= 2) return linked;
     try { return JSON.parse(localStorage.getItem("ciq_compare_cards") || "[]").slice(0, 3); } catch (error) { return []; }
   });
-  const [showCompare, setShowCompare] = useState(false);
+  const [showCompare, setShowCompare] = useState(() => String(initialFilters.compare || "").split(",").filter(Boolean).length >= 2);
   const [ownedCardId, setOwnedCardId] = useState(() => localStorage.getItem("ciq_owned_card") || "");
 
   useEffect(() => {

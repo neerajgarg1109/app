@@ -43,7 +43,7 @@ class Document(HTMLParser):
 
 
 def generated_pages():
-    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator"]
+    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator", BUILD / "compare", BUILD / "updates", BUILD / "lounges"]
     return [path for root in roots for path in root.glob("*/index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
 
 
@@ -106,6 +106,31 @@ class StaticCatalogTests(unittest.TestCase):
         for phrase in ("credit card value calculator for india", "annual fees", "reward caps", "no login"):
             self.assertIn(phrase, source)
         self.assertIn(f'{ORIGIN}/#/calculator', source)
+
+    def test_comparisons_are_substantial_editorial_pairs_with_deep_links(self):
+        pages = list((BUILD / "compare").glob("*/index.html"))
+        self.assertGreaterEqual(len(pages), 50)
+        for path in pages:
+            source = path.read_text()
+            self.assertIn("Key decision", source)
+            self.assertIn("Annual fee:", source)
+            self.assertIn("Joining fee:", source)
+            self.assertIn("CardIQ view", source)
+            self.assertIn("#/cards?compare=", source)
+            self.assertIn('"@type": "ItemList"', source)
+
+    def test_updates_distinguish_verification_from_launch_dates(self):
+        pages = list((BUILD / "updates").glob("*/index.html"))
+        self.assertGreaterEqual(len(pages), 1)
+        for path in pages:
+            source = path.read_text().lower()
+            self.assertIn("verification date", source)
+            self.assertIn("not necessarily a product launch", source)
+
+    def test_lounge_hub_explains_access_limits(self):
+        source = (BUILD / "lounges" / "index.html").read_text().lower()
+        for phrase in ("airport lounge credit cards", "airport", "terminal", "spend thresholds", "issuer terms"):
+            self.assertIn(phrase, source)
 
     def test_every_public_page_has_social_sharing_for_its_canonical_url(self):
         for path, document in self.documents.items():
