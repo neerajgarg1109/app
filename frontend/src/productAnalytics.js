@@ -15,6 +15,6 @@ export function productSessionId() {
   }
 }
 
-export function recordProductEvent(event, resultId = null) {
-  return trackProductEvent(event, productSessionId(), resultId).catch(() => null);
+export function recordProductEvent(event, resultId = null, metadata = {}) {
+  return trackProductEvent(event, productSessionId(), resultId, metadata).catch(() => null);
 }

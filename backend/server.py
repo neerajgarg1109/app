@@ -304,13 +304,37 @@ class ProductEventIn(BaseModel):
     event: str
     session_id: str
     result_id: Optional[str] = None
+    card_id: Optional[str] = None
+    channel: Optional[str] = None
+    page_type: Optional[str] = None
 
     @field_validator("event")
     @classmethod
     def validate_event(cls, value: str) -> str:
-        allowed = {"landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"}
+        allowed = {"landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked", "content_shared"}
         if value not in allowed:
             raise ValueError("Unsupported product event")
+        return value
+
+    @field_validator("channel")
+    @classmethod
+    def validate_channel(cls, value: Optional[str]) -> Optional[str]:
+        if value is not None and value not in {"whatsapp", "x", "facebook", "copy", "native"}:
+            raise ValueError("Unsupported share channel")
+        return value
+
+    @field_validator("card_id")
+    @classmethod
+    def validate_card_id(cls, value: Optional[str]) -> Optional[str]:
+        if value is not None and not re.fullmatch(r"[a-z0-9-]{1,120}", value):
+            raise ValueError("Invalid card identifier")
+        return value
+
+    @field_validator("page_type")
+    @classmethod
+    def validate_page_type(cls, value: Optional[str]) -> Optional[str]:
+        if value is not None and value not in {"card", "issuer", "category", "article", "result"}:
+            raise ValueError("Unsupported page type")
         return value
 
     @field_validator("session_id")
@@ -557,13 +581,18 @@ async def create_experience_feedback(payload: ExperienceFeedbackIn):
 async def record_product_event(payload: ProductEventIn):
     """Record a deduplicated, anonymous funnel event without arbitrary metadata."""
     now = datetime.now(timezone.utc)
+    dimensions = {"event": payload.event, "session_id": payload.session_id, "result_id": payload.result_id,
+                  "card_id": payload.card_id, "channel": payload.channel, "page_type": payload.page_type}
     await db.product_events.update_one(
-        {"event": payload.event, "session_id": payload.session_id, "result_id": payload.result_id},
+        dimensions,
         {"$setOnInsert": {
             "event_id": str(uuid.uuid4()),
             "event": payload.event,
             "session_id": payload.session_id,
             "result_id": payload.result_id,
+            "card_id": payload.card_id,
+            "channel": payload.channel,
+            "page_type": payload.page_type,
             "created_at": now,
         }},
         upsert=True,

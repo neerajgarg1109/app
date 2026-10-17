@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import CreditCardVisual from "./CreditCardVisual";
 import Compare from "./Compare";
 import CardDetails from "./CardDetails";
+import SharePanel from "./SharePanel";
 import { attachResultLead, emailResult, trackApplyClick, reportCardInformation, scheduleReviewFollowup, getCommunityRating, submitExperienceFeedback } from "../api";
 import { contactNameError, contactPhoneError, contactEmailError } from "../contactValidation";
 import { recordProductEvent } from "../productAnalytics";
@@ -312,7 +313,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
             className="ciq-press flex items-center justify-center gap-1.5 rounded-2xl border bg-white py-3 text-sm font-semibold"
             style={{ borderColor: copied ? "var(--ciq-teal-600)" : "var(--ciq-line)", color: "var(--ciq-ink)" }}
           >
-            {copied ? (<><Check className="h-4 w-4" style={{ color: "var(--ciq-teal-600)" }} /> Copied</>) : (<><Share2 className="h-4 w-4" /> Share</>)}
+            {copied ? (<><Check className="h-4 w-4" style={{ color: "var(--ciq-teal-600)" }} /> Copied</>) : (<><Share2 className="h-4 w-4" /> Share result</>)}
           </button>
           <button
             onClick={() => setShowCompare(true)}
@@ -339,6 +340,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
         {emailState === "error" && (
           <p className="mt-2 text-center text-xs" style={{ color: "#b4433f" }}>Couldn't send email. Try again.</p>
         )}
+        <div className="mt-4"><SharePanel card={card} /></div>
 
         {(best.reasons.length > 0 || tradeOffs.length > 0) && (
           <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>

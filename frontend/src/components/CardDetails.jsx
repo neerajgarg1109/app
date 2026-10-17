@@ -2,6 +2,7 @@ import React from "react";
 import { Check, ExternalLink, ShieldCheck } from "lucide-react";
 import CreditCardVisual from "./CreditCardVisual";
 import { editorialInsights } from "../editorialInsights";
+import SharePanel from "./SharePanel";
 
 export default function CardDetails({ card, heading = "Card details", compact = false, onApply }) {
   if (!card) return null;
@@ -37,6 +38,8 @@ export default function CardDetails({ card, heading = "Card details", compact = 
           This editorial view is generated from the sourced fees, rewards and conditions shown on this page. It is not approval advice or a paid ranking.
         </p>
       </section>
+
+      <SharePanel card={card} />
 
       {!compact && <CreditCardVisual card={card} />}
 

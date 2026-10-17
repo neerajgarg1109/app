@@ -150,11 +150,12 @@ export async function submitExperienceFeedback(rating, feedback, resultId, cardI
   return data;
 }
 
-export async function trackProductEvent(event, sessionId, resultId = null) {
+export async function trackProductEvent(event, sessionId, resultId = null, metadata = {}) {
   const { data } = await http.post("/product-events", {
     event,
     session_id: sessionId,
     result_id: resultId,
+    ...metadata,
   });
   return data;
 }

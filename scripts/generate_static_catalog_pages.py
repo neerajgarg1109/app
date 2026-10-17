@@ -18,14 +18,26 @@ def slug(value):
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
-def page(title, description, canonical, destination, body):
+def social_links(title, canonical):
+    text = quote(f"{title} — CardIQ", safe="")
+    url = quote(canonical, safe="")
+    return f'''<section class="share"><h2>Share this page</h2><p>Send these sourced details to someone comparing cards.</p><div class="share-links">
+<a href="https://wa.me/?text={text}%20{url}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+<a href="https://twitter.com/intent/tweet?text={text}&amp;url={url}" target="_blank" rel="noopener noreferrer">X</a>
+<a href="https://www.facebook.com/sharer/sharer.php?u={url}" target="_blank" rel="noopener noreferrer">Facebook</a>
+<button type="button" onclick="navigator.clipboard.writeText('{html.escape(canonical, quote=True)}').then(()=>this.textContent='Copied')">Copy link</button>
+</div></section>'''
+
+
+def page(title, description, canonical, destination, body, image_url=None):
+    image_meta = f'<meta property="og:image" content="{html.escape(image_url, quote=True)}"><meta name="twitter:card" content="summary_large_image">' if image_url else '<meta name="twitter:card" content="summary">'
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
-<meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">
-<style>body{{margin:0;background:#f8f7ff;color:#172033;font:16px/1.55 Inter,Arial,sans-serif}}header,main,footer{{max-width:960px;margin:auto;padding:24px}}header{{display:flex;justify-content:space-between;align-items:center}}a{{color:#4538c8}}.brand{{font-size:22px;font-weight:800;text-decoration:none}}h1{{font-size:38px;line-height:1.15}}.cta{{display:inline-block;background:#5b4ff0;color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:700}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}}.card{{background:white;border:1px solid #e4e2f1;border-radius:16px;padding:16px}}.muted{{color:#5d6478}}li{{margin:7px 0}}</style></head>
-<body><header><a class="brand" href="{ORIGIN}/">cardIQ</a><a href="{ORIGIN}/catalog/">Browse the catalogue</a></header><main>{body}<p><a class="cta" href="{html.escape(destination, quote=True)}">Explore and compare in CardIQ</a></p></main><footer class="muted">Card facts are dated and linked to issuer sources. Eligibility and approval are decided by the issuing bank. <a href="{ORIGIN}/methodology/">How CardIQ researches and ranks cards</a>.</footer></body></html>'''
+<meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">{image_meta}
+<style>body{{margin:0;background:#f8f7ff;color:#172033;font:16px/1.55 Inter,Arial,sans-serif}}header,main,footer{{max-width:960px;margin:auto;padding:24px}}header{{display:flex;justify-content:space-between;align-items:center}}a{{color:#4538c8}}.brand{{font-size:22px;font-weight:800;text-decoration:none}}h1{{font-size:38px;line-height:1.15}}.cta{{display:inline-block;background:#5b4ff0;color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:700}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}}.card,.share{{background:white;border:1px solid #e4e2f1;border-radius:16px;padding:16px}}.share{{margin-top:24px}}.share-links{{display:flex;flex-wrap:wrap;gap:8px}}.share-links a,.share-links button{{border:1px solid #d8d5e8;border-radius:10px;background:white;color:#4538c8;padding:9px 12px;font:600 14px Inter,Arial,sans-serif;text-decoration:none;cursor:pointer}}.muted{{color:#5d6478}}li{{margin:7px 0}}</style></head>
+<body><header><a class="brand" href="{ORIGIN}/">cardIQ</a><a href="{ORIGIN}/catalog/">Browse the catalogue</a></header><main>{body}{social_links(title, canonical)}<p><a class="cta" href="{html.escape(destination, quote=True)}">Explore and compare in CardIQ</a></p></main><footer class="muted">Card facts are dated and linked to issuer sources. Eligibility and approval are decided by the issuing bank. <a href="{ORIGIN}/methodology/">How CardIQ researches and ranks cards</a>.</footer></body></html>'''
 
 
 def write(relative, contents):
@@ -107,7 +119,8 @@ for card in CARDS:
     facts = "".join(f"<li>{html.escape(item)}</li>" for item in card.get("highlights", []))
     sources = "".join(f'<li><a href="{html.escape(url, quote=True)}">Issuer source {index + 1}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
     body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
-    write(Path("cards") / card["id"], page(f"{name} — fees, rewards and benefits | CardIQ", description, f'{ORIGIN}/cards/{card["id"]}/', route, body))
+    image_url = f'{ORIGIN}{card["imageUrl"]}' if card.get("imageUrl", "").startswith("/") else card.get("imageUrl")
+    write(Path("cards") / card["id"], page(f"{name} — fees, rewards and benefits | CardIQ", description, f'{ORIGIN}/cards/{card["id"]}/', route, body, image_url=image_url))
 
 issuers = sorted({card["issuer"] for card in CARDS})
 for issuer in issuers:

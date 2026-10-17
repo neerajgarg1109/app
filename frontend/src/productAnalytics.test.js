@@ -23,7 +23,16 @@ describe("privacy-safe product analytics", () => {
       "result_viewed",
       productSessionId(),
       "result-123",
+      {},
     );
+  });
+
+  test("forwards privacy-safe content share dimensions", async () => {
+    trackProductEvent.mockResolvedValue({ status: "recorded" });
+    await recordProductEvent("content_shared", null, { card_id: "cashback-card", channel: "whatsapp", page_type: "card" });
+    expect(trackProductEvent).toHaveBeenCalledWith("content_shared", productSessionId(), null, {
+      card_id: "cashback-card", channel: "whatsapp", page_type: "card",
+    });
   });
 
   test("never blocks the journey when analytics is unavailable", async () => {

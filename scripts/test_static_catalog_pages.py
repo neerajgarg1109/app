@@ -94,6 +94,15 @@ class StaticCatalogTests(unittest.TestCase):
         for disclosure in ("sources and updates", "generated consistently", "earn revenue", "cannot pay to increase"):
             self.assertIn(disclosure, source)
 
+    def test_every_public_page_has_social_sharing_for_its_canonical_url(self):
+        for path, document in self.documents.items():
+            source = path.read_text()
+            encoded = document.meta["canonical"].replace(":", "%3A").replace("/", "%2F")
+            self.assertIn("https://wa.me/", source)
+            self.assertIn("https://twitter.com/intent/tweet", source)
+            self.assertIn("https://www.facebook.com/sharer/sharer.php", source)
+            self.assertIn(encoded, source)
+
     def test_homepage_has_canonical_metadata_and_a_non_javascript_catalogue_path(self):
         source = (BUILD / "index.html").read_text()
         document = Document(source)

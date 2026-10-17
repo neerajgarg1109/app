@@ -368,11 +368,27 @@ def test_migration_and_api_round_trip(monkeypatch):
                         "event": event, "session_id": "anonymous-session-1234", "result_id": result["result_id"],
                     })
                     assert tracked.status_code == 202
+                shared = await api.post("/api/product-events", json={
+                    "event": "content_shared", "session_id": "anonymous-session-1234",
+                    "card_id": CARDS[0]["id"], "channel": "whatsapp", "page_type": "card",
+                })
+                assert shared.status_code == 202
+                assert await database.product_events.count_documents({
+                    "event": "content_shared", "card_id": CARDS[0]["id"], "channel": "whatsapp",
+                }) == 1
+                assert (await api.post("/api/product-events", json={
+                    "event": "content_shared", "session_id": "anonymous-session-1234",
+                    "channel": "email", "page_type": "card",
+                })).status_code == 422
+                assert (await api.post("/api/product-events", json={
+                    "event": "content_shared", "session_id": "anonymous-session-1234",
+                    "card_id": "not a safe id", "channel": "copy", "page_type": "card",
+                })).status_code == 422
                 # Events are idempotent for one session/result combination.
                 await api.post("/api/product-events", json={
                     "event": "landing_view", "session_id": "anonymous-session-1234", "result_id": result["result_id"],
                 })
-                assert await database.product_events.count_documents({"session_id": "anonymous-session-1234"}) == 5
+                assert await database.product_events.count_documents({"session_id": "anonymous-session-1234"}) == 6
                 assert (await api.post("/api/product-events", json={
                     "event": "unknown", "session_id": "anonymous-session-1234",
                 })).status_code == 422
