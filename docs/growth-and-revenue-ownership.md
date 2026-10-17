@@ -25,8 +25,8 @@
 
 ## Current commercial baseline — 17 October 2026
 
-- The catalogue contains 254 sourced cards and 215 currently recommendable products.
-- All 254 stored application URLs are official issuer or official partner source URLs.
+- Catalogue and recommendable-product counts are calculated from the live API rather than maintained as documentation constants.
+- Stored application URLs remain official issuer or official partner source URLs unless an approved live partner override is configured.
 - No catalogue link is inherently revenue-generating until a contracted partner URL is configured in the admin portal.
 - CardIQ records application clicks, but confirmed applications, approvals and paid commission require partner reporting.
 

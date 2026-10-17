@@ -2,6 +2,9 @@ import { cardShareDetails, socialShareUrl } from "./shareLinks";
 
 const card = { id: "cashback card", name: "Cashback & More", issuer: "Test Bank", rewardLine: "5% cashback" };
 
+beforeAll(() => { process.env.REACT_APP_PUBLIC_APP_URL = "https://neerajgarg1109.github.io/app"; });
+afterAll(() => { delete process.env.REACT_APP_PUBLIC_APP_URL; });
+
 test("uses the crawlable public card URL rather than the hash route", () => {
   const details = cardShareDetails(card);
   expect(details.url).toBe("https://neerajgarg1109.github.io/app/cards/cashback%20card/");

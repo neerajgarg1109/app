@@ -87,8 +87,61 @@ def test_partner_link_configuration_validates_state_and_commercial_metadata():
     }
 
 
-def test_catalog_has_254_sourced_unique_real_cards():
-    assert len(CARDS) == len({c["id"] for c in CARDS}) == 254
+def test_saved_results_refresh_changed_card_facts_and_value_estimates(monkeypatch):
+    server = importlib.import_module("server")
+    original = deepcopy(CARDS[0])
+    changed = deepcopy(original)
+    changed.update({
+        "name": f"{original['name']} Updated", "annualFee": "₹9,999 + GST",
+        "annualFeeAmount": 9999, "rewardLine": "Updated rewards proposition",
+    })
+
+    class Cursor:
+        async def to_list(self, _limit):
+            return [changed]
+
+    class CardsCollection:
+        def find(self, *_args, **_kwargs):
+            return Cursor()
+
+    class FakeDb:
+        cards = CardsCollection()
+
+    monkeypatch.setattr(server, "db", FakeDb())
+    prior = recommend_cards(profile(), [original])[0]
+    refreshed = asyncio.run(server.scored_result({"answers": profile(), "scored": [prior]}))[0]
+    assert refreshed["card"]["name"].endswith(" Updated")
+    assert refreshed["card"]["annualFeeAmount"] == 9999
+    assert refreshed["card"]["rewardLine"] == "Updated rewards proposition"
+    assert refreshed["valueEstimate"] != prior["valueEstimate"]
+
+
+def test_saved_results_drop_newly_unavailable_cards_when_an_alternative_exists(monkeypatch):
+    server = importlib.import_module("server")
+    unavailable = deepcopy(CARDS[0])
+    unavailable["applicationsOpen"] = False
+    alternative = next(deepcopy(card) for card in CARDS[1:] if card.get("applicationsOpen") is not False and card.get("recommendationEligible") is not False)
+
+    class Cursor:
+        async def to_list(self, _limit):
+            return [unavailable, alternative]
+
+    class CardsCollection:
+        def find(self, *_args, **_kwargs):
+            return Cursor()
+
+    class FakeDb:
+        cards = CardsCollection()
+
+    monkeypatch.setattr(server, "db", FakeDb())
+    snapshots = recommend_cards(profile(), [CARDS[0], alternative], include_unavailable=True)
+    refreshed = asyncio.run(server.scored_result({"answers": profile(), "scored": snapshots}))
+    assert refreshed
+    assert unavailable["id"] not in {item["card"]["id"] for item in refreshed}
+
+
+def test_catalog_has_sourced_unique_real_cards():
+    assert CARDS and len(CARDS) == len({c["id"] for c in CARDS})
     for card in CARDS:
         assert card["id"] not in DEMO_IDS
         assert card["feeType"] in {"free", "worth", "premium"}
@@ -383,11 +436,12 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert reminders.json() == {"due": 1, "sent": 1}
                 due_doc = await database.review_followups.find_one({"followup_id": "due-followup"})
                 assert due_doc["reminder_sent"] is True and due_doc["token_hash"] and due_doc["token_expires_at"]
-                # Updates must not rewrite a previously shared recommendation or email.
+                # Current issuer facts must flow through previously shared results and later emails.
                 top = result["scored"][0]["card"]
                 await database.cards.update_one({"id": top["id"]}, {"$set": {"name": "Updated issuer name", "active": False}})
                 saved = await api.get("/api/results/" + result["result_id"])
-                assert saved.json() == result
+                saved_top = next(s["card"] for s in saved.json()["scored"] if s["card"]["id"] == top["id"])
+                assert saved_top["name"] == "Updated issuer name"
                 reset = await api.put(
                     f"/api/admin/cards/{override_card['id']}/apply-link",
                     json={"apply_url": None}, headers=headers,
@@ -397,7 +451,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                 refreshed_card = next(s["card"] for s in refreshed.json()["scored"] if s["card"]["id"] == override_card["id"])
                 assert refreshed_card["applyUrl"] == override_card["applyUrl"]
                 doc = await database.quiz_results.find_one({"result_id": result["result_id"]})
-                assert (await server.scored_result(doc))[0]["card"]["name"] == top["name"]
+                assert next(s["card"] for s in await server.scored_result(doc) if s["card"]["id"] == top["id"])["name"] == "Updated issuer name"
                 await database.quiz_results.insert_one({"result_id": "legacy", "answers": profile(), "scored_ids": [demo["id"]]})
                 legacy = await api.get("/api/results/legacy")
                 assert legacy.status_code == 200

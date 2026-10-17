@@ -1,6 +1,6 @@
 # Indian credit card catalog
 
-Issuer details checked through 11 October 2026. The catalog contains 254 distinct products from 20 regulated issuers, including products distributed by fintech co-brand partners. Three American Express products are retained for reference but excluded from new recommendations while their official pages say applications are paused.
+Each card carries its own `verifiedOn` date. Catalogue and issuer totals are calculated from the current data rather than maintained in this document. Products distributed by fintech co-brand partners are included when the issuing bank is identified; paused products remain available for reference but are excluded from new recommendations.
 
 ## Data and interpretation
 
@@ -16,7 +16,7 @@ Issuer details checked through 11 October 2026. The catalog contains 254 distinc
 
 Verify current product availability, fees, caps, exclusions, lounge qualification and product URLs before changing data. Refresh `verifiedOn`, `sourceUrls` and `applicationsOpen` together. SBI’s current product pages load their details from official `/json/templatedata/…` endpoints; those URLs are cited as well as the product pages.
 
-Startup upserts all 254 records and marks only the eight known demo IDs inactive. It does not delete demo documents, leads, results or user-added cards. Current `/api/cards` excludes archived demos; new recommendations also exclude paused applications and products whose invitation or existing-card eligibility is not established by the quiz. Direct card lookups remain available for history. New results store scored card snapshots so later issuer updates do not silently change shared pages or email recommendations. Legacy results resolve their saved card IDs, including archived demos.
+Startup upserts every repository catalogue record and marks only the known demo IDs inactive. It does not delete demo documents, leads, results or user-added cards. Current `/api/cards` excludes archived demos; new recommendations also exclude paused applications and products whose invitation or existing-card eligibility is not established by the quiz. Direct card lookups remain available for history. Results retain snapshots only as a fallback for removed cards; current database facts are refreshed and rescored whenever a shared result or result email is opened.
 
 ## Expansion of 10 fintech co-branded consumer cards
 

@@ -1,7 +1,12 @@
-const PUBLIC_APP_ORIGIN = "https://neerajgarg1109.github.io/app";
+function publicAppOrigin() {
+  const configured = (process.env.REACT_APP_PUBLIC_APP_URL || "").replace(/\/$/, "");
+  if (configured) return configured;
+  const browserOrigin = typeof window !== "undefined" ? window.location.origin : "";
+  return `${browserOrigin}${process.env.PUBLIC_URL || ""}`.replace(/\/$/, "");
+}
 
 export function cardShareDetails(card) {
-  const url = `${PUBLIC_APP_ORIGIN}/cards/${encodeURIComponent(card.id)}/`;
+  const url = `${publicAppOrigin()}/cards/${encodeURIComponent(card.id)}/`;
   const text = `${card.name} by ${card.issuer}: ${card.rewardLine || "fees, benefits and important conditions"} — reviewed on CardIQ`;
   return { title: `${card.name} | CardIQ`, text, url };
 }

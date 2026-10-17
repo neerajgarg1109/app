@@ -6,6 +6,9 @@ import { recordProductEvent } from "../productAnalytics";
 jest.mock("../productAnalytics", () => ({ recordProductEvent: jest.fn() }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
+beforeAll(() => { process.env.REACT_APP_PUBLIC_APP_URL = "https://neerajgarg1109.github.io/app"; });
+afterAll(() => { delete process.env.REACT_APP_PUBLIC_APP_URL; });
+
 test("offers social, native and copy sharing while tracking anonymous dimensions", async () => {
   const writeText = jest.fn().mockResolvedValue(undefined);
   const nativeShare = jest.fn().mockResolvedValue(undefined);

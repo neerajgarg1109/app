@@ -2,16 +2,37 @@
 """Generate crawlable GitHub Pages entry documents for public catalog routes."""
 import html
 import json
+import os
 import re
 import shutil
+import sys
 from pathlib import Path
 from urllib.parse import quote
+from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "frontend" / "build"
-CARDS = json.loads((ROOT / "backend" / "cards_catalog.json").read_text())
 CATEGORIES = json.loads((ROOT / "frontend" / "src" / "data" / "cardCategories.json").read_text())
-ORIGIN = "https://neerajgarg1109.github.io/app"
+DEFAULT_ORIGIN = json.loads((ROOT / "frontend" / "package.json").read_text())["homepage"]
+ORIGIN = os.environ.get("CARDIQ_PUBLIC_ORIGIN", DEFAULT_ORIGIN).rstrip("/")
+
+
+def load_cards():
+    catalog_url = os.environ.get("CARDIQ_CATALOG_API_URL")
+    if catalog_url:
+        try:
+            with urlopen(catalog_url, timeout=30) as response:
+                cards = json.load(response)
+            if not isinstance(cards, list) or not cards:
+                raise RuntimeError("The configured CardIQ catalog API returned no cards")
+            return cards, catalog_url
+        except Exception as error:
+            print(f"Live catalog unavailable ({error}); using the repository fallback.", file=sys.stderr)
+    path = ROOT / "backend" / "cards_catalog.json"
+    return json.loads(path.read_text()), str(path.relative_to(ROOT))
+
+
+CARDS, CATALOG_SOURCE = load_cards()
 
 
 def slug(value):
@@ -146,7 +167,8 @@ category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
 catalog_body = f'''<h1>Explore Indian credit cards</h1><p>Browse CardIQ’s sourced catalogue by use case or issuer. Each card page brings together fees, rewards, important limitations, source links and a transparent editorial view.</p>
 <h2>Browse by category</h2><ul>{category_links}</ul><h2>Browse by issuer</h2><ul>{issuer_links}</ul><h2>All cards</h2>{card_links(CARDS)}'''
-write(Path("catalog"), page("Indian credit card catalogue | CardIQ", "Browse 254 Indian credit cards by category and issuer, with sourced fees, benefits, limitations and editorial guidance.", f"{ORIGIN}/catalog/", f"{ORIGIN}/#/cards", catalog_body))
+catalog_description = f"Browse {len(CARDS)} Indian credit cards by category and issuer, with sourced fees, benefits, limitations and editorial guidance."
+write(Path("catalog"), page("Indian credit card catalogue | CardIQ", catalog_description, f"{ORIGIN}/catalog/", f"{ORIGIN}/#/cards", catalog_body))
 
 methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 <p>CardIQ helps Indian customers compare credit cards and understand the trade-offs before visiting an issuer. We may earn revenue when a customer continues to an application, but payment does not improve a card’s match score or editorial treatment.</p>
@@ -163,5 +185,8 @@ sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]
 (BUILD / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(f"  <url><loc>{html.escape(url)}</loc></url>" for url in sitemap_urls) + "\n</urlset>\n")
 (BUILD / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n")
+(BUILD / "catalog-manifest.json").write_text(json.dumps({
+    "source": CATALOG_SOURCE, "origin": ORIGIN, "card_ids": [card["id"] for card in CARDS],
+}, indent=2))
 
 print(f"Generated {len(CARDS)} card, {len(issuers)} issuer and {len(published_categories)} useful category pages")

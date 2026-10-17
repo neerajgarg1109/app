@@ -9,8 +9,8 @@ Frontend quiz + recommendation now backed by FastAPI + MongoDB. Questions stay i
 - Frontend keeps: `QUIZ_QUESTIONS`, `TRUST_POINTS`, `PROBLEMS` (static).
 
 ## MongoDB collections
-- `cards`: 254 sourced records in `backend/cards_catalog.json`, upserted by `cards_seed.py`. Known demos are archived with `active: false`; paused applications have `applicationsOpen: false`. Products with invitation, upgrade, banking relationship, professional or partner-channel prerequisites have `recommendationEligible: false` and a factual `eligibilityNote`; the quiz cannot establish these prerequisites.
-- `quiz_results`: { result_id, answers, recommended_card_id, scored_ids, scored, lead_id, email_sent, created_at }. New `scored` snapshots preserve historical issuer facts; older results resolve their stored IDs.
+- `cards`: sourced records in `backend/cards_catalog.json`, upserted by `cards_seed.py`; the live API is the runtime source for customer and scheduled SEO builds. Known demos are archived with `active: false`; paused applications have `applicationsOpen: false`. Products with invitation, upgrade, banking relationship, professional or partner-channel prerequisites have `recommendationEligible: false` and a factual `eligibilityNote`; the quiz cannot establish these prerequisites.
+- `quiz_results`: { result_id, answers, recommended_card_id, scored_ids, scored, lead_id, email_sent, created_at }. Snapshots provide a fallback for removed historical cards; current cards are refreshed and rescored when a result or email is opened so corrections propagate.
 - `leads`: { lead_id, name, email, phone, result_id, created_at }
 - `apply_events`: immutable handoff snapshots containing card, result, official/partner link type, partner, campaign, tracking id, destination and expected payout at click time.
 

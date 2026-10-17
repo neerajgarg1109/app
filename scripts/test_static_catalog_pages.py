@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Regression checks for CardIQ's generated, indexable catalogue pages."""
 import json
+import os
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "frontend" / "build"
-CARDS = json.loads((ROOT / "backend" / "cards_catalog.json").read_text())
-ORIGIN = "https://neerajgarg1109.github.io/app"
+MANIFEST = json.loads((BUILD / "catalog-manifest.json").read_text())
+CARD_IDS = MANIFEST["card_ids"]
+ORIGIN = os.environ.get("CARDIQ_PUBLIC_ORIGIN", MANIFEST["origin"]).rstrip("/")
 
 
 class Document(HTMLParser):
@@ -53,7 +55,7 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_every_card_has_substantial_sourced_editorial_content(self):
         pages = list((BUILD / "cards").glob("*/index.html"))
-        self.assertEqual(len(pages), len(CARDS))
+        self.assertEqual({path.parent.name for path in pages}, set(CARD_IDS))
         for path in pages:
             source = path.read_text()
             self.assertIn("CardIQ editorial view", source)

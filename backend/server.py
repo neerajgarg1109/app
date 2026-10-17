@@ -808,30 +808,24 @@ async def attach_result_lead(result_id: str, payload: LeadIn):
 
 async def scored_result(result):
     if result.get("scored"):
-        scored = result["scored"]
-        ids = [s["card"]["id"] for s in scored]
+        snapshots = result["scored"]
+        ids = [s["card"]["id"] for s in snapshots]
         current = await db.cards.find(
-            {"id": {"$in": ids}}, {"_id": 0, "id": 1, "applyUrlOverride": 1, "applyLinkStatus": 1, "imageUrl": 1, "imageSourceUrl": 1}
+            {"id": {"$in": ids}}, {"_id": 0}
         ).to_list(None)
         current_by_id = {c["id"]: c for c in current}
-        refreshed = []
-        for item in scored:
-            updated = dict(item)
-            card = dict(item["card"])
-            official = card.get("officialApplyUrl", card.get("applyUrl"))
-            card["officialApplyUrl"] = official
-            latest = current_by_id.get(card["id"], {})
-            override = latest.get("applyUrlOverride")
-            live = latest.get("applyLinkStatus", "live" if override else "official") == "live"
-            card["applyUrl"] = override if override and live else official
-            card["applicationLinkType"] = "partner" if override and live else "official"
-            card["affiliateDisclosureRequired"] = card["applicationLinkType"] == "partner"
-            if latest.get("imageUrl"):
-                card["imageUrl"] = latest["imageUrl"]
-                card["imageSourceUrl"] = latest.get("imageSourceUrl")
-            updated["card"] = card
-            refreshed.append(updated)
-        return refreshed
+        cards = []
+        for item in snapshots:
+            snapshot = dict(item["card"])
+            latest = current_by_id.get(snapshot["id"])
+            cards.append(_card_for_client(latest) if latest else snapshot)
+        # Recalculate card-dependent scores, reasons and value estimates so a
+        # corrected fee, benefit or availability is consistent on shared results
+        # and in emails. Missing historical cards retain their saved snapshot.
+        refreshed = recommend_cards(result["answers"], cards)
+        # Preserve a readable historical result only when every former candidate
+        # is now unavailable; the UI will clearly disable those application links.
+        return refreshed or recommend_cards(result["answers"], cards, include_unavailable=True)
     # Older results store IDs only. Archived demo records remain available here.
     ids = result.get("scored_ids")
     query = {"id": {"$in": ids}} if ids else RECOMMENDABLE_QUERY

@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
-import { getCards } from "../api";
+import { getCards, getResult } from "../api";
 import { Link } from "react-router-dom";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
-  const [catalogStats, setCatalogStats] = useState({ cards: 254, issuers: 20 });
+  const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null, checked: null });
+  const [savedCardName, setSavedCardName] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -18,11 +19,23 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         setCatalogStats({
           cards: cards.length,
           issuers: new Set(cards.map((card) => card.issuer).filter(Boolean)).size,
+          checked: latestVerificationMonth(cards),
         });
       })
       .catch(() => {});
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    setSavedCardName(null);
+    if (savedResult?.resultId) {
+      getResult(savedResult.resultId)
+        .then((result) => { if (active) setSavedCardName(result?.scored?.[0]?.card?.name || null); })
+        .catch(() => {});
+    }
+    return () => { active = false; };
+  }, [savedResult?.resultId]);
 
   return (
     <div className="ciq-shell pb-40">
@@ -51,14 +64,14 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           Your clearest path to the <span className="ciq-gradient-text">right credit card</span>
         </h1>
         <p className="mx-auto mt-4 max-w-sm text-[15px]" style={{ color: "var(--ciq-ink-soft)" }}>
-          CardIQ checks {catalogStats.cards} cards across {catalogStats.issuers} issuers, weighs the fees and fine print against how you spend, and explains its strongest recommendation.
+          CardIQ checks {catalogStats.cards == null ? "the live card catalogue" : `${catalogStats.cards} cards across ${catalogStats.issuers} issuers`}, weighs the fees and fine print against how you spend, and explains its strongest recommendation.
         </p>
 
         <div className="ciq-soft-glow mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border bg-white/90 text-center backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
           {[
-            [String(catalogStats.cards), "cards catalogued"],
-            [String(catalogStats.issuers), "issuers covered"],
-            ["Oct 2026", "details checked"],
+            [catalogStats.cards == null ? "—" : String(catalogStats.cards), "cards catalogued"],
+            [catalogStats.issuers == null ? "—" : String(catalogStats.issuers), "issuers covered"],
+            [catalogStats.checked || "—", "latest check"],
           ].map(([value, label], index) => (
             <div key={label} className="ciq-stat px-2 py-3" style={{ borderLeft: index ? "1px solid var(--ciq-line)" : "none" }}>
               <div className="font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>{value}</div>
@@ -99,7 +112,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         )}
         {savedResult?.resultId && (
           <a href={`${process.env.PUBLIC_URL}/#/r/${savedResult.resultId}`} className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
-            Open saved result · {savedResult.cardName}
+            Open saved result{savedCardName ? ` · ${savedCardName}` : ""}
           </a>
         )}
       </section>
@@ -143,7 +156,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         >
           <h2 className="font-display text-2xl font-extrabold">Built to earn your trust.</h2>
           <p className="mt-2 text-sm text-white/85">
-            We turn a catalogue of {catalogStats.cards} cards into one reasoned recommendation, using your priorities—not a sponsored leaderboard.
+            We turn {catalogStats.cards == null ? "the live card catalogue" : `a catalogue of ${catalogStats.cards} cards`} into one reasoned recommendation, using your priorities—not a sponsored leaderboard.
           </p>
           <ul className="mt-5 space-y-3">
             {["Card facts traced to issuer and official partner sources", "Fees, exclusions and trade-offs shown clearly", "No bank can pay to improve its match score"].map((x) => (
@@ -172,4 +185,10 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
       </div>
     </div>
   );
+}
+
+function latestVerificationMonth(cards) {
+  const dates = cards.map((card) => card.verifiedOn).filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value || "")).sort();
+  if (!dates.length) return null;
+  return new Intl.DateTimeFormat("en-IN", { month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${dates.at(-1)}T00:00:00Z`));
 }

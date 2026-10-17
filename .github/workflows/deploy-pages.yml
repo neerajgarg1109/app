@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
 
 permissions:
   contents: read
@@ -32,8 +34,21 @@ jobs:
       - run: yarn build
         env:
           REACT_APP_BACKEND_URL: https://cardiq-api-g2ir.onrender.com
-      - run: python3 ../scripts/generate_static_catalog_pages.py
+          REACT_APP_PUBLIC_APP_URL: https://neerajgarg1109.github.io/app
+      - name: Generate SEO pages from this commit
+        if: github.event_name == 'push'
+        run: python3 ../scripts/generate_static_catalog_pages.py
+        env:
+          CARDIQ_PUBLIC_ORIGIN: https://neerajgarg1109.github.io/app
+      - name: Sync Admin-published cards into SEO pages
+        if: github.event_name != 'push'
+        run: python3 ../scripts/generate_static_catalog_pages.py
+        env:
+          CARDIQ_CATALOG_API_URL: https://cardiq-api-g2ir.onrender.com/api/cards
+          CARDIQ_PUBLIC_ORIGIN: https://neerajgarg1109.github.io/app
       - run: python3 ../scripts/test_static_catalog_pages.py
+        env:
+          CARDIQ_PUBLIC_ORIGIN: https://neerajgarg1109.github.io/app
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/build
