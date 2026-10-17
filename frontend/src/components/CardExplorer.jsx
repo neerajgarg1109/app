@@ -6,11 +6,12 @@ import { recordProductEvent } from "../productAnalytics";
 import Logo from "./Logo";
 import CardDetails from "./CardDetails";
 import Compare from "./Compare";
+import CARD_CATEGORIES from "../data/cardCategories.json";
 
 const PAGE_SIZE = 24;
 const POPULAR_CATEGORIES = [
-  ["cashback", "Cashback"], ["travel", "Travel"], ["lounge", "Lounge"], ["free", "Lifetime free"],
-  ["fuel", "Fuel"], ["upi", "UPI / RuPay"], ["secured", "Secured"], ["premium", "Premium"],
+  ["cashback", "Cashback"], ["travel", "Travel"], ["domestic-lounge", "Lounge"], ["lifetime-free", "Lifetime free"],
+  ["fuel", "Fuel"], ["rupay-upi", "UPI / RuPay"], ["secured", "Secured"], ["premium", "Premium"],
 ];
 
 export default function CardExplorer() {
@@ -47,6 +48,7 @@ export default function CardExplorer() {
   }, [cards, issuer, category, query]);
   const selected = cardId ? cards.find((card) => card.id === cardId) : null;
   const compareCards = compareIds.map((id) => cards.find((card) => card.id === id)).filter(Boolean);
+  const availableCategories = useMemo(() => CARD_CATEGORIES.map((item) => ({ ...item, count: cards.filter((card) => matchesCategory(card, item.id)).length })).filter((item) => item.count >= 3), [cards]);
 
   useEffect(() => { setVisible(PAGE_SIZE); }, [query, issuer, category]);
   useEffect(() => { localStorage.setItem("ciq_compare_cards", JSON.stringify(compareIds)); }, [compareIds]);
@@ -105,6 +107,13 @@ export default function CardExplorer() {
               {issuers.map((name) => { const count = cards.filter((card) => card.issuer === name).length; return <button type="button" key={name} onClick={() => setIssuer(name)} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === name ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>{name}<span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{count} card{count === 1 ? "" : "s"}</span></button>; })}
             </div>
           </details>
+          <details className="mt-3 rounded-2xl border bg-white p-3" style={{ borderColor: "var(--ciq-line)" }}>
+            <summary className="cursor-pointer text-sm font-bold">Explore {availableCategories.length} useful card categories</summary>
+            <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Only categories with at least three matching cards are published.</p>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {availableCategories.map((item) => <button type="button" key={item.id} onClick={() => setCategory(item.id)} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: category === item.id ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>{item.label}<span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{item.count} cards</span></button>)}
+            </div>
+          </details>
         </>}
 
         {loading && <div className="grid min-h-[40vh] place-items-center"><Loader2 className="h-7 w-7 ciq-spin" style={{ color: "var(--ciq-teal)" }} /></div>}
@@ -151,12 +160,18 @@ export default function CardExplorer() {
 }
 
 function matchesCategory(card, category) {
+  const definition = CARD_CATEGORIES.find((item) => item.id === category);
+  if (!definition) return true;
   const text = [card.name, card.rewardLine, card.feeType, card.network, ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
-  if (category === "free") return card.annualFeeAmount === 0 || /lifetime free|no annual fee/.test(text);
-  if (category === "secured") return card.secured === true || /fixed deposit|secured/.test(text);
-  if (category === "premium") return card.feeType === "premium" || card.annualFeeAmount >= 5000;
-  if (category === "upi") return /rupay|upi/.test(text);
-  return text.includes(category);
+  const checks = [];
+  if (definition.keywords?.length) checks.push(definition.keywords.some((keyword) => text.includes(keyword)));
+  if (typeof definition.annualFeeMax === "number") checks.push(Number(card.annualFeeAmount) <= definition.annualFeeMax);
+  if (typeof definition.annualFeeMin === "number") checks.push(Number(card.annualFeeAmount) >= definition.annualFeeMin);
+  if (definition.secured) checks.push(card.secured === true);
+  if (definition.creditReq) checks.push(card.creditReq === definition.creditReq);
+  if (definition.coBranded) checks.push(Boolean(card.coBrandPartner) || /co-brand|co brand/.test(text));
+  if (definition.fintech) checks.push(Boolean(card.coBrandPartner) || /fintech|kredit|salaryse|zaggle|onecard|scapia|super\.money/.test(text));
+  return checks.some(Boolean);
 }
 
 function hashFilters() {
