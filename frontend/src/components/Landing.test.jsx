@@ -22,7 +22,7 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.textContent).toContain("methodology and revenue disclosure");
   expect(container.textContent).not.toContain("confident recommendation");
   expect(container.textContent).toContain("2 cards across 2 issuers");
-  expect(container.textContent).toContain("Oct 2026");
+  expect(container.textContent).toContain("card categories");
   expect(container.textContent).toContain("More than a card quiz");
   expect(container.textContent).toContain("Compare with my card");
   const methodology = Array.from(container.querySelectorAll("a")).find((link) => link.textContent.includes("methodology"));

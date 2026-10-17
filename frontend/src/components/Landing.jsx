@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
 import { getCards, getResult } from "../api";
 import { Link } from "react-router-dom";
+import CARD_CATEGORIES from "../data/cardCategories.json";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
@@ -16,7 +17,7 @@ const INTENTS = [
 ];
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
-  const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null, checked: null });
+  const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null });
   const [savedCardName, setSavedCardName] = useState(null);
 
   useEffect(() => {
@@ -27,7 +28,6 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         setCatalogStats({
           cards: cards.length,
           issuers: new Set(cards.map((card) => card.issuer).filter(Boolean)).size,
-          checked: latestVerificationMonth(cards),
         });
       })
       .catch(() => {});
@@ -79,7 +79,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           {[
             [catalogStats.cards == null ? "—" : String(catalogStats.cards), "cards catalogued"],
             [catalogStats.issuers == null ? "—" : String(catalogStats.issuers), "issuers covered"],
-            [catalogStats.checked || "—", "latest check"],
+            [String(CARD_CATEGORIES.length), "card categories"],
           ].map(([value, label], index) => (
             <div key={label} className="ciq-stat px-2 py-3" style={{ borderLeft: index ? "1px solid var(--ciq-line)" : "none" }}>
               <div className="font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>{value}</div>
@@ -210,10 +210,4 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
       </div>
     </div>
   );
-}
-
-function latestVerificationMonth(cards) {
-  const dates = cards.map((card) => card.verifiedOn).filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value || "")).sort();
-  if (!dates.length) return null;
-  return new Intl.DateTimeFormat("en-IN", { month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(`${dates.at(-1)}T00:00:00Z`));
 }
