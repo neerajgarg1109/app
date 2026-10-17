@@ -1,10 +1,12 @@
 import React from "react";
 import { Check, ExternalLink, ShieldCheck } from "lucide-react";
 import CreditCardVisual from "./CreditCardVisual";
+import { editorialInsights } from "../editorialInsights";
 
 export default function CardDetails({ card, heading = "Card details", compact = false, onApply }) {
   if (!card) return null;
   const unavailable = card.active === false || card.applicationsOpen === false;
+  const editorial = editorialInsights(card);
   const facts = [
     ["Annual fee", card.annualFee || "Not specified"],
     ["Joining fee", card.joiningFee || "Not specified"],
@@ -22,6 +24,19 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       </div>
 
       <StructuredBenefits card={card} />
+
+      <section className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>CardIQ editorial view</div>
+        <h3 className="mt-1 font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>Who should consider this card?</h3>
+        <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{editorial.verdict}</p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <EditorialList title="A good fit when" items={editorial.goodFit} />
+          <EditorialList title="Think twice when" items={editorial.thinkTwice} />
+        </div>
+        <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>
+          This editorial view is generated from the sourced fees, rewards and conditions shown on this page. It is not approval advice or a paid ranking.
+        </p>
+      </section>
 
       {!compact && <CreditCardVisual card={card} />}
 
@@ -80,6 +95,10 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       )}
     </div>
   );
+}
+
+function EditorialList({ title, items }) {
+  return <div><div className="text-xs font-bold" style={{ color: "var(--ciq-ink)" }}>{title}</div><ul className="mt-2 list-disc space-y-1.5 pl-5 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>;
 }
 
 function StructuredBenefits({ card }) {

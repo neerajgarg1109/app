@@ -74,6 +74,30 @@ def card_links(cards):
     ) + "</div>"
 
 
+def editorial_analysis(card):
+    labels = {"cashback": "cashback", "shopping": "shopping", "online": "online purchases", "travel": "travel", "dining": "dining", "lounge": "airport lounge access", "rewards": "reward points", "forex": "international spending", "fuel": "fuel", "grocery": "groceries", "upi": "UPI payments", "secured": "building credit"}
+    interests = [labels.get(tag, tag.replace("-", " ")) for tag in (card.get("bestFor") or [])[:3]]
+    audience = (", ".join(interests[:-1]) + " and " + interests[-1]) if len(interests) > 1 else (interests[0] if interests else "its published reward proposition")
+    fee = card.get("annualFeeAmount") or 0
+    if card.get("secured"):
+        verdict = f'{card["name"]} is primarily worth considering for building credit through a secured or fixed-deposit-backed card.'
+    elif fee == 0:
+        verdict = f'{card["name"]} is a practical option for people who prioritise {audience}. Its no-annual-fee structure lowers the cost of keeping it long term.'
+    elif fee >= 5000:
+        verdict = f'{card["name"]} is a practical option for people who prioritise {audience}. The premium fee makes sense only if you will consistently use its higher-value benefits.'
+    else:
+        verdict = f'{card["name"]} is a practical option for people who prioritise {audience}. The decision should come down to whether your expected rewards comfortably exceed the annual fee.'
+    limitation = next((item for item in card.get("highlights", []) if re.search(r"cap|exclu|limit|markup|not cash|condition|eligible", item, re.I)), None)
+    good_fit = [f"Your regular spending includes {audience}.", "You can recover the annual fee through benefits you will actually use." if fee else "You want to avoid an annual membership charge."]
+    think_twice = [limitation] if limitation else []
+    if fee:
+        think_twice.append("You would not use the card enough to offset its annual fee and applicable GST.")
+    if not think_twice:
+        think_twice.append("Most of your spending falls outside the card's eligible reward categories.")
+    list_html = lambda items: "".join(f"<li>{html.escape(item)}</li>" for item in items)
+    return f'<section><h2>CardIQ editorial view</h2><p>{html.escape(verdict)}</p><div class="grid"><div class="card"><h3>A good fit when</h3><ul>{list_html(good_fit)}</ul></div><div class="card"><h3>Think twice when</h3><ul>{list_html(think_twice[:2])}</ul></div></div><p class="muted">This analysis is derived from the sourced fees, rewards and conditions on this page. It is not approval advice or a paid ranking.</p></section>'
+
+
 clean_generated_routes()
 
 for card in CARDS:
@@ -82,7 +106,7 @@ for card in CARDS:
     route = f'{ORIGIN}/#/cards/{quote(card["id"])}'
     facts = "".join(f"<li>{html.escape(item)}</li>" for item in card.get("highlights", []))
     sources = "".join(f'<li><a href="{html.escape(url, quote=True)}" rel="nofollow">Issuer source {index + 1}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
-    body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p><h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
+    body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
     write(Path("cards") / card["id"], page(f"{name} — fees, rewards and benefits | CardIQ", description, f'{ORIGIN}/cards/{card["id"]}/', route, body))
 
 issuers = sorted({card["issuer"] for card in CARDS})
