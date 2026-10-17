@@ -3,6 +3,7 @@ import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, Ph
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
 import { getCards } from "../api";
+import { Link } from "react-router-dom";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
@@ -27,12 +28,15 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
     <div className="ciq-shell pb-40">
       <header className="ciq-container flex items-center justify-between py-5">
         <Logo size="md" />
-        <button
-          onClick={onStart}
-          className="ciq-press ciq-primary-gradient ciq-soft-glow rounded-full px-4 py-2 text-sm font-semibold text-white"
-        >
-          Get started
-        </button>
+        <div className="flex items-center gap-2">
+          <Link to="/cards" className="ciq-press rounded-full border bg-white px-3 py-2 text-xs font-semibold sm:text-sm" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Browse cards</Link>
+          <button
+            onClick={onStart}
+            className="ciq-press ciq-primary-gradient ciq-soft-glow rounded-full px-4 py-2 text-sm font-semibold text-white"
+          >
+            Get started
+          </button>
+        </div>
       </header>
 
       {/* Hero */}
@@ -81,6 +85,9 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         >
           Find my strongest match <ArrowRight className="h-5 w-5" />
         </button>
+        <Link to="/cards" className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
+          Search and explore all cards
+        </Link>
         {resumeStep && (
           <button
             onClick={onResume}

@@ -35,6 +35,11 @@ const scored = [{
   },
 }];
 
+const alternateCard = {
+  ...card, id: "alternate-card", name: "Test Travel Card", issuer: "Another Bank",
+  rewardLine: "Travel rewards on eligible spend", highlights: ["Four lounge visits each year.", "Low foreign currency markup."],
+};
+
 function button(container, name) {
   return Array.from(container.querySelectorAll("button")).find((item) => item.textContent.trim() === name);
 }
@@ -130,5 +135,16 @@ describe("Result customer flows", () => {
     expect(target.opener).toBeNull();
     expect(target.location).toBe("https://bank.example.com/apply");
     open.mockRestore();
+  });
+
+  test("shows every verified top-card detail and opens complete alternate features", async () => {
+    await act(async () => root.render(<Result scored={[...scored, { card: alternateCard, confidence: 81, reasons: ["Travel fit"] }]} resultId="result-1" answers={{}} onRestart={jest.fn()} />));
+    expect(container.textContent).toContain("All verified benefits and conditions");
+    expect(container.textContent).toContain("5% eligible cashback");
+    expect(container.textContent).toContain("Cashback capped at ₹1,000 per month.");
+    await act(async () => container.querySelector('button[aria-label="View full details for Test Travel Card"]').click());
+    expect(container.textContent).toContain("Complete features");
+    expect(container.textContent).toContain("Four lounge visits each year.");
+    expect(container.textContent).toContain("Low foreign currency markup.");
   });
 });

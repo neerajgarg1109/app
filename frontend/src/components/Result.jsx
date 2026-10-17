@@ -3,6 +3,7 @@ import { Check, RotateCcw, Star, ArrowRight, Sparkles, ChevronRight, Mail, Loade
 import Logo from "./Logo";
 import CreditCardVisual from "./CreditCardVisual";
 import Compare from "./Compare";
+import CardDetails from "./CardDetails";
 import { attachResultLead, emailResult, trackApplyClick, reportCardInformation, scheduleReviewFollowup, getCommunityRating, submitExperienceFeedback } from "../api";
 import { contactNameError, contactPhoneError, contactEmailError } from "../contactValidation";
 import { recordProductEvent } from "../productAnalytics";
@@ -15,7 +16,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
   const annualFee = getAnnualFeeDisplay(card);
   const cautionHighlight = getCautionHighlight(card);
   const tradeOffs = getTradeOffs(card, cautionHighlight);
-  const benefitHighlights = (card.highlights || []).filter((item) => item !== cautionHighlight);
+  const benefitHighlights = [...new Set([card.rewardLine, ...(card.highlights || [])].filter(Boolean))];
 
   const [emailState, setEmailState] = useState("idle"); // idle | sending | sent | error
   const [sentTo, setSentTo] = useState("");
@@ -42,6 +43,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
   const [experienceRating, setExperienceRating] = useState(0);
   const [experienceFeedback, setExperienceFeedback] = useState("");
   const [experienceState, setExperienceState] = useState("idle");
+  const [selectedAlternate, setSelectedAlternate] = useState(null);
 
   useEffect(() => { getCommunityRating(card.id).then(setCommunity).catch(() => {}); }, [card.id]);
 
@@ -388,7 +390,8 @@ export default function Result({ scored, resultId, answers, refining = false, on
 
       <section className="ciq-container mt-4">
         <div className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
-          <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Key benefits</div>
+          <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>All verified benefits and conditions</div>
+          <p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Everything currently recorded in the CardIQ catalogue for this card.</p>
           <ul className="mt-3 space-y-2.5">
             {benefitHighlights.map((h) => (
               <li key={h} className="flex items-start gap-2 text-sm" style={{ color: "var(--ciq-ink)" }}>
@@ -406,10 +409,11 @@ export default function Result({ scored, resultId, answers, refining = false, on
         <section className="ciq-container mt-6">
           <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Strong alternatives, for comparison</div>
           <div className="mt-3 space-y-3">
-            {alternates.map((alt) => (
-              <div key={alt.card.id} className="flex items-center gap-3 rounded-2xl border bg-white p-3" style={{ borderColor: "var(--ciq-line)" }}>
+            {alternates.map((alt, index) => (
+              <button type="button" key={alt.card.id} onClick={() => setSelectedAlternate(alt.card)} className="ciq-press flex w-full items-center gap-3 rounded-2xl border bg-white p-3 text-left" style={{ borderColor: "var(--ciq-line)" }} aria-label={`View full details for ${alt.card.name}`}>
                 <div className="h-11 w-16 flex-shrink-0 rounded-lg" style={{ background: `linear-gradient(135deg, ${alt.card.palette[0]}, ${alt.card.palette[1]})` }} />
                 <div className="min-w-0 flex-1">
+                  <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>#{index + 2} match · Full details</div>
                   <div className="truncate font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>{alt.card.name}</div>
                   <div className="truncate text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{alt.card.rewardLine}</div>
                 </div>
@@ -417,7 +421,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
                   <span className="flex-shrink-0 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}>{alt.confidence}%</span>
                 )}
                 <ChevronRight className="h-4 w-4 flex-shrink-0" style={{ color: "var(--ciq-ink-soft)" }} />
-              </div>
+              </button>
             ))}
           </div>
         </section>
@@ -465,6 +469,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
       </div>
 
       {showCompare && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
+      {selectedAlternate && <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-label={`${selectedAlternate.name} details`} onClick={() => setSelectedAlternate(null)}><div className="max-h-[94vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-5 sm:rounded-3xl" onClick={(event) => event.stopPropagation()}><div className="sticky top-0 z-10 -mx-1 mb-4 flex items-start justify-between bg-white px-1 pb-2"><div><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>Alternative recommendation</div><div className="font-display text-xl font-extrabold">{selectedAlternate.name}</div><div className="text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{selectedAlternate.issuer}</div></div><button type="button" onClick={() => setSelectedAlternate(null)} className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }} aria-label="Close card details"><X className="h-4 w-4" /></button></div><CardDetails card={selectedAlternate} heading="Complete features" compact /></div></div>}
       {showHandoff && <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/35 sm:items-center sm:p-5" onClick={() => handoffState !== "working" && setShowHandoff(false)}><div className="w-full max-w-md rounded-t-3xl bg-white p-5 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}><div className="flex items-start justify-between"><div><h2 className="font-display text-xl font-extrabold">Continue to {card.issuer}</h2><p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>You can apply anonymously, or request one reminder to review the card after 75 days.</p></div><button onClick={() => setShowHandoff(false)} disabled={handoffState === "working"} className="rounded-full border p-2" style={{ borderColor: "var(--ciq-line)" }}><X className="h-4 w-4" /></button></div><button onClick={() => continueToIssuer(false)} disabled={handoffState === "working"} className="mt-5 w-full rounded-2xl border py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Continue without a reminder</button><div className="my-4 flex items-center gap-3 text-xs" style={{ color: "var(--ciq-ink-soft)" }}><span className="h-px flex-1" style={{ background: "var(--ciq-line)" }} />or<span className="h-px flex-1" style={{ background: "var(--ciq-line)" }} /></div><input type="email" value={reviewEmail} onChange={(e) => setReviewEmail(e.target.value)} placeholder="Email address" className="w-full rounded-2xl border px-3.5 py-3 text-sm outline-none" style={{ borderColor: "var(--ciq-line)" }} /><label className="mt-3 flex items-start gap-2 text-xs" style={{ color: "var(--ciq-ink-soft)" }}><input type="checkbox" className="mt-0.5" checked={reviewConsent} onChange={(e) => setReviewConsent(e.target.checked)} /><span>Email me one review reminder in 75 days. This does not subscribe me to marketing.</span></label>{handoffState === "error" && <p className="mt-2 text-xs" style={{ color: "#b4433f" }}>We couldn’t schedule the reminder. Check the email or continue without one.</p>}<button onClick={() => continueToIssuer(true)} disabled={handoffState === "working" || !reviewConsent || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reviewEmail)} className="mt-4 w-full rounded-2xl py-3 font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>{handoffState === "working" ? "Continuing…" : "Set reminder and continue"}</button><p className="mt-3 text-center text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>The issuer decides approval. CardIQ never asks for card credentials.</p></div></div>}
       {showEmailForm && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/35 p-0 sm:items-center sm:p-5" onClick={() => emailState !== "sending" && dismissContactPrompt()}>

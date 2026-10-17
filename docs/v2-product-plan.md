@@ -47,6 +47,8 @@ Acceptance criteria:
 
 ### Phase 2 — defensible recommendation and value
 
+- Public searchable card catalogue and direct card-detail links, with no quiz required.
+- Complete verified details for the winner and both alternative recommendations.
 - Model issuer-specific earn rules, category caps, exclusions, point values, milestones and fee waivers.
 - Show value assumptions before the headline number and distinguish guaranteed, conditional and estimated value.
 - Explain why the winner beats each alternative, not only why it generally fits.
