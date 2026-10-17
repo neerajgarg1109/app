@@ -362,6 +362,11 @@ class ReviewModerationIn(BaseModel):
 
 class ApplyLinkIn(BaseModel):
     apply_url: Optional[str] = None
+    partner_name: Optional[str] = None
+    campaign_id: Optional[str] = None
+    tracking_id: Optional[str] = None
+    status: str = "live"
+    expected_payout: Optional[float] = None
 
 
 class AdminCardIn(BaseModel):
@@ -420,9 +425,16 @@ def _card_for_client(card: dict) -> dict:
     """Expose an admin override as applyUrl while retaining the sourced issuer URL."""
     public = dict(card)
     override = public.pop("applyUrlOverride", None)
+    status = public.pop("applyLinkStatus", "live" if override else "official")
     public["officialApplyUrl"] = public.get("applyUrl")
-    if override:
+    if override and status == "live":
         public["applyUrl"] = override
+        public["applicationLinkType"] = "partner"
+    else:
+        public["applicationLinkType"] = "official"
+    public["affiliateDisclosureRequired"] = public["applicationLinkType"] == "partner"
+    for key in ("applyPartner", "applyCampaignId", "applyTrackingId", "expectedPayout", "applyLinkUpdatedAt"):
+        public.pop(key, None)
     return public
 
 
@@ -497,7 +509,12 @@ def _admin_card(card: dict) -> dict:
     public.update({
         "official_apply_url": public.get("applyUrl"),
         "custom_apply_url": public.get("applyUrlOverride"),
-        "effective_apply_url": public.get("applyUrlOverride") or public.get("applyUrl"),
+        "effective_apply_url": public.get("applyUrlOverride") if public.get("applyUrlOverride") and public.get("applyLinkStatus", "live") == "live" else public.get("applyUrl"),
+        "partner_name": public.get("applyPartner"),
+        "campaign_id": public.get("applyCampaignId"),
+        "tracking_id": public.get("applyTrackingId"),
+        "apply_link_status": public.get("applyLinkStatus", "live" if public.get("applyUrlOverride") else "official"),
+        "expected_payout": public.get("expectedPayout"),
         "has_draft": bool(draft),
         "publication_status": "draft" if draft else stored.get("publicationStatus", "published"),
         "is_new_draft": bool(draft and stored.get("publicationStatus") == "draft"),
@@ -520,10 +537,21 @@ async def get_cards():
 
 @api_router.post("/cards/{card_id}/apply-click")
 async def track_apply_click(card_id: str, payload: ApplyClickIn):
-    card = await db.cards.find_one({"id": card_id, **CATALOG_QUERY}, {"_id": 1})
+    card = await db.cards.find_one({"id": card_id, **CATALOG_QUERY}, {"_id": 0})
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
-    await db.apply_events.insert_one({"event_id": str(uuid.uuid4()), "card_id": card_id, "result_id": payload.result_id, "created_at": datetime.now(timezone.utc)})
+    status = card.get("applyLinkStatus", "live" if card.get("applyUrlOverride") else "official")
+    partner_live = bool(card.get("applyUrlOverride") and status == "live")
+    await db.apply_events.insert_one({
+        "event_id": str(uuid.uuid4()), "card_id": card_id, "result_id": payload.result_id,
+        "link_type": "partner" if partner_live else "official",
+        "partner_name": card.get("applyPartner") if partner_live else None,
+        "campaign_id": card.get("applyCampaignId") if partner_live else None,
+        "tracking_id": card.get("applyTrackingId") if partner_live else None,
+        "destination_url": card.get("applyUrlOverride") if partner_live else card.get("applyUrl"),
+        "expected_payout": card.get("expectedPayout") if partner_live else None,
+        "created_at": datetime.now(timezone.utc),
+    })
     return {"status": "recorded"}
 
 
@@ -758,7 +786,7 @@ async def scored_result(result):
         scored = result["scored"]
         ids = [s["card"]["id"] for s in scored]
         current = await db.cards.find(
-            {"id": {"$in": ids}}, {"_id": 0, "id": 1, "applyUrlOverride": 1, "imageUrl": 1, "imageSourceUrl": 1}
+            {"id": {"$in": ids}}, {"_id": 0, "id": 1, "applyUrlOverride": 1, "applyLinkStatus": 1, "imageUrl": 1, "imageSourceUrl": 1}
         ).to_list(None)
         current_by_id = {c["id"]: c for c in current}
         refreshed = []
@@ -768,7 +796,11 @@ async def scored_result(result):
             official = card.get("officialApplyUrl", card.get("applyUrl"))
             card["officialApplyUrl"] = official
             latest = current_by_id.get(card["id"], {})
-            card["applyUrl"] = latest.get("applyUrlOverride") or official
+            override = latest.get("applyUrlOverride")
+            live = latest.get("applyLinkStatus", "live" if override else "official") == "live"
+            card["applyUrl"] = override if override and live else official
+            card["applicationLinkType"] = "partner" if override and live else "official"
+            card["affiliateDisclosureRequired"] = card["applicationLinkType"] == "partner"
             if latest.get("imageUrl"):
                 card["imageUrl"] = latest["imageUrl"]
                 card["imageSourceUrl"] = latest.get("imageSourceUrl")
@@ -1024,7 +1056,27 @@ async def update_admin_card_apply_link(
 ):
     _require_admin(x_admin_token, "editor")
     apply_url = _validated_apply_url(payload.apply_url)
-    update = {"$set": {"applyUrlOverride": apply_url}} if apply_url else {"$unset": {"applyUrlOverride": ""}}
+    if payload.status not in {"testing", "live", "paused"}:
+        raise HTTPException(status_code=422, detail="Partner link status must be testing, live or paused")
+    partner_name = (payload.partner_name or "").strip() or None
+    campaign_id = (payload.campaign_id or "").strip() or None
+    tracking_id = (payload.tracking_id or "").strip() or None
+    if apply_url and payload.status == "live" and not partner_name:
+        raise HTTPException(status_code=422, detail="Partner name is required before a link goes live")
+    if payload.expected_payout is not None and payload.expected_payout < 0:
+        raise HTTPException(status_code=422, detail="Expected payout cannot be negative")
+    if apply_url:
+        update = {"$set": {
+            "applyUrlOverride": apply_url, "applyPartner": partner_name,
+            "applyCampaignId": campaign_id, "applyTrackingId": tracking_id,
+            "applyLinkStatus": payload.status, "expectedPayout": payload.expected_payout,
+            "applyLinkUpdatedAt": datetime.now(timezone.utc),
+        }}
+    else:
+        update = {"$unset": {key: "" for key in (
+            "applyUrlOverride", "applyPartner", "applyCampaignId", "applyTrackingId",
+            "applyLinkStatus", "expectedPayout", "applyLinkUpdatedAt",
+        )}}
     result = await db.cards.update_one({"id": card_id, **CATALOG_QUERY}, update)
     if not result.matched_count:
         raise HTTPException(status_code=404, detail="Card not found")
@@ -1033,7 +1085,12 @@ async def update_admin_card_apply_link(
         "id": card["id"],
         "official_apply_url": card.get("applyUrl"),
         "custom_apply_url": card.get("applyUrlOverride"),
-        "effective_apply_url": card.get("applyUrlOverride") or card.get("applyUrl"),
+        "effective_apply_url": card.get("applyUrlOverride") if card.get("applyUrlOverride") and card.get("applyLinkStatus") == "live" else card.get("applyUrl"),
+        "partner_name": card.get("applyPartner"),
+        "campaign_id": card.get("applyCampaignId"),
+        "tracking_id": card.get("applyTrackingId"),
+        "apply_link_status": card.get("applyLinkStatus", "official"),
+        "expected_payout": card.get("expectedPayout"),
     }
 
 
@@ -1143,6 +1200,13 @@ async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str]
 
     incomplete = await db.partial_sessions.count_documents({"completed": {"$ne": True}})
 
+    apply_events = await db.apply_events.find(q, {"_id": 0}).to_list(10000)
+    partner_clicks = [event for event in apply_events if event.get("link_type") == "partner"]
+    partner_counts: Dict[str, int] = {}
+    for event in partner_clicks:
+        name = event.get("partner_name") or "Unlabelled partner"
+        partner_counts[name] = partner_counts.get(name, 0) + 1
+
     funnel_events = ["landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"]
     funnel = {}
     for event in funnel_events:
@@ -1155,6 +1219,17 @@ async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str]
         "by_goal": to_sorted(goal_counts),
         "incomplete_sessions": incomplete,
         "funnel": funnel,
+        "application_performance": {
+            "total_clicks": len(apply_events),
+            "partner_clicks": len(partner_clicks),
+            "official_clicks": len(apply_events) - len(partner_clicks),
+            "monetised_click_rate": round(len(partner_clicks) * 100 / len(apply_events)) if apply_events else 0,
+            "expected_payout_pipeline": round(sum(float(event.get("expected_payout") or 0) for event in partner_clicks), 2),
+            "by_partner": [
+                {"label": name, "count": count, "pct": round(count * 100 / len(partner_clicks)) if partner_clicks else 0}
+                for name, count in sorted(partner_counts.items(), key=lambda item: item[1], reverse=True)
+            ],
+        },
     }
 
 

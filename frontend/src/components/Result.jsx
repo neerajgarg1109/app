@@ -458,6 +458,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
           <button onClick={() => setShowHandoff(true)} disabled={applicationsUnavailable} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)", boxShadow: "0 16px 30px -14px rgba(13,148,136,0.7)" }}>
             {applicationsUnavailable ? "Applications unavailable" : `Apply on ${card.issuer}`} <ExternalLink className="h-5 w-5" />
           </button>
+          {card.affiliateDisclosureRequired && <p className="mt-1.5 text-center text-[9px]" style={{ color: "var(--ciq-ink-soft)" }}>CardIQ may earn a commission. Rankings are unaffected.</p>}
         </div>
       </div>
 

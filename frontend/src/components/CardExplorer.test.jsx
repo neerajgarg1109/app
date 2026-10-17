@@ -21,6 +21,7 @@ const cards = [
     bestFor: ["cashback", "online"], creditReq: "good", verifiedOn: "2026-10-09",
     applicationsOpen: true, active: true, applyUrl: "https://example.com/apply",
     sourceUrls: ["https://example.com/terms"], termsNote: "Issuer terms apply.",
+    affiliateDisclosureRequired: true,
   },
   {
     id: "travel-card", name: "Travel Plus", issuer: "Beta Bank", tagline: "Travel",
@@ -74,6 +75,7 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Everything we know about this card");
     expect(container.textContent).toContain("Cashback capped at ₹1,000 monthly.");
     expect(container.textContent).toContain("Issuer source 1");
+    expect(container.textContent).toContain("may earn a commission");
   });
 
   test("filters by category and compares any two selected cards", async () => {

@@ -106,10 +106,17 @@ export async function importAdminCards(token, cards, dryRun = true) {
   return data;
 }
 
-export async function updateAdminCardApplyLink(token, cardId, applyUrl) {
+export async function updateAdminCardApplyLink(token, cardId, configuration) {
   const { data } = await http.put(
     `/admin/cards/${encodeURIComponent(cardId)}/apply-link`,
-    { apply_url: applyUrl || null },
+    configuration ? {
+      apply_url: configuration.url || null,
+      partner_name: configuration.partner || null,
+      campaign_id: configuration.campaign || null,
+      tracking_id: configuration.tracking || null,
+      status: configuration.status || "testing",
+      expected_payout: configuration.payout === "" || configuration.payout == null ? null : Number(configuration.payout),
+    } : { apply_url: null },
     { headers: { "X-Admin-Token": token } },
   );
   return data;

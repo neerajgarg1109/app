@@ -92,9 +92,9 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       </div>
 
       {onApply && (
-        <button type="button" onClick={onApply} disabled={unavailable || !card.applyUrl} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>
+        <div><button type="button" onClick={onApply} disabled={unavailable || !card.applyUrl} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>
           {unavailable ? "Applications unavailable" : `Apply on ${card.issuer}`} <ExternalLink className="h-4 w-4" />
-        </button>
+        </button>{card.affiliateDisclosureRequired && <p className="mt-2 text-center text-[10px] leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>CardIQ may earn a commission if you apply through this link. This does not affect our match score or editorial view.</p>}</div>
       )}
     </div>
   );

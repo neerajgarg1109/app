@@ -11,6 +11,12 @@ const PRESETS = [
   { key: "30d", label: "30 days" },
 ];
 
+const linkDraft = (card) => ({
+  url: card.custom_apply_url || "", partner: card.partner_name || "", campaign: card.campaign_id || "",
+  tracking: card.tracking_id || "", status: card.apply_link_status === "official" ? "testing" : (card.apply_link_status || "testing"),
+  payout: card.expected_payout ?? "",
+});
+
 function rangeFor(key) {
   const today = new Date();
   const iso = (d) => d.toISOString().slice(0, 10);
@@ -60,7 +66,7 @@ export default function Admin() {
       setAdminCards(catalog.cards || []);
       setAdminRole(catalog.role || "viewer");
       setReviews(reviewData.reviews || []);
-      setLinkDrafts(Object.fromEntries((catalog.cards || []).map((card) => [card.id, card.custom_apply_url || ""])));
+      setLinkDrafts(Object.fromEntries((catalog.cards || []).map((card) => [card.id, linkDraft(card)])));
       setAuthed(true);
       localStorage.setItem("ciq_admin", t);
     } catch (e) {
@@ -103,8 +109,10 @@ export default function Admin() {
         ...item,
         custom_apply_url: updated.custom_apply_url,
         effective_apply_url: updated.effective_apply_url,
+        partner_name: updated.partner_name, campaign_id: updated.campaign_id, tracking_id: updated.tracking_id,
+        apply_link_status: updated.apply_link_status, expected_payout: updated.expected_payout,
       } : item));
-      setLinkDrafts((drafts) => ({ ...drafts, [card.id]: updated.custom_apply_url || "" }));
+      setLinkDrafts((drafts) => ({ ...drafts, [card.id]: linkDraft({ ...card, ...updated }) }));
       setLinkMsg({ type: "success", text: `${card.name} apply link updated.` });
     } catch (e) {
       setLinkMsg({ type: "error", text: e.response?.data?.detail || "Could not update apply link." });
@@ -242,6 +250,7 @@ export default function Admin() {
   const maxGoal = Math.max(1, ...((insights?.by_goal || []).map((g) => g.count)));
   const incomplete = insights?.incomplete_sessions || 0;
   const funnel = insights?.funnel || {};
+  const applicationPerformance = insights?.application_performance || {};
   const funnelStages = [
     ["Landing visitors", funnel.landing_view || 0],
     ["Quiz starts", funnel.quiz_started || 0],
@@ -332,6 +341,17 @@ export default function Admin() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
             {funnelStages.map(([label, value]) => <div key={label} className="rounded-xl p-3" style={{ background: "#f7f8f6" }}><div className="font-display text-xl font-extrabold">{value}</div><div className="mt-1 text-[10px] font-semibold uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>{label}</div><div className="mt-1 text-xs font-bold" style={{ color: "var(--ciq-teal)" }}>{Math.round(value * 100 / funnelBase)}%</div></div>)}
           </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+          <div><h2 className="font-display text-base font-extrabold">Application revenue readiness</h2><p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Partner attribution captured at click time; expected payout is planning data until reconciled with partner reports.</p></div>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <Stat label="Apply clicks" value={applicationPerformance.total_clicks || 0} />
+            <Stat label="Partner clicks" value={applicationPerformance.partner_clicks || 0} />
+            <Stat label="Monetised click rate" value={`${applicationPerformance.monetised_click_rate || 0}%`} />
+            <Stat label="Expected pipeline" value={`₹${Number(applicationPerformance.expected_payout_pipeline || 0).toLocaleString("en-IN")}`} />
+          </div>
+          {(applicationPerformance.by_partner || []).length > 0 && <div className="mt-4 space-y-2">{applicationPerformance.by_partner.map((partner) => <Bar key={partner.label} label={partner.label} count={partner.count} pct={partner.pct} max={100} usePct />)}</div>}
         </div>
 
         {/* reminders */}
@@ -447,8 +467,9 @@ export default function Admin() {
           {linkMsg && <p className="mt-3 text-sm" style={{ color: linkMsg.type === "error" ? "#b4433f" : "var(--ciq-teal)" }}>{linkMsg.text}</p>}
           <div className="mt-4 max-h-[560px] space-y-3 overflow-y-auto pr-1">
             {filteredCards.map((card) => {
-              const draft = linkDrafts[card.id] || "";
-              const dirty = draft !== (card.custom_apply_url || "");
+              const draft = linkDrafts[card.id] || linkDraft(card);
+              const dirty = JSON.stringify(draft) !== JSON.stringify(linkDraft(card));
+              const updateDraft = (key, value) => setLinkDrafts((values) => ({ ...values, [card.id]: { ...draft, [key]: value } }));
               return (
                 <div key={card.id} className="rounded-2xl border p-3.5" style={{ borderColor: "var(--ciq-line)" }}>
                   <div className="flex flex-wrap items-baseline justify-between gap-1">
@@ -472,8 +493,8 @@ export default function Admin() {
                   <div className="mt-2 flex flex-col gap-2 md:flex-row">
                     <input
                       type="url"
-                      value={draft}
-                      onChange={(e) => setLinkDrafts((values) => ({ ...values, [card.id]: e.target.value }))}
+                      value={draft.url}
+                      onChange={(e) => updateDraft("url", e.target.value)}
                       placeholder={card.official_apply_url}
                       className="min-w-0 flex-1 rounded-xl border px-3 py-2 text-sm outline-none"
                       style={{ borderColor: "var(--ciq-line)" }}
@@ -481,8 +502,16 @@ export default function Admin() {
                     <button onClick={() => saveApplyLink(card)} disabled={!canEdit || !dirty || savingCard === card.id} className="ciq-press inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>
                       {savingCard === card.id ? <Loader2 className="h-4 w-4 ciq-spin" /> : <Save className="h-4 w-4" />} Save
                     </button>
-                    {card.custom_apply_url && <button onClick={() => saveApplyLink(card, "")} disabled={savingCard === card.id} className="ciq-press rounded-xl border px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Reset</button>}
+                    {card.custom_apply_url && <button onClick={() => saveApplyLink(card, null)} disabled={savingCard === card.id} className="ciq-press rounded-xl border px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Reset</button>}
                   </div>
+                  <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+                    <input value={draft.partner} onChange={(e) => updateDraft("partner", e.target.value)} placeholder="Partner name" className="rounded-xl border px-3 py-2 text-xs" style={{ borderColor: "var(--ciq-line)" }} />
+                    <input value={draft.campaign} onChange={(e) => updateDraft("campaign", e.target.value)} placeholder="Campaign ID" className="rounded-xl border px-3 py-2 text-xs" style={{ borderColor: "var(--ciq-line)" }} />
+                    <input value={draft.tracking} onChange={(e) => updateDraft("tracking", e.target.value)} placeholder="Tracking ID" className="rounded-xl border px-3 py-2 text-xs" style={{ borderColor: "var(--ciq-line)" }} />
+                    <select value={draft.status} onChange={(e) => updateDraft("status", e.target.value)} className="rounded-xl border px-3 py-2 text-xs" style={{ borderColor: "var(--ciq-line)" }}><option value="testing">Testing</option><option value="live">Live</option><option value="paused">Paused</option></select>
+                    <input min="0" step="0.01" type="number" value={draft.payout} onChange={(e) => updateDraft("payout", e.target.value)} placeholder="Expected ₹ payout" className="rounded-xl border px-3 py-2 text-xs" style={{ borderColor: "var(--ciq-line)" }} />
+                  </div>
+                  <p className="mt-1.5 text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>Only a <strong>Live</strong> partner link reaches customers. Testing or paused links automatically fall back to the official issuer URL.</p>
                   <a href={card.official_apply_url} target="_blank" rel="noopener noreferrer" className="mt-1.5 block truncate text-xs underline" style={{ color: "var(--ciq-ink-soft)" }}>Official: {card.official_apply_url}</a>
                 </div>
               );

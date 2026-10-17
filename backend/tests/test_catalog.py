@@ -27,6 +27,35 @@ def profile(**overrides):
                 spend="high", creditRoute="regular", **overrides)
 
 
+def test_public_card_uses_only_live_partner_links_and_hides_campaign_metadata():
+    server = importlib.import_module("server")
+    official_url = "https://issuer.example/card"
+    partner_url = "https://partner.example/apply"
+    card = {
+        "id": "partner-link-test",
+        "applyUrl": official_url,
+        "applyUrlOverride": partner_url,
+        "applyPartner": "Example Partner",
+        "applyCampaignId": "launch-2026",
+        "applyTrackingId": "cardiq-card-page",
+        "expectedPayout": 1250,
+        "applyLinkUpdatedAt": datetime.now(timezone.utc),
+    }
+
+    live = server._card_for_client(dict(card, applyLinkStatus="live"))
+    assert live["applyUrl"] == partner_url
+    assert live["officialApplyUrl"] == official_url
+    assert live["applicationLinkType"] == "partner"
+    assert live["affiliateDisclosureRequired"] is True
+    assert not ({"applyPartner", "applyCampaignId", "applyTrackingId", "expectedPayout", "applyLinkUpdatedAt"} & live.keys())
+
+    for status in ("testing", "paused"):
+        public = server._card_for_client(dict(card, applyLinkStatus=status))
+        assert public["applyUrl"] == official_url
+        assert public["applicationLinkType"] == "official"
+        assert public["affiliateDisclosureRequired"] is False
+
+
 def test_catalog_has_254_sourced_unique_real_cards():
     assert len(CARDS) == len({c["id"] for c in CARDS}) == 254
     for card in CARDS:
@@ -197,15 +226,18 @@ def test_migration_and_api_round_trip(monkeypatch):
                 custom_apply_url = "https://partner.example.org/apply/cardiq"
                 updated = await api.put(
                     f"/api/admin/cards/{override_card['id']}/apply-link",
-                    json={"apply_url": custom_apply_url}, headers=headers,
+                    json={"apply_url": custom_apply_url, "partner_name": "Partner Network", "campaign_id": "launch-1", "tracking_id": "track-1", "status": "live", "expected_payout": 1250}, headers=headers,
                 )
                 assert updated.status_code == 200
                 assert updated.json()["effective_apply_url"] == custom_apply_url
+                assert updated.json()["partner_name"] == "Partner Network"
                 response = await api.get("/api/cards")
                 assert response.status_code == 200 and len(response.json()) == len(CARDS)
                 public_override = next(c for c in response.json() if c["id"] == override_card["id"])
                 assert public_override["applyUrl"] == custom_apply_url
                 assert public_override["officialApplyUrl"] == override_card["applyUrl"]
+                assert public_override["applicationLinkType"] == "partner"
+                assert public_override["affiliateDisclosureRequired"] is True
                 restricted_ids = {c["id"] for c in CARDS if c.get("recommendationEligible") is False}
                 assert restricted_ids <= {c["id"] for c in response.json()}
                 ids = [CARDS[-1]["id"], CARDS[0]["id"]]
@@ -216,6 +248,8 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert (await api.get("/api/cards/missing-card")).status_code == 404
                 assert (await api.post(f"/api/cards/{CARDS[0]['id']}/apply-click", json={"result_id": None})).status_code == 200
                 assert await database.apply_events.count_documents({"card_id": CARDS[0]["id"]}) == 1
+                click = await database.apply_events.find_one({"card_id": CARDS[0]["id"]})
+                assert click["partner_name"] == "Partner Network" and click["campaign_id"] == "launch-1"
                 assert (await api.post("/api/cards/missing-card/apply-click", json={})).status_code == 404
                 assert (await api.post(f"/api/cards/{CARDS[0]['id']}/report", json={"issue": "too short"})).status_code == 422
                 report = await api.post(f"/api/cards/{CARDS[0]['id']}/report", json={"issue": "The annual fee appears to have changed.", "email": "reporter@example.com"})
@@ -399,6 +433,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert insights.json()["funnel"] == {event: 1 for event in (
                     "landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"
                 )}
+                assert insights.json()["application_performance"]["partner_clicks"] == 1
         finally:
             await client.drop_database(name)
             client.close()
