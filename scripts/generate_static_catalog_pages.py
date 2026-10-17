@@ -50,13 +50,15 @@ def social_links(title, canonical):
 </div></section>'''
 
 
-def page(title, description, canonical, destination, body, image_url=None):
+def page(title, description, canonical, destination, body, image_url=None, structured_data=None):
     image_meta = f'<meta property="og:image" content="{html.escape(image_url, quote=True)}"><meta name="twitter:card" content="summary_large_image">' if image_url else '<meta name="twitter:card" content="summary">'
+    schema = structured_data or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "description": description, "url": canonical, "inLanguage": "en-IN"}
+    schema_markup = html.escape(json.dumps(schema, ensure_ascii=False), quote=False)
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
-<meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">{image_meta}
+<meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">{image_meta}<script type="application/ld+json">{schema_markup}</script>
 <style>body{{margin:0;background:#f8f7ff;color:#172033;font:16px/1.55 Inter,Arial,sans-serif}}header,main,footer{{max-width:960px;margin:auto;padding:24px}}header{{display:flex;justify-content:space-between;align-items:center}}a{{color:#4538c8}}.brand{{font-size:22px;font-weight:800;text-decoration:none}}h1{{font-size:38px;line-height:1.15}}.cta{{display:inline-block;background:#5b4ff0;color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:700}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}}.card,.share{{background:white;border:1px solid #e4e2f1;border-radius:16px;padding:16px}}.share{{margin-top:24px}}.share-links{{display:flex;flex-wrap:wrap;gap:8px}}.share-links a,.share-links button{{border:1px solid #d8d5e8;border-radius:10px;background:white;color:#4538c8;padding:9px 12px;font:600 14px Inter,Arial,sans-serif;text-decoration:none;cursor:pointer}}.muted{{color:#5d6478}}li{{margin:7px 0}}</style></head>
 <body><header><a class="brand" href="{ORIGIN}/">cardIQ</a><a href="{ORIGIN}/catalog/">Browse the catalogue</a></header><main>{body}{social_links(title, canonical)}<p><a class="cta" href="{html.escape(destination, quote=True)}">Explore and compare in CardIQ</a></p></main><footer class="muted">Card facts are dated and linked to issuer sources. Eligibility and approval are decided by the issuing bank. <a href="{ORIGIN}/methodology/">How CardIQ researches and ranks cards</a>.</footer></body></html>'''
 
@@ -151,13 +153,24 @@ clean_generated_routes()
 
 for card in CARDS:
     name, issuer = card["name"], card["issuer"]
-    description = f'{name}: {card.get("rewardLine", "")}. Annual fee: {card.get("annualFee", "Not specified")}. Sourced card details from CardIQ.'
+    editorial = card.get("editorial") or {}
+    description = editorial.get("summary") or f'{name}: {card.get("rewardLine", "")}. Annual fee: {card.get("annualFee", "Not specified")}. Sourced card details from CardIQ.'
     route = f'{ORIGIN}/#/cards/{quote(card["id"])}'
     facts = "".join(f"<li>{html.escape(item)}</li>" for item in card.get("highlights", []))
     sources = "".join(f'<li><a href="{html.escape(url, quote=True)}">Issuer source {index + 1}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
     body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
     image_url = f'{ORIGIN}{card["imageUrl"]}' if card.get("imageUrl", "").startswith("/") else card.get("imageUrl")
-    write(Path("cards") / card["id"], page(f"{name} — fees, rewards and benefits | CardIQ", description, f'{ORIGIN}/cards/{card["id"]}/', route, body, image_url=image_url))
+    canonical = f'{ORIGIN}/cards/{card["id"]}/'
+    schema = {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebPage", "name": f"{name} review", "description": description, "url": canonical, "inLanguage": "en-IN", "dateModified": card.get("verifiedOn")},
+        {"@type": "Product", "name": name, "brand": {"@type": "Brand", "name": issuer}, "description": description, "url": canonical, **({"image": image_url} if image_url else {})},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Credit cards", "item": f"{ORIGIN}/catalog/"},
+            {"@type": "ListItem", "position": 2, "name": issuer, "item": f"{ORIGIN}/issuers/{slug(issuer)}/"},
+            {"@type": "ListItem", "position": 3, "name": name, "item": canonical},
+        ]},
+    ]}
+    write(Path("cards") / card["id"], page(f"{name} review: fees, rewards and benefits | CardIQ", description, canonical, route, body, image_url=image_url, structured_data=schema))
 
 issuers = sorted({card["issuer"] for card in CARDS})
 for issuer in issuers:

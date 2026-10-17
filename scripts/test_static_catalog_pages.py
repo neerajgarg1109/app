@@ -64,6 +64,9 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn("Trade-offs to understand", source)
             self.assertIn("CardIQ verdict", source)
             self.assertIn("Issuer source", source)
+            self.assertIn('application/ld+json', source)
+            self.assertIn('BreadcrumbList', source)
+            self.assertIn('Product', source)
             self.assertNotRegex(source.lower(), r"likely to meet|guaranteed approval|approval odds")
 
     def test_titles_descriptions_and_canonicals_are_unique(self):

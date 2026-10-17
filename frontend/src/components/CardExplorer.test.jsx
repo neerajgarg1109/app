@@ -106,4 +106,15 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Everyday Cashback");
     expect(container.textContent).toContain("Travel Plus");
   });
+
+  test("lets a customer mark an existing card before comparing alternatives", async () => {
+    await act(async () => root.render(<CardExplorer />));
+    await act(async () => Promise.resolve());
+    const ownedButtons = Array.from(container.querySelectorAll("button")).filter((item) => item.textContent === "I have this card");
+    await act(async () => ownedButtons[0].click());
+    expect(localStorage.getItem("ciq_owned_card")).toBe("cashback-card");
+    expect(container.textContent).toContain("This is my card");
+    expect(container.textContent).toContain("Compare with your card");
+    expect(container.textContent).toContain("Your card: Everyday Cashback");
+  });
 });

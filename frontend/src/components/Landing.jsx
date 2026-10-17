@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check } from "lucide-react";
+import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check, Search, GitCompare, Newspaper, Building2 } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
 import { getCards, getResult } from "../api";
 import { Link } from "react-router-dom";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
+
+const INTENTS = [
+  { title: "Help me choose", text: "Get a recommendation based on how you spend.", icon: Sparkles, action: "quiz" },
+  { title: "Research a card", text: "Search fees, rewards, exclusions and our verdict.", icon: Search, to: "/cards" },
+  { title: "Compare with my card", text: "Mark a card you own and compare alternatives.", icon: GitCompare, to: "/cards?mode=compare" },
+  { title: "See recent card updates", text: "Start with the most recently verified cards.", icon: Newspaper, to: "/cards?sort=recent" },
+  { title: "Browse by issuer", text: "See every catalogued card from each issuer.", icon: Building2, to: "/cards?browse=issuers" },
+];
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
   const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null, checked: null });
@@ -115,6 +123,23 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
             Open saved result{savedCardName ? ` · ${savedCardName}` : ""}
           </a>
         )}
+      </section>
+
+      <section className="ciq-container mt-12">
+        <div className="text-center">
+          <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Start with what you need</div>
+          <h2 className="mt-2 font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>More than a card quiz</h2>
+          <p className="mx-auto mt-2 max-w-md text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Choose a card, research one you have heard about, or compare it with a card already in your wallet.</p>
+        </div>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {INTENTS.map((intent) => {
+            const Icon = intent.icon;
+            const content = <><span className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-xl" style={{ background: "#eeeaff", color: "#5142d8" }}><Icon className="h-5 w-5" /></span><span><span className="block text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>{intent.title}</span><span className="mt-0.5 block text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{intent.text}</span></span><ArrowRight className="ml-auto h-4 w-4 flex-shrink-0" style={{ color: "var(--ciq-teal)" }} /></>;
+            return intent.action === "quiz"
+              ? <button key={intent.title} type="button" onClick={onStart} className="ciq-press flex w-full items-center gap-3 rounded-2xl border bg-white p-4 text-left" style={{ borderColor: "var(--ciq-line)" }}>{content}</button>
+              : <Link key={intent.title} to={intent.to} className="ciq-press flex items-center gap-3 rounded-2xl border bg-white p-4 text-left" style={{ borderColor: "var(--ciq-line)" }}>{content}</Link>;
+          })}
+        </div>
       </section>
 
       {/* Problem section */}

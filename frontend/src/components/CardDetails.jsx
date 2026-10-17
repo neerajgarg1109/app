@@ -24,18 +24,33 @@ export default function CardDetails({ card, heading = "Card details", compact = 
         </p>
       </div>
 
+      <section className="rounded-2xl border p-4" style={{ borderColor: "#b9e4da", background: "linear-gradient(145deg,#f2faf7,#ffffff)" }}>
+        <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>CardIQ editorial view</div>
+        <h3 className="mt-1 font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>CardIQ take</h3>
+        <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{editorial.summary}</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <DecisionPoint title="Best for" text={editorial.idealFor[0]} />
+          <DecisionPoint title="Main strength" text={editorial.strengths[0]} />
+          <DecisionPoint title="Know before applying" text={editorial.tradeoffs[0]} />
+        </div>
+        <div className="mt-4 rounded-xl p-3" style={{ background: "#f2faf7" }}><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>CardIQ verdict</div><p className="mt-1.5 text-sm font-semibold leading-relaxed">{editorial.verdict}</p></div>
+      </section>
+
+      {onApply && (
+        <div><button type="button" onClick={onApply} disabled={unavailable || !card.applyUrl} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>
+          {unavailable ? "Applications unavailable" : `Apply on ${card.issuer}`} <ExternalLink className="h-4 w-4" />
+        </button>{card.affiliateDisclosureRequired && <p className="mt-2 text-center text-[10px] leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>CardIQ may earn a commission if you apply through this link. This does not affect our match score or editorial view.</p>}</div>
+      )}
+
       <StructuredBenefits card={card} />
 
       <section className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
-        <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>CardIQ editorial view</div>
-        <h3 className="mt-1 font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>Our take</h3>
-        <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{editorial.summary}</p>
+        <h3 className="font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>Detailed CardIQ analysis</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <EditorialList title="Who it suits" items={editorial.idealFor} />
           <EditorialList title="Key strengths" items={editorial.strengths} />
         </div>
         <div className="mt-4"><EditorialList title="Trade-offs to understand" items={editorial.tradeoffs} /></div>
-        <div className="mt-4 rounded-xl p-3" style={{ background: "#f2faf7" }}><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>CardIQ verdict</div><p className="mt-1.5 text-sm font-semibold leading-relaxed">{editorial.verdict}</p></div>
         {editorial.alternatives.length > 0 && <div className="mt-4"><div className="text-xs font-bold">Compare before deciding</div><div className="mt-2 space-y-2">{editorial.alternatives.map((alternative) => <a key={alternative.id} href={`${process.env.PUBLIC_URL}/#/cards/${encodeURIComponent(alternative.id)}`} className="block rounded-xl border p-3" style={{ borderColor: "var(--ciq-line)" }}><div className="text-sm font-bold" style={{ color: "var(--ciq-teal)" }}>{alternative.name}</div><div className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{alternative.reason}</div></a>)}</div></div>}
         <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>
           This editorial assessment is maintained separately from issuer facts and never changes paid ranking. Verify current terms before applying.
@@ -94,13 +109,13 @@ export default function CardDetails({ card, heading = "Card details", compact = 
         )}
       </div>
 
-      {onApply && (
-        <div><button type="button" onClick={onApply} disabled={unavailable || !card.applyUrl} className="ciq-press inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>
-          {unavailable ? "Applications unavailable" : `Apply on ${card.issuer}`} <ExternalLink className="h-4 w-4" />
-        </button>{card.affiliateDisclosureRequired && <p className="mt-2 text-center text-[10px] leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>CardIQ may earn a commission if you apply through this link. This does not affect our match score or editorial view.</p>}</div>
-      )}
     </div>
   );
+}
+
+function DecisionPoint({ title, text }) {
+  if (!text) return null;
+  return <div className="rounded-xl border bg-white/80 p-3" style={{ borderColor: "var(--ciq-line)" }}><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>{title}</div><div className="mt-1 text-xs font-semibold leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{text}</div></div>;
 }
 
 function EditorialList({ title, items }) {

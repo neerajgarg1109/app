@@ -28,6 +28,7 @@ export default function CardExplorer() {
     try { return JSON.parse(localStorage.getItem("ciq_compare_cards") || "[]").slice(0, 3); } catch (error) { return []; }
   });
   const [showCompare, setShowCompare] = useState(false);
+  const [ownedCardId, setOwnedCardId] = useState(() => localStorage.getItem("ciq_owned_card") || "");
 
   useEffect(() => {
     let active = true;
@@ -38,13 +39,15 @@ export default function CardExplorer() {
   const issuers = useMemo(() => [...new Set(cards.map((card) => card.issuer).filter(Boolean))].sort(), [cards]);
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
-    return cards.filter((card) => {
+    const matches = cards.filter((card) => {
       if (issuer !== "all" && card.issuer !== issuer) return false;
       if (category !== "all" && !matchesCategory(card, category)) return false;
       if (!needle) return true;
-      const searchable = [card.name, card.issuer, card.network, card.rewardLine, ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
+      const editorial = card.editorial || {};
+      const searchable = [card.name, card.issuer, card.network, card.rewardLine, editorial.summary, editorial.verdict, ...(editorial.idealFor || []), ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
       return searchable.includes(needle);
     });
+    return initialFilters.sort === "recent" ? matches.sort((a, b) => String(b.verifiedOn || "").localeCompare(String(a.verifiedOn || ""))) : matches;
   }, [cards, issuer, category, query]);
   const selected = cardId ? cards.find((card) => card.id === cardId) : null;
   const compareCards = compareIds.map((id) => cards.find((card) => card.id === id)).filter(Boolean);
@@ -52,6 +55,12 @@ export default function CardExplorer() {
 
   useEffect(() => { setVisible(PAGE_SIZE); }, [query, issuer, category]);
   useEffect(() => { localStorage.setItem("ciq_compare_cards", JSON.stringify(compareIds)); }, [compareIds]);
+  useEffect(() => { if (ownedCardId) localStorage.setItem("ciq_owned_card", ownedCardId); else localStorage.removeItem("ciq_owned_card"); }, [ownedCardId]);
+
+  useEffect(() => {
+    if (!ownedCardId || compareIds.includes(ownedCardId)) return;
+    setCompareIds((current) => [ownedCardId, ...current].slice(0, 3));
+  }, [ownedCardId, compareIds]);
 
   const toggleCompare = (cardIdToToggle) => {
     setCompareIds((current) => current.includes(cardIdToToggle)
@@ -79,6 +88,8 @@ export default function CardExplorer() {
           <h1 className="mt-2 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Find any credit card</h1>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search CardIQ’s sourced catalogue by card, issuer, benefit or network and inspect the full details we have verified.</p>
         </section>
+
+        {initialFilters.mode === "compare" && <section className="mt-5 rounded-2xl border p-4" style={{ borderColor: "#b9e4da", background: "#f2faf7" }}><div className="font-display text-base font-extrabold">Compare against a card you already have</div><p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search for your existing card and choose “I have this card”, then add up to two alternatives.</p></section>}
 
         <section className="sticky top-0 z-20 -mx-2 mt-6 rounded-2xl bg-[var(--ciq-bg)]/95 p-2 backdrop-blur">
           <label className="flex items-center gap-2 rounded-2xl border bg-white px-4 py-3" style={{ borderColor: "var(--ciq-line)" }}>
@@ -131,8 +142,10 @@ export default function CardExplorer() {
                   <div className="min-w-0 flex-1"><div className="font-display text-sm font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</div><div className="mt-0.5 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</div></div>
                 </div>
                 <p className="mt-3 text-xs font-semibold leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{card.rewardLine}</p>
+                {card.editorial?.summary && <p className="mt-2 line-clamp-3 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}><span className="font-bold" style={{ color: "var(--ciq-teal)" }}>CardIQ take: </span>{card.editorial.summary}</p>}
                 <div className="mt-3 flex items-center justify-between gap-3 border-t pt-3 text-xs" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}><span>{card.annualFee || "Fee not specified"}</span><span className="flex-shrink-0 font-bold" style={{ color: "var(--ciq-teal)" }}>Full details</span></div>
               </Link>
+              <button type="button" onClick={() => setOwnedCardId(ownedCardId === card.id ? "" : card.id)} className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-semibold" style={{ borderColor: ownedCardId === card.id ? "var(--ciq-teal-600)" : "var(--ciq-line)", background: ownedCardId === card.id ? "#f2faf7" : "#fff", color: ownedCardId === card.id ? "var(--ciq-teal)" : "var(--ciq-ink)" }}>{ownedCardId === card.id ? <><Check className="h-3.5 w-3.5" /> This is my card</> : "I have this card"}</button>
               <button type="button" disabled={compareFull} onClick={() => toggleCompare(card.id)} className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border py-2 text-xs font-semibold disabled:opacity-40" style={{ borderColor: comparing ? "var(--ciq-teal-600)" : "var(--ciq-line)", color: comparing ? "var(--ciq-teal)" : "var(--ciq-ink)" }}>{comparing ? <><Check className="h-3.5 w-3.5" /> Added to compare</> : <><GitCompare className="h-3.5 w-3.5" /> {compareFull ? "Compare tray full" : "Add to compare"}</>}</button>
               </article>;
             })}
@@ -153,7 +166,7 @@ export default function CardExplorer() {
           </div>
         </div>
       )}
-      {compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">Compare {compareCards.length} of 3 cards</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => card.name).join(" · ")}</div></div><button type="button" onClick={() => setCompareIds([])} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={() => setShowCompare(true)} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
+      {compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">{ownedCardId ? "Compare with your card" : `Compare ${compareCards.length} of 3 cards`}</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => `${card.id === ownedCardId ? "Your card: " : ""}${card.name}`).join(" · ")}</div></div><button type="button" onClick={() => { setCompareIds([]); setOwnedCardId(""); }} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={() => setShowCompare(true)} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
       {showCompare && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
     </div>
   );
