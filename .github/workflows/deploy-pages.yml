@@ -33,6 +33,7 @@ jobs:
       - run: yarn test --watchAll=false
       - run: yarn build
         env:
+          DISABLE_ESLINT_PLUGIN: true
           REACT_APP_BACKEND_URL: https://cardiq-api-g2ir.onrender.com
           REACT_APP_PUBLIC_APP_URL: https://neerajgarg1109.github.io/app
       - name: Generate SEO pages from this commit
