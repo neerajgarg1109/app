@@ -9,6 +9,12 @@ test("creates card-specific guidance for a fee-bearing cashback card", () => {
   expect(insight.verdict).toContain("cashback and online purchases");
   expect(insight.goodFit.join(" ")).toContain("fee-waiver condition");
   expect(insight.thinkTwice.join(" ")).toContain("capped");
+  expect(JSON.stringify(insight)).not.toMatch(/likely to meet|approval odds|guaranteed/i);
+});
+
+test("never turns an internal credit-profile hint into underwriting advice", () => {
+  const insight = editorialInsights({ name: "Prime Card", bestFor: ["travel"], annualFeeAmount: 2999, creditReq: "excellent" });
+  expect(insight.goodFit.join(" ")).not.toMatch(/credit|eligible|approval|likely/i);
 });
 
 test("explains the distinct economics of free and secured cards", () => {

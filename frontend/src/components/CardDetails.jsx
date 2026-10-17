@@ -19,7 +19,7 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       <div>
         <div className="font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>{heading}</div>
         <p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>
-          All benefits and conditions currently verified in the CardIQ catalogue.
+          Benefits and conditions currently documented in the CardIQ catalogue, with source links below.
         </p>
       </div>
 
@@ -78,7 +78,7 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       )}
 
       <div className="rounded-xl border p-3 text-xs leading-relaxed" style={{ borderColor: "var(--ciq-line)", background: "#f7f8f6", color: "var(--ciq-ink-soft)" }}>
-        <div className="flex items-center gap-1.5 font-bold" style={{ color: "var(--ciq-ink)" }}><ShieldCheck className="h-4 w-4" /> Verified information</div>
+        <div className="flex items-center gap-1.5 font-bold" style={{ color: "var(--ciq-ink)" }}><ShieldCheck className="h-4 w-4" /> Sources and verification date</div>
         <p className="mt-1.5">Details checked {card.verifiedOn || "date not recorded"}. {card.availabilityNote || "Availability and approval are decided by the issuer."}</p>
         {card.termsNote && <p className="mt-1.5">{card.termsNote}</p>}
         {(card.sourceUrls || []).length > 0 && (

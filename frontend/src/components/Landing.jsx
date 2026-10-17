@@ -51,12 +51,12 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           Your clearest path to the <span className="ciq-gradient-text">right credit card</span>
         </h1>
         <p className="mx-auto mt-4 max-w-sm text-[15px]" style={{ color: "var(--ciq-ink-soft)" }}>
-          CardIQ checks {catalogStats.cards} cards across {catalogStats.issuers} issuers, weighs the fees and fine print against how you spend, and explains one confident recommendation.
+          CardIQ checks {catalogStats.cards} cards across {catalogStats.issuers} issuers, weighs the fees and fine print against how you spend, and explains its strongest recommendation.
         </p>
 
         <div className="ciq-soft-glow mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border bg-white/90 text-center backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
           {[
-            [String(catalogStats.cards), "cards reviewed"],
+            [String(catalogStats.cards), "cards catalogued"],
             [String(catalogStats.issuers), "issuers covered"],
             ["Oct 2026", "details checked"],
           ].map(([value, label], index) => (
@@ -143,7 +143,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         >
           <h2 className="font-display text-2xl font-extrabold">Built to earn your trust.</h2>
           <p className="mt-2 text-sm text-white/85">
-            We turn a catalog of {catalogStats.cards} cards into one reasoned recommendation, using your priorities—not a sponsored leaderboard.
+            We turn a catalogue of {catalogStats.cards} cards into one reasoned recommendation, using your priorities—not a sponsored leaderboard.
           </p>
           <ul className="mt-5 space-y-3">
             {["Card facts traced to issuer and official partner sources", "Fees, exclusions and trade-offs shown clearly", "No bank can pay to improve its match score"].map((x) => (
@@ -155,6 +155,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
               </li>
             ))}
           </ul>
+          <a href={`${process.env.PUBLIC_URL}/methodology/`} className="mt-5 inline-block text-xs font-semibold text-white underline underline-offset-4">Read our methodology and revenue disclosure</a>
         </div>
       </section>
 

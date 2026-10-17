@@ -258,16 +258,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
       </section>
 
       <section className="ciq-container mt-5">
-        <div className="grid grid-cols-[1.2fr_0.9fr_0.9fr] divide-x overflow-hidden rounded-2xl border bg-white" style={{ borderColor: "var(--ciq-line)" }}>
-          <div className="flex min-h-[92px] min-w-0 items-center gap-3 px-4 py-4">
-            <span className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-full" style={{ background: "#fff8e8" }}>
-              <Star className="h-4 w-4 fill-current" style={{ color: "var(--ciq-amber)" }} />
-            </span>
-            <div className="min-w-0" title={card.ratingBasis || "cardIQ editorial rating"}>
-              <div className="font-display text-lg font-extrabold leading-none" style={{ color: "var(--ciq-ink)" }}>{card.rating}<span className="text-xs font-semibold" style={{ color: "var(--ciq-ink-soft)" }}>/5</span></div>
-              <div className="mt-1 whitespace-nowrap text-[11px] font-semibold leading-tight" style={{ color: "var(--ciq-ink-soft)" }}>cardIQ rating</div>
-            </div>
-          </div>
+        <div className="grid grid-cols-2 divide-x overflow-hidden rounded-2xl border bg-white" style={{ borderColor: "var(--ciq-line)" }}>
           <div className="flex min-h-[92px] min-w-0 flex-col justify-center px-4 py-4">
             <div className="text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: "var(--ciq-ink-soft)" }}>Annual fee</div>
             <div className="mt-1.5 text-xs font-bold leading-snug" style={{ color: "var(--ciq-ink)" }}>{annualFee}</div>
@@ -452,7 +443,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
           <div className="rounded-2xl border p-4 text-left text-xs leading-relaxed" style={{ borderColor: "var(--ciq-line)", background: "#f1f3f0", color: "var(--ciq-ink-soft)" }}>
             <div className="font-display text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-ink)" }}>Important information</div>
             <p className="mt-2">Issuer details checked {card.verifiedOn}. Joining fee: {card.joiningFee}. {card.termsNote}</p>
-            <p className="mt-2">CardIQ ranks fit using your answers and our published catalog facts. Match scores and CardIQ ratings are editorial estimates—not approval odds, customer reviews or paid placements. The issuing bank alone decides eligibility.</p>
+            <p className="mt-2">CardIQ ranks fit using your answers and our published catalogue facts. Match scores are editorial estimates—not approval odds, customer reviews or paid placements. The issuing bank alone decides eligibility.</p>
             <p className="mt-2 text-[10px] leading-relaxed">Card images, product names and trademarks belong to their respective owners and are shown only for product identification. cardIQ is an independent comparison service and is not endorsed by any issuer unless expressly stated.</p>
             <a href={card.officialApplyUrl || card.applyUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-semibold underline" style={{ color: "var(--ciq-teal)" }}>Check current issuer terms</a>
             <button onClick={() => setShowReport(true)} className="ml-4 inline-flex items-center gap-1 font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}><Flag className="h-3 w-3" /> Report outdated information</button>

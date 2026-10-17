@@ -19,13 +19,13 @@ def slug(value):
 
 
 def page(title, description, canonical, destination, body):
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
+    return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
-<meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}">
+<meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">
 <style>body{{margin:0;background:#f8f7ff;color:#172033;font:16px/1.55 Inter,Arial,sans-serif}}header,main,footer{{max-width:960px;margin:auto;padding:24px}}header{{display:flex;justify-content:space-between;align-items:center}}a{{color:#4538c8}}.brand{{font-size:22px;font-weight:800;text-decoration:none}}h1{{font-size:38px;line-height:1.15}}.cta{{display:inline-block;background:#5b4ff0;color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:700}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}}.card{{background:white;border:1px solid #e4e2f1;border-radius:16px;padding:16px}}.muted{{color:#5d6478}}li{{margin:7px 0}}</style></head>
-<body><header><a class="brand" href="{ORIGIN}/">cardIQ</a><a href="{ORIGIN}/#/cards">Browse all cards</a></header><main>{body}<p><a class="cta" href="{html.escape(destination, quote=True)}">Explore and compare in CardIQ</a></p></main><footer class="muted">Card facts are dated and linked to issuer sources. Eligibility and approval are decided by the issuing bank.</footer></body></html>'''
+<body><header><a class="brand" href="{ORIGIN}/">cardIQ</a><a href="{ORIGIN}/catalog/">Browse the catalogue</a></header><main>{body}<p><a class="cta" href="{html.escape(destination, quote=True)}">Explore and compare in CardIQ</a></p></main><footer class="muted">Card facts are dated and linked to issuer sources. Eligibility and approval are decided by the issuing bank. <a href="{ORIGIN}/methodology/">How CardIQ researches and ranks cards</a>.</footer></body></html>'''
 
 
 def write(relative, contents):
@@ -88,7 +88,7 @@ def editorial_analysis(card):
     else:
         verdict = f'{card["name"]} is a practical option for people who prioritise {audience}. The decision should come down to whether your expected rewards comfortably exceed the annual fee.'
     limitation = next((item for item in card.get("highlights", []) if re.search(r"cap|exclu|limit|markup|not cash|condition|eligible", item, re.I)), None)
-    good_fit = [f"Your regular spending includes {audience}.", "You can recover the annual fee through benefits you will actually use." if fee else "You want to avoid an annual membership charge."]
+    good_fit = [f"Your priorities include {audience}.", "The benefits you will actually use are worth more to you than the annual fee." if fee else "You want to avoid an annual membership charge."]
     think_twice = [limitation] if limitation else []
     if fee:
         think_twice.append("You would not use the card enough to offset its annual fee and applicable GST.")
@@ -102,10 +102,10 @@ clean_generated_routes()
 
 for card in CARDS:
     name, issuer = card["name"], card["issuer"]
-    description = f'{card.get("rewardLine", "")} Annual fee: {card.get("annualFee", "Not specified")}. Verified card details from CardIQ.'
+    description = f'{name}: {card.get("rewardLine", "")}. Annual fee: {card.get("annualFee", "Not specified")}. Sourced card details from CardIQ.'
     route = f'{ORIGIN}/#/cards/{quote(card["id"])}'
     facts = "".join(f"<li>{html.escape(item)}</li>" for item in card.get("highlights", []))
-    sources = "".join(f'<li><a href="{html.escape(url, quote=True)}" rel="nofollow">Issuer source {index + 1}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
+    sources = "".join(f'<li><a href="{html.escape(url, quote=True)}">Issuer source {index + 1}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
     body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
     write(Path("cards") / card["id"], page(f"{name} — fees, rewards and benefits | CardIQ", description, f'{ORIGIN}/cards/{card["id"]}/', route, body))
 
@@ -113,7 +113,7 @@ issuers = sorted({card["issuer"] for card in CARDS})
 for issuer in issuers:
     matches = [card for card in CARDS if card["issuer"] == issuer]
     count = len(matches)
-    description = f"Compare {count} currently catalogued {issuer} credit cards, fees, rewards and verified benefits on CardIQ."
+    description = f"Compare {count} currently catalogued {issuer} credit cards, fees, rewards and sourced benefits on CardIQ."
     destination = f'{ORIGIN}/#/cards?issuer={quote(issuer)}'
     body = f'<h1>{html.escape(issuer)} credit cards</h1><p>{html.escape(description)}</p>{card_links(matches)}'
     write(Path("issuers") / slug(issuer), page(f"{issuer} credit cards | CardIQ", description, f'{ORIGIN}/issuers/{slug(issuer)}/', destination, body))
@@ -129,7 +129,22 @@ for category in CATEGORIES:
     body = f'<h1>{html.escape(category["label"])} credit cards in India</h1><p>{html.escape(description)}</p><p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches)}'
     write(Path("categories") / category["id"], page(f'{category["label"]} credit cards in India | CardIQ', description, f'{ORIGIN}/categories/{category["id"]}/', destination, body))
 
-sitemap_urls = [f"{ORIGIN}/"]
+category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
+issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
+catalog_body = f'''<h1>Explore Indian credit cards</h1><p>Browse CardIQ’s sourced catalogue by use case or issuer. Each card page brings together fees, rewards, important limitations, source links and a transparent editorial view.</p>
+<h2>Browse by category</h2><ul>{category_links}</ul><h2>Browse by issuer</h2><ul>{issuer_links}</ul><h2>All cards</h2>{card_links(CARDS)}'''
+write(Path("catalog"), page("Indian credit card catalogue | CardIQ", "Browse 254 Indian credit cards by category and issuer, with sourced fees, benefits, limitations and editorial guidance.", f"{ORIGIN}/catalog/", f"{ORIGIN}/#/cards", catalog_body))
+
+methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
+<p>CardIQ helps Indian customers compare credit cards and understand the trade-offs before visiting an issuer. We may earn revenue when a customer continues to an application, but payment does not improve a card’s match score or editorial treatment.</p>
+<h2>Sources and updates</h2><p>Fees, rewards, caps, exclusions and availability are documented from issuing-bank pages, key-fact statements, terms, and official co-brand partner pages. Every card shows its source links and the date its details were checked. Issuer terms remain authoritative.</p>
+<h2>Editorial analysis</h2><p>CardIQ’s editorial view is generated consistently from the sourced catalogue fields: the card’s intended use cases, fee level, waiver condition and material limitations. It does not use customer contact information, represent approval odds or replace financial advice.</p>
+<h2>Recommendations and revenue</h2><p>Quiz matches use customer-selected priorities and catalogue attributes. Issuers cannot pay to increase a match score. Application approval, credit limits and final product terms are decided by the issuing bank.</p>
+<h2>Corrections</h2><p>Benefits can change. Customers should verify the linked issuer terms before applying and can report outdated information from a CardIQ result page.</p>
+<p class="muted">Methodology reviewed 17 October 2026.</p>'''
+write(Path("methodology"), page("CardIQ editorial methodology and disclosures", "Learn how CardIQ sources card facts, generates editorial analysis, ranks recommendations and separates issuer revenue from match scores.", f"{ORIGIN}/methodology/", f"{ORIGIN}/#/cards", methodology_body))
+
+sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/"]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
 sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]

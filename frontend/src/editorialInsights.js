@@ -18,10 +18,9 @@ export function editorialInsights(card) {
   else verdict += " The decision should come down to whether your expected rewards comfortably exceed the annual fee.";
 
   const goodFit = [
-    audience ? `Your regular spending includes ${audience}.` : `You value ${card.rewardLine || "the card's core rewards"}.`,
-    annualFee === 0 ? "You want to avoid an annual membership charge." : feeWaiver ? `You can realistically meet the published fee-waiver condition: ${cleanSentence(feeWaiver)}` : `You expect to recover the ₹${annualFee.toLocaleString("en-IN")} annual fee through benefits you will actually use.`,
+    audience ? `Your priorities include ${audience}.` : `You value ${card.rewardLine || "the card's core rewards"}.`,
+    annualFee === 0 ? "You want to avoid an annual membership charge." : feeWaiver ? `Your normal spending can reach the published fee-waiver condition: ${cleanSentence(feeWaiver)}` : `The benefits you will actually use are worth more to you than the ₹${annualFee.toLocaleString("en-IN")} annual fee.`,
   ];
-  if (card.creditReq) goodFit.push(`Your profile is likely to meet the issuer's ${creditLabel(card.creditReq).toLowerCase()} expectations.`);
 
   const thinkTwice = [];
   if (limitation) thinkTwice.push(cleanSentence(limitation));
@@ -43,8 +42,4 @@ function cleanSentence(value) {
 function naturalList(items) {
   if (items.length < 2) return items[0] || "";
   return `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
-}
-
-function creditLabel(value) {
-  return ({ good: "good credit profile", excellent: "excellent credit profile", fair: "fair credit profile", starter: "starter credit profile", new: "new-to-credit profile" })[value] || "issuer eligibility";
 }

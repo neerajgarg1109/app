@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""Regression checks for CardIQ's generated, indexable catalogue pages."""
+import json
+import unittest
+from html.parser import HTMLParser
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+BUILD = ROOT / "frontend" / "build"
+CARDS = json.loads((ROOT / "backend" / "cards_catalog.json").read_text())
+ORIGIN = "https://neerajgarg1109.github.io/app"
+
+
+class Document(HTMLParser):
+    def __init__(self, source):
+        super().__init__()
+        self.title = ""
+        self.in_title = False
+        self.meta = {}
+        self.links = []
+        self.feed(source)
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "title":
+            self.in_title = True
+        if tag == "meta" and attrs.get("name"):
+            self.meta[attrs["name"]] = attrs.get("content", "")
+        if tag == "link" and attrs.get("rel") == "canonical":
+            self.meta["canonical"] = attrs.get("href", "")
+        if tag == "a" and attrs.get("href"):
+            self.links.append(attrs["href"])
+
+    def handle_endtag(self, tag):
+        if tag == "title":
+            self.in_title = False
+
+    def handle_data(self, data):
+        if self.in_title:
+            self.title += data
+
+
+def generated_pages():
+    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology"]
+    return [path for root in roots for path in root.glob("*/index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
+
+
+class StaticCatalogTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.pages = generated_pages()
+        cls.documents = {path: Document(path.read_text()) for path in cls.pages}
+
+    def test_every_card_has_substantial_sourced_editorial_content(self):
+        pages = list((BUILD / "cards").glob("*/index.html"))
+        self.assertEqual(len(pages), len(CARDS))
+        for path in pages:
+            source = path.read_text()
+            self.assertIn("CardIQ editorial view", source)
+            self.assertIn("A good fit when", source)
+            self.assertIn("Think twice when", source)
+            self.assertIn("Issuer source", source)
+            self.assertNotRegex(source.lower(), r"likely to meet|guaranteed approval|approval odds")
+
+    def test_titles_descriptions_and_canonicals_are_unique(self):
+        titles = [doc.title for doc in self.documents.values()]
+        descriptions = [doc.meta.get("description") for doc in self.documents.values()]
+        canonicals = [doc.meta.get("canonical") for doc in self.documents.values()]
+        self.assertNotIn("", titles + descriptions + canonicals)
+        self.assertEqual(len(titles), len(set(titles)))
+        self.assertEqual(len(descriptions), len(set(descriptions)))
+        self.assertEqual(len(canonicals), len(set(canonicals)))
+        self.assertTrue(all(url.startswith(f"{ORIGIN}/") and "#" not in url for url in canonicals))
+
+    def test_catalog_hub_links_to_every_indexable_detail_page(self):
+        hub = Document((BUILD / "catalog" / "index.html").read_text())
+        expected = {doc.meta["canonical"] for path, doc in self.documents.items() if "/cards/" in doc.meta["canonical"] or "/issuers/" in doc.meta["canonical"] or "/categories/" in doc.meta["canonical"]}
+        self.assertTrue(expected.issubset(set(hub.links)))
+
+    def test_every_published_category_contains_multiple_real_choices(self):
+        for path in (BUILD / "categories").glob("*/index.html"):
+            card_links = {link for link in self.documents[path].links if f"{ORIGIN}/cards/" in link}
+            self.assertGreaterEqual(len(card_links), 3, path)
+
+    def test_sitemap_and_robots_cover_generated_pages(self):
+        sitemap = (BUILD / "sitemap.xml").read_text()
+        for doc in self.documents.values():
+            self.assertIn(f"<loc>{doc.meta['canonical']}</loc>", sitemap)
+        robots = (BUILD / "robots.txt").read_text()
+        self.assertIn(f"Sitemap: {ORIGIN}/sitemap.xml", robots)
+
+    def test_methodology_discloses_sources_automation_and_revenue(self):
+        source = (BUILD / "methodology" / "index.html").read_text().lower()
+        for disclosure in ("sources and updates", "generated consistently", "earn revenue", "cannot pay to increase"):
+            self.assertIn(disclosure, source)
+
+    def test_homepage_has_canonical_metadata_and_a_non_javascript_catalogue_path(self):
+        source = (BUILD / "index.html").read_text()
+        document = Document(source)
+        self.assertEqual(document.meta.get("canonical"), f"{ORIGIN}/")
+        self.assertIn("/app/catalog/", source)
+
+
+if __name__ == "__main__":
+    unittest.main()

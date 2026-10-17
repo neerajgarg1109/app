@@ -1,5 +1,5 @@
 import React from "react";
-import { X, Check, Star } from "lucide-react";
+import { X, Check } from "lucide-react";
 
 export default function Compare({ cards, onClose }) {
   if (!cards || cards.length === 0) return null;
@@ -13,7 +13,6 @@ export default function Compare({ cards, onClose }) {
     { label: "Network", get: (c) => c.network },
     { label: "Forex / travel", get: (c) => (c.highlights || []).find((h) => /forex|foreign|international|lounge/i.test(h)) || "No highlighted benefit" },
     { label: "Important limit", get: (c) => (c.highlights || []).find((h) => /cap|limit|exclude|minimum|waiv/i.test(h)) || "See issuer terms" },
-    { label: "cardIQ rating", get: (c) => `${c.rating} / 5`, star: true },
   ].filter(Boolean);
 
   return (
@@ -51,11 +50,7 @@ export default function Compare({ cards, onClose }) {
                 <div className="text-xs font-semibold" style={{ color: "var(--ciq-ink-soft)" }}>{row.label}</div>
                 {cards.map((c) => (
                   <div key={c.id} className="text-center text-xs font-medium" style={{ color: "var(--ciq-ink)" }}>
-                    {row.star ? (
-                      <span className="inline-flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-current" style={{ color: "var(--ciq-amber)" }} /> {row.get(c)}
-                      </span>
-                    ) : row.get(c)}
+                    {row.get(c)}
                   </div>
                 ))}
               </div>

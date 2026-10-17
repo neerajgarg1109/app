@@ -146,5 +146,6 @@ describe("Result customer flows", () => {
     expect(container.textContent).toContain("Complete features");
     expect(container.textContent).toContain("Four lounge visits each year.");
     expect(container.textContent).toContain("Low foreign currency markup.");
+    expect(container.textContent).not.toContain("cardIQ rating");
   });
 });
