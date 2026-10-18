@@ -424,6 +424,20 @@ def test_migration_and_api_round_trip(monkeypatch):
                 unsubscribed = await api.post("/api/card-alerts/unsubscribe", json={"token": subscribed.json()["unsubscribeToken"]})
                 assert unsubscribed.json() == {"status": "unsubscribed"}
                 assert (await api.post("/api/card-alerts/unsubscribe", json={"token": subscribed.json()["unsubscribeToken"]})).status_code == 404
+                await api.post("/api/card-alerts", json={"email": "alerts@example.com", "scope_type": "card", "scope_value": result["scored"][0]["card"]["id"], "alert_consent": True})
+                alert_card = result["scored"][0]["card"]
+                alert_send = await api.post("/api/admin/card-alerts/send", headers=publisher_headers, json={
+                    "card_id": alert_card["id"], "title": "Annual fee terms updated",
+                    "summary": "The issuer has published updated annual fee terms for this card.",
+                    "source_url": alert_card["sourceUrls"][0], "idempotency_key": "fee-update-test-001",
+                })
+                assert alert_send.json()["sent"] == 1 and "#/alerts/unsubscribe?token=" in sent_emails[-1]["html"]
+                duplicate_alert = await api.post("/api/admin/card-alerts/send", headers=publisher_headers, json={
+                    "card_id": alert_card["id"], "title": "Annual fee terms updated",
+                    "summary": "The issuer has published updated annual fee terms for this card.",
+                    "source_url": alert_card["sourceUrls"][0], "idempotency_key": "fee-update-test-001",
+                })
+                assert duplicate_alert.json()["status"] == "already_sent"
                 top_id = result["scored"][0]["card"]["id"]
                 denied_followup = await api.post(f"/api/cards/{top_id}/review-followup", json={
                     "email": "holder@example.com", "result_id": result["result_id"], "review_consent": False,

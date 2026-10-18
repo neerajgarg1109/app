@@ -337,6 +337,21 @@ class CardAlertUnsubscribeIn(BaseModel):
     token: str = Field(min_length=32, max_length=200)
 
 
+class AdminCardAlertSendIn(BaseModel):
+    card_id: str
+    title: str = Field(min_length=5, max_length=120)
+    summary: str = Field(min_length=20, max_length=1000)
+    source_url: str
+    idempotency_key: str = Field(min_length=8, max_length=120, pattern=r"^[a-zA-Z0-9._-]+$")
+
+    @field_validator("source_url")
+    @classmethod
+    def validate_source_url(cls, value: str) -> str:
+        if not value.startswith("https://") or not _host_ok(urlparse(value).hostname or ""):
+            raise ValueError("Use a safe HTTPS issuer source")
+        return value
+
+
 class ProductEventIn(BaseModel):
     event: str
     session_id: str
@@ -744,6 +759,46 @@ async def unsubscribe_card_alerts(payload: CardAlertUnsubscribeIn):
     if not result.modified_count:
         raise HTTPException(status_code=404, detail="Subscription not found or already inactive")
     return {"status": "unsubscribed"}
+
+
+@api_router.post("/admin/card-alerts/send")
+async def send_card_change_alert(payload: AdminCardAlertSendIn, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    card = await db.cards.find_one({"id": payload.card_id, **CATALOG_QUERY}, {"_id": 0})
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+    allowed_sources = set(card.get("sourceUrls") or []) | {card.get("officialApplyUrl"), card.get("applyUrl")}
+    if payload.source_url not in allowed_sources:
+        raise HTTPException(status_code=422, detail="Source URL must already be a verified source for this card")
+    existing = await db.card_alert_campaigns.find_one({"idempotency_key": payload.idempotency_key}, {"_id": 0})
+    if existing:
+        return {"status": "already_sent", "sent": existing.get("sent", 0), "failed": existing.get("failed", 0)}
+    query = {"status": "active", "$or": [
+        {"scope_type": "all"}, {"scope_type": "card", "scope_value": card["id"]},
+        {"scope_type": "issuer", "scope_value": card["issuer"]},
+    ]}
+    subscriptions = await db.card_alert_subscriptions.find(query, {"_id": 0}).to_list(2000)
+    sent = failed = 0
+    for subscription in subscriptions:
+        token = secrets.token_urlsafe(32)
+        unsubscribe_url = f'{PUBLIC_APP_URL}/#/alerts/unsubscribe?token={token}'
+        message = (f'<h1>{escape(payload.title)}</h1><p>{escape(payload.summary)}</p>'
+                   f'<p><a href="{escape(payload.source_url)}">Check the issuer source</a></p>'
+                   f'<p style="font-size:12px;color:#667">You received this service alert because you asked CardIQ to track {escape(card["name"])} or {escape(card["issuer"])}. '
+                   f'<a href="{escape(unsubscribe_url)}">Unsubscribe</a>. CardIQ will never ask for sensitive banking credentials.</p>')
+        try:
+            await send_email(to=subscription["email"], subject=f'Card update: {payload.title}', html=message)
+            sent += 1
+            await db.card_alert_subscriptions.update_one({"subscription_id": subscription["subscription_id"]}, {"$set": {
+                "unsubscribe_token_hash": hashlib.sha256(token.encode()).hexdigest(), "last_alert_at": datetime.now(timezone.utc)}})
+        except Exception as error:
+            failed += 1
+            logger.error("Card alert delivery failed for subscription %s: %s", subscription.get("subscription_id"), error)
+    await db.card_alert_campaigns.insert_one({"campaign_id": str(uuid.uuid4()), "idempotency_key": payload.idempotency_key,
+        "card_id": card["id"], "issuer": card["issuer"], "title": payload.title, "summary": payload.summary,
+        "source_url": payload.source_url, "matched": len(subscriptions), "sent": sent, "failed": failed,
+        "created_at": datetime.now(timezone.utc)})
+    return {"status": "sent", "matched": len(subscriptions), "sent": sent, "failed": failed}
 
 
 @api_router.post("/product-events", status_code=202)

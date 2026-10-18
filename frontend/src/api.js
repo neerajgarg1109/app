@@ -142,6 +142,16 @@ export async function subscribeCardAlerts(subscription) {
   return data;
 }
 
+export async function unsubscribeCardAlerts(token) {
+  const { data } = await http.post("/card-alerts/unsubscribe", { token });
+  return data;
+}
+
+export async function sendAdminCardAlert(token, notice) {
+  const { data } = await http.post("/admin/card-alerts/send", notice, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
 export async function trackApplyClick(cardId, resultId) {
   const { data } = await http.post(`/cards/${encodeURIComponent(cardId)}/apply-click`, { result_id: resultId || null });
   return data;

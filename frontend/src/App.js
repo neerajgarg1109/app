@@ -11,6 +11,7 @@ import CardExplorer from "./components/CardExplorer";
 import ValueCalculator from "./components/ValueCalculator";
 import IssuerHelp from "./components/IssuerHelp";
 import CardAlerts from "./components/CardAlerts";
+import CardAlertUnsubscribe from "./components/CardAlertUnsubscribe";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 import { recordProductEvent } from "./productAnalytics";
@@ -169,6 +170,7 @@ function App() {
           <Route path="/calculator" element={<ValueCalculator />} />
           <Route path="/help/issuers" element={<IssuerHelp />} />
           <Route path="/alerts" element={<CardAlerts />} />
+          <Route path="/alerts/unsubscribe" element={<CardAlertUnsubscribe />} />
         </Routes>
       </HashRouter>
     </div>
