@@ -280,6 +280,10 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert all(item["valueEstimate"]["isPersonalized"] for item in calculation["results"])
                 assert (await api.post("/api/tools/value-calculator", json={})).status_code == 422
                 assert (await api.post("/api/tools/value-calculator", json={"online": -1})).status_code == 422
+                wallet = await api.post("/api/tools/purchase-optimizer", json={"card_ids": [CARDS[0]["id"], CARDS[1]["id"]], "category": "online", "amount": 12000})
+                assert wallet.status_code == 200 and len(wallet.json()["results"]) == 2
+                assert wallet.json()["results"][0]["economicsQuality"] in {"limited", "medium", "high"}
+                assert (await api.post("/api/tools/purchase-optimizer", json={"card_ids": [], "category": "online", "amount": 100})).status_code == 422
                 managed_payload = {
                     "name": "Admin Test Card", "issuer": "Test Bank", "variants": ["Visa", "RuPay"],
                     "network": "Visa", "rewardLine": "Test rewards", "applyUrl": "https://bank.example.org/card",

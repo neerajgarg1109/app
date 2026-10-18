@@ -297,6 +297,19 @@ class ValueCalculatorIn(BaseModel):
         return value
 
 
+class PurchaseOptimizerIn(BaseModel):
+    card_ids: List[str] = Field(min_length=1, max_length=10)
+    category: str
+    amount: int = Field(ge=1, le=10_000_000)
+
+    @field_validator("category")
+    @classmethod
+    def validate_category(cls, value: str) -> str:
+        if value not in {"online", "dining", "travel", "fuel", "grocery", "international", "upi", "other"}:
+            raise ValueError("Unsupported purchase category")
+        return value
+
+
 class ApplyClickIn(BaseModel):
     result_id: Optional[str] = None
 
@@ -930,6 +943,35 @@ async def calculate_card_value(payload: ValueCalculatorIn):
         },
         "results": scored,
     }
+
+
+@api_router.post("/tools/purchase-optimizer")
+async def optimize_purchase(payload: PurchaseOptimizerIn):
+    ids = list(dict.fromkeys(payload.card_ids))
+    cards = await db.cards.find({"id": {"$in": ids}, **CATALOG_QUERY}, {"_id": 0}).to_list(10)
+    if len(cards) != len(ids):
+        raise HTTPException(status_code=404, detail="One or more selected cards are unavailable")
+    category_tags = {
+        "online": {"online", "shopping", "cashback"}, "dining": {"dining", "food"},
+        "travel": {"travel", "flights", "hotels"}, "fuel": {"fuel"},
+        "grocery": {"grocery", "shopping", "cashback"}, "international": {"forex", "travel"},
+        "upi": {"upi", "rupay"}, "other": {"rewards", "cashback"},
+    }
+    keywords = category_tags[payload.category]
+    ranked = []
+    for stored in cards:
+        card = _card_for_client(stored)
+        best_for = set(card.get("bestFor") or [])
+        matches = sorted(best_for & keywords)
+        searchable = [card.get("rewardLine", ""), *(card.get("highlights") or [])]
+        evidence = [line for line in searchable if any(word in line.lower() for word in keywords)][:3]
+        economics = card["economicsProfile"]
+        score = len(matches) * 30 + len(evidence) * 8 + economics["coverage"] / 10
+        ranked.append({"card": card, "fitScore": round(score, 1), "categoryMatches": matches,
+            "documentedEvidence": evidence or [card.get("rewardLine", "")], "economicsQuality": economics["quality"]})
+    ranked.sort(key=lambda item: item["fitScore"], reverse=True)
+    return {"category": payload.category, "amount": payload.amount, "results": ranked,
+        "methodology": "Ranks only the cards you selected using documented category tags and sourced benefit text. It does not promise an exact reward because merchant coding, caps and exclusions can change the outcome."}
 
 
 @api_router.post("/quiz/submit")

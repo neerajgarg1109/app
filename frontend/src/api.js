@@ -137,6 +137,11 @@ export async function calculateCardValue(spending) {
   return data;
 }
 
+export async function optimizePurchase(payload) {
+  const { data } = await http.post("/tools/purchase-optimizer", payload);
+  return data;
+}
+
 export async function subscribeCardAlerts(subscription) {
   const { data } = await http.post("/card-alerts", subscription);
   return data;
