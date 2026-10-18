@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3, Send, Clock, Link2, Search, Save, LayoutDashboard, Users, Building2, Plus, Pencil, X, History, Archive, Upload, Activity, MessageSquare } from "lucide-react";
 import Logo from "./Logo";
-import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert } from "../api";
+import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert, checkAdminApplyLinks, getAdminApplyLinkHealth, importAdminReconciliation } from "../api";
 import { catalogQualityIssues } from "../catalogQuality";
 
 const PRESETS = [
@@ -50,24 +50,28 @@ export default function Admin() {
   const [reviews, setReviews] = useState([]);
   const [alertDraft, setAlertDraft] = useState({ card_id: "", title: "", summary: "", source_url: "", idempotency_key: "", change_type: "benefit-change", effective_date: "" });
   const [alertMsg, setAlertMsg] = useState(null);
+  const [linkHealth, setLinkHealth] = useState({ links: [], failed: 0 });
   const importInput = useRef(null);
+  const reconciliationInput = useRef(null);
 
   const load = async (t, presetKey = preset) => {
     setLoading(true);
     setError(null);
     const params = rangeFor(presetKey);
     try {
-      const [res, ins, catalog, reviewData] = await Promise.all([
+      const [res, ins, catalog, reviewData, healthData] = await Promise.all([
         getAdminLeads(t, params),
         getAdminInsights(t, params),
         getAdminCards(t),
         getAdminCardReviews(t),
+        getAdminApplyLinkHealth(t),
       ]);
       setData(res);
       setInsights(ins);
       setAdminCards(catalog.cards || []);
       setAdminRole(catalog.role || "viewer");
       setReviews(reviewData.reviews || []);
+      setLinkHealth(healthData || { links: [], failed: 0 });
       setLinkDrafts(Object.fromEntries((catalog.cards || []).map((card) => [card.id, linkDraft(card)])));
       setAuthed(true);
       localStorage.setItem("ciq_admin", t);
@@ -222,6 +226,23 @@ export default function Admin() {
     finally { setSending(false); }
   };
 
+  const runLinkChecks = async () => {
+    setSending(true); setLinkMsg(null);
+    try { const result = await checkAdminApplyLinks(token); setLinkMsg({ type: result.failed ? "error" : "success", text: `Checked ${result.checked} links; ${result.failed} failed and ${result.auto_paused} partner links were paused.` }); await load(token); }
+    catch (e) { setLinkMsg({ type: "error", text: e.response?.data?.detail || "Could not check application links." }); }
+    finally { setSending(false); }
+  };
+
+  const importReconciliation = async (file) => {
+    try {
+      const text = await file.text();
+      const rows = file.name.toLowerCase().endsWith(".json") ? JSON.parse(text) : parseReconciliationCsv(text);
+      const result = await importAdminReconciliation(token, rows.rows || rows);
+      setLinkMsg({ type: "success", text: `Imported ${result.imported} conversion updates; matched ${result.matched} of ${result.received} to CardIQ clicks.` });
+      await load(token);
+    } catch (e) { setLinkMsg({ type: "error", text: e.response?.data?.detail || "Reconciliation import failed." }); }
+  };
+
   if (!authed) {
     return (
       <div className="ciq-shell grid min-h-screen place-items-center">
@@ -363,8 +384,12 @@ export default function Admin() {
             <Stat label="Monetised click rate" value={`${applicationPerformance.monetised_click_rate || 0}%`} />
             <Stat label="Expected pipeline" value={`₹${Number(applicationPerformance.expected_payout_pipeline || 0).toLocaleString("en-IN")}`} />
           </div>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4"><Stat label="Confirmed applications" value={applicationPerformance.confirmed_conversions?.applied || 0} /><Stat label="Approved" value={applicationPerformance.confirmed_conversions?.approved || 0} /><Stat label="Paid revenue" value={`₹${Number(applicationPerformance.confirmed_revenue || 0).toLocaleString("en-IN")}`} /><Stat label="Reconciliation match" value={`${applicationPerformance.reconciliation_match_rate || 0}%`} /></div>
+          {canPublish && <div className="mt-3"><input ref={reconciliationInput} type="file" accept=".json,.csv,application/json,text/csv" className="hidden" onChange={(event) => event.target.files?.[0] && importReconciliation(event.target.files[0])} /><button onClick={() => reconciliationInput.current?.click()} className="inline-flex items-center gap-1 rounded-xl border px-3 py-2 text-xs font-semibold" style={{ borderColor: "var(--ciq-line)" }}><Upload className="h-3.5 w-3.5" /> Import partner reconciliation</button></div>}
           {(applicationPerformance.by_partner || []).length > 0 && <div className="mt-4 space-y-2">{applicationPerformance.by_partner.map((partner) => <Bar key={partner.label} label={partner.label} count={partner.count} pct={partner.pct} max={100} usePct />)}</div>}
         </div>
+
+        {(insights?.experiments || []).length > 0 && <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}><h2 className="font-display text-base font-extrabold">Active experiments</h2><p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Anonymous, stable assignments. Apply-click rate is the declared success metric.</p><div className="mt-3 grid gap-2 sm:grid-cols-2">{insights.experiments.map((item) => <div key={`${item.experiment_id}-${item.variant}`} className="rounded-xl p-3" style={{ background: "#f7f8f6" }}><div className="text-xs font-bold">{item.variant}</div><div className="mt-1 text-sm">{item.handoff_rate}% handoff · {item.visitors} visitors</div></div>)}</div></div>}
 
         {/* reminders */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
@@ -446,6 +471,7 @@ export default function Admin() {
             {healthIssues.length === 0 && <div className="rounded-2xl p-6 text-center text-sm" style={{ background: "#eef9f6", color: "var(--ciq-teal)" }}>All catalog checks passed.</div>}
             {healthIssues.map(({ card, issue }, index) => <div key={`${card.id}-${issue}-${index}`} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5" style={{ borderColor: "var(--ciq-line)" }}><div><div className="text-sm font-semibold">{card.name}</div><div className="text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</div></div><div className="flex items-center gap-2"><span className="text-xs font-semibold" style={{ color: "#9a6700" }}>{issue}</span>{canEdit && <button onClick={() => { setEditingCard(card); }} className="rounded-lg border px-2 py-1 text-xs" style={{ borderColor: "var(--ciq-line)" }}>Fix</button>}</div></div>)}
           </div>
+          <div className="mt-6 border-t pt-5" style={{ borderColor: "var(--ciq-line)" }}><div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-display text-base font-extrabold">Application-link health</h3><p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{linkHealth.links.length} destinations checked · {linkHealth.failed} currently failing. Failed live partner links fall back to the official issuer URL.</p></div>{canPublish && <button onClick={runLinkChecks} disabled={sending} className="rounded-xl px-3 py-2 text-sm font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>{sending ? "Checking…" : "Check all links"}</button>}</div><div className="mt-3 space-y-2">{linkHealth.links.filter((item) => !item.healthy).map((item) => <div key={item.card_id} className="rounded-xl border p-3 text-sm" style={{ borderColor: "#e4b5b1" }}><strong>{item.card_name}</strong><span className="ml-2 text-xs" style={{ color: "#a33b35" }}>{item.link_type} link failed{item.status_code ? ` (${item.status_code})` : ""}</span></div>)}</div></div>
         </section>}
 
         {activeSection === "reviews" && <section className="rounded-3xl border bg-white p-4 md:p-5" style={{ borderColor: "var(--ciq-line)" }}>
@@ -574,6 +600,22 @@ export default function Admin() {
       </div>
     </div>
   );
+}
+
+function parseReconciliationCsv(source) {
+  const rows = source.trim().split(/\r?\n/).filter(Boolean).map((line) => {
+    const values = []; let value = ""; let quoted = false;
+    for (let index = 0; index < line.length; index += 1) {
+      const char = line[index];
+      if (char === '"' && line[index + 1] === '"' && quoted) { value += '"'; index += 1; }
+      else if (char === '"') quoted = !quoted;
+      else if (char === "," && !quoted) { values.push(value.trim()); value = ""; }
+      else value += char;
+    }
+    values.push(value.trim()); return values;
+  });
+  const headers = rows.shift()?.map((header) => header.trim()) || [];
+  return rows.map((values) => Object.fromEntries(headers.map((header, index) => [header, header === "commission" ? Number(values[index] || 0) : (values[index] || null)])));
 }
 
 const NEW_CARD = {

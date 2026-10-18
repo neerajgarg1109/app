@@ -23,16 +23,17 @@ describe("privacy-safe product analytics", () => {
       "result_viewed",
       productSessionId(),
       "result-123",
-      {},
+      expect.objectContaining({ experiment_id: "landing-cta-clarity-v1", variant: expect.any(String) }),
     );
   });
 
   test("forwards privacy-safe content share dimensions", async () => {
     trackProductEvent.mockResolvedValue({ status: "recorded" });
     await recordProductEvent("content_shared", null, { card_id: "cashback-card", channel: "whatsapp", page_type: "card" });
-    expect(trackProductEvent).toHaveBeenCalledWith("content_shared", productSessionId(), null, {
+    expect(trackProductEvent).toHaveBeenCalledWith("content_shared", productSessionId(), null, expect.objectContaining({
       card_id: "cashback-card", channel: "whatsapp", page_type: "card",
-    });
+      experiment_id: "landing-cta-clarity-v1",
+    }));
   });
 
   test("never blocks the journey when analytics is unavailable", async () => {

@@ -10,6 +10,11 @@ export async function getCards() {
   return data;
 }
 
+export async function getRestrictedCards() {
+  const { data } = await http.get("/restricted-cards");
+  return data;
+}
+
 export async function submitQuiz(answers, lead) {
   const { data } = await http.post("/quiz/submit", lead ? { answers, lead } : { answers });
   return data; // { result_id, scored }
@@ -119,6 +124,21 @@ export async function updateAdminCardApplyLink(token, cardId, configuration) {
     } : { apply_url: null },
     { headers: { "X-Admin-Token": token } },
   );
+  return data;
+}
+
+export async function checkAdminApplyLinks(token) {
+  const { data } = await http.post("/admin/check-apply-links", {}, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function getAdminApplyLinkHealth(token) {
+  const { data } = await http.get("/admin/apply-link-health", { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function importAdminReconciliation(token, rows) {
+  const { data } = await http.post("/admin/reconciliation-import", rows, { headers: { "X-Admin-Token": token } });
   return data;
 }
 

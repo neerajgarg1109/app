@@ -1,4 +1,5 @@
 import { trackProductEvent } from "./api";
+import { experimentAssignment } from "./experiments";
 
 const SESSION_KEY = "ciq_anonymous_session";
 
@@ -16,5 +17,5 @@ export function productSessionId() {
 }
 
 export function recordProductEvent(event, resultId = null, metadata = {}) {
-  return trackProductEvent(event, productSessionId(), resultId, metadata).catch(() => null);
+  return trackProductEvent(event, productSessionId(), resultId, { ...experimentAssignment(), ...metadata }).catch(() => null);
 }

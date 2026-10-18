@@ -14,6 +14,7 @@ import CardAlerts from "./components/CardAlerts";
 import CardAlertUnsubscribe from "./components/CardAlertUnsubscribe";
 import PurchaseOptimizer from "./components/PurchaseOptimizer";
 import CardUpdates from "./components/CardUpdates";
+import RestrictedCards from "./components/RestrictedCards";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 import { recordProductEvent } from "./productAnalytics";
@@ -175,6 +176,7 @@ function App() {
           <Route path="/alerts/unsubscribe" element={<CardAlertUnsubscribe />} />
           <Route path="/wallet-optimizer" element={<PurchaseOptimizer />} />
           <Route path="/updates" element={<CardUpdates />} />
+          <Route path="/restricted-cards" element={<RestrictedCards />} />
         </Routes>
       </HashRouter>
     </div>

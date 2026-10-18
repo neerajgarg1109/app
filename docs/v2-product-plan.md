@@ -89,3 +89,18 @@ Acceptance criteria:
 ## Initial decision cadence
 
 Run Phase 1 until at least 500 unique landing sessions or four weeks, whichever is later. Review the funnel weekly. Investigate the largest absolute drop-off first, while monitoring complaint rate, outdated-card reports and issuer-link failures as trust guardrails.
+
+## Implementation status — 18 October 2026
+
+The first eight post-review priorities are implemented:
+
+1. Restricted-access discovery is integrated into the API, customer portal and crawlable publishing layer.
+2. Application destinations are checked automatically every 24 hours while the API is running; two consecutive partner-link failures pause the partner destination and preserve the official issuer fallback.
+3. JSON or CSV partner reconciliation imports connect applications, approvals and paid commission to attributed CardIQ clicks and Admin reporting.
+4. Value estimates expose their assumptions, fee-waiver treatment, explicit first-year value and per-card structured-economics coverage; limited records are flagged in catalog health.
+5. Every card detail view has an eligibility checklist that explicitly separates access requirements from approval odds.
+6. Comparison selections persist locally and can be recovered or shared through a card-ID deep link.
+7. Crawlable acquisition coverage includes cards, issuers, categories, comparisons, updates, lounges, restricted products and guides for launches, invite-only cards and safe closure journeys.
+8. A stable anonymous CTA experiment records only allow-listed experiment and variant identifiers, with issuer-handoff rate reported by variant in Admin.
+
+Operational configuration: `ENABLE_APPLY_LINK_MONITOR=true` enables the monitor (the default) and `APPLY_LINK_MONITOR_HOURS` controls its interval. Production partner reports may be uploaded in Admin as JSON or CSV with `external_id`, `status`, `commission`, and at least one of `card_id`, `campaign_id` or `tracking_id`.

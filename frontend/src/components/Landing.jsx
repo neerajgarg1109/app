@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check, Search, GitCompare, Newspaper, Building2, Calculator } from "lucide-react";
+import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check, Search, GitCompare, Newspaper, Building2, Calculator, LockKeyhole } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
 import { getCards, getResult } from "../api";
 import { Link } from "react-router-dom";
 import CARD_CATEGORIES from "../data/cardCategories.json";
+import { experimentAssignment } from "../experiments";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
@@ -15,12 +16,14 @@ const INTENTS = [
   { title: "Compare with my card", text: "Mark a card you own and compare alternatives.", icon: GitCompare, to: "/cards?mode=compare" },
   { title: "Pick a card from my wallet", text: "See which card best fits a planned purchase.", icon: Calculator, to: "/wallet-optimizer" },
   { title: "See launches & card changes", text: "Follow sourced launches, fee and reward changes.", icon: Newspaper, to: "/updates" },
+  { title: "Explore restricted-access cards", text: "Understand invite-only, relationship and special-channel cards.", icon: LockKeyhole, to: "/restricted-cards" },
   { title: "Browse by issuer", text: "See every catalogued card from each issuer.", icon: Building2, to: "/cards?browse=issuers" },
   { title: "Issuer help & card closure", text: "Use verified official support and closure channels.", icon: PhoneCall, to: "/help/issuers" },
   { title: "Track card changes", text: "Get opt-in alerts for a card, issuer or major update.", icon: Newspaper, to: "/alerts" },
 ];
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
+  const experiment = experimentAssignment();
   const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null });
   const [savedCardName, setSavedCardName] = useState(null);
 
@@ -108,7 +111,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           onClick={onStart}
           className="ciq-press ciq-primary-gradient ciq-soft-glow mt-8 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-4 text-base font-semibold text-white"
         >
-          Find my strongest match <ArrowRight className="h-5 w-5" />
+          {experiment.variant === "value-led" ? "See which card gives me more value" : "Find my strongest match"} <ArrowRight className="h-5 w-5" />
         </button>
         <Link to="/cards" className="ciq-press mt-3 inline-flex w-full items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
           Search and explore all cards

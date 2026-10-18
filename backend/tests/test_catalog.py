@@ -16,6 +16,15 @@ import pytest
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from cards_seed import CARDS, CATALOG_QUERY, DEMO_IDS, RECOMMENDABLE_QUERY, recommend_cards, seed_cards
+from restricted_access import restricted_access
+
+
+def test_every_restricted_catalog_card_has_one_shared_access_classification():
+    restricted = [card for card in CARDS if card.get("recommendationEligible") is False]
+    assert restricted
+    classifications = [restricted_access(card) for card in restricted]
+    assert all(item and item["accessExplanation"] for item in classifications)
+    assert {item["accessType"] for item in classifications} <= {"invite-only", "existing-relationship", "segment-restricted", "partner-channel", "issuer-discretion"}
 
 
 def available_cards():
@@ -359,6 +368,12 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert public_override["affiliateDisclosureRequired"] is True
                 restricted_ids = {c["id"] for c in CARDS if c.get("recommendationEligible") is False}
                 assert restricted_ids <= {c["id"] for c in response.json()}
+                restricted_response = await api.get("/api/restricted-cards")
+                assert restricted_response.status_code == 200
+                restricted_cards = restricted_response.json()["cards"]
+                assert restricted_ids <= {c["id"] for c in restricted_cards}
+                assert all(c["recommendationExcluded"] is True and c["accessExplanation"] for c in restricted_cards)
+                assert {c["accessType"] for c in restricted_cards} <= {"invite-only", "existing-relationship", "segment-restricted", "partner-channel", "issuer-discretion"}
                 ids = [CARDS[-1]["id"], CARDS[0]["id"]]
                 response = await api.post("/api/cards/compare", json={"ids": ids})
                 assert [c["id"] for c in response.json()] == ids
@@ -369,6 +384,23 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert await database.apply_events.count_documents({"card_id": CARDS[0]["id"]}) == 1
                 click = await database.apply_events.find_one({"card_id": CARDS[0]["id"]})
                 assert click["partner_name"] == "Partner Network" and click["campaign_id"] == "launch-1"
+                reconciliation = await api.post("/api/admin/reconciliation-import", headers=publisher_headers, json=[{
+                    "external_id": "partner-row-001", "status": "paid", "commission": 1250,
+                    "card_id": CARDS[0]["id"], "campaign_id": "launch-1", "tracking_id": "track-1",
+                }])
+                assert reconciliation.json() == {"received": 1, "imported": 1, "matched": 1, "unmatched": 0}
+                assert (await database.partner_conversions.find_one({"external_id": "partner-row-001"}))["click_event_id"] == click["event_id"]
+                async def fake_destination_check(url):
+                    healthy = url != custom_apply_url
+                    return {"healthy": healthy, "status_code": 200 if healthy else 503, "final_url": url, "error": None}
+                monkeypatch.setattr(server, "_check_destination", fake_destination_check)
+                link_check = await api.post("/api/admin/check-apply-links", headers=publisher_headers)
+                assert link_check.status_code == 200 and link_check.json()["auto_paused"] == 0
+                link_check = await api.post("/api/admin/check-apply-links", headers=publisher_headers)
+                assert link_check.json()["auto_paused"] == 1
+                assert (await database.cards.find_one({"id": override_card["id"]}))["applyLinkStatus"] == "paused"
+                link_health = await api.get("/api/admin/apply-link-health", headers=viewer_headers)
+                assert link_health.status_code == 200 and link_health.json()["failed"] == 1
                 assert (await api.post("/api/cards/missing-card/apply-click", json={})).status_code == 404
                 assert (await api.post(f"/api/cards/{CARDS[0]['id']}/report", json={"issue": "too short"})).status_code == 422
                 report = await api.post(f"/api/cards/{CARDS[0]['id']}/report", json={"issue": "The annual fee appears to have changed.", "email": "reporter@example.com"})
@@ -581,6 +613,8 @@ def test_migration_and_api_round_trip(monkeypatch):
                     "landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"
                 )}
                 assert insights.json()["application_performance"]["partner_clicks"] == 1
+                assert insights.json()["application_performance"]["confirmed_revenue"] == 1250
+                assert insights.json()["application_performance"]["reconciliation_match_rate"] == 100
         finally:
             await client.drop_database(name)
             client.close()

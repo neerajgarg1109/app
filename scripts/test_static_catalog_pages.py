@@ -43,7 +43,7 @@ class Document(HTMLParser):
 
 
 def generated_pages():
-    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator", BUILD / "compare", BUILD / "updates", BUILD / "lounges"]
+    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator", BUILD / "compare", BUILD / "updates", BUILD / "lounges", BUILD / "restricted-cards", BUILD / "guides"]
     return [path for root in roots for path in root.glob("*/index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
 
 
@@ -131,6 +131,19 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / "lounges" / "index.html").read_text().lower()
         for phrase in ("airport lounge credit cards", "airport", "terminal", "spend thresholds", "issuer terms"):
             self.assertIn(phrase, source)
+
+    def test_restricted_hub_separates_discovery_from_eligibility(self):
+        source = (BUILD / "restricted-cards" / "index.html").read_text().lower()
+        for phrase in ("invite-only", "restricted", "excluded from cardiq’s general quiz", "does not guarantee approval", "issuing bank decides"):
+            self.assertIn(phrase, source)
+        self.assertIn(f'{ORIGIN}/#/restricted-cards', source)
+
+    def test_guides_cover_high_intent_discovery_journeys(self):
+        pages = list((BUILD / "guides").glob("*/index.html"))
+        self.assertEqual({path.parent.name for path in pages}, {"new-credit-cards", "invite-only-credit-cards", "close-credit-card-india"})
+        combined = " ".join(path.read_text().lower() for path in pages)
+        for phrase in ("launch", "invitation-only", "close a credit card", "official closure channel"):
+            self.assertIn(phrase, combined)
 
     def test_every_public_page_has_social_sharing_for_its_canonical_url(self):
         for path, document in self.documents.items():

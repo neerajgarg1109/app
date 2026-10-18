@@ -38,6 +38,8 @@ export default function CardDetails({ card, heading = "Card details", compact = 
 
       <StructuredBenefits card={card} />
 
+      <EligibilityChecklist card={card} />
+
       <section className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
         <h3 className="font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>Detailed CardIQ analysis</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -146,4 +148,14 @@ function StructuredBenefits({ card }) {
 
 function creditLabel(value) {
   return ({ good: "Good credit profile", excellent: "Excellent credit profile", fair: "Fair credit profile", starter: "Starter / building credit" })[value] || "Issuer eligibility applies";
+}
+
+function EligibilityChecklist({ card }) {
+  const checks = [
+    card.eligibilityNote || null,
+    card.secured ? "A fixed deposit or other issuer-approved security may be required." : `The issuer may assess the ${creditLabel(card.creditReq).toLowerCase()} indicated for this product.`,
+    card.availabilityNote || "Confirm that applications are open for your city and customer profile.",
+    "Check the issuer’s current income, age, residency and documentation requirements before applying.",
+  ].filter(Boolean);
+  return <section className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}><div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Eligibility checklist</div><h3 className="mt-1 font-display text-base font-extrabold">Check access before you apply</h3><ul className="mt-3 space-y-2">{checks.map((item) => <li key={item} className="flex items-start gap-2 text-sm leading-relaxed"><Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: "var(--ciq-teal-600)" }} /><span>{item}</span></li>)}</ul><p className="mt-3 text-[11px] leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>This checklist describes published product access—not approval odds. The issuing bank makes the final decision.</p></section>;
 }

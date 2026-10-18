@@ -87,6 +87,8 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Trade-offs to understand");
     expect(container.textContent).toContain("Worth shortlisting for consistent online use.");
     expect(container.textContent).toContain("Compare before deciding");
+    expect(container.textContent).toContain("Eligibility checklist");
+    expect(container.textContent).toContain("not approval odds");
     const analysis = Array.from(container.querySelectorAll("h3")).find((item) => item.textContent === "Detailed CardIQ analysis");
     const apply = Array.from(container.querySelectorAll("button")).find((item) => item.textContent.includes("Apply on Alpha Bank"));
     expect(analysis.compareDocumentPosition(apply) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -129,5 +131,14 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Compare cards");
     expect(container.textContent).toContain("Everyday Cashback");
     expect(container.textContent).toContain("Travel Plus");
+  });
+
+  test("creates a recoverable comparison link", async () => {
+    window.location.hash = "#/cards?compare=cashback-card,travel-card";
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: jest.fn().mockResolvedValue() } });
+    await act(async () => root.render(<CardExplorer />)); await act(async () => Promise.resolve());
+    const share = container.querySelector('button[aria-label="Share comparison"]');
+    await act(async () => share.click());
+    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining("#/cards?compare=cashback-card,travel-card"));
   });
 });

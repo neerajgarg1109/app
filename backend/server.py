@@ -16,11 +16,13 @@ from pydantic import BaseModel, Field, EmailStr, field_validator
 from typing import List, Dict, Optional, Any
 import uuid
 import secrets
+import asyncio
 import hashlib
 import unicodedata
 from datetime import datetime, timezone, timedelta
 
 from cards_seed import seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
+from restricted_access import restricted_access
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -388,6 +390,8 @@ class ProductEventIn(BaseModel):
     card_id: Optional[str] = None
     channel: Optional[str] = None
     page_type: Optional[str] = None
+    experiment_id: Optional[str] = None
+    variant: Optional[str] = None
 
     @field_validator("event")
     @classmethod
@@ -425,6 +429,13 @@ class ProductEventIn(BaseModel):
             raise ValueError("Invalid anonymous session identifier")
         return value
 
+    @field_validator("experiment_id", "variant")
+    @classmethod
+    def validate_experiment_dimension(cls, value: Optional[str]) -> Optional[str]:
+        if value is not None and not re.fullmatch(r"[a-z0-9_-]{1,80}", value):
+            raise ValueError("Invalid experiment dimension")
+        return value
+
 
 class CardholderReviewIn(BaseModel):
     overall: int
@@ -448,6 +459,23 @@ class ApplyLinkIn(BaseModel):
     tracking_id: Optional[str] = None
     status: str = "live"
     expected_payout: Optional[float] = None
+
+
+class ReconciliationRowIn(BaseModel):
+    external_id: str = Field(min_length=3, max_length=160, pattern=r"^[A-Za-z0-9._-]+$")
+    status: str
+    commission: float = Field(default=0, ge=0, le=10_000_000)
+    card_id: Optional[str] = None
+    campaign_id: Optional[str] = None
+    tracking_id: Optional[str] = None
+    occurred_at: Optional[datetime] = None
+
+    @field_validator("status")
+    @classmethod
+    def validate_conversion_status(cls, value: str) -> str:
+        if value not in {"applied", "approved", "rejected", "reversed", "paid"}:
+            raise ValueError("Unsupported reconciliation status")
+        return value
 
 
 class EditorialAlternativeIn(BaseModel):
@@ -686,6 +714,17 @@ async def get_cards():
     return [_card_for_client(card) for card in cards]
 
 
+@api_router.get("/restricted-cards")
+async def get_restricted_cards():
+    cards = await db.cards.find(CATALOG_QUERY, {"_id": 0}).to_list(None)
+    results = []
+    for card in cards:
+        access = restricted_access(card)
+        if access:
+            results.append({**_card_for_client(card), **access, "recommendationExcluded": True})
+    return {"cards": sorted(results, key=lambda item: (item["accessType"], item["issuer"], item["name"]))}
+
+
 @api_router.post("/cards/{card_id}/apply-click")
 async def track_apply_click(card_id: str, payload: ApplyClickIn):
     card = await db.cards.find_one({"id": card_id, **CATALOG_QUERY}, {"_id": 0})
@@ -845,7 +884,8 @@ async def record_product_event(payload: ProductEventIn):
     """Record a deduplicated, anonymous funnel event without arbitrary metadata."""
     now = datetime.now(timezone.utc)
     dimensions = {"event": payload.event, "session_id": payload.session_id, "result_id": payload.result_id,
-                  "card_id": payload.card_id, "channel": payload.channel, "page_type": payload.page_type}
+                  "card_id": payload.card_id, "channel": payload.channel, "page_type": payload.page_type,
+                  "experiment_id": payload.experiment_id, "variant": payload.variant}
     await db.product_events.update_one(
         dimensions,
         {"$setOnInsert": {
@@ -856,6 +896,8 @@ async def record_product_event(payload: ProductEventIn):
             "card_id": payload.card_id,
             "channel": payload.channel,
             "page_type": payload.page_type,
+            "experiment_id": payload.experiment_id,
+            "variant": payload.variant,
             "created_at": now,
         }},
         upsert=True,
@@ -1381,6 +1423,83 @@ async def update_admin_card_apply_link(
     }
 
 
+async def _check_destination(url: str) -> dict:
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or not _host_ok(parsed.hostname or "") or parsed.hostname in {"localhost", "localhost.localdomain"}:
+        return {"healthy": False, "status_code": None, "final_url": None, "error": "Unsafe destination URL"}
+    try:
+        async with httpx.AsyncClient(timeout=12, follow_redirects=True) as checker:
+            response = await checker.head(url)
+            if response.status_code in {403, 405}:
+                response = await checker.get(url, headers={"Range": "bytes=0-0"})
+        final_url = str(response.url)
+        healthy = response.status_code < 400 and urlparse(final_url).scheme == "https"
+        return {"healthy": healthy, "status_code": response.status_code, "final_url": final_url, "error": None}
+    except Exception as error:
+        return {"healthy": False, "status_code": None, "final_url": None, "error": str(error)[:300]}
+
+
+@api_router.post("/admin/check-apply-links")
+async def check_apply_links(x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    return await _run_apply_link_checks()
+
+
+async def _run_apply_link_checks():
+    cards = await db.cards.find(CATALOG_QUERY, {"_id": 0}).to_list(None)
+    semaphore = asyncio.Semaphore(10)
+    async def inspect(card):
+        partner_live = bool(card.get("applyUrlOverride") and card.get("applyLinkStatus") == "live")
+        url = card.get("applyUrlOverride") if partner_live else card.get("applyUrl")
+        if not url:
+            return None
+        async with semaphore:
+            result = await _check_destination(url)
+            record = {"card_id": card["id"], "card_name": card["name"], "issuer": card["issuer"],
+                      "url": url, "link_type": "partner" if partner_live else "official", **result,
+                      "checked_at": datetime.now(timezone.utc)}
+            previous = await db.apply_link_checks.find_one({"card_id": card["id"], "link_type": record["link_type"]}, {"_id": 0}, sort=[("checked_at", -1)])
+            await db.apply_link_checks.insert_one(dict(record))
+            if not result["healthy"] and partner_live and previous and not previous.get("healthy"):
+                await db.cards.update_one({"id": card["id"]}, {"$set": {"applyLinkStatus": "paused", "applyLinkPausedReason": "Automated destination check failed", "applyLinkUpdatedAt": datetime.now(timezone.utc)}})
+                record["auto_paused"] = True
+            return record
+    checked = [item for item in await asyncio.gather(*(inspect(card) for card in cards)) if item]
+    failed = sum(not item["healthy"] for item in checked)
+    paused = sum(bool(item.get("auto_paused")) for item in checked)
+    return {"checked": len(checked), "failed": failed, "auto_paused": paused, "results": [_clean(item) for item in checked]}
+
+
+@api_router.get("/admin/apply-link-health")
+async def apply_link_health(x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    records = await db.apply_link_checks.find({}, {"_id": 0}).sort("checked_at", -1).to_list(2000)
+    latest = {}
+    for item in records:
+        latest.setdefault(item["card_id"], item)
+    return {"links": list(latest.values()), "failed": sum(not item.get("healthy") for item in latest.values())}
+
+
+@api_router.post("/admin/reconciliation-import")
+async def reconciliation_import(rows: List[ReconciliationRowIn], x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    imported, matched = 0, 0
+    for payload in rows:
+        row = payload.model_dump()
+        query = {key: row[key] for key in ("tracking_id", "campaign_id", "card_id") if row.get(key)}
+        click = await db.apply_events.find_one(query, {"_id": 0}, sort=[("created_at", -1)]) if query else None
+        if click:
+            matched += 1
+        document = {**row, "click_event_id": click.get("event_id") if click else None,
+                    "partner_name": click.get("partner_name") if click else None,
+                    "card_id": row.get("card_id") or (click or {}).get("card_id"),
+                    "created_at": row.get("occurred_at") or datetime.now(timezone.utc),
+                    "imported_at": datetime.now(timezone.utc)}
+        result = await db.partner_conversions.update_one({"external_id": row["external_id"]}, {"$set": document}, upsert=True)
+        imported += int(result.upserted_id is not None or result.modified_count > 0)
+    return {"received": len(rows), "imported": imported, "matched": matched, "unmatched": len(rows) - matched}
+
+
 
 @api_router.get("/admin/leads")
 async def admin_leads(date_from: Optional[str] = None, date_to: Optional[str] = None, x_admin_token: Optional[str] = Header(None)):
@@ -1499,6 +1618,19 @@ async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str]
     for event in funnel_events:
         funnel[event] = len(await db.product_events.distinct("session_id", {**q, "event": event}))
 
+    conversions = await db.partner_conversions.find(q, {"_id": 0}).to_list(10000)
+    conversion_counts = {status: sum(item.get("status") == status for item in conversions) for status in ("applied", "approved", "rejected", "reversed", "paid")}
+    confirmed_revenue = round(sum(float(item.get("commission") or 0) for item in conversions if item.get("status") == "paid"), 2)
+    experiments = []
+    experiment_ids = await db.product_events.distinct("experiment_id", {**q, "experiment_id": {"$ne": None}})
+    for experiment_id in experiment_ids:
+        variants = await db.product_events.distinct("variant", {**q, "experiment_id": experiment_id})
+        for variant in variants:
+            visitors = len(await db.product_events.distinct("session_id", {**q, "experiment_id": experiment_id, "variant": variant, "event": "landing_view"}))
+            handoffs = len(await db.product_events.distinct("session_id", {**q, "experiment_id": experiment_id, "variant": variant, "event": "apply_clicked"}))
+            experiments.append({"experiment_id": experiment_id, "variant": variant, "visitors": visitors, "handoffs": handoffs,
+                                "handoff_rate": round(handoffs * 100 / visitors, 1) if visitors else 0})
+
     return {
         "total_results": total,
         "emails_sent": emailed,
@@ -1516,7 +1648,11 @@ async def admin_insights(date_from: Optional[str] = None, date_to: Optional[str]
                 {"label": name, "count": count, "pct": round(count * 100 / len(partner_clicks)) if partner_clicks else 0}
                 for name, count in sorted(partner_counts.items(), key=lambda item: item[1], reverse=True)
             ],
+            "confirmed_conversions": conversion_counts,
+            "confirmed_revenue": confirmed_revenue,
+            "reconciliation_match_rate": round(sum(bool(item.get("click_event_id")) for item in conversions) * 100 / len(conversions)) if conversions else 0,
         },
+        "experiments": experiments,
     }
 
 
@@ -1652,6 +1788,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+_link_monitor_task = None
+
+
+async def _link_monitor_loop():
+    await asyncio.sleep(300)
+    interval = max(1, int(os.environ.get("APPLY_LINK_MONITOR_HOURS", "24"))) * 3600
+    while True:
+        try:
+            summary = await _run_apply_link_checks()
+            logger.info("Application-link monitor checked %s destinations; %s failed; %s auto-paused", summary["checked"], summary["failed"], summary["auto_paused"])
+        except Exception as error:
+            logger.error("Application-link monitor failed: %s", error)
+        await asyncio.sleep(interval)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -1660,20 +1810,28 @@ logging.basicConfig(
 
 @app.on_event("startup")
 async def on_startup():
+    global _link_monitor_task
     await seed_cards(db)
     try:
         await db.product_events.drop_index("unique_product_funnel_event")
     except OperationFailure:
         pass
     await db.product_events.create_index(
-        [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1)],
+        [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1), ("experiment_id", 1), ("variant", 1)],
         unique=True,
         name="unique_product_funnel_event",
     )
     await db.product_events.create_index("created_at", name="product_event_created_at")
+    await db.partner_conversions.create_index("external_id", unique=True, name="unique_partner_conversion")
+    await db.partner_conversions.create_index("created_at", name="partner_conversion_created_at")
+    await db.apply_link_checks.create_index([("card_id", 1), ("checked_at", -1)], name="apply_link_check_card_date")
+    if os.environ.get("ENABLE_APPLY_LINK_MONITOR", "true").lower() == "true":
+        _link_monitor_task = asyncio.create_task(_link_monitor_loop())
     logger.info("cardIQ card catalog seeded")
 
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    if _link_monitor_task:
+        _link_monitor_task.cancel()
     client.close()

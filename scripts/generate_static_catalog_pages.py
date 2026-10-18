@@ -11,6 +11,8 @@ from urllib.parse import quote
 from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "backend"))
+from restricted_access import restricted_access
 BUILD = ROOT / "frontend" / "build"
 CATEGORIES = json.loads((ROOT / "frontend" / "src" / "data" / "cardCategories.json").read_text())
 DEFAULT_ORIGIN = json.loads((ROOT / "frontend" / "package.json").read_text())["homepage"]
@@ -77,6 +79,8 @@ def clean_generated_routes():
     shutil.rmtree(BUILD / "compare", ignore_errors=True)
     shutil.rmtree(BUILD / "updates", ignore_errors=True)
     shutil.rmtree(BUILD / "lounges", ignore_errors=True)
+    shutil.rmtree(BUILD / "restricted-cards", ignore_errors=True)
+    shutil.rmtree(BUILD / "guides", ignore_errors=True)
     cards_directory = BUILD / "cards"
     if cards_directory.exists():
         for child in cards_directory.iterdir():
@@ -266,11 +270,36 @@ lounge_description = f"Explore {len(lounge_cards)} Indian credit cards whose sou
 lounge_body = f'<h1>Airport lounge credit cards in India</h1><p>{html.escape(lounge_description)}</p><p class="muted">Access rules can depend on airport, terminal, network, spend thresholds and quarterly limits. Confirm current eligibility in the linked issuer terms before travelling.</p>{card_links(lounge_cards)}'
 write(Path("lounges"), page("Airport lounge credit cards in India | CardIQ", lounge_description, f"{ORIGIN}/lounges/", f"{ORIGIN}/#/cards?category=travel", lounge_body))
 
+restricted_cards = [(card, restricted_access(card)) for card in CARDS if restricted_access(card)]
+restricted_columns = "".join(
+    f'<article class="card"><p><strong>{html.escape(access["accessLabel"])}</strong></p><h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
+    f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(access["accessExplanation"])}</p></article>'
+    for card, access in restricted_cards
+)
+restricted_description = f"Research {len(restricted_cards)} invite-only and restricted-access Indian credit cards, including relationship, customer-segment and partner-channel requirements."
+restricted_body = f'''<h1>Invite-only and restricted credit cards in India</h1><p>{html.escape(restricted_description)}</p>
+<p class="muted">These cards are excluded from CardIQ’s general quiz because access cannot be assumed. An invitation, relationship or listed customer segment does not guarantee approval; the issuing bank decides eligibility.</p><div class="grid">{restricted_columns}</div>'''
+write(Path("restricted-cards"), page("Invite-only and restricted credit cards in India | CardIQ", restricted_description, f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/#/restricted-cards", restricted_body))
+
+guides = [
+    ("new-credit-cards", "New credit cards and benefit changes in India", "Follow sourced Indian credit card launches, fee revisions, reward changes and discontinued benefits without confusing publication dates with launch dates.", f"{ORIGIN}/updates/", "Use CardIQ’s dated change log to verify what changed, when it takes effect and which issuer source supports it."),
+    ("invite-only-credit-cards", "Invite-only credit cards in India", "Understand invitation-only and relationship-restricted Indian credit cards, their access routes and why exclusivity does not guarantee approval.", f"{ORIGIN}/restricted-cards/", "CardIQ separates invitation-only products from partner-channel and profession-restricted cards so customers can research the real access requirement."),
+    ("close-credit-card-india", "How to close a credit card in India", "Find official issuer support and card-closure channels, prepare for outstanding balances and keep written confirmation of closure.", f"{ORIGIN}/#/help/issuers", "Pay or transfer outstanding balances, redeem rewards that may expire, use the issuer’s official closure channel and retain the closure acknowledgement. Never share an OTP, PIN or CVV with a caller."),
+]
+guide_links = []
+for guide_slug, guide_title, guide_description, destination, guidance in guides:
+    canonical = f"{ORIGIN}/guides/{guide_slug}/"
+    guide_body = f'<h1>{html.escape(guide_title)}</h1><p>{html.escape(guide_description)}</p><h2>What to do next</h2><p>{html.escape(guidance)}</p><p class="muted">Issuer terms and official service channels remain authoritative. CardIQ does not provide approval or legal advice.</p>'
+    write(Path("guides") / guide_slug, page(f"{guide_title} | CardIQ", guide_description, canonical, destination, guide_body))
+    guide_links.append(f'<li><a href="{canonical}">{html.escape(guide_title)}</a></li>')
+guides_description = "Practical Indian credit card guides covering new launches, restricted-access cards and safe issuer support or closure routes."
+write(Path("guides"), page("Indian credit card guides | CardIQ", guides_description, f"{ORIGIN}/guides/", f"{ORIGIN}/#/cards", f'<h1>Indian credit card guides</h1><p>{html.escape(guides_description)}</p><ul>{"".join(guide_links)}</ul>'))
+
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
 catalog_body = f'''<h1>Explore Indian credit cards</h1><p>Browse CardIQ’s sourced catalogue by use case or issuer. Each card page brings together fees, rewards, important limitations, source links and a transparent editorial view.</p>
 <p><a class="cta" href="{ORIGIN}/calculator/">Estimate annual card value</a></p>
-<p><a href="{ORIGIN}/compare/">Head-to-head comparisons</a> · <a href="{ORIGIN}/updates/">Catalogue updates</a> · <a href="{ORIGIN}/lounges/">Airport lounge cards</a></p>
+<p><a href="{ORIGIN}/compare/">Head-to-head comparisons</a> · <a href="{ORIGIN}/updates/">Catalogue updates</a> · <a href="{ORIGIN}/lounges/">Airport lounge cards</a> · <a href="{ORIGIN}/restricted-cards/">Restricted-access cards</a> · <a href="{ORIGIN}/guides/">Credit card guides</a></p>
 <h2>Browse by category</h2><ul>{category_links}</ul><h2>Browse by issuer</h2><ul>{issuer_links}</ul><h2>All cards</h2>{card_links(CARDS)}'''
 catalog_description = f"Browse {len(CARDS)} Indian credit cards by category and issuer, with sourced fees, benefits, limitations and editorial guidance."
 write(Path("catalog"), page("Indian credit card catalogue | CardIQ", catalog_description, f"{ORIGIN}/catalog/", f"{ORIGIN}/#/cards", catalog_body))
@@ -290,7 +319,8 @@ calculator_body = '''<h1>Credit card value calculator for India</h1>
 <h2>What can change the result</h2><p>Merchant classification, monthly reward caps, excluded transactions, redemption choices and issuer rule changes can reduce actual value. CardIQ therefore shows an editorial range rather than promising an exact return. The issuing bank’s current terms remain authoritative.</p>'''
 write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))
 
-sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/"]
+sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
+sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug, *_ in guides]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
 sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]
