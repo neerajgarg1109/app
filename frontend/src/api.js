@@ -137,6 +137,11 @@ export async function calculateCardValue(spending) {
   return data;
 }
 
+export async function subscribeCardAlerts(subscription) {
+  const { data } = await http.post("/card-alerts", subscription);
+  return data;
+}
+
 export async function trackApplyClick(cardId, resultId) {
   const { data } = await http.post(`/cards/${encodeURIComponent(cardId)}/apply-click`, { result_id: resultId || null });
   return data;

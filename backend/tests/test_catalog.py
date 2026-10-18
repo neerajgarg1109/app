@@ -416,6 +416,14 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert (await api.post("/api/experience-feedback", json={"rating": 6})).status_code == 422
                 assert (await api.post("/api/experience-feedback", json={"rating": 5, "feedback": "x" * 1501})).status_code == 422
                 assert (await api.post("/api/experience-feedback", json={"rating": 5, "card_id": "missing"})).status_code == 404
+                assert (await api.post("/api/card-alerts", json={"email": "alerts@example.com", "scope_type": "all", "alert_consent": False})).status_code == 422
+                subscribed = await api.post("/api/card-alerts", json={"email": "alerts@example.com", "scope_type": "card", "scope_value": result["scored"][0]["card"]["id"], "alert_consent": True})
+                assert subscribed.status_code == 201
+                subscription = await database.card_alert_subscriptions.find_one({"email": "alerts@example.com"})
+                assert subscription["marketing_consent"] is False and subscription["status"] == "active"
+                unsubscribed = await api.post("/api/card-alerts/unsubscribe", json={"token": subscribed.json()["unsubscribeToken"]})
+                assert unsubscribed.json() == {"status": "unsubscribed"}
+                assert (await api.post("/api/card-alerts/unsubscribe", json={"token": subscribed.json()["unsubscribeToken"]})).status_code == 404
                 top_id = result["scored"][0]["card"]["id"]
                 denied_followup = await api.post(f"/api/cards/{top_id}/review-followup", json={
                     "email": "holder@example.com", "result_id": result["result_id"], "review_consent": False,

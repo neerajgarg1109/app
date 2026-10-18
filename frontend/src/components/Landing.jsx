@@ -16,6 +16,7 @@ const INTENTS = [
   { title: "See recent card updates", text: "Start with the most recently verified cards.", icon: Newspaper, to: "/cards?sort=recent" },
   { title: "Browse by issuer", text: "See every catalogued card from each issuer.", icon: Building2, to: "/cards?browse=issuers" },
   { title: "Issuer help & card closure", text: "Use verified official support and closure channels.", icon: PhoneCall, to: "/help/issuers" },
+  { title: "Track card changes", text: "Get opt-in alerts for a card, issuer or major update.", icon: Newspaper, to: "/alerts" },
 ];
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {

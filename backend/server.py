@@ -319,6 +319,24 @@ class ExperienceFeedbackIn(BaseModel):
     card_id: Optional[str] = None
 
 
+class CardAlertSubscriptionIn(BaseModel):
+    email: EmailStr
+    scope_type: str
+    scope_value: Optional[str] = None
+    alert_consent: bool
+
+    @field_validator("scope_type")
+    @classmethod
+    def validate_scope_type(cls, value: str) -> str:
+        if value not in {"all", "issuer", "card"}:
+            raise ValueError("Unsupported alert scope")
+        return value
+
+
+class CardAlertUnsubscribeIn(BaseModel):
+    token: str = Field(min_length=32, max_length=200)
+
+
 class ProductEventIn(BaseModel):
     event: str
     session_id: str
@@ -690,6 +708,42 @@ async def create_experience_feedback(payload: ExperienceFeedbackIn):
         "created_at": datetime.now(timezone.utc),
     })
     return {"status": "received"}
+
+
+@api_router.post("/card-alerts", status_code=201)
+async def subscribe_card_alerts(payload: CardAlertSubscriptionIn):
+    if not payload.alert_consent:
+        raise HTTPException(status_code=422, detail="Card-alert consent is required")
+    scope_value = (payload.scope_value or "").strip()
+    if payload.scope_type != "all" and not scope_value:
+        raise HTTPException(status_code=422, detail="Choose what you want to follow")
+    if payload.scope_type == "card" and not await db.cards.find_one({"id": scope_value, **CATALOG_QUERY}, {"_id": 1}):
+        raise HTTPException(status_code=404, detail="Card not found")
+    if payload.scope_type == "issuer" and not await db.cards.find_one({"issuer": scope_value, **CATALOG_QUERY}, {"_id": 1}):
+        raise HTTPException(status_code=404, detail="Issuer not found")
+    token = secrets.token_urlsafe(32)
+    now = datetime.now(timezone.utc)
+    email = str(payload.email).lower()
+    await db.card_alert_subscriptions.update_one(
+        {"email": email, "scope_type": payload.scope_type, "scope_value": scope_value or None},
+        {"$set": {"status": "active", "alert_consent": True, "marketing_consent": False,
+                  "updated_at": now, "unsubscribe_token_hash": hashlib.sha256(token.encode()).hexdigest()},
+         "$setOnInsert": {"subscription_id": str(uuid.uuid4()), "email": email,
+                          "scope_type": payload.scope_type, "scope_value": scope_value or None, "created_at": now}},
+        upsert=True,
+    )
+    return {"status": "subscribed", "unsubscribeToken": token}
+
+
+@api_router.post("/card-alerts/unsubscribe")
+async def unsubscribe_card_alerts(payload: CardAlertUnsubscribeIn):
+    result = await db.card_alert_subscriptions.update_one(
+        {"unsubscribe_token_hash": hashlib.sha256(payload.token.encode()).hexdigest(), "status": "active"},
+        {"$set": {"status": "unsubscribed", "unsubscribed_at": datetime.now(timezone.utc)}},
+    )
+    if not result.modified_count:
+        raise HTTPException(status_code=404, detail="Subscription not found or already inactive")
+    return {"status": "unsubscribed"}
 
 
 @api_router.post("/product-events", status_code=202)
