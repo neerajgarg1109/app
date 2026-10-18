@@ -14,7 +14,7 @@ const INTENTS = [
   { title: "Research a card", text: "Search fees, rewards, exclusions and our verdict.", icon: Search, to: "/cards" },
   { title: "Compare with my card", text: "Mark a card you own and compare alternatives.", icon: GitCompare, to: "/cards?mode=compare" },
   { title: "Pick a card from my wallet", text: "See which card best fits a planned purchase.", icon: Calculator, to: "/wallet-optimizer" },
-  { title: "See recent card updates", text: "Start with the most recently verified cards.", icon: Newspaper, to: "/cards?sort=recent" },
+  { title: "See launches & card changes", text: "Follow sourced launches, fee and reward changes.", icon: Newspaper, to: "/updates" },
   { title: "Browse by issuer", text: "See every catalogued card from each issuer.", icon: Building2, to: "/cards?browse=issuers" },
   { title: "Issuer help & card closure", text: "Use verified official support and closure channels.", icon: PhoneCall, to: "/help/issuers" },
   { title: "Track card changes", text: "Get opt-in alerts for a card, issuer or major update.", icon: Newspaper, to: "/alerts" },

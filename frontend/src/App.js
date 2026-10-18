@@ -13,6 +13,7 @@ import IssuerHelp from "./components/IssuerHelp";
 import CardAlerts from "./components/CardAlerts";
 import CardAlertUnsubscribe from "./components/CardAlertUnsubscribe";
 import PurchaseOptimizer from "./components/PurchaseOptimizer";
+import CardUpdates from "./components/CardUpdates";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 import { recordProductEvent } from "./productAnalytics";
@@ -173,6 +174,7 @@ function App() {
           <Route path="/alerts" element={<CardAlerts />} />
           <Route path="/alerts/unsubscribe" element={<CardAlertUnsubscribe />} />
           <Route path="/wallet-optimizer" element={<PurchaseOptimizer />} />
+          <Route path="/updates" element={<CardUpdates />} />
         </Routes>
       </HashRouter>
     </div>

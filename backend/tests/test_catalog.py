@@ -434,14 +434,19 @@ def test_migration_and_api_round_trip(monkeypatch):
                     "card_id": alert_card["id"], "title": "Annual fee terms updated",
                     "summary": "The issuer has published updated annual fee terms for this card.",
                     "source_url": alert_card["sourceUrls"][0], "idempotency_key": "fee-update-test-001",
+                    "change_type": "fee-change", "effective_date": "2026-11-01",
                 })
                 assert alert_send.json()["sent"] == 1 and "#/alerts/unsubscribe?token=" in sent_emails[-1]["html"]
                 duplicate_alert = await api.post("/api/admin/card-alerts/send", headers=publisher_headers, json={
                     "card_id": alert_card["id"], "title": "Annual fee terms updated",
                     "summary": "The issuer has published updated annual fee terms for this card.",
                     "source_url": alert_card["sourceUrls"][0], "idempotency_key": "fee-update-test-001",
+                    "change_type": "fee-change", "effective_date": "2026-11-01",
                 })
                 assert duplicate_alert.json()["status"] == "already_sent"
+                public_updates = await api.get("/api/card-updates")
+                assert public_updates.json()["updates"][0]["change_type"] == "fee-change"
+                assert "sent" not in public_updates.json()["updates"][0]
                 top_id = result["scored"][0]["card"]["id"]
                 denied_followup = await api.post(f"/api/cards/{top_id}/review-followup", json={
                     "email": "holder@example.com", "result_id": result["result_id"], "review_consent": False,

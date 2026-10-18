@@ -48,7 +48,7 @@ export default function Admin() {
   const [versions, setVersions] = useState([]);
   const [adminRole, setAdminRole] = useState("viewer");
   const [reviews, setReviews] = useState([]);
-  const [alertDraft, setAlertDraft] = useState({ card_id: "", title: "", summary: "", source_url: "", idempotency_key: "" });
+  const [alertDraft, setAlertDraft] = useState({ card_id: "", title: "", summary: "", source_url: "", idempotency_key: "", change_type: "benefit-change", effective_date: "" });
   const [alertMsg, setAlertMsg] = useState(null);
   const importInput = useRef(null);
 
@@ -318,6 +318,8 @@ export default function Admin() {
             </button>
           ))}
         </nav>
+
+        {activeSection === "alerts" && <div className="mb-3 grid gap-3 sm:grid-cols-2"><select aria-label="Change type" value={alertDraft.change_type} onChange={(e) => setAlertDraft({ ...alertDraft, change_type: e.target.value })} className="rounded-xl border bg-white px-3 py-2.5"><option value="launch">New launch</option><option value="fee-change">Fee change</option><option value="reward-change">Reward change</option><option value="benefit-change">Benefit change</option><option value="devaluation">Devaluation</option><option value="discontinued">Discontinued</option></select><input aria-label="Effective date" type="date" value={alertDraft.effective_date} onChange={(e) => setAlertDraft({ ...alertDraft, effective_date: e.target.value })} className="rounded-xl border bg-white px-3 py-2.5" /></div>}
 
         {/* date presets */}
         {(activeSection === "overview" || activeSection === "leads") && <div className="flex flex-wrap gap-2">

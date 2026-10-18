@@ -356,12 +356,28 @@ class AdminCardAlertSendIn(BaseModel):
     summary: str = Field(min_length=20, max_length=1000)
     source_url: str
     idempotency_key: str = Field(min_length=8, max_length=120, pattern=r"^[a-zA-Z0-9._-]+$")
+    change_type: str
+    effective_date: Optional[str] = None
 
     @field_validator("source_url")
     @classmethod
     def validate_source_url(cls, value: str) -> str:
         if not value.startswith("https://") or not _host_ok(urlparse(value).hostname or ""):
             raise ValueError("Use a safe HTTPS issuer source")
+        return value
+
+    @field_validator("change_type")
+    @classmethod
+    def validate_change_type(cls, value: str) -> str:
+        if value not in {"launch", "fee-change", "reward-change", "devaluation", "benefit-change", "discontinued"}:
+            raise ValueError("Unsupported card update type")
+        return value
+
+    @field_validator("effective_date")
+    @classmethod
+    def validate_effective_date(cls, value: Optional[str]) -> Optional[str]:
+        if value and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            raise ValueError("Effective date must use YYYY-MM-DD")
         return value
 
 
@@ -811,9 +827,17 @@ async def send_card_change_alert(payload: AdminCardAlertSendIn, x_admin_token: O
             logger.error("Card alert delivery failed for subscription %s: %s", subscription.get("subscription_id"), error)
     await db.card_alert_campaigns.insert_one({"campaign_id": str(uuid.uuid4()), "idempotency_key": payload.idempotency_key,
         "card_id": card["id"], "issuer": card["issuer"], "title": payload.title, "summary": payload.summary,
+        "card_name": card["name"], "change_type": payload.change_type, "effective_date": payload.effective_date,
         "source_url": payload.source_url, "matched": len(subscriptions), "sent": sent, "failed": failed,
         "created_at": datetime.now(timezone.utc)})
     return {"status": "sent", "matched": len(subscriptions), "sent": sent, "failed": failed}
+
+
+@api_router.get("/card-updates")
+async def public_card_updates(limit: int = 50):
+    limit = max(1, min(limit, 100))
+    updates = await db.card_alert_campaigns.find({}, {"_id": 0, "idempotency_key": 0, "matched": 0, "sent": 0, "failed": 0}).sort("created_at", -1).to_list(limit)
+    return {"updates": [_clean(item) for item in updates]}
 
 
 @api_router.post("/product-events", status_code=202)

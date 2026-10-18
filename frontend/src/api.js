@@ -142,6 +142,11 @@ export async function optimizePurchase(payload) {
   return data;
 }
 
+export async function getCardUpdates() {
+  const { data } = await http.get("/card-updates");
+  return data;
+}
+
 export async function subscribeCardAlerts(subscription) {
   const { data } = await http.post("/card-alerts", subscription);
   return data;
