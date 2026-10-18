@@ -1,7 +1,9 @@
 import React from "react";
-import { ArrowRight, BadgeIndianRupee, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeIndianRupee, ExternalLink, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import CreditCardVisual from "./CreditCardVisual";
+import { trackApplyClick } from "../api";
+import { recordProductEvent } from "../productAnalytics";
 
 export default function FeaturedCards({ cards = [], updates = [], placements = null }) {
   const byId = new Map(cards.map((card) => [card.id, card]));
@@ -51,6 +53,10 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
 }
 
 function FeatureSection({ id, eyebrow, title, description, features, updatesLink = false }) {
+  const trackApplication = (card) => {
+    Promise.resolve(trackApplyClick(card.id, null)).catch(() => {});
+    recordProductEvent("apply_clicked");
+  };
   return <section className="ciq-container ciq-container--wide mt-12" aria-labelledby={`${id}-title`}>
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div>
@@ -72,7 +78,10 @@ function FeatureSection({ id, eyebrow, title, description, features, updatesLink
                 <h3 className="font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</h3>
                 <p className="mt-0.5 text-xs font-semibold" style={{ color: "var(--ciq-teal)" }}>{card.issuer}</p>
                 <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{summary}</p>
-                <Link to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press mt-4 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>View card details <ArrowRight className="h-4 w-4" /></Link>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {card.applyUrl && card.active !== false && card.applicationsOpen !== false && <a href={card.applyUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackApplication(card)} className="ciq-press inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>Apply now <ExternalLink className="h-4 w-4" /></a>}
+                  <Link to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>View details <ArrowRight className="h-4 w-4" /></Link>
+                </div>
               </div>
             </div>
             {commercial && <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>Promoted placement. CardIQ may earn a commission if you apply. This placement does not affect recommendations, ratings or editorial conclusions.</p>}

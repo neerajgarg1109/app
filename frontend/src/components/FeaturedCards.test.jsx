@@ -1,14 +1,17 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import FeaturedCards from "./FeaturedCards";
+import { trackApplyClick } from "../api";
 
 jest.mock("react-router-dom", () => ({ Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a> }));
 jest.mock("./CreditCardVisual", () => ({ card }) => <div>{card.name} image</div>);
+jest.mock("../api", () => ({ trackApplyClick: jest.fn(() => Promise.resolve()) }));
+jest.mock("../productAnalytics", () => ({ recordProductEvent: jest.fn() }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 const cards = [
-  { id: "partner", name: "Partner Card", issuer: "Bank A", applicationLinkType: "partner", rewardLine: "Partner rewards" },
-  { id: "launch", name: "Launch Card", issuer: "Bank B", applicationLinkType: "official", rewardLine: "Launch rewards" },
+  { id: "partner", name: "Partner Card", issuer: "Bank A", applicationLinkType: "partner", rewardLine: "Partner rewards", applyUrl: "https://bank.example/partner" },
+  { id: "launch", name: "Launch Card", issuer: "Bank B", applicationLinkType: "official", rewardLine: "Launch rewards", applyUrl: "https://bank.example/launch" },
 ];
 
 test("labels paid placement and new launches without changing rankings", async () => {
@@ -22,6 +25,10 @@ test("labels paid placement and new launches without changing rankings", async (
   expect(container.textContent).toContain("New launch");
   expect(container.textContent).toContain("Promotion never changes match scores");
   expect(Array.from(container.querySelectorAll("a")).map((link) => link.getAttribute("href"))).toEqual(expect.arrayContaining(["/cards/partner", "/cards/launch", "/updates"]));
+  const launchApply = Array.from(container.querySelectorAll("a")).find((link) => link.getAttribute("href") === "https://bank.example/launch");
+  expect(launchApply.textContent).toContain("Apply now");
+  await act(async () => launchApply.click());
+  expect(trackApplyClick).toHaveBeenCalledWith("launch", null);
   await act(async () => root.unmount());
 });
 
