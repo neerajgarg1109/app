@@ -6,8 +6,16 @@ const API = `${BACKEND_URL}/api`;
 const http = axios.create({ baseURL: API });
 
 export async function getCards() {
-  const { data } = await http.get("/cards");
-  return data;
+  try {
+    const { data } = await http.get("/cards", { timeout: 5000 });
+    return data;
+  } catch (apiError) {
+    // GitHub Pages remains useful while Render's free service is waking up.
+    // This file is generated from the same backend catalogue during each build.
+    const fallbackUrl = `${process.env.PUBLIC_URL || ""}/cards-catalog.json`;
+    const { data } = await axios.get(fallbackUrl, { timeout: 10000 });
+    return data;
+  }
 }
 
 export async function getSiteContent() {

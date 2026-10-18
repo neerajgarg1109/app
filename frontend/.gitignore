@@ -10,6 +10,7 @@
 
 # production
 /build
+/public/cards-catalog.json
 
 # misc
 .DS_Store

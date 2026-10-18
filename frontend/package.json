@@ -62,7 +62,10 @@
     "zod": "3.24.4"
   },
   "scripts": {
+    "sync-catalog": "node scripts/syncCatalog.js",
+    "prestart": "yarn sync-catalog",
     "start": "craco start",
+    "prebuild": "yarn sync-catalog",
     "build": "craco build",
     "test": "craco test"
   },
