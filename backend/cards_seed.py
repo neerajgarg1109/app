@@ -6,9 +6,14 @@ cardIQ estimates, not issuer underwriting criteria or approval probabilities.
 
 import json
 import re
+import hashlib
 from pathlib import Path
+from pymongo import UpdateOne
 
 CARDS = json.loads(Path(__file__).with_name("cards_catalog.json").read_text())
+CATALOG_VERSION = hashlib.sha256(
+    json.dumps(CARDS, sort_keys=True, separators=(",", ":")).encode()
+).hexdigest()
 
 # Archive only the demo IDs shipped by this app. Preserve them for historical
 # results, email lookups and admin reports; never remove user-created cards.
@@ -26,11 +31,37 @@ RECOMMENDABLE_QUERY = {
 
 async def seed_cards(db):
     """Refresh issuer facts; archive only known demo records after upserts succeed."""
-    for card in CARDS:
-        existing = await db.cards.find_one({"id": card["id"]}, {"adminManaged": 1})
-        if existing and existing.get("adminManaged"):
-            continue
-        await db.cards.update_one({"id": card["id"]}, {"$set": card}, upsert=True)
+    catalog_ids = [item["id"] for item in CARDS]
+    state = await db.catalog_meta.find_one({"_id": "repository_catalog"}, {"version": 1})
+    if state and state.get("version") == CATALOG_VERSION:
+        present = await db.cards.count_documents({"id": {"$in": catalog_ids}})
+        if present == len(CARDS):
+            await db.cards.update_many(
+                {"id": {"$in": list(DEMO_IDS)}}, {"$set": {"active": False}}
+            )
+            return
+
+    # Render can cold-start while MongoDB is remote. One find plus one unordered
+    # bulk write avoids two network round trips for every catalogue card.
+    managed_ids = {
+        card["id"]
+        async for card in db.cards.find(
+            {"id": {"$in": catalog_ids}, "adminManaged": True},
+            {"id": 1},
+        )
+    }
+    operations = [
+        UpdateOne({"id": card["id"]}, {"$set": card}, upsert=True)
+        for card in CARDS
+        if card["id"] not in managed_ids
+    ]
+    if operations:
+        await db.cards.bulk_write(operations, ordered=False)
+    await db.catalog_meta.update_one(
+        {"_id": "repository_catalog"},
+        {"$set": {"version": CATALOG_VERSION, "cardCount": len(CARDS)}},
+        upsert=True,
+    )
     await db.cards.update_many(
         {"id": {"$in": list(DEMO_IDS)}}, {"$set": {"active": False}}
     )

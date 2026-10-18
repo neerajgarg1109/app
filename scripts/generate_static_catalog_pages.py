@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 from restricted_access import restricted_access
 BUILD = ROOT / "frontend" / "build"
 CATEGORIES = json.loads((ROOT / "frontend" / "src" / "data" / "cardCategories.json").read_text())
+ISSUER_SUPPORT = json.loads((ROOT / "frontend" / "src" / "data" / "issuerSupport.json").read_text())
 DEFAULT_ORIGIN = json.loads((ROOT / "frontend" / "package.json").read_text())["homepage"]
 ORIGIN = os.environ.get("CARDIQ_PUBLIC_ORIGIN", DEFAULT_ORIGIN).rstrip("/")
 
@@ -292,7 +293,62 @@ for guide_slug, guide_title, guide_description, destination, guidance in guides:
     guide_body = f'<h1>{html.escape(guide_title)}</h1><p>{html.escape(guide_description)}</p><h2>What to do next</h2><p>{html.escape(guidance)}</p><p class="muted">Issuer terms and official service channels remain authoritative. CardIQ does not provide approval or legal advice.</p>'
     write(Path("guides") / guide_slug, page(f"{guide_title} | CardIQ", guide_description, canonical, destination, guide_body))
     guide_links.append(f'<li><a href="{canonical}">{html.escape(guide_title)}</a></li>')
-guides_description = "Practical Indian credit card guides covering new launches, restricted-access cards and safe issuer support or closure routes."
+
+# High-intent editorial guides are generated from the same catalogue records as card pages.
+# This keeps fees, card availability and card links synchronized when the catalogue changes.
+category_by_id = {item["id"]: item for item in CATEGORIES}
+editorial_guides = [
+    ("best-cashback-credit-cards-india", "Best cashback credit cards in India", "cashback", "Compare eligible cashback rates, monthly caps, excluded transactions and annual fees—not only the headline percentage."),
+    ("best-lifetime-free-credit-cards-india", "Best lifetime-free credit cards in India", "lifetime-free", "A zero annual fee lowers the cost of keeping a card, but rewards, exclusions and application eligibility still differ."),
+    ("best-travel-credit-cards-india", "Best travel credit cards in India", "travel", "Compare airline and hotel rewards, lounge conditions, foreign-currency costs, redemption choices and annual fees."),
+    ("best-fuel-credit-cards-india", "Best fuel credit cards in India", "fuel", "Compare eligible fuel outlets, reward caps, surcharge-waiver conditions and the spending needed to recover the annual fee."),
+    ("best-rupay-upi-credit-cards-india", "Best RuPay credit cards for UPI in India", "rupay-upi", "Check UPI eligibility, merchant restrictions, reward exclusions, caps and the issuing bank behind each RuPay card."),
+    ("best-first-credit-cards-india", "Best first credit cards in India", "beginner", "Compare straightforward fees, secured alternatives and documented benefits without treating a shortlist as an approval promise."),
+]
+editorial_guide_slugs = []
+for guide_slug, guide_title, category_id, guidance in editorial_guides:
+    definition = category_by_id[category_id]
+    matches = [card for card in CARDS if card.get("active", True) and card.get("applicationsOpen", True) and not restricted_access(card) and category_match(card, definition)]
+    matches.sort(key=lambda card: (-len(card.get("sourceUrls") or []), -len(card.get("highlights") or []), -float(card.get("rating") or 0), card["name"]))
+    shortlist = matches[:12]
+    description = f"CardIQ’s sourced shortlist of {len(shortlist)} {definition['label'].lower()} credit cards in India, with fees, benefits and important trade-offs to verify."
+    canonical = f"{ORIGIN}/guides/{guide_slug}/"
+    destination = f"{ORIGIN}/#/cards?category={category_id}"
+    body = f'''<h1>{html.escape(guide_title)}</h1><p>{html.escape(description)}</p>
+<h2>How to choose</h2><p>{html.escape(guidance)}</p>
+<p class="muted">This is an editorial shortlist, not a personalised recommendation or approval ranking. Eligible cards are ordered by the completeness of their maintained sources and decision-critical details—not from best to worst. No issuer can pay to improve its position.</p>
+{card_links(shortlist)}<h2>Check before applying</h2><ul><li>Confirm the current fee, waiver threshold and applicable GST.</li><li>Check reward caps, excluded transactions and redemption value.</li><li>Open the card page to review dated issuer sources and CardIQ’s trade-offs.</li></ul>'''
+    schema = {"@context": "https://schema.org", "@graph": [
+        {"@type": "Article", "headline": guide_title, "description": description, "url": canonical, "inLanguage": "en-IN"},
+        {"@type": "ItemList", "name": guide_title, "itemListElement": [
+            {"@type": "ListItem", "position": index, "url": f'{ORIGIN}/cards/{card["id"]}/', "name": card["name"]}
+            for index, card in enumerate(shortlist, 1)
+        ]},
+    ]}
+    write(Path("guides") / guide_slug, page(f"{guide_title} | CardIQ", description, canonical, destination, body, structured_data=schema))
+    guide_links.append(f'<li><a href="{canonical}">{html.escape(guide_title)}</a></li>')
+    editorial_guide_slugs.append(guide_slug)
+
+# Only publish issuer-specific closure pages where an official channel has been reviewed.
+closure_guide_slugs = []
+for support in ISSUER_SUPPORT:
+    issuer = support["issuer"]
+    product_name = issuer if issuer.lower().endswith("card") else f"{issuer} credit card"
+    guide_slug = f'close-{slug(issuer)}-credit-card'
+    canonical = f"{ORIGIN}/guides/{guide_slug}/"
+    description = f"How to close {product_name} using official support and closure guidance checked by CardIQ on {support['checkedOn']}."
+    phone = f'<li><strong>Customer care:</strong> <a href="tel:{html.escape(support["phone"].replace(" ", ""), quote=True)}">{html.escape(support["phone"])}</a></li>' if support.get("phone") else ""
+    email = f'<li><strong>Email:</strong> <a href="mailto:{html.escape(support["email"], quote=True)}">{html.escape(support["email"])}</a></li>' if support.get("email") else ""
+    closure = f'<li><a href="{html.escape(support["closureUrl"], quote=True)}">Official {html.escape(issuer)} closure guidance</a></li>' if support.get("closureUrl") else ""
+    body = f'''<h1>How to close {html.escape(product_name)}</h1><p>{html.escape(description)}</p>
+<h2>Before requesting closure</h2><ul><li>Clear outstanding balances, pending EMIs and unbilled transactions.</li><li>Redeem eligible rewards that may expire and move recurring payments.</li><li>Download recent statements and retain the written closure acknowledgement.</li></ul>
+<h2>Official {html.escape(issuer)} channels</h2><ul>{phone}{email}<li><a href="{html.escape(support['supportUrl'], quote=True)}">Official customer support</a></li>{closure}</ul>
+<p class="muted">Blocking a card is not the same as closing the credit account. Never share your PIN, CVV or OTP. Contact details were checked {html.escape(support['checkedOn'])}; verify them on the linked issuer page.</p>'''
+    write(Path("guides") / guide_slug, page(f"How to close {product_name} | CardIQ", description, canonical, f"{ORIGIN}/#/help/issuers", body))
+    guide_links.append(f'<li><a href="{canonical}">How to close {html.escape(product_name)}</a></li>')
+    closure_guide_slugs.append(guide_slug)
+
+guides_description = "Practical Indian credit card guides covering high-value card categories, new launches, comparisons, restricted access and verified issuer closure routes."
 write(Path("guides"), page("Indian credit card guides | CardIQ", guides_description, f"{ORIGIN}/guides/", f"{ORIGIN}/#/cards", f'<h1>Indian credit card guides</h1><p>{html.escape(guides_description)}</p><ul>{"".join(guide_links)}</ul>'))
 
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
@@ -321,6 +377,7 @@ write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "
 
 sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
 sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug, *_ in guides]
+sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug in editorial_guide_slugs + closure_guide_slugs]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
 sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]

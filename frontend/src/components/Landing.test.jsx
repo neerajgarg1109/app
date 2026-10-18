@@ -26,6 +26,12 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.textContent).toContain("More than a card quiz");
   expect(container.textContent).toContain("Compare with my card");
   expect(container.textContent).toContain("Calculate my annual value");
+  expect(container.textContent).toContain("Read credit card guides");
+  const guides = Array.from(container.querySelectorAll("a")).find((link) => link.textContent.includes("credit card guides"));
+  expect(guides.getAttribute("href")).toContain("/guides/");
+  expect(container.querySelector("header").className).toContain("ciq-container--wide");
+  expect(container.querySelector("h1").className).toContain("lg:text-6xl");
+  expect(container.querySelector(".lg\\:grid-cols-3")).not.toBeNull();
   const methodology = Array.from(container.querySelectorAll("a")).find((link) => link.textContent.includes("methodology"));
   expect(methodology.getAttribute("href")).toContain("/methodology/");
   await act(async () => root.unmount());

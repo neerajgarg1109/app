@@ -16,7 +16,11 @@ export async function getRestrictedCards() {
 }
 
 export async function submitQuiz(answers, lead) {
-  const { data } = await http.post("/quiz/submit", lead ? { answers, lead } : { answers });
+  const { data } = await http.post(
+    "/quiz/submit",
+    lead ? { answers, lead } : { answers },
+    { timeout: 9000 },
+  );
   return data; // { result_id, scored }
 }
 

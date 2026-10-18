@@ -103,4 +103,6 @@ The first eight post-review priorities are implemented:
 7. Crawlable acquisition coverage includes cards, issuers, categories, comparisons, updates, lounges, restricted products and guides for launches, invite-only cards and safe closure journeys.
 8. A stable anonymous CTA experiment records only allow-listed experiment and variant identifiers, with issuer-handoff rate reported by variant in Admin.
 
+The acquisition layer also publishes catalogue-driven editorial guides for cashback, lifetime-free, travel, fuel, RuPay UPI and first-card searches; maintained head-to-head comparisons; launch and restricted-card guidance; and issuer-specific closure pages only where CardIQ has a reviewed official support channel. Guide facts and card links are regenerated from the same catalogue used by the application.
+
 Operational configuration: `ENABLE_APPLY_LINK_MONITOR=true` enables the monitor (the default) and `APPLY_LINK_MONITOR_HOURS` controls its interval. Production partner reports may be uploaded in Admin as JSON or CSV with `external_id`, `status`, `commission`, and at least one of `card_id`, `campaign_id` or `tracking_id`.

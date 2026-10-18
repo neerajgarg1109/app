@@ -46,11 +46,11 @@ export default function ValueCalculator() {
   };
 
   return <div className="ciq-shell min-h-screen pb-16">
-    <header className="ciq-container flex items-center justify-between py-5">
+    <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
       <Logo size="md" />
       <Link to="/" className="ciq-press inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}><ArrowLeft className="h-4 w-4" /> Home</Link>
     </header>
-    <main className="ciq-container">
+    <main className="ciq-container ciq-container--reading">
       <section className="pt-4 text-center">
         <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl text-white" style={{ background: "linear-gradient(145deg,#604ee8,#0e9e98)" }}><Calculator className="h-6 w-6" /></span>
         <div className="mt-4 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>No sign-up required</div>
@@ -61,7 +61,7 @@ export default function ValueCalculator() {
       <form onSubmit={submit} className="mt-7 rounded-3xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>
         <h2 className="font-display text-lg font-extrabold">Your monthly spending</h2>
         <p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Use approximate amounts. Do not enter card numbers, account details or transaction data.</p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {SPEND_FIELDS.map(([key, label]) => <label key={key} className="text-xs font-semibold">{label}<span className="mt-1 flex items-center rounded-xl border bg-white px-3" style={{ borderColor: "var(--ciq-line)" }}><span style={{ color: "var(--ciq-ink-soft)" }}>₹</span><input aria-label={label} min="0" max="2000000" inputMode="numeric" type="number" value={form[key]} onChange={(event) => set(key, event.target.value)} placeholder="0" className="w-full bg-transparent px-2 py-2.5 text-sm outline-none" /></span></label>)}
           <label className="text-xs font-semibold">Airport lounge visits per year<input aria-label="Airport lounge visits per year" min="0" max="100" type="number" value={form.lounge_visits} onChange={(event) => set("lounge_visits", event.target.value)} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 text-sm outline-none" style={{ borderColor: "var(--ciq-line)" }} /></label>
           <label className="text-xs font-semibold">Annual-fee preference<select aria-label="Annual-fee preference" value={form.fee_preference} onChange={(event) => set("fee_preference", event.target.value)} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 text-sm outline-none" style={{ borderColor: "var(--ciq-line)" }}><option value="free">Lifetime-free only preferred</option><option value="worth">Pay a fee when value justifies it</option><option value="premium">Premium benefits are welcome</option></select></label>
@@ -73,7 +73,7 @@ export default function ValueCalculator() {
       {result && <section id="value-results" className="mt-8">
         <div className="rounded-2xl border p-4" style={{ borderColor: "#b9e4da", background: "#f2faf7" }}><div className="flex items-center gap-2 font-display font-extrabold"><ShieldCheck className="h-5 w-5" style={{ color: "var(--ciq-teal)" }} /> Your scenario</div><p className="mt-1 text-sm">₹{result.monthlySpend.toLocaleString("en-IN")} a month · ₹{result.annualSpend.toLocaleString("en-IN")} a year</p><p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>These are editorial ranges, not guaranteed returns. CardIQ uses your spending, catalogue categories, published fees and explicitly priced benefits. Actual rewards depend on merchant classification, caps, exclusions and redemption choices.</p></div>
         <h2 className="mt-6 font-display text-xl font-extrabold">Strongest value matches</h2>
-        <div className="mt-3 space-y-3">{result.results.slice(0, 5).map((item, index) => <article key={item.card.id} className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+        <div className="mt-3 grid gap-3 lg:grid-cols-2">{result.results.slice(0, 5).map((item, index) => <article key={item.card.id} className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
           <div className="flex items-start justify-between gap-3"><div><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>#{index + 1} value match</div><h3 className="mt-1 font-display text-base font-extrabold">{item.card.name}</h3><p className="text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{item.card.issuer}</p></div><div className="text-right"><div className="font-display text-base font-extrabold" style={{ color: "var(--ciq-teal)" }}>₹{item.valueEstimate.netLow.toLocaleString("en-IN")}–₹{item.valueEstimate.netHigh.toLocaleString("en-IN")}</div><div className="text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>estimated yearly net value</div></div></div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs"><ValueFact label="Rewards range" value={`₹${item.valueEstimate.grossLow.toLocaleString("en-IN")}–₹${item.valueEstimate.grossHigh.toLocaleString("en-IN")}`} /><ValueFact label="Annual fee used" value={item.valueEstimate.feeWaived ? "Waived" : `₹${item.valueEstimate.effectiveAnnualFee.toLocaleString("en-IN")}`} /></div>
           <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{item.card.rewardLine}</p>

@@ -26,8 +26,8 @@ export default function RestrictedCards() {
   }), [cards, filter, query]);
 
   return <div className="ciq-shell min-h-screen pb-20">
-    <header className="ciq-container flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="flex items-center gap-1 text-sm font-semibold" style={{ color: "var(--ciq-teal)" }}><ArrowLeft className="h-4 w-4" /> Home</Link></header>
-    <main className="ciq-container">
+    <header className="ciq-container ciq-container--wide flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="flex items-center gap-1 text-sm font-semibold" style={{ color: "var(--ciq-teal)" }}><ArrowLeft className="h-4 w-4" /> Home</Link></header>
+    <main className="ciq-container ciq-container--wide">
       <section className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(145deg,#33268f,#604ee8 60%,#0e9e98 130%)" }}>
         <LockKeyhole className="h-8 w-8" /><h1 className="mt-4 font-display text-3xl font-extrabold">Invite-only and restricted credit cards in India</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85">Research cards that require an issuer invitation, an existing banking relationship, membership of a defined customer segment, or a partner channel. These cards are excluded from the CardIQ quiz because we cannot verify that you can access them.</p>
@@ -37,7 +37,7 @@ export default function RestrictedCards() {
       <div className="mt-4 flex gap-2 overflow-x-auto pb-2">{FILTERS.map(([value, label]) => <button key={value} type="button" onClick={() => setFilter(value)} className="whitespace-nowrap rounded-full border px-3 py-2 text-xs font-semibold" style={{ borderColor: filter === value ? "var(--ciq-teal)" : "var(--ciq-line)", background: filter === value ? "#e4faf6" : "white", color: "var(--ciq-ink)" }}>{label}</button>)}</div>
       {error && <p role="alert" className="mt-6 text-sm text-red-700">{error}</p>}
       <p className="mt-4 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{visible.length} card{visible.length === 1 ? "" : "s"} shown</p>
-      <div className="mt-3 grid gap-4 md:grid-cols-2">{visible.map((card) => <article key={card.id} className="rounded-2xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>
+      <div className="mt-3 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visible.map((card) => <article key={card.id} className="rounded-2xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>
         <div className="text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>{card.accessLabel}</div>
         <h2 className="mt-2 font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</h2><p className="text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</p>
         <p className="mt-4 text-sm font-semibold" style={{ color: "var(--ciq-ink)" }}>{card.rewardLine}</p><p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{card.accessExplanation}</p>

@@ -68,6 +68,8 @@ describe("CardExplorer", () => {
     await act(async () => root.render(<CardExplorer />));
     await act(async () => Promise.resolve());
     expect(container.textContent).toContain("2 cards found");
+    expect(container.querySelector("main").className).toContain("ciq-container--wide");
+    expect(container.querySelector(".xl\\:grid-cols-3")).not.toBeNull();
     const search = container.querySelector('input[aria-label="Search cards"]');
     await act(async () => changeInput(search, "lounge"));
     expect(container.textContent).toContain("1 card found");

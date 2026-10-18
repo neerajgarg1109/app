@@ -304,7 +304,7 @@ export default function Admin() {
 
   return (
     <div className="ciq-shell min-h-screen pb-16">
-      <header className="ciq-container flex items-center justify-between py-5" style={{ maxWidth: 1000 }}>
+      <header className="ciq-container ciq-container--admin flex items-center justify-between py-5">
         <Logo size="md" />
         <div className="flex items-center gap-2">
           <button onClick={() => load(token)} className="ciq-press flex items-center gap-1.5 rounded-full border bg-white px-3 py-1.5 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
@@ -313,7 +313,7 @@ export default function Admin() {
         </div>
       </header>
 
-      <div className="ciq-container" style={{ maxWidth: 1000 }}>
+      <div className="ciq-container ciq-container--admin">
         <div className="mb-3 flex justify-end"><span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide" style={{ background: "#eef0ec", color: "var(--ciq-ink-soft)" }}>{adminRole} access</span></div>
         <nav className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border bg-white p-1.5 sm:grid-cols-7" style={{ borderColor: "var(--ciq-line)" }} aria-label="Admin sections">
           {[

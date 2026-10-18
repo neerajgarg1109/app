@@ -99,7 +99,7 @@ function QuizApp() {
     try {
       const [data] = await Promise.all([
         submitQuiz(ans),
-        new Promise((resolve) => setTimeout(resolve, 1600)),
+        new Promise((resolve) => setTimeout(resolve, 450)),
       ]);
       if (!data?.scored?.length) {
         throw new Error("The matching service returned no recommendations.");

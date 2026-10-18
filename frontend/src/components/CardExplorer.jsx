@@ -85,12 +85,12 @@ export default function CardExplorer() {
 
   return (
     <div className="ciq-shell min-h-screen pb-32">
-      <header className="ciq-container flex items-center justify-between py-5">
+      <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
         <Logo size="md" />
         <Link to="/" className="ciq-press inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}><ArrowLeft className="h-4 w-4" /> Home</Link>
       </header>
 
-      <main className="ciq-container">
+      <main className="ciq-container ciq-container--wide">
         <section className="pt-4 text-center">
           <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Explore without the quiz</div>
           <h1 className="mt-2 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Find any credit card</h1>
@@ -121,7 +121,7 @@ export default function CardExplorer() {
           </section>
           <details className="mt-4 rounded-2xl border bg-white p-3" style={{ borderColor: "var(--ciq-line)" }}>
             <summary className="cursor-pointer text-sm font-bold">Browse {issuers.length} issuers</summary>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
               <button type="button" onClick={() => setIssuer("all")} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === "all" ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>All issuers <span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{cards.length} cards</span></button>
               {issuers.map((name) => { const count = cards.filter((card) => card.issuer === name).length; return <button type="button" key={name} onClick={() => setIssuer(name)} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === name ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>{name}<span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{count} card{count === 1 ? "" : "s"}</span></button>; })}
             </div>
@@ -129,7 +129,7 @@ export default function CardExplorer() {
           <details className="mt-3 rounded-2xl border bg-white p-3" style={{ borderColor: "var(--ciq-line)" }}>
             <summary className="cursor-pointer text-sm font-bold">Explore {availableCategories.length} useful card categories</summary>
             <p className="mt-2 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Only categories with at least three matching cards are published.</p>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
               {availableCategories.map((item) => <button type="button" key={item.id} onClick={() => setCategory(item.id)} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: category === item.id ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>{item.label}<span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{item.count} cards</span></button>)}
             </div>
           </details>
@@ -139,7 +139,7 @@ export default function CardExplorer() {
         {error && <div className="mt-8 rounded-2xl border bg-white p-5 text-center text-sm" style={{ borderColor: "var(--ciq-line)" }}>We couldn’t load the catalogue. Please try again.</div>}
         {!loading && !error && <>
           <div className="mt-4 flex items-center justify-between text-xs" style={{ color: "var(--ciq-ink-soft)" }}><span>{filtered.length} card{filtered.length === 1 ? "" : "s"} found</span><span>Details checked by CardIQ</span></div>
-          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.slice(0, visible).map((card) => {
               const comparing = compareIds.includes(card.id);
               const compareFull = compareIds.length >= 3 && !comparing;
@@ -165,7 +165,7 @@ export default function CardExplorer() {
 
       {cardId && !loading && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 sm:items-center sm:p-5" role="dialog" aria-modal="true" aria-label="Card details">
-          <div className="max-h-[94vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-white p-5 sm:rounded-3xl">
+          <div className="max-h-[94vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl bg-white p-5 sm:rounded-3xl lg:p-7">
             <div className="sticky top-0 z-10 -mx-1 mb-4 flex items-start justify-between bg-white px-1 pb-2">
               <div><div className="font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{selected?.name || "Card not found"}</div>{selected && <div className="mt-0.5 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{selected.issuer}</div>}</div>
               <Link to="/cards" className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }} aria-label="Close card details"><X className="h-4 w-4" /></Link>

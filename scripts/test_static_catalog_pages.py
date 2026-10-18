@@ -2,14 +2,19 @@
 """Regression checks for CardIQ's generated, indexable catalogue pages."""
 import json
 import os
+import re
+import sys
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "backend"))
+from restricted_access import restricted_access
 BUILD = ROOT / "frontend" / "build"
 MANIFEST = json.loads((BUILD / "catalog-manifest.json").read_text())
 CARD_IDS = MANIFEST["card_ids"]
+CARDS_BY_ID = {card["id"]: card for card in json.loads((ROOT / "backend" / "cards_catalog.json").read_text())}
 ORIGIN = os.environ.get("CARDIQ_PUBLIC_ORIGIN", MANIFEST["origin"]).rstrip("/")
 
 
@@ -93,8 +98,18 @@ class StaticCatalogTests(unittest.TestCase):
         sitemap = (BUILD / "sitemap.xml").read_text()
         for doc in self.documents.values():
             self.assertIn(f"<loc>{doc.meta['canonical']}</loc>", sitemap)
+        locations = re.findall(r"<loc>([^<]+)</loc>", sitemap)
+        self.assertEqual(len(locations), len(set(locations)))
         robots = (BUILD / "robots.txt").read_text()
         self.assertIn(f"Sitemap: {ORIGIN}/sitemap.xml", robots)
+
+    def test_generated_internal_links_resolve_to_generated_pages(self):
+        generated = {document.meta["canonical"] for document in self.documents.values()}
+        generated.add(f"{ORIGIN}/")
+        for path, document in self.documents.items():
+            for link in document.links:
+                if link.startswith(f"{ORIGIN}/") and "#" not in link:
+                    self.assertIn(link, generated, f"Broken generated link in {path}: {link}")
 
     def test_methodology_discloses_sources_automation_and_revenue(self):
         source = (BUILD / "methodology" / "index.html").read_text().lower()
@@ -140,10 +155,47 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_guides_cover_high_intent_discovery_journeys(self):
         pages = list((BUILD / "guides").glob("*/index.html"))
-        self.assertEqual({path.parent.name for path in pages}, {"new-credit-cards", "invite-only-credit-cards", "close-credit-card-india"})
+        slugs = {path.parent.name for path in pages}
+        expected = {
+            "new-credit-cards", "invite-only-credit-cards", "close-credit-card-india",
+            "best-cashback-credit-cards-india", "best-lifetime-free-credit-cards-india",
+            "best-travel-credit-cards-india", "best-fuel-credit-cards-india",
+            "best-rupay-upi-credit-cards-india", "best-first-credit-cards-india",
+        }
+        self.assertTrue(expected.issubset(slugs))
         combined = " ".join(path.read_text().lower() for path in pages)
         for phrase in ("launch", "invitation-only", "close a credit card", "official closure channel"):
             self.assertIn(phrase, combined)
+
+    def test_best_card_guides_are_sourced_substantial_and_not_paid_rankings(self):
+        pages = list((BUILD / "guides").glob("best-*/index.html"))
+        self.assertGreaterEqual(len(pages), 6)
+        for path in pages:
+            source = path.read_text()
+            document = self.documents[path]
+            card_links = {link for link in document.links if f"{ORIGIN}/cards/" in link}
+            self.assertGreaterEqual(len(card_links), 3, path)
+            for link in card_links:
+                card_id = link.split("/cards/", 1)[1].strip("/")
+                card = CARDS_BY_ID[card_id]
+                self.assertTrue(card.get("active", True), card_id)
+                self.assertTrue(card.get("applicationsOpen", True), card_id)
+                self.assertIsNone(restricted_access(card), card_id)
+            self.assertIn("How to choose", source)
+            self.assertIn("Check before applying", source)
+            self.assertIn("not from best to worst", source)
+            self.assertIn("No issuer can pay to improve its position", source)
+            self.assertIn('"@type": "ItemList"', source)
+
+    def test_verified_issuers_have_specific_credit_card_closure_guides(self):
+        support = json.loads((ROOT / "frontend" / "src" / "data" / "issuerSupport.json").read_text())
+        for issuer in support:
+            slug = "close-" + "-".join(part for part in "".join(char.lower() if char.isalnum() else " " for char in issuer["issuer"]).split()) + "-credit-card"
+            source = (BUILD / "guides" / slug / "index.html").read_text().lower()
+            self.assertIn("before requesting closure", source)
+            self.assertIn("official customer support", source)
+            self.assertIn(issuer["supportUrl"].lower(), source)
+            self.assertIn("blocking a card is not the same as closing", source)
 
     def test_every_public_page_has_social_sharing_for_its_canonical_url(self):
         for path, document in self.documents.items():
