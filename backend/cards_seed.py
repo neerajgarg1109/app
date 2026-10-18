@@ -106,6 +106,38 @@ def _advertised_lounge_visits(card):
     return max(counts, default=0)
 
 
+def card_economics_profile(card):
+    """Describe which economics inputs are sourced instead of implying false precision."""
+    waiver = _fee_waiver_threshold(card)
+    lounge_visits = _advertised_lounge_visits(card)
+    first_year = _explicit_first_year_benefits(card)
+    fields = {
+        "annualFee": card.get("annualFeeAmount") is not None,
+        "joiningFee": card.get("joiningFeeAmount") is not None,
+        "feeWaiver": waiver is not None or (card.get("annualFeeAmount") or 0) == 0,
+        "rewardSummary": bool(card.get("rewardLine")),
+        "rewardRedemption": bool(card.get("rewardRedemption")),
+        "welcomeBenefits": bool(card.get("welcomeBenefits")) or bool(first_year),
+        "milestoneBenefits": bool(card.get("milestoneBenefits")),
+        "loungeBenefits": bool(card.get("loungeBenefits")) or lounge_visits > 0,
+        "exclusions": bool(card.get("exclusions")) or any("exclu" in line.lower() for line in card.get("highlights", [])),
+        "forexMarkup": bool(card.get("forexMarkup")) or any("forex" in line.lower() or "foreign" in line.lower() for line in card.get("highlights", [])),
+        "fuelBenefits": bool(card.get("fuelBenefits")) or any("fuel" in line.lower() for line in card.get("highlights", [])),
+    }
+    known = [key for key, value in fields.items() if value]
+    missing = [key for key, value in fields.items() if not value]
+    coverage = round(len(known) / len(fields) * 100)
+    return {
+        "coverage": coverage,
+        "quality": "high" if coverage >= 80 else "medium" if coverage >= 55 else "limited",
+        "knownFields": known,
+        "unstructuredFields": missing,
+        "feeWaiverThreshold": waiver,
+        "advertisedLoungeVisits": lounge_visits,
+        "explicitFirstYearBenefits": first_year,
+    }
+
+
 def recommend_cards(answers, cards, *, include_unavailable=False):
     goal = answers.get("goal")
     usage = answers.get("usage")
@@ -195,6 +227,7 @@ def recommend_cards(answers, cards, *, include_unavailable=False):
     scored.sort(key=lambda x: x["score"], reverse=True)
     # Confidence: map absolute score to a friendly 0-100 (perfect match ~ 130 pts)
     for s in scored:
+        economics = card_economics_profile(s["card"])
         s["confidence"] = max(35, min(99, round(s["score"] / 130 * 100)))
         monthly_spend = _number(answers.get("monthlySpend"), _MONTHLY_SPEND.get(spend, 35000))
         annual_spend = round(monthly_spend * 12)
@@ -247,7 +280,10 @@ def recommend_cards(answers, cards, *, include_unavailable=False):
             "availableLoungeVisits": advertised_lounge_visits,
             "availableLoungeValue": available_lounge_value,
             "headlinePotential": potential,
+            "economicsCoverage": economics["coverage"],
+            "economicsQuality": economics["quality"],
+            "unstructuredEconomicsFields": economics["unstructuredFields"],
             "isPersonalized": bool(answers.get("monthlySpend")),
-            "methodology": "Editorial scenario using your spending, published fees and only explicitly priced gifts or vouchers. Lounge value uses ₹700 per visit. Actual rewards depend on eligible categories, caps, exclusions and redemption choices.",
+            "methodology": f'Editorial scenario using your spending and {economics["coverage"]}% structured economics coverage for this card. Published fees and only explicitly priced gifts or vouchers are counted. Lounge value uses ₹700 per visit. Actual rewards depend on eligible categories, caps, exclusions and redemption choices.',
         }
     return scored

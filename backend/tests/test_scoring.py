@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import pytest
 
-from cards_seed import CARDS, recommend_cards
+from cards_seed import CARDS, recommend_cards, card_economics_profile
 
 
 BASE = {
@@ -54,6 +54,17 @@ def test_value_estimates_are_internally_consistent(profile):
         assert value["annualSpendAssumption"] >= 0
         assert value["effectiveAnnualFee"] in {0, value["annualFee"]}
         assert value["headlinePotential"] >= value["grossHigh"]
+        assert value["economicsQuality"] in {"limited", "medium", "high"}
+        assert 0 <= value["economicsCoverage"] <= 100
+
+
+def test_economics_profile_never_invents_missing_structured_terms():
+    card = {"annualFeeAmount": 0, "joiningFeeAmount": 0, "rewardLine": "Simple rewards", "highlights": []}
+    profile = card_economics_profile(card)
+    assert profile["feeWaiverThreshold"] is None
+    assert profile["advertisedLoungeVisits"] == 0
+    assert profile["explicitFirstYearBenefits"] == []
+    assert "rewardRedemption" in profile["unstructuredFields"]
 
 
 def test_personalised_spend_inputs_drive_the_value_model():

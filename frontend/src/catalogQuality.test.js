@@ -21,3 +21,11 @@ test("accepts a complete internally consistent card", () => {
     verifiedOn: "2026-10-01", imageUrl: "/card.png" };
   expect(catalogQualityIssues([card], new Date("2026-10-17"))).toEqual([]);
 });
+
+test("surfaces limited economics coverage for editorial follow-up", () => {
+  const card = { id: "thin", name: "Thin Card", annualFee: "No annual fee", annualFeeAmount: 0,
+    joiningFee: "No joining fee", joiningFeeAmount: 0, highlights: ["A benefit"],
+    sourceUrls: ["https://issuer.example/card"], applyUrl: "https://issuer.example/card",
+    verifiedOn: "2026-10-01", imageUrl: "/card.png", economicsProfile: { quality: "limited", coverage: 36 } };
+  expect(catalogQualityIssues([card], new Date("2026-10-17")).map((item) => item.issue)).toContain("Limited economics coverage (36%)");
+});

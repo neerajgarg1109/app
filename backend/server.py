@@ -20,7 +20,7 @@ import hashlib
 import unicodedata
 from datetime import datetime, timezone, timedelta
 
-from cards_seed import seed_cards, recommend_cards, CATALOG_QUERY, RECOMMENDABLE_QUERY
+from cards_seed import seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -502,6 +502,7 @@ def _card_for_client(card: dict) -> dict:
     else:
         public["applicationLinkType"] = "official"
     public["affiliateDisclosureRequired"] = public["applicationLinkType"] == "partner"
+    public["economicsProfile"] = card_economics_profile(public)
     for key in ("applyPartner", "applyCampaignId", "applyTrackingId", "expectedPayout", "applyLinkUpdatedAt"):
         public.pop(key, None)
     return public
@@ -639,6 +640,7 @@ def _admin_card(card: dict) -> dict:
         "publication_status": "draft" if draft else stored.get("publicationStatus", "published"),
         "is_new_draft": bool(draft and stored.get("publicationStatus") == "draft"),
         "draft": draft,
+        "economicsProfile": card_economics_profile(public),
     })
     return public
 

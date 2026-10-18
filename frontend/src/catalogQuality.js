@@ -8,6 +8,7 @@ export function catalogQualityIssues(cards, now = new Date()) {
     if (!card.applyUrl && !card.official_apply_url) issues.push("Missing official apply link");
     if (!(card.highlights || []).length) issues.push("No benefit highlights");
     if (!(card.sourceUrls || []).length) issues.push("No issuer sources");
+    if (card.economicsProfile?.quality === "limited") issues.push(`Limited economics coverage (${card.economicsProfile.coverage}%)`);
     if (card.verifiedOn && now.getTime() - new Date(card.verifiedOn).getTime() > 180 * 86400000) issues.push("Details need re-verification");
     if (!card.verifiedOn) issues.push("Missing verification date");
     if (normalizedNames.indexOf(normalizedNames[index]) !== index) issues.push("Possible duplicate product");

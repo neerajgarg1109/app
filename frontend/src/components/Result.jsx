@@ -291,6 +291,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
                 </div>
                 {best.valueEstimate.netHigh < 1500 && best.valueEstimate.annualFee > 0 && <div className="mt-3 rounded-xl px-3 py-2 text-xs" style={{ background: "#fff8e8", color: "#7a5b00" }}>At this spending level, the measurable value may not justify the fee. Consider the lifetime-free refinement below.</div>}
                 <div className="mt-3 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Annual card spend used: {formatRupees(best.valueEstimate.annualSpendAssumption)}. {best.valueEstimate.methodology}</div>
+                <div className="mt-2 text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>{best.valueEstimate.economicsQuality || "limited"} economics confidence · {best.valueEstimate.economicsCoverage ?? 0}% structured</div>
               </div>
             </details>
           </div>
