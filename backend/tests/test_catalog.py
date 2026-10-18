@@ -19,6 +19,13 @@ from cards_seed import CARDS, CATALOG_QUERY, DEMO_IDS, RECOMMENDABLE_QUERY, reco
 from restricted_access import restricted_access
 
 
+def database_client_for_tests(mongo_url):
+    if os.environ.get("CARDIQ_TEST_IN_MEMORY", "false").lower() in {"1", "true", "yes"}:
+        from mongomock_motor import AsyncMongoMockClient
+        return AsyncMongoMockClient(), True
+    return AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=5000), False
+
+
 def test_every_restricted_catalog_card_has_one_shared_access_classification():
     restricted = [card for card in CARDS if card.get("recommendationEligible") is False]
     assert restricted
@@ -36,6 +43,26 @@ def available_cards():
 def profile(**overrides):
     return dict(goal="travel", usage="flights", priority="lounge", fee="premium",
                 spend="high", creditRoute="regular", **overrides)
+
+
+def test_site_content_upgrade_replaces_legacy_match_copy_without_losing_links():
+    server = importlib.import_module("server")
+    legacy = {
+        "footer_groups": [{
+            "title": "Tools",
+            "links": [
+                {"label": "Find my card match", "url": "/"},
+                {"label": "Annual value calculator", "url": "/calculator"},
+            ],
+        }],
+        "featured_cards": [],
+    }
+    upgraded = server._upgrade_site_content(legacy)
+    assert upgraded["schema_version"] == server.SITE_CONTENT_VERSION
+    assert upgraded["footer_groups"][0]["links"] == [
+        {"label": "Find my best card", "url": "/"},
+        {"label": "Annual value calculator", "url": "/calculator"},
+    ]
 
 
 def test_public_card_uses_only_live_partner_links_and_hides_campaign_metadata():
@@ -233,8 +260,9 @@ def test_secured_options_and_free_fee_profiles():
 def test_migration_and_api_round_trip(monkeypatch):
     async def run():
         mongo_url = os.environ.get("CARDIQ_TEST_MONGO_URL", "mongodb://127.0.0.1:27017")
-        client = AsyncIOMotorClient(mongo_url, serverSelectionTimeoutMS=5000)
-        await client.admin.command("ping")
+        client, in_memory = database_client_for_tests(mongo_url)
+        if not in_memory:
+            await client.admin.command("ping")
         name = "cardiq_catalog_test_" + uuid.uuid4().hex
         database = client[name]
         monkeypatch.setenv("MONGO_URL", mongo_url)
@@ -654,7 +682,7 @@ def test_restricted_cards_do_not_enter_general_quiz_but_history_is_resolvable():
 def test_expansion_preserves_existing_92_and_adds_distinct_products():
     # Freeze pre-expansion product facts while allowing sourced presentation assets.
     frozen = [
-        {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial"}}
+        {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial", "homepagePlacement"}}
         for card in CARDS[:92]
     ]
     encoded = json.dumps(frozen, sort_keys=True, ensure_ascii=False).encode()

@@ -15,23 +15,26 @@ import CardAlertUnsubscribe from "./components/CardAlertUnsubscribe";
 import PurchaseOptimizer from "./components/PurchaseOptimizer";
 import CardUpdates from "./components/CardUpdates";
 import RestrictedCards from "./components/RestrictedCards";
+import CustomerFooter from "./components/CustomerFooter";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 import { recordProductEvent } from "./productAnalytics";
 
 const ANALYZE_STEPS = [
-  "Matching your priorities and spending",
+  "Understanding your priorities and spending",
   "Comparing fees and waiver thresholds",
   "Checking reward caps and exclusions",
   "Reviewing eligibility indicators",
-  "Selecting your strongest explainable match",
+  "Choosing your best card option",
 ];
 
 function Analyzing() {
   const [i, setI] = useState(0);
+  const [waking, setWaking] = useState(false);
   useEffect(() => {
     const t = setInterval(() => setI((x) => (x < ANALYZE_STEPS.length - 1 ? x + 1 : x)), 650);
-    return () => clearInterval(t);
+    const slow = setTimeout(() => setWaking(true), 6000);
+    return () => { clearInterval(t); clearTimeout(slow); };
   }, []);
   return (
     <div className="ciq-shell grid min-h-screen place-items-center">
@@ -44,11 +47,12 @@ function Analyzing() {
           </span>
         </div>
         <h2 className="mt-8 font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>
-          Building your evidence-backed match…
+          Finding the best card for your needs…
         </h2>
         <p className="mt-2 text-sm font-medium transition-all" style={{ color: "var(--ciq-teal)" }}>
           {ANALYZE_STEPS[i]}
         </p>
+        {waking && <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Our service is waking up after a quiet period. Your answers are safe and your result will appear automatically.</p>}
       </div>
     </div>
   );
@@ -109,7 +113,7 @@ function QuizApp() {
       recordProductEvent("result_viewed", data.result_id);
       setScreen("result");
     } catch (e) {
-      setError("We couldn't reach the matching service. Please try again.");
+      setError("We couldn't reach the recommendation service. Please try again.");
       setScreen("quiz");
     }
   };
@@ -178,6 +182,7 @@ function App() {
           <Route path="/updates" element={<CardUpdates />} />
           <Route path="/restricted-cards" element={<RestrictedCards />} />
         </Routes>
+        <CustomerFooter />
       </HashRouter>
     </div>
   );

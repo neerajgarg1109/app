@@ -8,7 +8,7 @@ import { submitQuiz } from "./api";
 
 const mockPost = axios.__mockPost;
 
-test("caps recommendation wait time instead of leaving the customer hanging", async () => {
+test("allows a sleeping recommendation service to wake without waiting forever", async () => {
   mockPost.mockResolvedValue({ data: { result_id: "result-1", scored: [{ card: { id: "card-1" } }] } });
   const answers = { goal: "cashback" };
 
@@ -16,6 +16,6 @@ test("caps recommendation wait time instead of leaving the customer hanging", as
   expect(mockPost).toHaveBeenCalledWith(
     "/quiz/submit",
     { answers },
-    { timeout: 9000 },
+    { timeout: 50000 },
   );
 });

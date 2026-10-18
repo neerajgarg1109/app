@@ -79,11 +79,11 @@ describe("Result customer flows", () => {
 
   test("keeps the result uninterrupted and offers optional contact capture", async () => {
     await act(async () => jest.advanceTimersByTime(1201));
-    expect(container.textContent).not.toContain("Keep your match handy");
+    expect(container.textContent).not.toContain("Keep your recommendation handy");
     await act(async () => button(container, "Email").click());
-    expect(container.textContent).toContain("Keep your match handy");
+    expect(container.textContent).toContain("Keep your recommendation handy");
     await act(async () => button(container, "See my result without sharing details").click());
-    expect(container.textContent).not.toContain("Keep your match handy");
+    expect(container.textContent).not.toContain("Keep your recommendation handy");
     expect(sessionStorage.getItem("ciq_contact_prompt_result-1")).toBe("skipped");
   });
 

@@ -10,6 +10,21 @@ export async function getCards() {
   return data;
 }
 
+export async function getSiteContent() {
+  const { data } = await http.get("/site-content");
+  return data;
+}
+
+export async function getAdminSiteContent(token) {
+  const { data } = await http.get("/admin/site-content", { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function updateAdminSiteContent(token, content) {
+  const { data } = await http.put("/admin/site-content", content, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
 export async function getRestrictedCards() {
   const { data } = await http.get("/restricted-cards");
   return data;
@@ -19,7 +34,10 @@ export async function submitQuiz(answers, lead) {
   const { data } = await http.post(
     "/quiz/submit",
     lead ? { answers, lead } : { answers },
-    { timeout: 9000 },
+    // Render can take tens of seconds to wake a sleeping free-tier service.
+    // The catalogue request starts that wake-up on landing; this larger guard
+    // prevents an immediate quiz failure if a customer completes it first.
+    { timeout: 50000 },
   );
   return data; // { result_id, scored }
 }

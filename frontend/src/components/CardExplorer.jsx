@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import CardDetails from "./CardDetails";
 import Compare from "./Compare";
 import CARD_CATEGORIES from "../data/cardCategories.json";
+import CustomerNav from "./CustomerNav";
 
 const PAGE_SIZE = 24;
 const POPULAR_CATEGORIES = [
@@ -89,6 +90,7 @@ export default function CardExplorer() {
         <Logo size="md" />
         <Link to="/" className="ciq-press inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}><ArrowLeft className="h-4 w-4" /> Home</Link>
       </header>
+      <CustomerNav />
 
       <main className="ciq-container ciq-container--wide">
         <section className="pt-4 text-center">

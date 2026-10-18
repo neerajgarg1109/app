@@ -1,8 +1,9 @@
 import React, { useRef, useState } from "react";
 import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3, Send, Clock, Link2, Search, Save, LayoutDashboard, Users, Building2, Plus, Pencil, X, History, Archive, Upload, Activity, MessageSquare } from "lucide-react";
 import Logo from "./Logo";
-import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert, checkAdminApplyLinks, getAdminApplyLinkHealth, importAdminReconciliation } from "../api";
+import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert, checkAdminApplyLinks, getAdminApplyLinkHealth, importAdminReconciliation, getAdminSiteContent, updateAdminSiteContent } from "../api";
 import { catalogQualityIssues } from "../catalogQuality";
+import SiteContentEditor from "./SiteContentEditor";
 
 const PRESETS = [
   { key: "all", label: "All time" },
@@ -51,6 +52,8 @@ export default function Admin() {
   const [alertDraft, setAlertDraft] = useState({ card_id: "", title: "", summary: "", source_url: "", idempotency_key: "", change_type: "benefit-change", effective_date: "" });
   const [alertMsg, setAlertMsg] = useState(null);
   const [linkHealth, setLinkHealth] = useState({ links: [], failed: 0 });
+  const [siteContent, setSiteContent] = useState(null);
+  const [savingContent, setSavingContent] = useState(false);
   const importInput = useRef(null);
   const reconciliationInput = useRef(null);
 
@@ -59,12 +62,13 @@ export default function Admin() {
     setError(null);
     const params = rangeFor(presetKey);
     try {
-      const [res, ins, catalog, reviewData, healthData] = await Promise.all([
+      const [res, ins, catalog, reviewData, healthData, contentData] = await Promise.all([
         getAdminLeads(t, params),
         getAdminInsights(t, params),
         getAdminCards(t),
         getAdminCardReviews(t),
         getAdminApplyLinkHealth(t),
+        getAdminSiteContent(t),
       ]);
       setData(res);
       setInsights(ins);
@@ -72,6 +76,7 @@ export default function Admin() {
       setAdminRole(catalog.role || "viewer");
       setReviews(reviewData.reviews || []);
       setLinkHealth(healthData || { links: [], failed: 0 });
+      setSiteContent({ footer_groups: contentData.footer_groups || [], featured_cards: contentData.featured_cards || [] });
       setLinkDrafts(Object.fromEntries((catalog.cards || []).map((card) => [card.id, linkDraft(card)])));
       setAuthed(true);
       localStorage.setItem("ciq_admin", t);
@@ -84,6 +89,13 @@ export default function Admin() {
   };
 
   const applyPreset = (key) => { setPreset(key); load(token, key); };
+
+  const saveSiteContent = async (content) => {
+    setSavingContent(true); setLinkMsg(null);
+    try { const saved = await updateAdminSiteContent(token, content); setSiteContent({ footer_groups: saved.footer_groups, featured_cards: saved.featured_cards }); setLinkMsg({ type: "success", text: "Footer and homepage promotions published." }); }
+    catch (e) { setLinkMsg({ type: "error", text: e.response?.data?.detail || "Could not publish site content." }); }
+    finally { setSavingContent(false); }
+  };
 
   const downloadCsv = () => {
     const url = leadsCsvUrl(token, rangeFor(preset));
@@ -315,7 +327,7 @@ export default function Admin() {
 
       <div className="ciq-container ciq-container--admin">
         <div className="mb-3 flex justify-end"><span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide" style={{ background: "#eef0ec", color: "var(--ciq-ink-soft)" }}>{adminRole} access</span></div>
-        <nav className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border bg-white p-1.5 sm:grid-cols-7" style={{ borderColor: "var(--ciq-line)" }} aria-label="Admin sections">
+        <nav className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border bg-white p-1.5 sm:grid-cols-8" style={{ borderColor: "var(--ciq-line)" }} aria-label="Admin sections">
           {[
             { key: "overview", label: "Overview", icon: LayoutDashboard },
             { key: "issuers", label: "Issuers", icon: Building2 },
@@ -323,6 +335,7 @@ export default function Admin() {
             { key: "reviews", label: "Reviews", icon: MessageSquare },
             { key: "alerts", label: "Alerts", icon: Send },
             { key: "links", label: "Cards", icon: CreditCard },
+            { key: "content", label: "Content", icon: Pencil },
             { key: "leads", label: "Leads", icon: Users },
           ].map(({ key, label, icon: Icon }) => (
             <button
@@ -339,6 +352,8 @@ export default function Admin() {
             </button>
           ))}
         </nav>
+
+        {activeSection === "content" && <SiteContentEditor content={siteContent} cards={adminCards} canEdit={canEdit} saving={savingContent} onSave={saveSiteContent} />}
 
         {activeSection === "alerts" && <div className="mb-3 grid gap-3 sm:grid-cols-2"><select aria-label="Change type" value={alertDraft.change_type} onChange={(e) => setAlertDraft({ ...alertDraft, change_type: e.target.value })} className="rounded-xl border bg-white px-3 py-2.5"><option value="launch">New launch</option><option value="fee-change">Fee change</option><option value="reward-change">Reward change</option><option value="benefit-change">Benefit change</option><option value="devaluation">Devaluation</option><option value="discontinued">Discontinued</option></select><input aria-label="Effective date" type="date" value={alertDraft.effective_date} onChange={(e) => setAlertDraft({ ...alertDraft, effective_date: e.target.value })} className="rounded-xl border bg-white px-3 py-2.5" /></div>}
 
@@ -734,7 +749,7 @@ function CardEditor({ card, saving, onClose, onSave }) {
         <label className={`${labelClass} sm:col-span-2`}>Eligibility note<textarea rows="2" className={inputClass} value={form.eligibilityNote || ""} onChange={(e) => set("eligibilityNote", e.target.value)} /></label>
         <div className="sm:col-span-2 rounded-2xl border p-4" style={{ borderColor: "var(--ciq-line)", background: "#f7fbfa" }}>
           <div className="font-display text-sm font-extrabold">CardIQ editorial</div>
-          <p className="mt-1 text-xs font-normal" style={{ color: "var(--ciq-ink-soft)" }}>Independent analysis shown on the card page. Edit this separately from issuer-sourced facts.</p>
+          <p className="mt-1 text-xs font-normal" style={{ color: "var(--ciq-ink-soft)" }}>CardIQ analysis shown on the card page. Edit this separately from issuer-sourced facts and commercial links.</p>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className={`${labelClass} sm:col-span-2`}>Our take<textarea rows="3" className={inputClass} value={form.editorial.summary} onChange={(e) => setEditorial("summary", e.target.value)} /></label>
             <label className={labelClass}>Who it suits <span className="font-normal">(one per line)</span><textarea rows="5" className={inputClass} value={listText(form.editorial.idealFor)} onChange={(e) => setEditorial("idealFor", e.target.value)} /></label>

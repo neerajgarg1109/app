@@ -21,14 +21,19 @@ import hashlib
 import unicodedata
 from datetime import datetime, timezone, timedelta
 
-from cards_seed import seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
+from cards_seed import CARDS, seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
 from restricted_access import restricted_access
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
+USE_IN_MEMORY_DB = os.environ.get("USE_IN_MEMORY_DB", "false").lower() in {"1", "true", "yes"}
+if USE_IN_MEMORY_DB:
+    from mongomock_motor import AsyncMongoMockClient
+    client = AsyncMongoMockClient()
+else:
+    client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 app = FastAPI(title="cardIQ API", version="1.0.0")
@@ -408,6 +413,7 @@ class ProductEventIn(BaseModel):
             raise ValueError("Unsupported share channel")
         return value
 
+
     @field_validator("card_id")
     @classmethod
     def validate_card_id(cls, value: Optional[str]) -> Optional[str]:
@@ -435,6 +441,43 @@ class ProductEventIn(BaseModel):
         if value is not None and not re.fullmatch(r"[a-z0-9_-]{1,80}", value):
             raise ValueError("Invalid experiment dimension")
         return value
+
+
+class SiteLinkIn(BaseModel):
+    label: str = Field(min_length=1, max_length=60)
+    url: str = Field(min_length=1, max_length=500)
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        if value.startswith("/") or (value.startswith("https://") and _host_ok(urlparse(value).hostname or "")):
+            return value
+        raise ValueError("Footer links must use an internal path or safe HTTPS URL")
+
+
+class FooterGroupIn(BaseModel):
+    title: str = Field(min_length=1, max_length=60)
+    links: List[SiteLinkIn] = Field(min_length=1, max_length=12)
+
+
+class FeaturedPlacementIn(BaseModel):
+    card_id: str = Field(pattern=r"^[a-z0-9][a-z0-9-]{1,119}$")
+    placement_type: str
+    label: str = Field(min_length=1, max_length=40)
+    summary: Optional[str] = Field(default=None, max_length=300)
+    active: bool = True
+
+    @field_validator("placement_type")
+    @classmethod
+    def validate_placement_type(cls, value: str) -> str:
+        if value not in {"launch", "partner"}:
+            raise ValueError("Placement type must be launch or partner")
+        return value
+
+
+class SiteContentIn(BaseModel):
+    footer_groups: List[FooterGroupIn] = Field(min_length=1, max_length=8)
+    featured_cards: List[FeaturedPlacementIn] = Field(default_factory=list, max_length=4)
 
 
 class CardholderReviewIn(BaseModel):
@@ -1215,6 +1258,77 @@ async def create_status_check(input: StatusCheckCreate):
 async def get_status_checks():
     status_checks = await db.status_checks.find().to_list(1000)
     return [StatusCheck(**_clean(s)) for s in status_checks]
+
+
+DEFAULT_FOOTER_GROUPS = [
+    {"title": "Discover cards", "links": [{"label": "Browse all cards", "url": "/cards"}, {"label": "Card comparisons", "url": "/cards?mode=compare"}, {"label": "New and updated cards", "url": "/updates"}, {"label": "Invite-only cards", "url": "/restricted-cards"}]},
+    {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
+    {"title": "Help & research", "links": [{"label": "Reviews and editorials", "url": "/guides/"}, {"label": "Issuer contacts", "url": "/help/issuers"}, {"label": "How to close a card", "url": "/help/issuers"}, {"label": "Credit card guides", "url": "/guides/"}]},
+    {"title": "About CardIQ", "links": [{"label": "How recommendations work", "url": "/methodology/"}, {"label": "Affiliate disclosure", "url": "/methodology/"}, {"label": "Card catalogue", "url": "/catalog/"}]},
+]
+SITE_CONTENT_VERSION = 2
+
+
+def _default_site_content() -> dict:
+    placements = []
+    for card in CARDS:
+        placement = card.get("homepagePlacement") or {}
+        if placement.get("active"):
+            placements.append({"card_id": card["id"], "placement_type": placement.get("type", "launch"), "label": placement.get("label", "Featured card"), "summary": placement.get("summary"), "active": True})
+    return {"schema_version": SITE_CONTENT_VERSION, "footer_groups": DEFAULT_FOOTER_GROUPS, "featured_cards": placements[:4]}
+
+
+def _upgrade_site_content(content: dict) -> dict:
+    if content.get("schema_version", 1) >= SITE_CONTENT_VERSION:
+        return content
+    upgraded = {**content, "schema_version": SITE_CONTENT_VERSION}
+    upgraded["footer_groups"] = [
+        {
+            **group,
+            "links": [
+                {**link, "label": "Find my best card"} if link.get("label") == "Find my card match" else link
+                for link in group.get("links", [])
+            ],
+        }
+        for group in content.get("footer_groups", [])
+    ]
+    return upgraded
+
+
+async def _site_content() -> dict:
+    stored = await db.site_content.find_one({"_id": "customer_site"}, {"_id": 0})
+    if not stored:
+        return _default_site_content()
+    upgraded = _upgrade_site_content(stored)
+    if upgraded != stored:
+        await db.site_content.update_one({"_id": "customer_site"}, {"$set": upgraded})
+    return upgraded
+
+
+@api_router.get("/site-content")
+async def public_site_content():
+    return await _site_content()
+
+
+@api_router.get("/admin/site-content")
+async def admin_site_content(x_admin_token: Optional[str] = Header(None)):
+    role = _require_admin(x_admin_token, "viewer")
+    return {**(await _site_content()), "role": role}
+
+
+@api_router.put("/admin/site-content")
+async def update_admin_site_content(payload: SiteContentIn, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    card_ids = [item.card_id for item in payload.featured_cards]
+    if card_ids:
+        existing = await db.cards.count_documents({"id": {"$in": card_ids}})
+        if existing != len(set(card_ids)):
+            raise HTTPException(status_code=422, detail="One or more featured cards do not exist")
+    content = payload.model_dump()
+    content["schema_version"] = SITE_CONTENT_VERSION
+    content["updated_at"] = datetime.now(timezone.utc)
+    await db.site_content.replace_one({"_id": "customer_site"}, {"_id": "customer_site", **content}, upsert=True)
+    return _clean({**content})
 
 
 def _date_query(date_from: Optional[str], date_to: Optional[str]) -> dict:

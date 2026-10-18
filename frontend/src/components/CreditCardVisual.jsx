@@ -6,7 +6,13 @@ const OFFICIAL_CARD_IMAGES = {
   "axis-scapia-axis-bank-credit-card": "/cards/scapia-axis-bank.jpg",
 };
 
-export default function CreditCardVisual({ card, floating = false }) {
+const SIZE_CLASSES = {
+  sm: "max-w-[220px]",
+  md: "max-w-[320px]",
+  lg: "max-w-[380px]",
+};
+
+export default function CreditCardVisual({ card, floating = false, size = "md" }) {
   const [c1, c2] = card.palette;
   const imageUrl = card.imageUrl || OFFICIAL_CARD_IMAGES[card.id];
   const [imageFailed, setImageFailed] = useState(false);
@@ -16,7 +22,7 @@ export default function CreditCardVisual({ card, floating = false }) {
   if (imageUrl && !imageFailed) {
     return (
       <div
-        className={`relative grid w-full place-items-center overflow-hidden rounded-2xl border bg-white p-5 ${floating ? "ciq-float" : ""}`}
+        className={`relative mx-auto grid w-full place-items-center overflow-hidden rounded-2xl border bg-white p-3 ${SIZE_CLASSES[size] || SIZE_CLASSES.md} ${floating ? "ciq-float" : ""}`}
         style={{
           aspectRatio: "1.586 / 1",
           borderColor: "var(--ciq-line)",
@@ -35,7 +41,7 @@ export default function CreditCardVisual({ card, floating = false }) {
 
   return (
     <div
-      className={`relative w-full rounded-2xl p-5 text-white overflow-hidden ${floating ? "ciq-float" : ""}`}
+      className={`relative mx-auto w-full rounded-2xl p-4 text-white overflow-hidden ${SIZE_CLASSES[size] || SIZE_CLASSES.md} ${floating ? "ciq-float" : ""}`}
       style={{
         aspectRatio: "1.586 / 1",
         background: `linear-gradient(135deg, ${c1}, ${c2})`,

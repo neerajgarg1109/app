@@ -15,6 +15,7 @@ jest.mock("../api", () => ({
   importAdminCards: jest.fn(), leadsCsvUrl: jest.fn(), sendReminders: jest.fn(),
   moderateAdminCardReview: jest.fn(), sendAdminReviewReminders: jest.fn(),
   getAdminApplyLinkHealth: jest.fn(), checkAdminApplyLinks: jest.fn(), importAdminReconciliation: jest.fn(),
+  getAdminSiteContent: jest.fn(), updateAdminSiteContent: jest.fn(),
 }));
 
 global.IS_REACT_ACT_ENVIRONMENT = true;
@@ -59,6 +60,7 @@ describe("Admin partner-link workflow", () => {
     getAdminCards.mockResolvedValue({ role: "owner", cards: [card] });
     getAdminCardReviews.mockResolvedValue({ reviews: [] });
     require("../api").getAdminApplyLinkHealth.mockResolvedValue({ links: [], failed: 0 });
+    require("../api").getAdminSiteContent.mockResolvedValue({ footer_groups: [{ title: "Discover", links: [{ label: "Cards", url: "/cards" }] }], featured_cards: [] });
     updateAdminCardApplyLink.mockResolvedValue({
       custom_apply_url: "https://partner.example/live", effective_apply_url: "https://partner.example/live",
       partner_name: "Partner Network", campaign_id: "launch-2", tracking_id: "result-page",

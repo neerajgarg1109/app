@@ -133,7 +133,7 @@ def editorial_analysis(card):
             f'<div class="card"><h3>Key strengths</h3><ul>{list_html(stored.get("strengths", []))}</ul></div></div>'
             f'<h3>Trade-offs to understand</h3><ul>{list_html(stored.get("tradeoffs", []))}</ul>'
             f'<h3>CardIQ verdict</h3><p>{html.escape(stored["verdict"])}</p>{alternatives_section}'
-            '<p class="muted">This independent editorial assessment is maintained separately from issuer facts and paid placement. Verify current terms before applying.</p></section>'
+            '<p class="muted">This CardIQ editorial assessment is maintained separately from issuer facts and commercial links. CardIQ may earn a commission from some applications. Verify current terms before applying.</p></section>'
         )
     labels = {"cashback": "cashback", "shopping": "shopping", "online": "online purchases", "travel": "travel", "dining": "dining", "lounge": "airport lounge access", "rewards": "reward points", "forex": "international spending", "fuel": "fuel", "grocery": "groceries", "upi": "UPI payments", "secured": "building credit"}
     interests = [labels.get(tag, tag.replace("-", " ")) for tag in (card.get("bestFor") or [])[:3]]
@@ -385,6 +385,8 @@ sitemap_urls += [f'{ORIGIN}/compare/{left}-vs-{right}/' for left, right in compa
 sitemap_urls += [f'{ORIGIN}/updates/{verified_on}/' for verified_on in verification_dates]
 (BUILD / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(f"  <url><loc>{html.escape(url)}</loc></url>" for url in sitemap_urls) + "\n</urlset>\n")
 (BUILD / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n")
+homepage = BUILD / "index.html"
+homepage.write_text(homepage.read_text().replace("%REACT_APP_PUBLIC_APP_URL%", ORIGIN))
 (BUILD / "catalog-manifest.json").write_text(json.dumps({
     "source": CATALOG_SOURCE, "origin": ORIGIN, "card_ids": [card["id"] for card in CARDS],
 }, indent=2))

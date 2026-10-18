@@ -5078,6 +5078,13 @@
     "issuer": "Axis Bank",
     "imageUrl": "/cards/scapia-axis-bank.jpg",
     "imageSourceUrl": "https://www.axis.bank.in/images/default-source/press--release/jpg/axis-bank-and-scapia-launch-03-09-2026.jpg",
+    "homepagePlacement": {
+      "active": true,
+      "type": "launch",
+      "label": "New launch",
+      "priority": 100,
+      "summary": "A lifetime-free travel card with zero forex markup, Scapia travel redemptions and spend-linked domestic lounge access."
+    },
     "tagline": "For travel and everyday rewards.",
     "network": "Mastercard / RuPay",
     "palette": [

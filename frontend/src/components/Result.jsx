@@ -80,7 +80,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
 
   const handleShare = async () => {
     const url = `${window.location.origin}${process.env.PUBLIC_URL}/#/r/${resultId}`;
-    const shareData = { title: "My cardIQ match", text: `My best credit card match is ${card.name}`, url };
+    const shareData = { title: "My best card from CardIQ", text: `CardIQ recommended ${card.name} as the best card for my needs`, url };
     try {
       if (navigator.share) {
         await navigator.share(shareData);
@@ -182,7 +182,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
       // heading
       ctx.fillStyle = "#0f1a17";
       ctx.font = "800 54px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText("My cardIQ match", 90, 740);
+      ctx.fillText("My best card from CardIQ", 90, 740);
 
       // confidence pill
       ctx.fillStyle = "#0d9488";
@@ -210,7 +210,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
       const file = new File([blob], "cardiq-match.png", { type: "image/png" });
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: "My cardIQ match", text: `My best card match is ${card.name}` });
+        await navigator.share({ files: [file], title: "My best card from CardIQ", text: `CardIQ recommended ${card.name} as the best card for my needs` });
       } else {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -236,7 +236,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
 
       <section className="ciq-container text-center ciq-fade-up">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold" style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}>
-          <Sparkles className="h-3.5 w-3.5" /> Your strongest CardIQ match
+          <Sparkles className="h-3.5 w-3.5" /> Your best card for your needs
         </div>
         <h1 className="mt-3 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</h1>
         <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{card.tagline}</p>
@@ -407,7 +407,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
               <button type="button" key={alt.card.id} onClick={() => setSelectedAlternate(alt.card)} className="ciq-press flex w-full items-center gap-3 rounded-2xl border bg-white p-3 text-left" style={{ borderColor: "var(--ciq-line)" }} aria-label={`View full details for ${alt.card.name}`}>
                 <div className="h-11 w-16 flex-shrink-0 rounded-lg" style={{ background: `linear-gradient(135deg, ${alt.card.palette[0]}, ${alt.card.palette[1]})` }} />
                 <div className="min-w-0 flex-1">
-                  <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>#{index + 2} match · Full details</div>
+                  <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>#{index + 2} option · Full details</div>
                   <div className="truncate font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>{alt.card.name}</div>
                   <div className="truncate text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{alt.card.rewardLine}</div>
                 </div>
@@ -447,7 +447,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
             <div className="font-display text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-ink)" }}>Important information</div>
             <p className="mt-2">Issuer details checked {card.verifiedOn}. Joining fee: {card.joiningFee}. {card.termsNote}</p>
             <p className="mt-2">CardIQ ranks fit using your answers and our published catalogue facts. Match scores are editorial estimates—not approval odds, customer reviews or paid placements. The issuing bank alone decides eligibility.</p>
-            <p className="mt-2 text-[10px] leading-relaxed">Card images, product names and trademarks belong to their respective owners and are shown only for product identification. cardIQ is an independent comparison service and is not endorsed by any issuer unless expressly stated.</p>
+            <p className="mt-2 text-[10px] leading-relaxed">Card images, product names and trademarks belong to their respective owners and are shown only for product identification. CardIQ is a comparison platform and is not endorsed by any issuer unless expressly stated. We may earn a commission from some application links.</p>
             <a href={card.officialApplyUrl || card.applyUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-semibold underline" style={{ color: "var(--ciq-teal)" }}>Check current issuer terms</a>
             <button onClick={() => setShowReport(true)} className="ml-4 inline-flex items-center gap-1 font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}><Flag className="h-3 w-3" /> Report outdated information</button>
           </div>
@@ -471,7 +471,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
           <div className="w-full max-w-md rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Keep your match handy</h2>
+                <h2 className="font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Keep your recommendation handy</h2>
                 <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Get this recommendation by email and, if useful, help with your card application.</p>
               </div>
               <button onClick={dismissContactPrompt} disabled={emailState === "sending"} aria-label="Close" className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }}><X className="h-4 w-4" /></button>

@@ -83,17 +83,17 @@ describe("CardExplorer", () => {
     await act(async () => Promise.resolve());
     expect(container.textContent).toContain("Everything we know about this card");
     expect(container.textContent).toContain("Cashback capped at ₹1,000 monthly.");
-    expect(container.textContent).toContain("Issuer source 1");
+    expect(container.textContent).toContain("Official source 1");
     expect(container.textContent).toContain("may earn a commission");
     expect(container.textContent).toContain("A focused cashback card for regular online spending.");
     expect(container.textContent).toContain("Trade-offs to understand");
     expect(container.textContent).toContain("Worth shortlisting for consistent online use.");
     expect(container.textContent).toContain("Compare before deciding");
     expect(container.textContent).toContain("Eligibility checklist");
-    expect(container.textContent).toContain("not approval odds");
-    const analysis = Array.from(container.querySelectorAll("h3")).find((item) => item.textContent === "Detailed CardIQ analysis");
-    const apply = Array.from(container.querySelectorAll("button")).find((item) => item.textContent.includes("Apply on Alpha Bank"));
-    expect(analysis.compareDocumentPosition(apply) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(container.textContent).toContain("not an approval prediction");
+    const analysis = Array.from(container.querySelectorAll("summary")).find((item) => item.textContent === "Detailed analysis and alternatives");
+    const apply = Array.from(container.querySelectorAll("button")).find((item) => item.textContent.includes("Check eligibility on Alpha Bank"));
+    expect(apply.compareDocumentPosition(analysis) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   test("filters by category and compares any two selected cards", async () => {

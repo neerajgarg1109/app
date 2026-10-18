@@ -1,14 +1,16 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import Landing from "./Landing";
-import { getCards, getResult } from "../api";
+import { getCards, getCardUpdates, getResult, getSiteContent } from "../api";
 
-jest.mock("../api", () => ({ getCards: jest.fn(), getResult: jest.fn() }));
+jest.mock("../api", () => ({ getCards: jest.fn(), getCardUpdates: jest.fn(), getResult: jest.fn(), getSiteContent: jest.fn() }));
 jest.mock("react-router-dom", () => ({ Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a> }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 test("presents the commercial proposition with transparent trust links", async () => {
   getResult.mockResolvedValue({ scored: [] });
+  getCardUpdates.mockResolvedValue({ updates: [] });
+  getSiteContent.mockResolvedValue({ featured_cards: [] });
   getCards.mockResolvedValue([
     { issuer: "Bank A", verifiedOn: "2026-09-10" },
     { issuer: "Bank B", verifiedOn: "2026-10-17" },
@@ -17,7 +19,10 @@ test("presents the commercial proposition with transparent trust links", async (
   const root = createRoot(container);
   await act(async () => root.render(<Landing onStart={jest.fn()} />));
   await act(async () => Promise.resolve());
-  expect(container.textContent).toContain("explains its strongest recommendation");
+  expect(container.textContent).toContain("find the best card for your needs");
+  expect(container.textContent).toContain("Clear comparisons. Honest trade-offs. Built around you.");
+  expect(container.textContent).not.toContain("Independent.");
+  expect(container.textContent).not.toContain("Evidence-led");
   expect(container.textContent).toContain("not a sponsored leaderboard");
   expect(container.textContent).toContain("methodology and revenue disclosure");
   expect(container.textContent).not.toContain("confident recommendation");
@@ -27,6 +32,14 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.textContent).toContain("Compare with my card");
   expect(container.textContent).toContain("Calculate my annual value");
   expect(container.textContent).toContain("Read credit card guides");
+  expect(container.textContent).toContain("Close a card");
+  expect(container.textContent).toContain("Invite-only cards");
+  expect(container.textContent).toContain("Card comparisons");
+  expect(container.textContent).toContain("Reviews & editorials");
+  expect(container.textContent.match(/Find my best card/g)).toHaveLength(1);
+  expect(container.textContent).not.toContain("Search and explore all cards");
+  const closureLink = Array.from(container.querySelectorAll("a")).find((link) => link.textContent === "Close a card");
+  expect(closureLink.getAttribute("href")).toBe("/help/issuers");
   const guides = Array.from(container.querySelectorAll("a")).find((link) => link.textContent.includes("credit card guides"));
   expect(guides.getAttribute("href")).toContain("/guides/");
   expect(container.querySelector("header").className).toContain("ciq-container--wide");
@@ -38,6 +51,8 @@ test("presents the commercial proposition with transparent trust links", async (
 });
 
 test("refreshes a saved result label instead of showing a cached card name", async () => {
+  getCardUpdates.mockResolvedValue({ updates: [] });
+  getSiteContent.mockResolvedValue({ featured_cards: [] });
   getCards.mockResolvedValue([]);
   getResult.mockResolvedValue({ scored: [{ card: { name: "Current Card Name" } }] });
   const container = document.createElement("div");

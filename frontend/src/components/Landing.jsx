@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { ArrowRight, ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall, Sparkles, Check, Search, GitCompare, Newspaper, Building2, Calculator, LockKeyhole, BookOpen } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS, PROBLEMS } from "../mock/mock";
-import { getCards, getResult } from "../api";
+import { getCards, getCardUpdates, getResult, getSiteContent } from "../api";
 import { Link } from "react-router-dom";
 import CARD_CATEGORIES from "../data/cardCategories.json";
 import { experimentAssignment } from "../experiments";
+import CustomerNav from "./CustomerNav";
+import FeaturedCards from "./FeaturedCards";
 
 const ICONS = { ShieldCheck, Timer, BellOff, List, TrendingUp, Database, PhoneCall };
 
@@ -26,6 +28,9 @@ const INTENTS = [
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
   const experiment = experimentAssignment();
   const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null });
+  const [catalogCards, setCatalogCards] = useState([]);
+  const [cardUpdates, setCardUpdates] = useState([]);
+  const [featuredPlacements, setFeaturedPlacements] = useState(null);
   const [savedCardName, setSavedCardName] = useState(null);
 
   useEffect(() => {
@@ -33,12 +38,25 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
     getCards()
       .then((cards) => {
         if (!active || !Array.isArray(cards)) return;
+        setCatalogCards(cards);
         setCatalogStats({
           cards: cards.length,
           issuers: new Set(cards.map((card) => card.issuer).filter(Boolean)).size,
         });
       })
       .catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getSiteContent().then((data) => { if (active) setFeaturedPlacements(Array.isArray(data?.featured_cards) ? data.featured_cards : null); }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    getCardUpdates().then((data) => { if (active) setCardUpdates(Array.isArray(data?.updates) ? data.updates : []); }).catch(() => {});
     return () => { active = false; };
   }, []);
 
@@ -55,18 +73,10 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
 
   return (
     <div className="ciq-shell pb-40">
-      <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
+      <header className="ciq-container ciq-container--wide py-5">
         <Logo size="md" />
-        <div className="flex items-center gap-2">
-          <Link to="/cards" className="ciq-press rounded-full border bg-white px-3 py-2 text-xs font-semibold sm:text-sm" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Browse cards</Link>
-          <button
-            onClick={onStart}
-            className="ciq-press ciq-primary-gradient ciq-soft-glow rounded-full px-4 py-2 text-sm font-semibold text-white"
-          >
-            Get started
-          </button>
-        </div>
       </header>
+      <CustomerNav />
 
       {/* Hero */}
       <section className="ciq-container ciq-container--reading pt-6 text-center ciq-fade-up lg:pt-12">
@@ -74,13 +84,13 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold"
           style={{ background: "linear-gradient(90deg,#eeeaff,#e4faf6)", color: "var(--ciq-teal)" }}
         >
-          <Sparkles className="h-3.5 w-3.5" /> Independent. Evidence-led. Built around you.
+          <Sparkles className="h-3.5 w-3.5" /> Clear comparisons. Honest trade-offs. Built around you.
         </div>
         <h1 className="font-display text-[34px] leading-[1.1] font-extrabold sm:text-5xl lg:text-6xl" style={{ color: "var(--ciq-ink)" }}>
           Your clearest path to the <span className="ciq-gradient-text">right credit card</span>
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed sm:text-base" style={{ color: "var(--ciq-ink-soft)" }}>
-          CardIQ checks {catalogStats.cards == null ? "the live card catalogue" : `${catalogStats.cards} cards across ${catalogStats.issuers} issuers`}, weighs the fees and fine print against how you spend, and explains its strongest recommendation.
+          CardIQ checks {catalogStats.cards == null ? "the live card catalogue" : `${catalogStats.cards} cards across ${catalogStats.issuers} issuers`}, weighs the fees and fine print against how you spend, and helps you find the best card for your needs.
         </p>
 
         <div className="ciq-soft-glow mx-auto mt-6 grid max-w-2xl grid-cols-3 overflow-hidden rounded-2xl border bg-white/90 text-center backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
@@ -108,15 +118,6 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           })}
         </div>
 
-        <button
-          onClick={onStart}
-          className="ciq-press ciq-primary-gradient ciq-soft-glow mx-auto mt-8 flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-base font-semibold text-white"
-        >
-          {experiment.variant === "value-led" ? "See which card gives me more value" : "Find my strongest match"} <ArrowRight className="h-5 w-5" />
-        </button>
-        <Link to="/cards" className="ciq-press mx-auto mt-3 flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
-          Search and explore all cards
-        </Link>
         {resumeStep && (
           <button
             onClick={onResume}
@@ -132,6 +133,8 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           </a>
         )}
       </section>
+
+      <FeaturedCards cards={catalogCards} updates={cardUpdates} placements={featuredPlacements} />
 
       <section className="ciq-container ciq-container--wide mt-12 lg:mt-20">
         <div className="text-center">
@@ -206,15 +209,14 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
       </section>
 
       {/* sticky CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-white/90 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
-        <div className="ciq-container py-3">
-          <button
-            onClick={onStart}
-            className="ciq-press ciq-primary-gradient inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-base font-semibold text-white"
-          >
-            Get my evidence-backed match <ArrowRight className="h-5 w-5" />
-          </button>
-        </div>
+      <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
+        <button
+          onClick={onStart}
+          className="ciq-press ciq-primary-gradient ciq-soft-glow inline-flex items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold text-white sm:px-6 sm:text-base"
+          aria-label={experiment.variant === "value-led" ? "Find the card that gives me more value" : "Find my best card"}
+        >
+          Find my best card <ArrowRight className="h-5 w-5" />
+        </button>
       </div>
     </div>
   );

@@ -1,0 +1,83 @@
+import React from "react";
+import { ArrowRight, BadgeIndianRupee, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import CreditCardVisual from "./CreditCardVisual";
+
+export default function FeaturedCards({ cards = [], updates = [], placements = null }) {
+  const byId = new Map(cards.map((card) => [card.id, card]));
+  const configured = Array.isArray(placements)
+    ? placements.filter((item) => item.active).map((item) => {
+        const card = byId.get(item.card_id);
+        return card && { card, placement: { type: item.placement_type, label: item.label, summary: item.summary } };
+      }).filter(Boolean)
+    : cards.filter((card) => card.homepagePlacement?.active && card.active !== false && card.applicationsOpen !== false)
+        .sort((a, b) => Number(b.homepagePlacement.priority || 0) - Number(a.homepagePlacement.priority || 0))
+        .map((card) => ({ card, placement: card.homepagePlacement }));
+  const partnerCard = cards.find((card) => card.applicationLinkType === "partner" && card.active !== false && card.applicationsOpen !== false);
+  const launch = updates.find((item) => item.change_type === "launch" && byId.has(item.card_id));
+  const launchCard = launch ? byId.get(launch.card_id) : null;
+  const features = [];
+  configured.forEach(({ card, placement }) => features.push({
+    card,
+    label: placement.label || (placement.type === "partner" ? "Partner feature" : "New launch"),
+    commercial: placement.type === "partner",
+    summary: placement.summary || card.editorial?.summary || card.rewardLine,
+  }));
+  if (partnerCard && !features.some((item) => item.card.id === partnerCard.id)) features.push({ card: partnerCard, label: "Partner feature", commercial: true, summary: partnerCard.editorial?.summary || partnerCard.rewardLine });
+  if (launchCard && !features.some((item) => item.card.id === launchCard.id)) features.push({ card: launchCard, label: "New launch", commercial: false, summary: launch.summary || launchCard.editorial?.summary || launchCard.rewardLine });
+  if (!features.length) return null;
+  const launches = features.filter((item) => !item.commercial).slice(0, 2);
+  const promotions = features.filter((item) => item.commercial).slice(0, 2);
+
+  return (
+    <div className="space-y-12">
+      {launches.length > 0 && <FeatureSection
+        id="new-card-launches"
+        eyebrow="Newly launched"
+        title="New cards worth knowing about"
+        description="Recent Indian credit-card launches, shown as editorial coverage rather than paid rankings."
+        features={launches}
+        updatesLink
+      />}
+      {promotions.length > 0 && <FeatureSection
+        id="promoted-cards"
+        eyebrow="Promoted cards"
+        title="Offers from CardIQ partners"
+        description="Clearly labelled paid placements from issuers or partners working with CardIQ. Promotion never changes match scores, ratings or editorial conclusions."
+        features={promotions}
+      />}
+    </div>
+  );
+}
+
+function FeatureSection({ id, eyebrow, title, description, features, updatesLink = false }) {
+  return <section className="ciq-container ciq-container--wide mt-12" aria-labelledby={`${id}-title`}>
+    <div className="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>{eyebrow}</div>
+        <h2 id={`${id}-title`} className="mt-1 font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{title}</h2>
+        <p className="mt-1 max-w-2xl text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{description}</p>
+      </div>
+      {updatesLink && <Link to="/updates" className="text-sm font-semibold underline" style={{ color: "var(--ciq-teal)" }}>See all card updates</Link>}
+    </div>
+    <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        {features.map(({ card, label, commercial, summary }) => (
+          <article key={`${label}-${card.id}`} className="rounded-3xl border bg-white p-5" style={{ borderColor: commercial ? "#c9c1ff" : "#b9e4da" }}>
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: commercial ? "#5142d8" : "var(--ciq-teal)" }}>
+              {commercial ? <BadgeIndianRupee className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />} {label}
+            </div>
+            <div className="mt-4 grid items-center gap-4 sm:grid-cols-[150px_1fr]">
+              <CreditCardVisual card={card} size="sm" />
+              <div>
+                <h3 className="font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</h3>
+                <p className="mt-0.5 text-xs font-semibold" style={{ color: "var(--ciq-teal)" }}>{card.issuer}</p>
+                <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{summary}</p>
+                <Link to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press mt-4 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>View card details <ArrowRight className="h-4 w-4" /></Link>
+              </div>
+            </div>
+            {commercial && <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>Promoted placement. CardIQ may earn a commission if you apply. This placement does not affect recommendations, ratings or editorial conclusions.</p>}
+          </article>
+        ))}
+      </div>
+    </section>;
+}
