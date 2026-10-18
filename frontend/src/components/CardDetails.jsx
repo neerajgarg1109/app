@@ -3,6 +3,7 @@ import { Check, ExternalLink, ShieldCheck } from "lucide-react";
 import CreditCardVisual from "./CreditCardVisual";
 import { editorialInsights } from "../editorialInsights";
 import SharePanel from "./SharePanel";
+import { formatCustomerDate } from "../formatDate";
 
 export default function CardDetails({ card, heading = "Card details", compact = false, onApply }) {
   if (!card) return null;
@@ -20,7 +21,7 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       <div>
         <div className="font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>{heading}</div>
         <p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>
-          The key costs, benefits and catches—followed by full details if you need them.
+          Fees, rewards and the main trade-off—followed by full details if you need them.
         </p>
       </div>
 
@@ -45,11 +46,10 @@ export default function CardDetails({ card, heading = "Card details", compact = 
         <h3 className="mt-1 font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>Is this card right for you?</h3>
         <p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{editorial.summary}</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
-          <DecisionPoint title="Best for" text={editorial.idealFor[0]} />
-          <DecisionPoint title="Why consider it" text={editorial.strengths[0]} />
-          <DecisionPoint title="Main catch" text={editorial.tradeoffs[0]} />
+          <DecisionPoint title="Good choice if" text={editorial.idealFor[0]} />
+          <DecisionPoint title="Why it stands out" text={editorial.strengths[0]} />
+          <DecisionPoint title="Think twice if" text={editorial.tradeoffs[0]} />
         </div>
-        <div className="mt-4 rounded-xl border-l-4 bg-white p-3" style={{ borderColor: "var(--ciq-teal-600)" }}><div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>Bottom line</div><p className="mt-1.5 text-sm font-semibold leading-relaxed">{editorial.verdict}</p></div>
       </section>
 
       {onApply && (
@@ -83,12 +83,12 @@ export default function CardDetails({ card, heading = "Card details", compact = 
       </details>
 
       <details className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
-        <summary className="cursor-pointer font-display text-sm font-extrabold">Detailed analysis and alternatives</summary>
+        <summary className="cursor-pointer font-display text-sm font-extrabold">More analysis and alternatives</summary>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <EditorialList title="Who it suits" items={editorial.idealFor} />
-          <EditorialList title="Key strengths" items={editorial.strengths} />
+          <EditorialList title="More reasons it may suit you" items={editorial.idealFor.slice(1)} />
+          <EditorialList title="Other strengths" items={editorial.strengths.slice(1)} />
         </div>
-        <div className="mt-4"><EditorialList title="Trade-offs to understand" items={editorial.tradeoffs} /></div>
+        <div className="mt-4"><EditorialList title="Other trade-offs" items={editorial.tradeoffs.slice(1)} /></div>
         {editorial.alternatives.length > 0 && <div className="mt-4"><div className="text-xs font-bold">Compare before deciding</div><div className="mt-2 space-y-2">{editorial.alternatives.map((alternative) => <a key={alternative.id} href={`${process.env.PUBLIC_URL}/#/cards/${encodeURIComponent(alternative.id)}`} className="block rounded-xl border p-3" style={{ borderColor: "var(--ciq-line)" }}><div className="text-sm font-bold" style={{ color: "var(--ciq-teal)" }}>{alternative.name}</div><div className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{alternative.reason}</div></a>)}</div></div>}
         <p className="mt-4 border-t pt-3 text-[11px] leading-relaxed" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink-soft)" }}>CardIQ editorial analysis is maintained separately from commercial links. Verify current terms before applying.</p>
       </details>
@@ -97,7 +97,7 @@ export default function CardDetails({ card, heading = "Card details", compact = 
 
       <div className="rounded-xl border p-3 text-xs leading-relaxed" style={{ borderColor: "var(--ciq-line)", background: "#f7f8f6", color: "var(--ciq-ink-soft)" }}>
         <div className="flex items-center gap-1.5 font-bold" style={{ color: "var(--ciq-ink)" }}><ShieldCheck className="h-4 w-4" /> Checked against issuer information</div>
-        <p className="mt-1.5">Last checked {card.verifiedOn || "date not recorded"}. {card.availabilityNote || "Availability and approval are decided by the issuer."}</p>
+        <p className="mt-1.5">Last checked {formatCustomerDate(card.verifiedOn) || "date not recorded"}. {card.availabilityNote || "Availability and approval are decided by the issuer."}</p>
         {card.termsNote && <p className="mt-1.5">Worth knowing: {card.termsNote}</p>}
         {(card.sourceUrls || []).length > 0 && (
           <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
@@ -115,6 +115,7 @@ function DecisionPoint({ title, text }) {
 }
 
 function EditorialList({ title, items }) {
+  if (!items?.length) return null;
   return <div><div className="text-xs font-bold" style={{ color: "var(--ciq-ink)" }}>{title}</div><ul className="mt-2 list-disc space-y-1.5 pl-5 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>;
 }
 

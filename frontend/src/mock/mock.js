@@ -92,7 +92,7 @@ export const QUIZ_QUESTIONS = [
 export const TRUST_POINTS = [
   { icon: "ShieldCheck", text: "No sponsored rankings" },
   { icon: "Timer", text: "Issuer details checked and dated" },
-  { icon: "BellOff", text: "No phone number required" },
+  { icon: "BellOff", text: "Contact details are optional" },
 ];
 
 export const PROBLEMS = [

@@ -8,6 +8,7 @@ import SharePanel from "./SharePanel";
 import { attachResultLead, emailResult, trackApplyClick, reportCardInformation, scheduleReviewFollowup, getCommunityRating, submitExperienceFeedback } from "../api";
 import { contactNameError, contactPhoneError, contactEmailError } from "../contactValidation";
 import { recordProductEvent } from "../productAnalytics";
+import { formatCustomerDate } from "../formatDate";
 
 export default function Result({ scored, resultId, answers, refining = false, onRefine, onSaveResult, onRestart, shared = false }) {
   const best = scored[0];
@@ -236,7 +237,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
 
       <section className="ciq-container text-center ciq-fade-up">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold" style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}>
-          <Sparkles className="h-3.5 w-3.5" /> Your best card for your needs
+          <Sparkles className="h-3.5 w-3.5" /> Best suited to your needs
         </div>
         <h1 className="mt-3 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</h1>
         <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{card.tagline}</p>
@@ -271,14 +272,16 @@ export default function Result({ scored, resultId, answers, refining = false, on
         </div>
         {community?.published && <div className="mt-2 flex items-center justify-between rounded-xl border bg-white px-3 py-2 text-xs" style={{ borderColor: "var(--ciq-line)" }}><span className="font-semibold" style={{ color: "var(--ciq-ink)" }}>Cardholder rating</span><span><strong>{community.overall}/5</strong> · {community.count} approved cardholders</span></div>}
 
+        <RecommendationReasons reasons={best.reasons} tradeOffs={tradeOffs} />
+
         {best.valueEstimate && <div className="mt-3 overflow-hidden rounded-2xl border bg-white" style={{ borderColor: "var(--ciq-line)" }}>
           <div className="p-4 text-white" style={{ background: "linear-gradient(135deg,#4538c8,#6555ed 55%,#159d9a)" }}>
-            <div className="text-xs font-semibold uppercase tracking-wide text-white/75">First-year value available</div>
+            <div className="text-xs font-semibold uppercase tracking-wide text-white/75">Estimated first-year value</div>
             <div className="mt-1 font-display text-3xl font-extrabold">Up to {formatRupees(best.valueEstimate.headlinePotential)}</div>
-            <div className="mt-1 text-xs text-white/80">Rewards plus explicitly priced benefits and available lounge value; conditions apply.</div>
+            <div className="mt-1 text-xs text-white/80">Includes estimated rewards and benefits with a clear rupee value. Caps, exclusions and usage conditions apply.</div>
           </div>
           <div className="p-4">
-            {!best.valueEstimate.isPersonalized && !shared && <button onClick={() => setShowValueForm(true)} className="ciq-press mt-3 w-full rounded-xl py-2.5 text-sm font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>Make this estimate accurate</button>}
+            {!best.valueEstimate.isPersonalized && !shared && <button onClick={() => setShowValueForm(true)} className="ciq-press mt-3 w-full rounded-xl py-2.5 text-sm font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>Use my monthly spending</button>}
             <details className={`${best.valueEstimate.isPersonalized ? "" : "mt-3"} rounded-xl border`} style={{ borderColor: "var(--ciq-line)" }}>
               <summary className="cursor-pointer px-3 py-3 text-sm font-semibold" style={{ color: "var(--ciq-ink)" }}>See likely value and full breakdown</summary>
               <div className="border-t px-3 pb-3 pt-3" style={{ borderColor: "var(--ciq-line)" }}>
@@ -291,7 +294,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
                 </div>
                 {best.valueEstimate.netHigh < 1500 && best.valueEstimate.annualFee > 0 && <div className="mt-3 rounded-xl px-3 py-2 text-xs" style={{ background: "#fff8e8", color: "#7a5b00" }}>At this spending level, the measurable value may not justify the fee. Consider the lifetime-free refinement below.</div>}
                 <div className="mt-3 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Annual card spend used: {formatRupees(best.valueEstimate.annualSpendAssumption)}. {best.valueEstimate.methodology}</div>
-                <div className="mt-2 text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>{best.valueEstimate.economicsQuality || "limited"} economics confidence · {best.valueEstimate.economicsCoverage ?? 0}% structured</div>
+                <div className="mt-2 text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>Estimate quality: {best.valueEstimate.economicsQuality || "limited"} · {best.valueEstimate.economicsCoverage ?? 0}% of benefits have structured values</div>
               </div>
             </details>
           </div>
@@ -343,31 +346,6 @@ export default function Result({ scored, resultId, answers, refining = false, on
         )}
         <div className="mt-4"><SharePanel card={card} /></div>
 
-        {(best.reasons.length > 0 || tradeOffs.length > 0) && (
-          <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
-            <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Why this card earned the top spot</div>
-            <ul className="mt-2 space-y-1.5">
-              {best.reasons.slice(0, 3).map((r) => (
-                <li key={r} className="flex items-start gap-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: "var(--ciq-teal-600)" }} /> {r}
-                </li>
-              ))}
-            </ul>
-            {tradeOffs.length > 0 && (
-              <div className="mt-3 rounded-xl px-3 py-2.5 text-sm leading-relaxed" style={{ background: "#fff8e8", color: "var(--ciq-ink)" }}>
-                <div className="font-bold" style={{ color: "#7a5b00" }}>Worth knowing</div>
-                <ul className="mt-1.5 space-y-1.5">
-                  {tradeOffs.map((note) => (
-                    <li key={note} className="flex items-start gap-2">
-                      <span className="mt-[0.55em] h-1 w-1 flex-shrink-0 rounded-full" style={{ background: "#9a7400" }} />
-                      <span>{note}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
         {!shared && onRefine && <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
           <div className="flex items-center gap-2"><SlidersHorizontal className="h-4 w-4" style={{ color: "var(--ciq-teal-600)" }} /><div className="font-display text-sm font-bold">Refine this recommendation</div></div>
           <p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Change one priority and recalculate without retaking the quiz.</p>
@@ -445,7 +423,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
         <section className="ciq-container mt-8">
           <div className="rounded-2xl border p-4 text-left text-xs leading-relaxed" style={{ borderColor: "var(--ciq-line)", background: "#f1f3f0", color: "var(--ciq-ink-soft)" }}>
             <div className="font-display text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-ink)" }}>Important information</div>
-            <p className="mt-2">Issuer details checked {card.verifiedOn}. Joining fee: {card.joiningFee}. {card.termsNote}</p>
+            <p className="mt-2">Card details checked {formatCustomerDate(card.verifiedOn)}. Joining fee: {card.joiningFee}. {card.termsNote}</p>
             <p className="mt-2">CardIQ ranks fit using your answers and our published catalogue facts. Match scores are editorial estimates—not approval odds, customer reviews or paid placements. The issuing bank alone decides eligibility.</p>
             <p className="mt-2 text-[10px] leading-relaxed">Card images, product names and trademarks belong to their respective owners and are shown only for product identification. CardIQ is a comparison platform and is not endorsed by any issuer unless expressly stated. We may earn a commission from some application links.</p>
             <a href={card.officialApplyUrl || card.applyUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-semibold underline" style={{ color: "var(--ciq-teal)" }}>Check current issuer terms</a>
@@ -471,8 +449,8 @@ export default function Result({ scored, resultId, answers, refining = false, on
           <div className="w-full max-w-md rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Keep your recommendation handy</h2>
-                <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Get this recommendation by email and, if useful, help with your card application.</p>
+                <h2 className="font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Want your result by email?</h2>
+              <p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Complete these details only if you want us to save and email your result. You can skip this step.</p>
               </div>
               <button onClick={dismissContactPrompt} disabled={emailState === "sending"} aria-label="Close" className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }}><X className="h-4 w-4" /></button>
             </div>
@@ -486,7 +464,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
             <button onClick={handleEmail} disabled={emailState === "sending"} className="ciq-press mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>
               {emailState === "sending" ? <><Loader2 className="h-5 w-5 ciq-spin" /> Saving…</> : <><Mail className="h-5 w-5" /> Save and email my result</>}
             </button>
-            <button onClick={dismissContactPrompt} disabled={emailState === "sending"} className="mt-3 w-full py-2 text-sm font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>See my result without sharing details</button>
+            <button onClick={dismissContactPrompt} disabled={emailState === "sending"} className="mt-3 w-full py-2 text-sm font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Skip and continue without sharing details</button>
             {emailTouched && !contactConsent && <p className="mt-1 text-center text-xs" style={{ color: "#b4433f" }}>Please confirm how we may use your details, or continue without sharing them.</p>}
             <p className="mt-2 text-center text-[10px] leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Your details are used only for this result and card-application follow-up. You can withdraw consent by replying to our message.</p>
           </div>
@@ -509,6 +487,20 @@ function EmailField({ icon: Icon, label, value, onChange, placeholder, type = "t
       {error && <span className="mt-1 block text-xs" style={{ color: "#b4433f" }}>{error}</span>}
     </label>
   );
+}
+
+function RecommendationReasons({ reasons = [], tradeOffs = [] }) {
+  if (!reasons.length && !tradeOffs.length) return null;
+  return <div className="mt-4 rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
+    <div className="font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>Why this card is your top match</div>
+    <ul className="mt-2 space-y-1.5">
+      {reasons.slice(0, 3).map((reason) => <li key={reason} className="flex items-start gap-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}><Check className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: "var(--ciq-teal-600)" }} /> {reason}</li>)}
+    </ul>
+    {tradeOffs.length > 0 && <div className="mt-3 rounded-xl px-3 py-2.5 text-sm leading-relaxed" style={{ background: "#fff8e8", color: "var(--ciq-ink)" }}>
+      <div className="font-bold" style={{ color: "#7a5b00" }}>Worth knowing</div>
+      <ul className="mt-1.5 space-y-1.5">{tradeOffs.map((note) => <li key={note} className="flex items-start gap-2"><span className="mt-[0.55em] h-1 w-1 flex-shrink-0 rounded-full" style={{ background: "#9a7400" }} /><span>{note}</span></li>)}</ul>
+    </div>}
+  </div>;
 }
 
 function formatRupees(value) {

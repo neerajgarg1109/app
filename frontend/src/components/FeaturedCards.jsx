@@ -37,7 +37,7 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
         id="new-card-launches"
         eyebrow="Newly launched"
         title="New cards worth knowing about"
-        description="Recent Indian credit-card launches, shown as editorial coverage rather than paid rankings."
+        description="Recently launched credit cards in India, with the key facts and trade-offs."
         features={launches}
         updatesLink
       />}

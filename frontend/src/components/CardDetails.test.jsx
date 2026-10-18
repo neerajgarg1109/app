@@ -22,7 +22,8 @@ test("puts decision-critical facts first and collapses deeper detail", async () 
   expect(text.indexOf("At a glance")).toBeLessThan(text.indexOf("Is this card right for you?"));
   expect(text.indexOf("Is this card right for you?")).toBeLessThan(text.indexOf("Check eligibility on Test Bank"));
   expect(container.querySelectorAll("details")).toHaveLength(3);
-  expect(text).toContain("Main catch");
+  expect(text).toContain("Think twice if");
+  expect(text).toContain("Last checked 18 Oct 2026");
   expect(text).toContain("Checked against issuer information");
   await act(async () => root.unmount());
 });

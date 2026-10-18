@@ -51,7 +51,7 @@ export default function CardExplorer() {
       return searchable.includes(needle);
     });
     return initialFilters.sort === "recent" ? matches.sort((a, b) => String(b.verifiedOn || "").localeCompare(String(a.verifiedOn || ""))) : matches;
-  }, [cards, issuer, category, query]);
+  }, [cards, issuer, category, query, initialFilters.sort]);
   const selected = cardId ? cards.find((card) => card.id === cardId) : null;
   const compareCards = compareIds.map((id) => cards.find((card) => card.id === id)).filter(Boolean);
   const availableCategories = useMemo(() => CARD_CATEGORIES.map((item) => ({ ...item, count: cards.filter((card) => matchesCategory(card, item.id)).length })).filter((item) => item.count >= 3), [cards]);
@@ -96,7 +96,7 @@ export default function CardExplorer() {
         <section className="pt-4 text-center">
           <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Explore without the quiz</div>
           <h1 className="mt-2 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Find any credit card</h1>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search CardIQ’s sourced catalogue by card, issuer, benefit or network and inspect the full details we have verified.</p>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search the cards we track by card name, bank, benefit or network. Check fees, rewards, exclusions and our review.</p>
         </section>
 
         {initialFilters.mode === "compare" && <section className="mt-5 rounded-2xl border p-4" style={{ borderColor: "#b9e4da", background: "#f2faf7" }}><div className="font-display text-base font-extrabold">Compare against a card you already have</div><p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search for your existing card and choose “I have this card”, then add up to two alternatives.</p></section>}
@@ -108,7 +108,7 @@ export default function CardExplorer() {
             {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search"><X className="h-4 w-4" /></button>}
           </label>
           <select value={issuer} onChange={(event) => setIssuer(event.target.value)} className="mt-2 w-full rounded-xl border bg-white px-3 py-2.5 text-sm font-semibold outline-none" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }} aria-label="Filter by issuer">
-            <option value="all">All issuers</option>
+            <option value="all">All banks &amp; issuers</option>
             {issuers.map((name) => <option key={name} value={name}>{name}</option>)}
           </select>
         </section>
@@ -122,9 +122,9 @@ export default function CardExplorer() {
             </div>
           </section>
           <details className="mt-4 rounded-2xl border bg-white p-3" style={{ borderColor: "var(--ciq-line)" }}>
-            <summary className="cursor-pointer text-sm font-bold">Browse {issuers.length} issuers</summary>
+            <summary className="cursor-pointer text-sm font-bold">Browse {issuers.length} banks &amp; issuers</summary>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
-              <button type="button" onClick={() => setIssuer("all")} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === "all" ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>All issuers <span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{cards.length} cards</span></button>
+              <button type="button" onClick={() => setIssuer("all")} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === "all" ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>All banks &amp; issuers <span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{cards.length} cards</span></button>
               {issuers.map((name) => { const count = cards.filter((card) => card.issuer === name).length; return <button type="button" key={name} onClick={() => setIssuer(name)} className="rounded-xl border px-3 py-2 text-left text-xs font-semibold" style={{ borderColor: issuer === name ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>{name}<span className="block font-normal" style={{ color: "var(--ciq-ink-soft)" }}>{count} card{count === 1 ? "" : "s"}</span></button>; })}
             </div>
           </details>

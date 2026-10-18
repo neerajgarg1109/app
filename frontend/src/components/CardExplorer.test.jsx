@@ -86,12 +86,12 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Official source 1");
     expect(container.textContent).toContain("may earn a commission");
     expect(container.textContent).toContain("A focused cashback card for regular online spending.");
-    expect(container.textContent).toContain("Trade-offs to understand");
-    expect(container.textContent).toContain("Worth shortlisting for consistent online use.");
+    expect(container.textContent).toContain("Think twice if");
+    expect(container.textContent).toContain("A monthly cashback cap applies.");
     expect(container.textContent).toContain("Compare before deciding");
     expect(container.textContent).toContain("Eligibility checklist");
     expect(container.textContent).toContain("not an approval prediction");
-    const analysis = Array.from(container.querySelectorAll("summary")).find((item) => item.textContent === "Detailed analysis and alternatives");
+    const analysis = Array.from(container.querySelectorAll("summary")).find((item) => item.textContent === "More analysis and alternatives");
     const apply = Array.from(container.querySelectorAll("button")).find((item) => item.textContent.includes("Check eligibility on Alpha Bank"));
     expect(apply.compareDocumentPosition(analysis) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
