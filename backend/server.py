@@ -918,8 +918,37 @@ async def send_card_change_alert(payload: AdminCardAlertSendIn, x_admin_token: O
 @api_router.get("/card-updates")
 async def public_card_updates(limit: int = 50):
     limit = max(1, min(limit, 100))
-    updates = await db.card_alert_campaigns.find({}, {"_id": 0, "idempotency_key": 0, "matched": 0, "sent": 0, "failed": 0}).sort("created_at", -1).to_list(limit)
-    return {"updates": [_clean(item) for item in updates]}
+    campaigns = await db.card_alert_campaigns.find({}, {"_id": 0, "idempotency_key": 0, "matched": 0, "sent": 0, "failed": 0}).sort("created_at", -1).to_list(limit)
+    published_launches = {(item.get("card_id"), item.get("change_type")) for item in campaigns}
+    launch_cards = await db.cards.find({
+        **CATALOG_QUERY,
+        "homepagePlacement.active": True,
+        "homepagePlacement.type": "launch",
+    }, {"_id": 0}).to_list(20)
+    catalogue_updates = []
+    for card in launch_cards:
+        if (card.get("id"), "launch") in published_launches:
+            continue
+        placement = card.get("homepagePlacement") or {}
+        sources = card.get("sourceUrls") or []
+        source_url = sources[0] if sources else card.get("officialApplyUrl") or card.get("applyUrl")
+        if not source_url:
+            continue
+        catalogue_updates.append({
+            "campaign_id": f'catalogue-launch-{card["id"]}',
+            "card_id": card["id"],
+            "issuer": card.get("issuer"),
+            "card_name": card.get("name"),
+            "change_type": "launch",
+            "title": f'{card.get("name")} added to CardIQ',
+            "summary": placement.get("summary") or card.get("tagline") or card.get("rewardLine"),
+            "effective_date": None,
+            "source_url": source_url,
+            "created_at": card.get("verifiedOn"),
+        })
+    updates = campaigns + catalogue_updates
+    updates.sort(key=lambda item: str(item.get("effective_date") or item.get("created_at") or ""), reverse=True)
+    return {"updates": [_clean(item) for item in updates[:limit]]}
 
 
 @api_router.post("/product-events", status_code=202)

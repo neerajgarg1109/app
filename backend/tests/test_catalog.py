@@ -507,6 +507,10 @@ def test_migration_and_api_round_trip(monkeypatch):
                 public_updates = await api.get("/api/card-updates")
                 assert public_updates.json()["updates"][0]["change_type"] == "fee-change"
                 assert "sent" not in public_updates.json()["updates"][0]
+                scapia_launch = next(item for item in public_updates.json()["updates"] if item["card_id"] == "axis-scapia-axis-bank-credit-card")
+                assert scapia_launch["change_type"] == "launch"
+                assert scapia_launch["campaign_id"] == "catalogue-launch-axis-scapia-axis-bank-credit-card"
+                assert scapia_launch["source_url"].startswith("https://")
                 top_id = result["scored"][0]["card"]["id"]
                 denied_followup = await api.post(f"/api/cards/{top_id}/review-followup", json={
                     "email": "holder@example.com", "result_id": result["result_id"], "review_consent": False,
