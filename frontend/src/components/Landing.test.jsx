@@ -31,6 +31,7 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.textContent).toContain("Compare cards");
   expect(container.textContent).toContain("Calculate my annual value");
   expect(container.textContent).toContain("Read credit card guides");
+  expect(container.textContent).not.toContain("More CardIQ tools");
   expect(container.textContent).toContain("Close a card");
   expect(container.textContent).toContain("Invite-only cards");
   expect(container.textContent).toContain("Card comparisons");
@@ -44,6 +45,7 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.querySelector("header").className).toContain("ciq-container--wide");
   expect(container.querySelector("h1").className).toContain("lg:text-6xl");
   expect(container.querySelector(".lg\\:grid-cols-3")).not.toBeNull();
+  expect(Array.from(container.querySelectorAll("section")).find((section) => section.textContent.includes("Start with what you need"))?.className).toContain("mt-20");
   await act(async () => root.unmount());
 });
 

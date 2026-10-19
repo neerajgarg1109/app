@@ -26,6 +26,7 @@ const MORE_INTENTS = [
   { title: "Track card changes", text: "Get opt-in alerts for a card, issuer or major update.", icon: Newspaper, to: "/alerts" },
   { title: "Read credit card guides", text: "Explore sourced shortlists, comparisons and practical card guidance.", icon: BookOpen, href: `${process.env.PUBLIC_URL}/guides/` },
 ];
+const ALL_INTENTS = [...PRIMARY_INTENTS, ...MORE_INTENTS];
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
   const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null });
@@ -137,14 +138,14 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
 
       <FeaturedCards cards={catalogCards} updates={cardUpdates} placements={featuredPlacements} />
 
-      <section className="ciq-container ciq-container--wide mt-12 lg:mt-20">
+      <section className="ciq-container ciq-container--wide mt-20 pt-2 lg:mt-28 lg:pt-4">
         <div className="text-center">
           <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Start with what you need</div>
           <h2 className="mt-2 font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>What would you like to do?</h2>
           <p className="mx-auto mt-2 max-w-md text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Find a card, check one you have heard about, compare options or see what is new.</p>
         </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {PRIMARY_INTENTS.map((intent) => {
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {ALL_INTENTS.map((intent) => {
             const Icon = intent.icon;
             const content = <><span className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-xl" style={{ background: "#eeeaff", color: "#5142d8" }}><Icon className="h-5 w-5" /></span><span><span className="block text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>{intent.title}</span><span className="mt-0.5 block text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{intent.text}</span></span><ArrowRight className="ml-auto h-4 w-4 flex-shrink-0" style={{ color: "var(--ciq-teal)" }} /></>;
             if (intent.action === "quiz") return <button key={intent.title} type="button" onClick={onStart} className="ciq-press flex w-full items-center gap-3 rounded-2xl border bg-white p-4 text-left" style={{ borderColor: "var(--ciq-line)" }}>{content}</button>;
@@ -152,17 +153,6 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
             return <Link key={intent.title} to={intent.to} className="ciq-press flex items-center gap-3 rounded-2xl border bg-white p-4 text-left" style={{ borderColor: "var(--ciq-line)" }}>{content}</Link>;
           })}
         </div>
-        <details className="mx-auto mt-4 max-w-3xl rounded-2xl border bg-white p-4 text-left" style={{ borderColor: "var(--ciq-line)" }}>
-          <summary className="cursor-pointer text-sm font-bold">More CardIQ tools</summary>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {MORE_INTENTS.map((intent) => {
-              const Icon = intent.icon;
-              const content = <><span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl" style={{ background: "#eeeaff", color: "#5142d8" }}><Icon className="h-4 w-4" /></span><span><span className="block text-sm font-bold">{intent.title}</span><span className="mt-0.5 block text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{intent.text}</span></span><ArrowRight className="ml-auto h-4 w-4" /></>;
-              if (intent.href) return <a key={intent.title} href={intent.href} className="flex items-center gap-3 rounded-xl border p-3" style={{ borderColor: "var(--ciq-line)" }}>{content}</a>;
-              return <Link key={intent.title} to={intent.to} className="flex items-center gap-3 rounded-xl border p-3" style={{ borderColor: "var(--ciq-line)" }}>{content}</Link>;
-            })}
-          </div>
-        </details>
       </section>
 
       {/* sticky CTA */}
