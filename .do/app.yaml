@@ -1,0 +1,40 @@
+name: cardiq-prod
+region: blr
+services:
+  - name: api
+    github:
+      repo: neerajgarg1109/app
+      branch: main
+      deploy_on_push: true
+    source_dir: /backend
+    dockerfile_path: backend/Dockerfile
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    http_port: 8080
+    routes:
+      - path: /
+    health_check:
+      http_path: /api/
+      initial_delay_seconds: 30
+    envs:
+      # Fill secrets in DigitalOcean before the first deployment.
+      - key: MONGO_URL
+        scope: RUN_TIME
+        type: SECRET
+        value: ""
+      - key: ADMIN_TOKEN
+        scope: RUN_TIME
+        type: SECRET
+        value: ""
+      - key: DB_NAME
+        scope: RUN_TIME
+        value: cardiq_prod
+      - key: USE_IN_MEMORY_DB
+        scope: RUN_TIME
+        value: "false"
+      - key: PUBLIC_APP_URL
+        scope: RUN_TIME
+        value: https://findmybest.cards
+      - key: CORS_ORIGINS
+        scope: RUN_TIME
+        value: https://findmybest.cards,https://www.findmybest.cards,https://neerajgarg1109.github.io
