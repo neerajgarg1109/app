@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft, Calculator, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { calculateCardValue, trackApplyClick } from "../api";
 import { recordProductEvent } from "../productAnalytics";
 import Logo from "./Logo";
@@ -17,6 +17,8 @@ const SPEND_FIELDS = [
 const EMPTY = Object.fromEntries(SPEND_FIELDS.map(([key]) => [key, ""]));
 
 export default function ValueCalculator() {
+  const { search } = useLocation();
+  const embedded = new URLSearchParams(search).get("embedded") === "1";
   const [form, setForm] = useState({ ...EMPTY, lounge_visits: "0", fee_preference: "worth" });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -45,11 +47,11 @@ export default function ValueCalculator() {
     window.open(card.applyUrl, "_blank", "noopener,noreferrer");
   };
 
-  return <div className="ciq-shell min-h-screen pb-16">
-    <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
+  return <div className={`ciq-shell ${embedded ? "pb-4" : "min-h-screen pb-16"}`}>
+    {!embedded && <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
       <Logo size="md" />
       <Link to="/" className="ciq-press inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}><ArrowLeft className="h-4 w-4" /> Home</Link>
-    </header>
+    </header>}
     <main className="ciq-container ciq-container--reading">
       <section className="pt-4 text-center">
         <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl text-white" style={{ background: "linear-gradient(145deg,#604ee8,#0e9e98)" }}><Calculator className="h-6 w-6" /></span>

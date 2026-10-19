@@ -122,7 +122,7 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn(phrase, source)
         self.assertIn(f'{ORIGIN}/#/calculator', source)
         self.assertIn('title="cardiq credit card value calculator"', source)
-        self.assertIn(f'src="{ORIGIN}/#/calculator"', source)
+        self.assertIn(f'src="{ORIGIN}/#/calculator?embedded=1"', source)
         self.assertIn('scrolling="no"', source)
         self.assertIn("resizeobserver", source)
         self.assertIn("open the calculator in a full page", source)

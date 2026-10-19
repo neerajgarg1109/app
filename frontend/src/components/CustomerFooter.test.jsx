@@ -6,7 +6,7 @@ import { getSiteContent } from "../api";
 let mockPathname = "/";
 jest.mock("react-router-dom", () => ({
   Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>,
-  useLocation: () => ({ pathname: mockPathname }),
+  useLocation: () => ({ pathname: mockPathname, search: "" }),
 }));
 jest.mock("./Logo", () => () => <div>CardIQ</div>);
 jest.mock("../api", () => ({ getSiteContent: jest.fn() }));

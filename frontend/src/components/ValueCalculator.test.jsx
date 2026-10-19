@@ -5,7 +5,8 @@ import { calculateCardValue } from "../api";
 
 jest.mock("../api", () => ({ calculateCardValue: jest.fn(), trackApplyClick: jest.fn() }));
 jest.mock("../productAnalytics", () => ({ recordProductEvent: jest.fn() }));
-jest.mock("react-router-dom", () => ({ Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a> }));
+let mockSearch = "";
+jest.mock("react-router-dom", () => ({ Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>, useLocation: () => ({ search: mockSearch }) }));
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 function input(container, label, value) {
@@ -16,6 +17,7 @@ function input(container, label, value) {
 }
 
 test("calculates a spend scenario without collecting contact details", async () => {
+  mockSearch = "";
   calculateCardValue.mockResolvedValue({
     monthlySpend: 40000, annualSpend: 480000,
     results: [{
@@ -37,4 +39,15 @@ test("calculates a spend scenario without collecting contact details", async () 
   expect(container.querySelector('input[type="tel"]')).toBeNull();
   await act(async () => root.unmount());
   container.remove();
+});
+
+test("removes duplicate navigation and full-screen spacing when embedded", async () => {
+  mockSearch = "?embedded=1";
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  await act(async () => root.render(<ValueCalculator />));
+  expect(container.querySelector("header")).toBeNull();
+  expect(container.firstChild.className).toContain("pb-4");
+  expect(container.firstChild.className).not.toContain("min-h-screen");
+  await act(async () => root.unmount());
 });

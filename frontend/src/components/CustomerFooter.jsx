@@ -42,7 +42,7 @@ const GROUPS = [
 ];
 
 export default function CustomerFooter() {
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const [groups, setGroups] = useState(GROUPS);
   useEffect(() => {
     let active = true;
@@ -52,7 +52,7 @@ export default function CustomerFooter() {
     }).catch(() => {});
     return () => { active = false; };
   }, []);
-  if (pathname.startsWith("/admin") || pathname.startsWith("/review/")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/review/") || new URLSearchParams(search).get("embedded") === "1") return null;
 
   return (
     <footer className="border-t bg-white" style={{ borderColor: "var(--ciq-line)" }}>
