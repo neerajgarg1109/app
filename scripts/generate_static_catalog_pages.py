@@ -369,8 +369,12 @@ methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 <p class="muted">Methodology reviewed 17 October 2026.</p>'''
 write(Path("methodology"), page("CardIQ editorial methodology and disclosures", "Learn how CardIQ sources card facts, generates editorial analysis, ranks recommendations and separates issuer revenue from match scores.", f"{ORIGIN}/methodology/", f"{ORIGIN}/#/cards", methodology_body))
 
-calculator_body = '''<h1>Credit card value calculator for India</h1>
+calculator_body = f'''<h1>Credit card value calculator for India</h1>
 <p>Compare Indian credit cards using your own monthly spending instead of headline reward rates. Enter approximate spending for online shopping, dining, travel, fuel, international purchases and everything else. No login or contact details are required.</p>
+<section class="card" aria-labelledby="calculator-tool-title"><h2 id="calculator-tool-title">Calculate your card value</h2>
+<p class="muted">Enter a typical month of spending below. The calculator uses CardIQ’s current catalogue and the same calculation model as the main app.</p>
+<iframe title="CardIQ credit card value calculator" src="{ORIGIN}/#/calculator" loading="eager" style="display:block;width:100%;height:1180px;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
+<p><a href="{ORIGIN}/#/calculator">Open the calculator in a full page</a></p></section>
 <h2>What the estimate considers</h2><ul><li>Your annualised card spending</li><li>How well each card’s documented categories match your spending</li><li>Published annual fees and fee-waiver thresholds</li><li>Explicitly priced welcome or milestone benefits</li><li>Your expected airport-lounge use</li></ul>
 <h2>What can change the result</h2><p>Merchant classification, monthly reward caps, excluded transactions, redemption choices and issuer rule changes can reduce actual value. CardIQ therefore shows an editorial range rather than promising an exact return. The issuing bank’s current terms remain authoritative.</p>'''
 write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))

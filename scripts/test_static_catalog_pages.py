@@ -121,6 +121,9 @@ class StaticCatalogTests(unittest.TestCase):
         for phrase in ("credit card value calculator for india", "annual fees", "reward caps", "no login"):
             self.assertIn(phrase, source)
         self.assertIn(f'{ORIGIN}/#/calculator', source)
+        self.assertIn('title="cardiq credit card value calculator"', source)
+        self.assertIn(f'src="{ORIGIN}/#/calculator"', source)
+        self.assertIn("open the calculator in a full page", source)
 
     def test_comparisons_are_substantial_editorial_pairs_with_deep_links(self):
         pages = list((BUILD / "compare").glob("*/index.html"))
