@@ -35,7 +35,7 @@ const GROUPS = [
     title: "About CardIQ",
     links: [
       ["How recommendations work", `${process.env.PUBLIC_URL}/methodology/`, "external"],
-      ["Affiliate disclosure", `${process.env.PUBLIC_URL}/methodology/`, "external"],
+      ["How CardIQ makes money", `${process.env.PUBLIC_URL}/methodology/`, "external"],
       ["Card catalogue", `${process.env.PUBLIC_URL}/catalog/`, "external"],
     ],
   },
@@ -61,7 +61,6 @@ export default function CustomerFooter() {
           <div>
             <Logo size="md" />
             <p className="mt-3 max-w-xs text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Clear credit-card information for India, including fees, benefits, trade-offs, comparisons and official issuer sources.</p>
-            <p className="mt-3 max-w-xs text-[11px] leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>CardIQ may earn a commission from some application links. Commercial relationships do not change match scores or editorial conclusions.</p>
           </div>
           {groups.map((group) => (
             <section key={group.title} aria-labelledby={`footer-${group.title.replace(/\W+/g, "-").toLowerCase()}`}>

@@ -19,6 +19,7 @@ import secrets
 import asyncio
 import hashlib
 import unicodedata
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone, timedelta
 
 from cards_seed import CARDS, seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
@@ -35,8 +36,44 @@ if USE_IN_MEMORY_DB:
 else:
     client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+_link_monitor_task = None
 
-app = FastAPI(title="cardIQ API", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Initialize database state and background work using FastAPI's lifespan API."""
+    global _link_monitor_task
+    await seed_cards(db)
+    try:
+        await db.product_events.drop_index("unique_product_funnel_event")
+    except OperationFailure:
+        pass
+    await db.product_events.create_index(
+        [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1), ("experiment_id", 1), ("variant", 1)],
+        unique=True,
+        name="unique_product_funnel_event",
+    )
+    await db.product_events.create_index("created_at", name="product_event_created_at")
+    await db.partner_conversions.create_index("external_id", unique=True, name="unique_partner_conversion")
+    await db.partner_conversions.create_index("created_at", name="partner_conversion_created_at")
+    await db.apply_link_checks.create_index([("card_id", 1), ("checked_at", -1)], name="apply_link_check_card_date")
+    if os.environ.get("ENABLE_APPLY_LINK_MONITOR", "true").lower() == "true":
+        _link_monitor_task = asyncio.create_task(_link_monitor_loop())
+    logger.info("cardIQ card catalog seeded")
+    try:
+        yield
+    finally:
+        if _link_monitor_task:
+            _link_monitor_task.cancel()
+            try:
+                await _link_monitor_task
+            except asyncio.CancelledError:
+                pass
+            _link_monitor_task = None
+        client.close()
+
+
+app = FastAPI(title="cardIQ API", version="1.0.0", lifespan=lifespan)
 api_router = APIRouter(prefix="/api")
 
 logger = logging.getLogger(__name__)
@@ -608,6 +645,39 @@ def _card_for_client(card: dict) -> dict:
     return public
 
 
+CARD_SUMMARY_FIELDS = {
+    "id", "name", "issuer", "tagline", "network", "palette", "accent", "annualFee",
+    "annualFeeAmount", "joiningFee", "joiningFeeAmount", "rewardLine", "bestFor", "feeType",
+    "minSpend", "creditReq", "rating", "verifiedOn", "applicationsOpen", "secured", "active",
+    "coBrandPartner", "imageUrl", "editorial", "recommendationEligible",
+    "applyUrl", "officialApplyUrl", "applicationLinkType", "affiliateDisclosureRequired",
+    "homepagePlacement",
+}
+CARD_SUMMARY_SOURCE_FIELDS = CARD_SUMMARY_FIELDS | {
+    "applyUrlOverride", "applyLinkStatus", "applyPartner", "applyCampaignId", "applyTrackingId",
+    "expectedPayout", "applyLinkUpdatedAt",
+}
+PUBLIC_RECOMMENDATION_LIMIT = 3
+RESULT_READ_PROJECTION = {
+    "_id": 0,
+    "result_id": 1,
+    "answers": 1,
+    "lead_id": 1,
+    "scored": {"$slice": PUBLIC_RECOMMENDATION_LIMIT},
+    "scored_ids": {"$slice": PUBLIC_RECOMMENDATION_LIMIT},
+}
+
+
+def _card_summary_for_client(card: dict) -> dict:
+    """Return fields needed to search and render catalogue tiles, not full card detail."""
+    public = _card_for_client(card)
+    summary = {key: public[key] for key in CARD_SUMMARY_FIELDS if key in public}
+    editorial = summary.get("editorial")
+    if editorial:
+        summary["editorial"] = {"summary": editorial["summary"]} if editorial.get("summary") else {}
+    return summary
+
+
 def _require_admin(token: Optional[str], minimum: str = "viewer") -> str:
     roles = {ADMIN_VIEWER_TOKEN: "viewer", ADMIN_EDITOR_TOKEN: "editor", ADMIN_PUBLISHER_TOKEN: "publisher", ADMIN_TOKEN: "owner"}
     roles.pop(None, None)
@@ -752,7 +822,14 @@ async def root():
 
 
 @api_router.get("/cards")
-async def get_cards():
+async def get_cards(view: str = "full"):
+    if view == "summary":
+        projection = {key: 1 for key in CARD_SUMMARY_SOURCE_FIELDS}
+        projection["_id"] = 0
+        cards = await db.cards.find(CATALOG_QUERY, projection).to_list(None)
+        return [_card_summary_for_client(card) for card in cards]
+    if view != "full":
+        raise HTTPException(status_code=422, detail="view must be full or summary")
     cards = await db.cards.find(CATALOG_QUERY, {"_id": 0}).to_list(None)
     return [_card_for_client(card) for card in cards]
 
@@ -1007,7 +1084,7 @@ async def submit_cardholder_review(token: str, payload: CardholderReviewIn):
     invite = await db.review_followups.find_one({"token_hash": token_hash, "review_submitted": False})
     if not invite or _token_expired(invite.get("token_expires_at")):
         raise HTTPException(status_code=404, detail="Review link is invalid or expired")
-    review = payload.dict()
+    review = payload.model_dump()
     review.update({"review_id": str(uuid.uuid4()), "card_id": invite["card_id"], "followup_id": invite["followup_id"],
                    "status": "pending", "created_at": datetime.now(timezone.utc)})
     await db.cardholder_reviews.insert_one(review)
@@ -1121,6 +1198,7 @@ async def submit_quiz(payload: QuizSubmitIn):
     scored = recommend_cards(payload.answers, [_card_for_client(card) for card in cards])
     if not scored:
         raise HTTPException(status_code=503, detail="No cards currently available for application")
+    scored = scored[:PUBLIC_RECOMMENDATION_LIMIT]
     top = scored[0]
     result_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
@@ -1211,7 +1289,7 @@ async def attach_result_lead(result_id: str, payload: LeadIn):
 
 async def scored_result(result):
     if result.get("scored"):
-        snapshots = result["scored"]
+        snapshots = result["scored"][:PUBLIC_RECOMMENDATION_LIMIT]
         ids = [s["card"]["id"] for s in snapshots]
         current = await db.cards.find(
             {"id": {"$in": ids}}, {"_id": 0}
@@ -1228,9 +1306,9 @@ async def scored_result(result):
         refreshed = recommend_cards(result["answers"], cards)
         # Preserve a readable historical result only when every former candidate
         # is now unavailable; the UI will clearly disable those application links.
-        return refreshed or recommend_cards(result["answers"], cards, include_unavailable=True)
+        return (refreshed or recommend_cards(result["answers"], cards, include_unavailable=True))[:PUBLIC_RECOMMENDATION_LIMIT]
     # Older results store IDs only. Archived demo records remain available here.
-    ids = result.get("scored_ids")
+    ids = (result.get("scored_ids") or [])[:PUBLIC_RECOMMENDATION_LIMIT]
     query = {"id": {"$in": ids}} if ids else RECOMMENDABLE_QUERY
     cards = await db.cards.find(query, {"_id": 0}).to_list(None)
     scored = recommend_cards(
@@ -1239,12 +1317,12 @@ async def scored_result(result):
     )
     if not scored:
         raise HTTPException(status_code=410, detail="Cards for this result are no longer available")
-    return scored
+    return scored[:PUBLIC_RECOMMENDATION_LIMIT]
 
 
 @api_router.get("/results/{result_id}")
 async def get_result(result_id: str):
-    result = await db.quiz_results.find_one({"result_id": result_id}, {"_id": 0})
+    result = await db.quiz_results.find_one({"result_id": result_id}, RESULT_READ_PROJECTION)
     if not result:
         raise HTTPException(status_code=404, detail="Result not found")
     scored = await scored_result(result)
@@ -1260,7 +1338,7 @@ async def get_result(result_id: str):
 @api_router.post("/results/{result_id}/email")
 async def email_result(result_id: str):
     """Send the recommendation to the lead email stored server-side (G4: no caller email)."""
-    result = await db.quiz_results.find_one({"result_id": result_id}, {"_id": 0})
+    result = await db.quiz_results.find_one({"result_id": result_id}, RESULT_READ_PROJECTION)
     if not result:
         raise HTTPException(status_code=404, detail="Result not found")
     lead = await db.leads.find_one({"lead_id": result.get("lead_id")}, {"_id": 0})
@@ -1278,8 +1356,8 @@ async def email_result(result_id: str):
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
-    status_obj = StatusCheck(**input.dict())
-    await db.status_checks.insert_one(status_obj.dict())
+    status_obj = StatusCheck(**input.model_dump())
+    await db.status_checks.insert_one(status_obj.model_dump())
     return status_obj
 
 
@@ -1293,9 +1371,9 @@ DEFAULT_FOOTER_GROUPS = [
     {"title": "Discover cards", "links": [{"label": "Browse all cards", "url": "/cards"}, {"label": "Card comparisons", "url": "/cards?mode=compare"}, {"label": "New and updated cards", "url": "/updates"}, {"label": "Invite-only cards", "url": "/restricted-cards"}]},
     {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
     {"title": "Help & research", "links": [{"label": "Reviews and editorials", "url": "/guides/"}, {"label": "Issuer contacts", "url": "/help/issuers"}, {"label": "How to close a card", "url": "/help/issuers"}, {"label": "Credit card guides", "url": "/guides/"}]},
-    {"title": "About CardIQ", "links": [{"label": "How recommendations work", "url": "/methodology/"}, {"label": "Affiliate disclosure", "url": "/methodology/"}, {"label": "Card catalogue", "url": "/catalog/"}]},
+    {"title": "About CardIQ", "links": [{"label": "How recommendations work", "url": "/methodology/"}, {"label": "How CardIQ makes money", "url": "/methodology/"}, {"label": "Card catalogue", "url": "/catalog/"}]},
 ]
-SITE_CONTENT_VERSION = 2
+SITE_CONTENT_VERSION = 3
 
 
 def _default_site_content() -> dict:
@@ -1315,7 +1393,9 @@ def _upgrade_site_content(content: dict) -> dict:
         {
             **group,
             "links": [
-                {**link, "label": "Find my best card"} if link.get("label") == "Find my card match" else link
+                ({**link, "label": "Find my best card"} if link.get("label") == "Find my card match"
+                 else {**link, "label": "How CardIQ makes money"} if link.get("label") == "Affiliate disclosure"
+                 else link)
                 for link in group.get("links", [])
             ],
         }
@@ -1931,9 +2011,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_link_monitor_task = None
-
-
 async def _link_monitor_loop():
     await asyncio.sleep(300)
     interval = max(1, int(os.environ.get("APPLY_LINK_MONITOR_HOURS", "24"))) * 3600
@@ -1949,32 +2026,3 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-
-
-@app.on_event("startup")
-async def on_startup():
-    global _link_monitor_task
-    await seed_cards(db)
-    try:
-        await db.product_events.drop_index("unique_product_funnel_event")
-    except OperationFailure:
-        pass
-    await db.product_events.create_index(
-        [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1), ("experiment_id", 1), ("variant", 1)],
-        unique=True,
-        name="unique_product_funnel_event",
-    )
-    await db.product_events.create_index("created_at", name="product_event_created_at")
-    await db.partner_conversions.create_index("external_id", unique=True, name="unique_partner_conversion")
-    await db.partner_conversions.create_index("created_at", name="partner_conversion_created_at")
-    await db.apply_link_checks.create_index([("card_id", 1), ("checked_at", -1)], name="apply_link_check_card_date")
-    if os.environ.get("ENABLE_APPLY_LINK_MONITOR", "true").lower() == "true":
-        _link_monitor_task = asyncio.create_task(_link_monitor_loop())
-    logger.info("cardIQ card catalog seeded")
-
-
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    if _link_monitor_task:
-        _link_monitor_task.cancel()
-    client.close()

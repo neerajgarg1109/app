@@ -165,20 +165,6 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         </details>
       </section>
 
-      {/* Revenue disclosure */}
-      <section className="ciq-container ciq-container--reading" style={{ marginTop: 32 }}>
-        <div
-          className="ciq-trust-panel rounded-3xl p-6 text-white"
-          style={{ background: "linear-gradient(145deg,#33268f 0%,#604ee8 55%,#0e9e98 130%)", boxShadow: "0 24px 55px -30px rgba(61,45,184,.8)" }}
-        >
-          <h2 className="font-display text-2xl font-extrabold">How CardIQ makes money</h2>
-          <p className="mt-2 text-sm text-white/85">
-            Some application links may earn CardIQ a commission. Paid placements are clearly labelled, and commercial relationships do not change recommendation scores or editorial conclusions.
-          </p>
-          <a href={`${process.env.PUBLIC_URL}/methodology/`} className="mt-4 inline-block text-xs font-semibold text-white underline underline-offset-4">See how recommendations and revenue work</a>
-        </div>
-      </section>
-
       {/* sticky CTA */}
       <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
         <button

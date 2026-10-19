@@ -23,8 +23,7 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.textContent).toContain("Clear comparisons. Honest trade-offs. Built around you.");
   expect(container.textContent).not.toContain("Independent.");
   expect(container.textContent).not.toContain("Evidence-led");
-  expect(container.textContent).toContain("commercial relationships do not change recommendation scores");
-  expect(container.textContent).toContain("how recommendations and revenue work");
+  expect(container.textContent).not.toContain("How CardIQ makes money");
   expect(container.textContent).not.toContain("confident recommendation");
   expect(container.textContent).toContain("2 cards from 2 banks and issuers");
   expect(container.textContent).toContain("card categories");
@@ -45,8 +44,6 @@ test("presents the commercial proposition with transparent trust links", async (
   expect(container.querySelector("header").className).toContain("ciq-container--wide");
   expect(container.querySelector("h1").className).toContain("lg:text-6xl");
   expect(container.querySelector(".lg\\:grid-cols-3")).not.toBeNull();
-  const methodology = Array.from(container.querySelectorAll("a")).find((link) => link.textContent.includes("recommendations and revenue"));
-  expect(methodology.getAttribute("href")).toContain("/methodology/");
   await act(async () => root.unmount());
 });
 

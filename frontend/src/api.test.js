@@ -5,7 +5,7 @@ jest.mock("axios", () => {
 });
 
 import axios from "axios";
-import { getCards, submitQuiz } from "./api";
+import { getCard, getCards, submitQuiz } from "./api";
 
 const mockGet = axios.__mockGet;
 const mockPost = axios.__mockPost;
@@ -18,14 +18,20 @@ test("uses the generated catalogue when the live API is unavailable", async () =
     .mockResolvedValueOnce({ data: [{ id: "fallback-card" }] });
 
   await expect(getCards()).resolves.toEqual([{ id: "fallback-card" }]);
-  expect(mockGet).toHaveBeenNthCalledWith(1, "/cards", { timeout: 5000 });
-  expect(mockGet).toHaveBeenNthCalledWith(2, "/cards-catalog.json", { timeout: 10000 });
+  expect(mockGet).toHaveBeenNthCalledWith(1, "/cards", { params: { view: "summary" }, timeout: 2500 });
+  expect(mockGet).toHaveBeenNthCalledWith(2, "/cards-catalog-summary.json", { timeout: 10000 });
 });
 
 test("prefers current API card data when the service is available", async () => {
   mockGet.mockResolvedValueOnce({ data: [{ id: "live-card" }] });
   await expect(getCards()).resolves.toEqual([{ id: "live-card" }]);
   expect(mockGet).toHaveBeenCalledTimes(1);
+});
+
+test("loads one complete card without downloading the full live catalogue", async () => {
+  mockGet.mockResolvedValueOnce({ data: { id: "live-card", highlights: ["Full detail"] } });
+  await expect(getCard("live-card")).resolves.toEqual(expect.objectContaining({ highlights: ["Full detail"] }));
+  expect(mockGet).toHaveBeenCalledWith("/cards/live-card", { timeout: 5000 });
 });
 
 test("allows a sleeping recommendation service to wake without waiting forever", async () => {

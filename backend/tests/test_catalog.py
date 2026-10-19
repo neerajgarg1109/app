@@ -396,6 +396,14 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert public_override["affiliateDisclosureRequired"] is True
                 restricted_ids = {c["id"] for c in CARDS if c.get("recommendationEligible") is False}
                 assert restricted_ids <= {c["id"] for c in response.json()}
+                summary_response = await api.get("/api/cards", params={"view": "summary"})
+                assert summary_response.status_code == 200 and len(summary_response.json()) == len(CARDS)
+                summary_card = next(c for c in summary_response.json() if c["id"] == override_card["id"])
+                assert "sourceUrls" not in summary_card and "economicsProfile" not in summary_card
+                assert set(summary_card["editorial"]) <= {"summary"}
+                assert summary_card["applyUrl"] == custom_apply_url
+                assert summary_card["applicationLinkType"] == "partner"
+                assert (await api.get("/api/cards", params={"view": "invalid"})).status_code == 422
                 restricted_response = await api.get("/api/restricted-cards")
                 assert restricted_response.status_code == 200
                 restricted_cards = restricted_response.json()["cards"]
@@ -468,7 +476,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                     "lead": {"name": "Catalog test", "email": "local-test@example.com"}})
                 assert response.status_code == 200, response.text
                 result = response.json()
-                assert len(result["scored"]) == len(available_cards())
+                assert len(result["scored"]) == 3
                 assert not restricted_ids & {s["card"]["id"] for s in result["scored"]}
                 feedback = await api.post("/api/experience-feedback", json={
                     "rating": 4, "feedback": "Clear recommendation and useful trade-offs.",
@@ -573,8 +581,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                     json={"apply_url": None}, headers=headers,
                 )
                 assert reset.status_code == 200 and reset.json()["custom_apply_url"] is None
-                refreshed = await api.get("/api/results/" + result["result_id"])
-                refreshed_card = next(s["card"] for s in refreshed.json()["scored"] if s["card"]["id"] == override_card["id"])
+                refreshed_card = (await api.get(f"/api/cards/{override_card['id']}")).json()
                 assert refreshed_card["applyUrl"] == override_card["applyUrl"]
                 doc = await database.quiz_results.find_one({"result_id": result["result_id"]})
                 assert next(s["card"] for s in await server.scored_result(doc) if s["card"]["id"] == top["id"])["name"] == "Updated issuer name"
@@ -605,7 +612,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                 await database.leads.insert_one({"lead_id": "expanded-lead", "name": "Expanded catalog",
                     "email": "expanded@example.com", "result_id": "expanded-legacy"})
                 expanded = await api.get("/api/results/expanded-legacy")
-                assert len(expanded.json()["scored"]) == len(CARDS)
+                assert len(expanded.json()["scored"]) == 3
                 leads = (await api.get("/api/admin/leads", headers=headers)).json()["leads"]
                 assert next(l for l in leads if l["result_id"] == "expanded-legacy")["recommended_card"] == CARDS[-1]["name"]
                 for event in ("landing_view", "quiz_started", "result_viewed", "lead_submitted", "apply_clicked"):

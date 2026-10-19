@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Check, GitCompare, Loader2, Search, Share2, X } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { getCards, trackApplyClick } from "../api";
+import { getCard, getCards, trackApplyClick } from "../api";
 import { recordProductEvent } from "../productAnalytics";
 import Logo from "./Logo";
 import CardDetails from "./CardDetails";
@@ -18,6 +18,8 @@ const POPULAR_CATEGORIES = [
 export default function CardExplorer() {
   const { cardId } = useParams();
   const [cards, setCards] = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
   const [query, setQuery] = useState("");
   const initialFilters = hashFilters();
   const [issuer, setIssuer] = useState(initialFilters.issuer || "all");
@@ -39,6 +41,18 @@ export default function CardExplorer() {
     return () => { active = false; };
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    setSelectedCard(null);
+    if (!cardId) return () => { active = false; };
+    setDetailLoading(true);
+    getCard(cardId)
+      .then((card) => { if (active) setSelectedCard(card); })
+      .catch(() => { if (active) setSelectedCard(null); })
+      .finally(() => { if (active) setDetailLoading(false); });
+    return () => { active = false; };
+  }, [cardId]);
+
   const issuers = useMemo(() => [...new Set(cards.map((card) => card.issuer).filter(Boolean))].sort(), [cards]);
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -52,7 +66,7 @@ export default function CardExplorer() {
     });
     return initialFilters.sort === "recent" ? matches.sort((a, b) => String(b.verifiedOn || "").localeCompare(String(a.verifiedOn || ""))) : matches;
   }, [cards, issuer, category, query, initialFilters.sort]);
-  const selected = cardId ? cards.find((card) => card.id === cardId) : null;
+  const selected = cardId ? selectedCard : null;
   const compareCards = compareIds.map((id) => cards.find((card) => card.id === id)).filter(Boolean);
   const availableCategories = useMemo(() => CARD_CATEGORIES.map((item) => ({ ...item, count: cards.filter((card) => matchesCategory(card, item.id)).length })).filter((item) => item.count >= 3), [cards]);
 
@@ -172,7 +186,7 @@ export default function CardExplorer() {
               <div><div className="font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{selected?.name || "Card not found"}</div>{selected && <div className="mt-0.5 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{selected.issuer}</div>}</div>
               <Link to="/cards" className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }} aria-label="Close card details"><X className="h-4 w-4" /></Link>
             </div>
-            {selected ? <CardDetails card={selected} heading="Everything we know about this card" onApply={() => apply(selected)} /> : <div className="rounded-2xl p-5 text-sm" style={{ background: "#f7f8f6" }}>This card is not in the current public catalogue.</div>}
+            {detailLoading ? <div className="grid min-h-48 place-items-center"><Loader2 className="h-7 w-7 ciq-spin" style={{ color: "var(--ciq-teal)" }} /></div> : selected ? <CardDetails card={selected} heading="Everything we know about this card" onApply={() => apply(selected)} /> : <div className="rounded-2xl p-5 text-sm" style={{ background: "#f7f8f6" }}>This card is not in the current public catalogue.</div>}
           </div>
         </div>
       )}

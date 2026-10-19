@@ -1,9 +1,9 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import CardExplorer from "./CardExplorer";
-import { getCards } from "../api";
+import { getCard, getCards } from "../api";
 
-jest.mock("../api", () => ({ getCards: jest.fn(), trackApplyClick: jest.fn() }));
+jest.mock("../api", () => ({ getCard: jest.fn(), getCards: jest.fn(), trackApplyClick: jest.fn() }));
 let mockCardId;
 jest.mock("react-router-dom", () => ({
   Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>,
@@ -53,6 +53,7 @@ describe("CardExplorer", () => {
     window.location.hash = "";
     localStorage.clear();
     getCards.mockResolvedValue(cards);
+    getCard.mockImplementation((cardId) => Promise.resolve(cards.find((card) => card.id === cardId)));
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
