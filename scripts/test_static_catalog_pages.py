@@ -167,6 +167,15 @@ class StaticCatalogTests(unittest.TestCase):
         for phrase in ("launch", "invitation-only", "close a credit card", "official closure channel"):
             self.assertIn(phrase, combined)
 
+    def test_every_guide_has_an_explicit_home_link(self):
+        pages = [BUILD / "guides" / "index.html", *(BUILD / "guides").glob("*/index.html")]
+        self.assertGreater(len(pages), 1)
+        for path in pages:
+            source = path.read_text()
+            self.assertIn("← Back", source, path)
+            self.assertIn(">Home</a>", source, path)
+            self.assertIn(f'href="{ORIGIN}/"', source, path)
+
     def test_best_card_guides_are_sourced_substantial_and_not_paid_rankings(self):
         pages = list((BUILD / "guides").glob("best-*/index.html"))
         self.assertGreaterEqual(len(pages), 6)
