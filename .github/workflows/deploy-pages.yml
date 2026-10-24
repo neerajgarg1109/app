@@ -34,22 +34,22 @@ jobs:
       - run: yarn build
         env:
           DISABLE_ESLINT_PLUGIN: true
-          REACT_APP_BACKEND_URL: ${{ vars.CARDIQ_BACKEND_URL || 'https://cardiq-api-g2ir.onrender.com' }}
-          REACT_APP_PUBLIC_APP_URL: https://neerajgarg1109.github.io/app
+          REACT_APP_BACKEND_URL: ${{ vars.CARDIQ_BACKEND_URL || 'https://api.findmybest.cards' }}
+          REACT_APP_PUBLIC_APP_URL: https://findmybest.cards
       - name: Generate SEO pages from this commit
         if: github.event_name == 'push'
         run: python3 ../scripts/generate_static_catalog_pages.py
         env:
-          CARDIQ_PUBLIC_ORIGIN: https://neerajgarg1109.github.io/app
+          CARDIQ_PUBLIC_ORIGIN: https://findmybest.cards
       - name: Sync Admin-published cards into SEO pages
         if: github.event_name != 'push'
         run: python3 ../scripts/generate_static_catalog_pages.py
         env:
-          CARDIQ_CATALOG_API_URL: ${{ format('{0}/api/cards', vars.CARDIQ_BACKEND_URL || 'https://cardiq-api-g2ir.onrender.com') }}
-          CARDIQ_PUBLIC_ORIGIN: https://neerajgarg1109.github.io/app
+          CARDIQ_CATALOG_API_URL: ${{ format('{0}/api/cards', vars.CARDIQ_BACKEND_URL || 'https://api.findmybest.cards') }}
+          CARDIQ_PUBLIC_ORIGIN: https://findmybest.cards
       - run: python3 ../scripts/test_static_catalog_pages.py
         env:
-          CARDIQ_PUBLIC_ORIGIN: https://neerajgarg1109.github.io/app
+          CARDIQ_PUBLIC_ORIGIN: https://findmybest.cards
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/build

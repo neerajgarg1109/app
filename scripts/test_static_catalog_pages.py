@@ -7,6 +7,7 @@ import sys
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
@@ -224,7 +225,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / "index.html").read_text()
         document = Document(source)
         self.assertEqual(document.meta.get("canonical"), f"{ORIGIN}/")
-        self.assertIn("/app/catalog/", source)
+        self.assertIn(f'href="{urlparse(ORIGIN).path}/catalog/"', source)
 
 
 if __name__ == "__main__":
