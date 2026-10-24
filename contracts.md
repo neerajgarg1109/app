@@ -30,7 +30,10 @@ Frontend quiz + recommendation now backed by FastAPI + MongoDB. Questions stay i
 2. After result: "Email me my recommendation" → `POST /results/{result_id}/email`.
 
 ## Email
-- Emergent managed Resend. `EMAIL_FROM_NAME=cardIQ`. Recipient read server-side from
+- Direct HTTPS email delivery using an independently owned Resend account. Set
+  `EMAIL_PROVIDER=resend`, `RESEND_API_KEY`, `EMAIL_FROM_ADDRESS` (verified sender),
+  and `EMAIL_FROM_NAME`. Without configuration, email returns an explicit 503;
+  browsing and recommendations remain available. Recipient read server-side from
   the lead record (never from request body). Template server-side only.
 
 ## Frontend integration

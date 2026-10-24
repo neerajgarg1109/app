@@ -18,6 +18,8 @@ The frontend stays on GitHub Pages; MongoDB Atlas is billed separately.
 4. Set `ADMIN_TOKEN` as an encrypted, randomly generated secret. Optional role
    tokens (`ADMIN_VIEWER_TOKEN`, `ADMIN_EDITOR_TOKEN`, `ADMIN_PUBLISHER_TOKEN`)
    and email settings can also be added as encrypted secrets when needed.
+   For direct email delivery, follow [email setup](email-setup.md). Leave email
+   disabled until an independently owned provider and verified sender are configured.
 5. Configure Atlas network access for the service's supported outbound addresses.
    Confirm connectivity before switching traffic. Dedicated egress IPs are a
    separate paid feature, outside the $5 budget.

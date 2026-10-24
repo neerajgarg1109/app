@@ -24,6 +24,7 @@ from datetime import datetime, timezone, timedelta
 
 from cards_seed import CARDS, seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
 from restricted_access import restricted_access
+from email_transport import deliver_email, EmailConfigurationError, EmailDeliveryError
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -90,11 +91,7 @@ async def service_root():
         "customer_portal": PUBLIC_APP_URL,
     }
 
-# ---------------- Email (Emergent managed Resend) ----------------
-EMAIL_BASE_URL = "https://integrations.emergentagent.com"
-EMAIL_KEY = os.environ.get("EMERGENT_EMAIL_KEY")
-EMAIL_FROM_NAME = os.environ.get("EMAIL_FROM_NAME", "cardIQ")
-EMAIL_REPLY_TO = os.environ.get("EMAIL_REPLY_TO")
+# ---------------- Email (direct provider transport) ----------------
 ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN")
 ADMIN_VIEWER_TOKEN = os.environ.get("ADMIN_VIEWER_TOKEN")
 ADMIN_EDITOR_TOKEN = os.environ.get("ADMIN_EDITOR_TOKEN")
@@ -176,26 +173,13 @@ def _assert_safe_email(subject: str, html: str) -> None:
 
 async def send_email(*, to: str, subject: str, html: str, reply_to: Optional[str] = None) -> Optional[str]:
     _assert_safe_email(subject, html)
-    if not EMAIL_KEY:
-        raise HTTPException(status_code=500, detail="Email not configured")
-    payload = {"to": [to], "subject": subject, "html": html, "from_name": EMAIL_FROM_NAME}
-    if reply_to or EMAIL_REPLY_TO:
-        payload["contact_email"] = reply_to or EMAIL_REPLY_TO
     try:
-        async with httpx.AsyncClient(timeout=30) as client_http:
-            resp = await client_http.post(
-                f"{EMAIL_BASE_URL}/api/v1/email/send",
-                headers={"X-Email-Key": EMAIL_KEY},
-                json=payload,
-            )
-        resp.raise_for_status()
-        return resp.json().get("id")
-    except httpx.HTTPStatusError as e:
-        logger.error(f"Email send failed: {e.response.status_code} {e.response.text}")
+        return await deliver_email(to=to, subject=subject, html=html, reply_to=reply_to)
+    except EmailConfigurationError:
+        raise HTTPException(status_code=503, detail="Email service is not configured")
+    except EmailDeliveryError:
+        logger.error("Email provider delivery failed")
         raise HTTPException(status_code=502, detail="Failed to send email")
-    except Exception as e:
-        logger.error(f"Email send error: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to send email")
 
 
 def _build_recommendation_email(name: str, card: Dict[str, Any], reasons: List[str]) -> str:

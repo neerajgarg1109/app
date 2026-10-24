@@ -269,7 +269,6 @@ def test_migration_and_api_round_trip(monkeypatch):
         monkeypatch.setenv("DB_NAME", name)
         server = importlib.import_module("server")
         monkeypatch.setattr(server, "db", database)
-        monkeypatch.setattr(server, "EMAIL_KEY", None)
         monkeypatch.setattr(server, "ADMIN_TOKEN", uuid.uuid4().hex)
         monkeypatch.setattr(server, "ADMIN_VIEWER_TOKEN", "viewer-token")
         monkeypatch.setattr(server, "ADMIN_EDITOR_TOKEN", "editor-token")

@@ -9,7 +9,7 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 # Copy application files explicitly to keep local .env files out of the image.
-COPY server.py cards_seed.py restricted_access.py cards_catalog.json ./
+COPY server.py cards_seed.py restricted_access.py email_transport.py cards_catalog.json ./
 RUN useradd --create-home appuser
 USER appuser
 EXPOSE 8080
