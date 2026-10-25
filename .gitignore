@@ -60,6 +60,9 @@ venv/
 .venv/
 .runtime/
 .data/
+*.aesgcm
+*.bson
+dump/
 
 # Development tools
 chainlit.md

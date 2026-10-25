@@ -1,0 +1,60 @@
+name: Operations verification
+on:
+  push:
+    branches: [main]
+    paths: ['ops/**', 'backend/**', '.github/workflows/operations-verification.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-verification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      mongodb:
+        image: mongo:8.0
+        ports: ['27017:27017']
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ping:1})'"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r backend/requirements.txt
+      - run: bash ops/install_mongo_tools.sh
+      - run: python -m unittest discover -s ops/tests -v
+      - name: Real MongoDB encrypted backup and restore drill
+        run: python ops/restore_drill.py
+      - name: Build matching API container
+        run: docker build -f backend/Dockerfile -t cardiq-load-api backend
+      - name: Start isolated API with launch-plan resource limits
+        run: >-
+          docker run --detach --name cardiq-load-api --network host --cpus 1 --memory 512m
+          -e MONGO_URL=mongodb://127.0.0.1:27017 -e DB_NAME=cardiq_isolated_load
+          -e EMAIL_PROVIDER=disabled -e ENABLE_APPLY_LINK_MONITOR=false
+          cardiq-load-api
+      - name: Wait for database-aware readiness
+        run: |
+          python - <<'PY'
+          import time, urllib.request
+          for attempt in range(40):
+              try:
+                  with urllib.request.urlopen('http://127.0.0.1:8080/api/ready', timeout=3) as r:
+                      if r.status == 200: break
+              except Exception: time.sleep(2)
+          else: raise SystemExit('Isolated API failed readiness')
+          PY
+      - name: Fifty concurrent users for sixty seconds
+        run: python ops/load_test.py --users 50 --seconds 60 --output load-report.json
+      - name: Container resource usage
+        if: always()
+        run: docker stats --no-stream cardiq-load-api || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: isolated-load-report
+          path: load-report.json
+          retention-days: 7
+          if-no-files-found: warn

@@ -1,0 +1,23 @@
+name: Consented review reminder runner
+on:
+  schedule:
+    - cron: '19 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: production-reminders
+  cancel-in-progress: false
+jobs:
+  run:
+    if: vars.CARDIQ_REMINDERS_ENABLED == 'true'
+    environment: production-reminders
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check or send consented reminders
+        env:
+          REMINDER_RUNNER_TOKEN: ${{ secrets.REMINDER_RUNNER_TOKEN }}
+          CARDIQ_REMINDERS_SEND: ${{ vars.CARDIQ_REMINDERS_SEND }}
+        run: python3 ops/run_reminders.py

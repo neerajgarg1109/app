@@ -1,0 +1,35 @@
+name: Encrypted production backup
+on:
+  schedule:
+    - cron: '43 20 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: production-backup
+  cancel-in-progress: false
+jobs:
+  backup:
+    if: vars.CARDIQ_BACKUPS_ENABLED == 'true'
+    environment: production-backups
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'cryptography==46.0.3'
+      - run: bash ops/install_mongo_tools.sh
+      - name: Dump and encrypt
+        env:
+          MONGODB_BACKUP_URI: ${{ secrets.MONGODB_BACKUP_URI }}
+          MONGODB_DATABASE: ${{ vars.CARDIQ_DATABASE_NAME }}
+          BACKUP_ENCRYPTION_KEY: ${{ secrets.BACKUP_ENCRYPTION_KEY }}
+        run: python ops/backup.py backup --output "$RUNNER_TEMP/cardiq-backup.aesgcm"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: encrypted-backup-${{ github.run_id }}
+          path: ${{ runner.temp }}/cardiq-backup.aesgcm
+          retention-days: 3
+          if-no-files-found: error

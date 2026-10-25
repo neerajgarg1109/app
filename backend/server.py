@@ -805,6 +805,19 @@ async def root():
     return {"message": "cardIQ API"}
 
 
+@api_router.get("/ready")
+async def readiness(response: Response):
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        await asyncio.wait_for(db.command("ping"), timeout=2)
+        available = await asyncio.wait_for(db.cards.find_one(RECOMMENDABLE_QUERY, {"_id": 1}), timeout=2)
+        if not available:
+            raise RuntimeError("Catalogue unavailable")
+    except Exception:
+        raise HTTPException(status_code=503, detail="Service unavailable", headers={"Cache-Control": "no-store"}) from None
+    return {"status": "ready"}
+
+
 @api_router.get("/cards")
 async def get_cards(view: str = "full"):
     if view == "summary":
@@ -1957,15 +1970,32 @@ async def moderate_card_review(review_id: str, payload: ReviewModerationIn, x_ad
 
 
 @api_router.post("/admin/send-review-reminders")
-async def send_review_reminders(x_admin_token: Optional[str] = Header(None)):
-    _require_admin(x_admin_token, "editor")
+async def send_review_reminders(x_admin_token: Optional[str] = Header(None), dry_run: bool = False):
+    runner_token = os.environ.get("REMINDER_RUNNER_TOKEN", "")
+    if not (runner_token and x_admin_token and secrets.compare_digest(runner_token, x_admin_token)):
+        _require_admin(x_admin_token, "editor")
     now = datetime.now(timezone.utc)
-    due = await db.review_followups.find({"due_at": {"$lte": now}, "reminder_sent": False, "review_submitted": False, "review_consent": True}, {"_id": 0}).to_list(1000)
+    query = {"due_at": {"$lte": now}, "reminder_sent": False, "review_submitted": False, "review_consent": True, "delivery_state": {"$nin": ["claimed", "needs_review"]}}
+    if dry_run:
+        needs_review = await db.review_followups.count_documents({"$or": [
+            {"delivery_state": "needs_review"},
+            {"delivery_state": "claimed", "delivery_claimed_at": {"$lte": now - timedelta(minutes=15)}}]})
+        return {"due": await db.review_followups.count_documents(query), "sent": 0, "dry_run": True, "needs_review": needs_review}
+    due = await db.review_followups.find(query, {"_id": 0}).to_list(20)
     cards = await db.cards.find({}, {"_id": 0, "id": 1, "name": 1}).to_list(None)
     names = {card["id"]: card["name"] for card in cards}
     sent = 0
     for followup in due:
         token = secrets.token_urlsafe(32)
+        # Atomically claim before contacting the provider. A lost response must
+        # not cause concurrent or later runners to send the same message twice.
+        claimed = await db.review_followups.find_one_and_update(
+            {**query, "followup_id": followup["followup_id"]},
+            {"$set": {"delivery_state": "claimed", "delivery_claimed_at": now,
+                      "token_hash": hashlib.sha256(token.encode()).hexdigest(),
+                      "token_expires_at": now + timedelta(days=30)}})
+        if not claimed:
+            continue
         url = f"{PUBLIC_APP_URL}/#/review/{token}"
         card_name = names.get(followup["card_id"], "your card")
         html = (f'<table role="presentation" width="100%" style="font-family:Arial,sans-serif;background:#f6f7f5;padding:24px"><tr><td>'
@@ -1975,10 +2005,11 @@ async def send_review_reminders(x_admin_token: Optional[str] = Header(None)):
                 f'<p style="color:#888;font-size:12px">This is the one review reminder you requested. It is not a marketing subscription.</p></td></tr></table>')
         try:
             await send_email(to=followup["email"], subject=f"Review your {card_name}", html=html)
-            await db.review_followups.update_one({"followup_id": followup["followup_id"]}, {"$set": {"reminder_sent": True, "reminder_sent_at": now, "token_hash": hashlib.sha256(token.encode()).hexdigest(), "token_expires_at": now + timedelta(days=30)}})
+            await db.review_followups.update_one({"followup_id": followup["followup_id"]}, {"$set": {"reminder_sent": True, "reminder_sent_at": now, "delivery_state": "sent"}})
             sent += 1
         except Exception as exc:
-            logger.error(f"Review reminder failed for followup {followup['followup_id']}: {exc}")
+            await db.review_followups.update_one({"followup_id": followup["followup_id"]}, {"$set": {"delivery_state": "needs_review"}})
+            logger.error("Review reminder delivery needs manual review")
     return {"due": len(due), "sent": sent}
 
 

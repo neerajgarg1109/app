@@ -14,7 +14,7 @@ services:
     routes:
       - path: /
     health_check:
-      http_path: /api/
+      http_path: /api/ready
       initial_delay_seconds: 30
     envs:
       # Fill secrets in DigitalOcean before the first deployment.
