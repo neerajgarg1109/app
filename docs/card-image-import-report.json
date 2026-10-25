@@ -56,27 +56,43 @@
   },
   {
     "id": "axis-axis-bank-ace-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/ace.webp?sfvrsn=750b2a98_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-flipkart-axisbank-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card",
-    "candidates": 2
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/flipkart.webp?sfvrsn=7e61908d_3",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-airtel-axis-bank-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/airtel.webp?sfvrsn=3cedec32_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-indianoil-axis-bank-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/indianoil-axis-bank-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/indianoil.webp?sfvrsn=69a9e92b_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-axis-bank-select-credit-card",
@@ -85,9 +101,13 @@
   },
   {
     "id": "axis-axis-bank-my-zone-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/axis-bank-my-zone-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/myzone.webp?sfvrsn=dfa008eb_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-axis-bank-neo-credit-card",
@@ -101,9 +121,13 @@
   },
   {
     "id": "axis-axis-horizon-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/axis-horizon-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/horizon.webp?sfvrsn=8943841e_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-rewards-credit-card",
@@ -113,9 +137,13 @@
   },
   {
     "id": "axis-fibe-axis-bank-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/fibe-axis-bank-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/fibeaxis-bank.webp?sfvrsn=cacc3e64_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-privilege",
@@ -291,9 +319,13 @@
   },
   {
     "id": "axis-flipkart-axis-bank-super-elite-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/flipkart-axis-bank-super-elite-credit-card",
-    "candidates": 2
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/cards-images/flipkart-superelite-card-design.jpg?sfvrsn=be7d2401_5",
+    "size": [
+      853,
+      557
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-google-pay-flex-axis-bank-credit-card",
@@ -308,15 +340,23 @@
   },
   {
     "id": "axis-indigo-axis-bank-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/indigo-axis-bank-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/indigo-credit-card-blue.webp?sfvrsn=ebed652b_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-indigo-axis-bank-premium-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/indigo-axis-bank-premium-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/indigo-credit-card-red.webp?sfvrsn=731dbc72_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-lic-axis-bank-platinum-credit-card",
@@ -325,9 +365,13 @@
   },
   {
     "id": "axis-lic-axis-bank-signature-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/lic-axis-bank-signature-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/signature-lifestyle-benefits.webp?sfvrsn=f30d0a43_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-miles-more-credit-card",
@@ -336,15 +380,23 @@
   },
   {
     "id": "axis-my-zone-easy-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/my-zone-easy-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/myzone.webp?sfvrsn=dfa008eb_1",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-privilege-easy-credit-card",
-    "status": "unresolved",
-    "page": "https://www.axis.bank.in/cards/credit-card/privilege-easy-credit-card",
-    "candidates": 1
+    "status": "imported",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/privilege.webp?sfvrsn=5f9521ce_4",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "axis-samsung-axis-bank-signature-credit-card",
@@ -368,69 +420,113 @@
   },
   {
     "id": "au-altura-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/altura-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/altura-1?fmt=webp",
+    "size": [
+      807,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-altura-plus-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/altura-plus-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/altura_plus_blue?fmt=webp",
+    "size": [
+      807,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-ananta-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/ananta-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/Ananta?fmt=webp",
+    "size": [
+      750,
+      1190
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-cheq-au-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/cheq-au-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/CheQ-credit-card-without-name-V?fmt=webp",
+    "size": [
+      812,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-ixigo-au-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/ixigo-au-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/ixigo-4?fmt=webp",
+    "size": [
+      807,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-laksya-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/laksya-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/Laksya?fmt=webp",
+    "size": [
+      750,
+      1190
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-lit-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/lit-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/lit?fmt=webp",
+    "size": [
+      808,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-nomo-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/nomo-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/nomo_card?fmt=webp",
+    "size": [
+      469,
+      744
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-paytm-au-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/paytm-au-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/1875x2974-Paytm-Rupay-Platinum-active?fmt=webp",
+    "size": [
+      807,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-prathama-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/prathama-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/Prathama?fmt=webp",
+    "size": [
+      750,
+      1190
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-swipeup-program-xcite-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/swipeup-program/xcite-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/Xcite?fmt=webp",
+    "size": [
+      504,
+      800
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-swipeup-program-xcite-ace-credit-card",
@@ -444,33 +540,53 @@
   },
   {
     "id": "au-tejas-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/tejas-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/Tejas?fmt=webp",
+    "size": [
+      750,
+      1190
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-vetta-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/vetta-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/Vetta?fmt=webp",
+    "size": [
+      469,
+      744
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-zenith-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/zenith-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/zenith?fmt=webp",
+    "size": [
+      750,
+      1190
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-zenith-plus-credit-card",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/premium-banking/credit-cards/zenith-plus-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/zenith_plus?fmt=webp",
+    "size": [
+      750,
+      1190
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "au-instapay",
-    "status": "unresolved",
-    "page": "https://www.au.bank.in/personal-banking/credit-cards/instapay-credit-card",
-    "candidates": 0
+    "status": "imported",
+    "source": "https://aemassets.au.bank.in/is/image/aubank/instapay-2?fmt=webp",
+    "size": [
+      807,
+      1280
+    ],
+    "reviewedOn": "2026-10-26"
   },
   {
     "id": "federal-celesta-credit-card",

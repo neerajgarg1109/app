@@ -55,24 +55,30 @@
         "5% online and 1% offline cashback on eligible purchases."
       ],
       "tradeoffs": [
-        "Online cashback capped at ₹2,000 and offline cashback at ₹2,000 per statement cycle; combined maximum ₹4,000.",
-        "No cashback on utilities, insurance, fuel, rent, wallets, education, jewellery or railway spends, among other exclusions.",
-        "Renewal fee reversed at ₹2 lakh eligible annual spend."
+        "Cashback excludes utilities/telecom, insurance, fuel, rent, wallets, education, jewellery, railways, gift shops, government payments, tolls, gaming and quasi-cash, among other excluded categories.",
+        "Flexipay and merchant EMI transactions do not earn cashback.",
+        "Online cashback capped at ₹2,000 and offline cashback at ₹2,000 per statement cycle; combined maximum ₹4,000."
       ],
-      "verdict": "It deserves a place on the shortlist when your normal spending makes 5% online and 1% offline cashback on eligible purchases valuable enough to clear the fee. Factor in this condition: Online cashback capped at ₹2,000 and offline cashback at ₹2,000 per statement cycle; combined maximum ₹4,000.",
+      "verdict": "It deserves a place on the shortlist when your normal spending makes 5% online and 1% offline cashback on eligible purchases valuable enough to clear the fee. Factor in this condition: Cashback excludes utilities/telecom, insurance, fuel, rent, wallets, education, jewellery, railways, gift shops, government payments, tolls, gaming and quasi-cash, among other excluded categories.",
       "alternatives": [
         {
           "id": "rbl-jalsa",
           "name": "RBL Bank Jalsa",
-          "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
+          "reason": "A similarly priced alternative for comparing online spending and straightforward cashback."
         },
         {
           "id": "hdfc-millennia-credit-card",
           "name": "HDFC Bank Millennia",
-          "reason": "A higher-fee option to compare for broader benefits around shopping rewards and online spending."
+          "reason": "A higher-fee option to compare for broader benefits around online spending and straightforward cashback."
         }
       ]
-    }
+    },
+    "rewardRedemption": "Cashback is credited automatically to the SBI Card account within two working days of statement generation. Refunds and EMI conversions reverse the corresponding cashback.",
+    "fuelBenefits": "1% fuel surcharge waiver on ₹500–₹3,000 transactions, capped at ₹100 per statement cycle per card account. Fuel purchases do not earn cashback.",
+    "exclusions": [
+      "Cashback excludes utilities/telecom, insurance, fuel, rent, wallets, education, jewellery, railways, gift shops, government payments, tolls, gaming and quasi-cash, among other excluded categories.",
+      "Flexipay and merchant EMI transactions do not earn cashback."
+    ]
   },
   {
     "id": "sbi-elite",
@@ -846,13 +852,13 @@
     "accent": "#fbbf24",
     "annualFee": "₹499 + GST (waived on over ₹2 lakh eligible annual spend)",
     "annualFeeAmount": 499,
-    "joiningFee": "₹499 + GST",
+    "joiningFee": "₹499 + GST (waived on ₹10,000 spend within 45 days)",
     "joiningFeeAmount": 499,
     "rewardLine": "5% on eligible Google Pay bills; 4% on Swiggy, Zomato and Ola",
     "highlights": [
-      "1.5% cashback on other eligible purchases.",
-      "Accelerated cashback has shared limits; excluded categories do not earn cashback.",
-      "Domestic lounge access requires qualifying prior-period spend."
+      "5% Google Pay bills and 4% Swiggy, Zomato and Ola cashback share a ₹500 cap per statement; 1.5% on other eligible purchases is uncapped.",
+      "Google Pay utility and recharge cashback is available on Android only.",
+      "4 domestic lounge visits per calendar year require ₹50,000 eligible spending in the previous three calendar months; initial-card exemption applies."
     ],
     "bestFor": [
       "cashback",
@@ -866,7 +872,10 @@
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card",
     "sourceUrls": [
-      "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card"
+      "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-ace-credit-card-tncs.pdf",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/credit-cards/terms-and-conditions-axis-bank-ace-credit-card.pdf?sfvrsn=1109dfe1_2",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-airport-lounge-access-program.pdf?sfvrsn=843429b3_11"
     ],
     "verifiedOn": "2026-10-09",
     "applicationsOpen": true,
@@ -883,27 +892,43 @@
       ],
       "strengths": [
         "5% on eligible Google Pay bills; 4% on Swiggy, Zomato and Ola.",
-        "Domestic lounge access requires qualifying prior-period spend."
+        "Joining fee is waived after ₹10,000 of spending within 45 days of card setup.",
+        "4 domestic lounge visits per calendar year at participating lounges, after ₹50,000 eligible spend in the previous three calendar months. The spend condition is waived in the issuance month and the next three calendar months."
       ],
       "tradeoffs": [
-        "1.5% cashback on other eligible purchases.",
-        "Accelerated cashback has shared limits; excluded categories do not earn cashback.",
-        "The ₹499 annual fee plus GST needs to be justified by benefits you will actually use."
+        "Cashback excludes utilities outside Google Pay, fuel, EMI, wallets, rent, cash advances, gold/jewellery, insurance, education, government services and card fees, among other issuer exclusions.",
+        "Rent and wallet loads do not count toward the annual fee waiver.",
+        "5% Google Pay bills and 4% Swiggy, Zomato and Ola cashback share a ₹500 cap per statement; 1.5% on other eligible purchases is uncapped."
       ],
-      "verdict": "It deserves a place on the shortlist when your normal spending makes 5% on eligible google pay bills; 4% on swiggy, zomato and ola valuable enough to clear the fee. Factor in this condition: 1.5% cashback on other eligible purchases.",
+      "verdict": "It deserves a place on the shortlist when your normal spending makes 5% on eligible google pay bills; 4% on swiggy, zomato and ola valuable enough to clear the fee. Factor in this condition: Cashback excludes utilities outside Google Pay, fuel, EMI, wallets, rent, cash advances, gold/jewellery, insurance, education, government services and card fees, among other issuer exclusions.",
       "alternatives": [
         {
           "id": "hdfc-swiggy-hdfc-bank-credit-card",
           "name": "Swiggy HDFC Bank Credit Card",
-          "reason": "A higher-fee option to compare for broader benefits around online spending and dining rewards."
+          "reason": "A higher-fee option to compare for broader benefits around online spending and straightforward cashback."
         },
         {
           "id": "hdfc-swiggy-ornge-hdfc-bank-credit-card",
           "name": "Swiggy Ornge HDFC Bank Credit Card",
-          "reason": "A higher-fee option to compare for broader benefits around online spending and dining rewards."
+          "reason": "A higher-fee option to compare for broader benefits around online spending and straightforward cashback."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-axis-bank-ace-credit-card-bd117be4e8.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/ace.webp?sfvrsn=750b2a98_1",
+    "rewardRedemption": "Cashback is credited automatically in the next billing cycle, three days before statement generation. No reward redemption fee.",
+    "forexMarkup": "3.5% of the foreign-currency transaction value, plus applicable taxes.",
+    "fuelBenefits": "1% fuel surcharge waiver on ₹400–₹4,000 transactions, capped at ₹500 per statement. GST on the surcharge is not refunded; fuel purchases earn no cashback.",
+    "exclusions": [
+      "Cashback excludes utilities outside Google Pay, fuel, EMI, wallets, rent, cash advances, gold/jewellery, insurance, education, government services and card fees, among other issuer exclusions.",
+      "Rent and wallet loads do not count toward the annual fee waiver."
+    ],
+    "welcomeBenefits": [
+      "Joining fee is waived after ₹10,000 of spending within 45 days of card setup."
+    ],
+    "loungeBenefits": [
+      "4 domestic lounge visits per calendar year at participating lounges, after ₹50,000 eligible spend in the previous three calendar months. The spend condition is waived in the issuance month and the next three calendar months."
+    ]
   },
   {
     "id": "axis-flipkart-axisbank-credit-card",
@@ -938,7 +963,9 @@
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card",
     "sourceUrls": [
-      "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card"
+      "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/cashback-tncs---final.pdf?sfvrsn=b55a0e1a_5",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-airport-lounge-access-program.pdf?sfvrsn=843429b3_11"
     ],
     "verifiedOn": "2026-10-09",
     "applicationsOpen": true,
@@ -958,24 +985,40 @@
         "Joining fee is currently waived under a limited-period offer; confirm before applying."
       ],
       "tradeoffs": [
-        "Myntra cashback is capped at ₹4,000 per statement quarter; Flipkart and Cleartrip each have a ₹4,000 quarterly cap.",
-        "4% at listed preferred merchants and 1% on other eligible purchases.",
-        "Joining fee is currently waived under a limited-period offer; confirm before applying."
+        "Cashback excludes utilities, telecom, fuel, insurance, rent, wallets, education, government services, gold/jewellery, EMI, cash advances, card fees and Flipkart/Myntra gift cards, among other issuer exclusions.",
+        "Rent and wallet loads do not count toward the annual fee waiver.",
+        "Myntra cashback is capped at ₹4,000 per statement quarter; Flipkart and Cleartrip each have a ₹4,000 quarterly cap."
       ],
-      "verdict": "It deserves a place on the shortlist when your normal spending makes 5% on flipkart and cleartrip; 7.5% on myntra valuable enough to clear the fee. Factor in this condition: Myntra cashback is capped at ₹4,000 per statement quarter; Flipkart and Cleartrip each have a ₹4,000 quarterly cap.",
+      "verdict": "It deserves a place on the shortlist when your normal spending makes 5% on flipkart and cleartrip; 7.5% on myntra valuable enough to clear the fee. Factor in this condition: Cashback excludes utilities, telecom, fuel, insurance, rent, wallets, education, government services, gold/jewellery, EMI, cash advances, card fees and Flipkart/Myntra gift cards, among other issuer exclusions.",
       "alternatives": [
         {
           "id": "sbi-flipkart-sbi-card",
           "name": "Flipkart SBI Card",
-          "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
+          "reason": "A similarly priced alternative for comparing online spending and straightforward cashback."
         },
         {
           "id": "hdfc-pixel-play-credit-card",
           "name": "HDFC Bank PIXEL Play",
-          "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
+          "reason": "A similarly priced alternative for comparing online spending and straightforward cashback."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-flipkart-axisbank-credit-card-8164d13c1d.png",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/flipkart.webp?sfvrsn=7e61908d_3",
+    "rewardRedemption": "Cashback is credited automatically in the next billing cycle, three days before statement generation. No reward redemption fee.",
+    "welcomeBenefits": [
+      "₹250 Flipkart voucher after the first transaction within 30 days applies only to paid cards; it is unavailable with the current first-year-free offer.",
+      "First-time Swiggy users can receive 50% off up to ₹100 using AXISFKNEW, subject to offer terms."
+    ],
+    "forexMarkup": "3.5% of the foreign-currency transaction value, plus applicable taxes.",
+    "fuelBenefits": "1% fuel surcharge waiver on ₹400–₹4,000 transactions, capped at ₹400 per statement. GST on the surcharge is not refunded; fuel purchases earn no cashback.",
+    "exclusions": [
+      "Cashback excludes utilities, telecom, fuel, insurance, rent, wallets, education, government services, gold/jewellery, EMI, cash advances, card fees and Flipkart/Myntra gift cards, among other issuer exclusions.",
+      "Rent and wallet loads do not count toward the annual fee waiver."
+    ],
+    "loungeBenefits": [
+      "Complimentary domestic lounge access was discontinued in June 2025."
+    ]
   },
   {
     "id": "axis-airtel-axis-bank-credit-card",
@@ -994,9 +1037,9 @@
     "joiningFeeAmount": 500,
     "rewardLine": "25% on eligible Airtel bills and 10% on other utilities via Airtel Thanks",
     "highlights": [
-      "Airtel monthly cashback cap is twice base cashback earned that statement month; utility cap equals base cashback.",
+      "Airtel monthly cashback cap is twice base cashback earned that statement month; utility cap equals base cashback. Without eligible base spending, these categories earn no cashback.",
       "1% base cashback on other eligible spends; excluded merchant categories do not qualify.",
-      "Listed partner value-back offers have their own minimum-order and monthly limits."
+      "10% value-back at Zomato, Blinkit and District Movies is capped at ₹200 per partner per month; Zomato and Blinkit require a ₹499 minimum order."
     ],
     "bestFor": [
       "cashback",
@@ -1010,7 +1053,9 @@
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card",
     "sourceUrls": [
-      "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card"
+      "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/credit-cards/terms-and-conditions-for-cashback-for-airtel-axis-bank-credit-card.pdf",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/terms-and-conditions-for-airtel-cbcc-cvp.pdf?sfvrsn=9deed8c1_5"
     ],
     "verifiedOn": "2026-10-09",
     "applicationsOpen": true,
@@ -1026,27 +1071,44 @@
         "People whose normal usage can recover the annual fee through relevant benefits."
       ],
       "strengths": [
-        "25% on eligible Airtel bills and 10% on other utilities via Airtel Thanks."
+        "25% on eligible Airtel bills and 10% on other utilities via Airtel Thanks.",
+        "₹250 Amazon eVoucher after the first transaction within 30 days; unavailable on cards issued without a joining fee."
       ],
       "tradeoffs": [
-        "Airtel monthly cashback cap is twice base cashback earned that statement month; utility cap equals base cashback.",
-        "1% base cashback on other eligible spends; excluded merchant categories do not qualify.",
-        "Listed partner value-back offers have their own minimum-order and monthly limits."
+        "Cashback excludes utilities/telecom outside Airtel Thanks, EMI, cash advances, fuel, rent, wallets, jewellery, insurance, education, government payments, gift cards, tolls and card fees.",
+        "Partner wallet loads and gift-card purchases do not earn partner value-back.",
+        "Rent and wallet loads do not count toward the annual fee waiver."
       ],
-      "verdict": "It deserves a place on the shortlist when your normal spending makes 25% on eligible airtel bills and 10% on other utilities via airtel thanks valuable enough to clear the fee. Factor in this condition: Airtel monthly cashback cap is twice base cashback earned that statement month; utility cap equals base cashback.",
+      "verdict": "It deserves a place on the shortlist when your normal spending makes 25% on eligible airtel bills and 10% on other utilities via airtel thanks valuable enough to clear the fee. Factor in this condition: Cashback excludes utilities/telecom outside Airtel Thanks, EMI, cash advances, fuel, rent, wallets, jewellery, insurance, education, government payments, gift cards, tolls and card fees.",
       "alternatives": [
         {
           "id": "sbi-flipkart-sbi-card",
           "name": "Flipkart SBI Card",
-          "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
+          "reason": "A similarly priced alternative for comparing online spending and straightforward cashback."
         },
         {
           "id": "hdfc-pixel-play-credit-card",
           "name": "HDFC Bank PIXEL Play",
-          "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
+          "reason": "A similarly priced alternative for comparing online spending and straightforward cashback."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-airtel-axis-bank-credit-card-55e05b6fcc.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/airtel.webp?sfvrsn=3cedec32_1",
+    "rewardRedemption": "Cashback is credited automatically to the card account on the issuer’s 60-day cycle. Partner value-back goes to the respective partner wallet, rather than the card statement. No reward redemption fee.",
+    "welcomeBenefits": [
+      "₹250 Amazon eVoucher after the first transaction within 30 days; unavailable on cards issued without a joining fee."
+    ],
+    "loungeBenefits": [
+      "Complimentary domestic lounge access was discontinued in April 2026."
+    ],
+    "forexMarkup": "3.5% of the foreign-currency transaction value, plus applicable taxes.",
+    "fuelBenefits": "1% fuel surcharge waiver on ₹400–₹4,000 transactions, capped at ₹500 per statement. GST on the surcharge is not refunded; fuel purchases earn no cashback.",
+    "exclusions": [
+      "Cashback excludes utilities/telecom outside Airtel Thanks, EMI, cash advances, fuel, rent, wallets, jewellery, insurance, education, government payments, gift cards, tolls and card fees.",
+      "Partner wallet loads and gift-card purchases do not earn partner value-back.",
+      "Rent and wallet loads do not count toward the annual fee waiver."
+    ]
   },
   {
     "id": "axis-indianoil-axis-bank-credit-card",
@@ -1118,7 +1180,9 @@
           "reason": "A similarly priced alternative for comparing reward points and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-indianoil-axis-bank-credit-card-cdab7f9fb7.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/indianoil.webp?sfvrsn=69a9e92b_1"
   },
   {
     "id": "axis-axis-bank-select-credit-card",
@@ -1264,7 +1328,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-axis-bank-my-zone-credit-card-135ed0ccc6.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/myzone.webp?sfvrsn=dfa008eb_1"
   },
   {
     "id": "axis-axis-bank-neo-credit-card",
@@ -1486,7 +1552,9 @@
           "reason": "A lower-fee way to compare similar strengths in reward points and flights."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-axis-horizon-credit-card-ecde672807.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/horizon.webp?sfvrsn=8943841e_1"
   },
   {
     "id": "axis-rewards-credit-card",
@@ -1627,7 +1695,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and dining rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-fibe-axis-bank-credit-card-c8e9ed94c8.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/fibeaxis-bank.webp?sfvrsn=cacc3e64_1"
   },
   {
     "id": "axis-privilege",
@@ -4284,7 +4354,9 @@
           "reason": "A similarly priced alternative for comparing reward points and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-flipkart-axis-bank-super-elite-credit-card-f635aeb927.jpg",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/cards-images/flipkart-superelite-card-design.jpg?sfvrsn=be7d2401_5"
   },
   {
     "id": "axis-google-pay-flex-axis-bank-credit-card",
@@ -4522,7 +4594,9 @@
           "reason": "A similarly priced alternative for comparing reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-indigo-axis-bank-credit-card-28b46b3477.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/indigo-credit-card-blue.webp?sfvrsn=ebed652b_1"
   },
   {
     "id": "axis-indigo-axis-bank-premium-credit-card",
@@ -4601,7 +4675,9 @@
           "reason": "A lower-fee way to compare similar strengths in airport lounge access and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-indigo-axis-bank-premium-credit-card-7332055cdf.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/indigo-credit-card-red.webp?sfvrsn=731dbc72_1"
   },
   {
     "id": "axis-lic-axis-bank-platinum-credit-card",
@@ -4754,7 +4830,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-lic-axis-bank-signature-credit-card-7916cf43bc.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/signature-lifestyle-benefits.webp?sfvrsn=f30d0a43_1"
   },
   {
     "id": "axis-miles-more-credit-card",
@@ -4911,7 +4989,9 @@
           "reason": "A similarly priced alternative for comparing reward points and shopping rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-my-zone-easy-credit-card-135ed0ccc6.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/myzone.webp?sfvrsn=dfa008eb_1"
   },
   {
     "id": "axis-privilege-easy-credit-card",
@@ -4989,7 +5069,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-privilege-easy-credit-card-80b2fac562.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/privilege.webp?sfvrsn=5f9521ce_4"
   },
   {
     "id": "axis-samsung-axis-bank-signature-credit-card",
@@ -5400,7 +5482,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and straightforward cashback."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-altura-credit-card-9330ac8759.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/altura-1?fmt=webp"
   },
   {
     "id": "au-altura-plus-credit-card",
@@ -5477,7 +5561,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-altura-plus-credit-card-4dad1cff6d.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/altura_plus_blue?fmt=webp"
   },
   {
     "id": "au-ananta-credit-card",
@@ -5555,7 +5641,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-ananta-credit-card-f8a2613e39.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/Ananta?fmt=webp"
   },
   {
     "id": "au-cheq-au-credit-card",
@@ -5632,7 +5720,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-cheq-au-credit-card-bc21c6302f.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/CheQ-credit-card-without-name-V?fmt=webp"
   },
   {
     "id": "au-ixigo-au-credit-card",
@@ -5714,7 +5804,9 @@
           "reason": "A higher-fee option to compare for broader benefits around online spending and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-ixigo-au-credit-card-52d986c582.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/ixigo-4?fmt=webp"
   },
   {
     "id": "au-laksya-credit-card",
@@ -5791,7 +5883,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-laksya-credit-card-c01da1f32c.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/Laksya?fmt=webp"
   },
   {
     "id": "au-lit-credit-card",
@@ -5868,7 +5962,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-lit-credit-card-49beeb0d77.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/lit?fmt=webp"
   },
   {
     "id": "au-nomo-credit-card",
@@ -5948,7 +6044,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-nomo-credit-card-790ba537b5.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/nomo_card?fmt=webp"
   },
   {
     "id": "au-paytm-au-credit-card",
@@ -6027,7 +6125,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-paytm-au-credit-card-748046e38b.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/1875x2974-Paytm-Rupay-Platinum-active?fmt=webp"
   },
   {
     "id": "au-prathama-credit-card",
@@ -6102,7 +6202,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-prathama-credit-card-d978335c35.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/Prathama?fmt=webp"
   },
   {
     "id": "au-swipeup-program-xcite-credit-card",
@@ -6181,7 +6283,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-swipeup-program-xcite-credit-card-ddea7aac7d.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/Xcite?fmt=webp"
   },
   {
     "id": "au-swipeup-program-xcite-ace-credit-card",
@@ -6420,7 +6524,9 @@
           "reason": "A similarly priced alternative for comparing reward points and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-tejas-credit-card-6a9072a436.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/Tejas?fmt=webp"
   },
   {
     "id": "au-vetta-credit-card",
@@ -6498,7 +6604,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-vetta-credit-card-2fdc0db56c.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/Vetta?fmt=webp"
   },
   {
     "id": "au-zenith-credit-card",
@@ -6579,7 +6687,9 @@
           "reason": "A lower-fee way to compare similar strengths in reward points and airport lounge access."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-zenith-credit-card-87a6d55925.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/zenith?fmt=webp"
   },
   {
     "id": "au-zenith-plus-credit-card",
@@ -6658,7 +6768,9 @@
           "reason": "A similarly priced alternative for comparing reward points and airport lounge access."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-zenith-plus-credit-card-c9a18ee9b4.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/zenith_plus?fmt=webp"
   },
   {
     "id": "au-instapay",
@@ -6734,7 +6846,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and dining rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/au-instapay-481a4b9443.webp",
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/instapay-2?fmt=webp"
   },
   {
     "id": "federal-celesta-credit-card",

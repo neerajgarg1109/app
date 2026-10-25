@@ -695,13 +695,14 @@ def test_restricted_cards_do_not_enter_general_quiz_but_history_is_resolvable():
 
 
 def test_expansion_preserves_existing_92_and_adds_distinct_products():
-    # Freeze pre-expansion product facts while allowing sourced presentation assets.
+    # Preserve the original products; baseline includes the targeted issuer-source
+    # corrections recorded in docs/catalog-fact-checks-2026-10-26.json.
     frozen = [
         {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial", "homepagePlacement"}}
         for card in CARDS[:92]
     ]
     encoded = json.dumps(frozen, sort_keys=True, ensure_ascii=False).encode()
-    assert hashlib.sha256(encoded).hexdigest() == "6e01e1a527a591ddc0121b63ae9852da4884d6738292c65defb12bfc21dcbf8f"
+    assert hashlib.sha256(encoded).hexdigest() == "2e50e9e673f435cdc4f6f836d9d663076af5a878bd14d1a0d0693a7321d6d421"
     batch = [c for c in CARDS if c.get("catalogBatch") == "expansion-100-2026-10-09"]
     assert len(batch) == 100
     # A '+' distinguishes actual Plus tiers and must survive name normalization.

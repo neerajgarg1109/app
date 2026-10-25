@@ -1,5 +1,15 @@
 import { catalogQualityIssues } from "./catalogQuality";
 
+test.each(["No fee for the first four years", "₹0", "Rs. 0"])("does not mistake %s for a positive fee", (fee) => {
+  const issues = catalogQualityIssues([{ annualFee: fee, annualFeeAmount: 0, joiningFee: fee, joiningFeeAmount: 0 }]);
+  expect(issues.map((item) => item.issue).filter((issue) => issue.includes("fee text and amount conflict"))).toEqual([]);
+});
+
+test.each(["Rs. 500", "Rs 1,000", "₹0 initially; ₹500 later"])("preserves real fee conflicts for %s", (fee) => {
+  const issues = catalogQualityIssues([{ annualFee: fee, annualFeeAmount: 0, joiningFee: fee, joiningFeeAmount: 0 }]);
+  expect(issues.map((item) => item.issue)).toEqual(expect.arrayContaining(["Annual fee text and amount conflict", "Joining fee text and amount conflict"]));
+});
+
 test("detects contradictory fees, duplicate facts and unsafe sources", () => {
   const [card] = [{
     id: "broken", name: "Broken Card", annualFee: "No annual fee", annualFeeAmount: 999,

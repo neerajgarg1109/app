@@ -1,0 +1,70 @@
+[
+  {
+    "id": "axis-axis-bank-ace-credit-card",
+    "checkedOn": "2026-10-26",
+    "fields": [
+      "joiningFee",
+      "highlights",
+      "rewardRedemption",
+      "forexMarkup",
+      "fuelBenefits",
+      "exclusions",
+      "welcomeBenefits",
+      "loungeBenefits"
+    ],
+    "sources": [
+      "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-ace-credit-card-tncs.pdf",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/credit-cards/terms-and-conditions-axis-bank-ace-credit-card.pdf?sfvrsn=1109dfe1_2",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-airport-lounge-access-program.pdf?sfvrsn=843429b3_11"
+    ]
+  },
+  {
+    "id": "axis-flipkart-axisbank-credit-card",
+    "checkedOn": "2026-10-26",
+    "fields": [
+      "rewardRedemption",
+      "welcomeBenefits",
+      "forexMarkup",
+      "fuelBenefits",
+      "exclusions",
+      "loungeBenefits"
+    ],
+    "sources": [
+      "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/cashback-tncs---final.pdf?sfvrsn=b55a0e1a_5",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-airport-lounge-access-program.pdf?sfvrsn=843429b3_11"
+    ]
+  },
+  {
+    "id": "axis-airtel-axis-bank-credit-card",
+    "checkedOn": "2026-10-26",
+    "fields": [
+      "rewardRedemption",
+      "welcomeBenefits",
+      "loungeBenefits",
+      "forexMarkup",
+      "fuelBenefits",
+      "highlights",
+      "exclusions"
+    ],
+    "sources": [
+      "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/credit-cards/terms-and-conditions-for-cashback-for-airtel-axis-bank-credit-card.pdf",
+      "https://www.axis.bank.in/docs/default-source/default-document-library/terms-and-conditions-for-airtel-cbcc-cvp.pdf?sfvrsn=9deed8c1_5"
+    ]
+  },
+  {
+    "id": "sbi-cashback-sbi",
+    "checkedOn": "2026-10-26",
+    "fields": [
+      "rewardRedemption",
+      "fuelBenefits",
+      "exclusions"
+    ],
+    "sources": [
+      "https://www.sbicard.com/en/personal/credit-cards/cashback-sbi-card.html",
+      "https://www.sbicard.com/sbi-card-en/assets/docs/pdf/ekit-tncs/cashback-tnc-ekit.pdf"
+    ]
+  }
+]

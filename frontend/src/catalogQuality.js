@@ -1,3 +1,8 @@
+function hasPositiveRupeeAmount(text) {
+  const amounts = text.matchAll(/(?:₹|\brs\.?)\s*([0-9][0-9,]*(?:\.[0-9]+)?)/gi);
+  return Array.from(amounts).some((match) => Number(match[1].replace(/,/g, "")) > 0);
+}
+
 export function catalogQualityIssues(cards, now = new Date()) {
   const normalizedNames = cards.map((card) => String(card.name || "").trim().toLowerCase());
   return cards.flatMap((card, index) => {
@@ -13,9 +18,9 @@ export function catalogQualityIssues(cards, now = new Date()) {
     if (!card.verifiedOn) issues.push("Missing verification date");
     if (normalizedNames.indexOf(normalizedNames[index]) !== index) issues.push("Possible duplicate product");
     if ((/no annual fee|lifetime free/.test(annualText) && Number(card.annualFeeAmount) > 0)
-      || (!/no annual fee|lifetime free/.test(annualText) && Number(card.annualFeeAmount) === 0 && /₹|rs\.?/.test(annualText))) issues.push("Annual fee text and amount conflict");
+      || (!/no annual fee|lifetime free/.test(annualText) && Number(card.annualFeeAmount) === 0 && hasPositiveRupeeAmount(annualText))) issues.push("Annual fee text and amount conflict");
     if ((/no joining fee|lifetime free/.test(joiningText) && Number(card.joiningFeeAmount) > 0)
-      || (!/no joining fee|lifetime free|first.year.free/.test(joiningText) && Number(card.joiningFeeAmount) === 0 && /₹|rs\.?/.test(joiningText))) issues.push("Joining fee text and amount conflict");
+      || (!/no joining fee|lifetime free|first.year.free/.test(joiningText) && Number(card.joiningFeeAmount) === 0 && hasPositiveRupeeAmount(joiningText))) issues.push("Joining fee text and amount conflict");
     if ((card.highlights || []).length !== new Set((card.highlights || []).map((item) => item.trim().toLowerCase())).size) issues.push("Duplicate benefit statements");
     for (const source of card.sourceUrls || []) {
       if (!String(source).startsWith("https://")) issues.push("Non-HTTPS source URL");

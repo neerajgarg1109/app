@@ -20,7 +20,7 @@ LABELS = {
 }
 LIMITATION = re.compile(r"cap|exclu|limit|markup|not cash|condition|eligible|only|minimum|quarter", re.I)
 STRENGTH = re.compile(r"welcome|complimentary|lounge|cashback|reward|waiv|voucher|milestone|insurance", re.I)
-NEGATIVE = re.compile(r"^(?:no|not)\b|excluded|exclusion|ineligible|not cash", re.I)
+NEGATIVE = re.compile(r"^(?:no|not)\b|excluded|exclusion|ineligible|not cash|discontinued", re.I)
 
 
 def sentence(value):

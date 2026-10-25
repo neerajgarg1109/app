@@ -4,10 +4,14 @@
 The importer is deliberately conservative: it only accepts raster images from
 the same issuer host (or its CDN), requires a product-name match in the image
 metadata/URL, validates the downloaded file, and records its source URL.
+Review the result visually before publishing; an issuer's Open Graph image may
+still be a promotional banner rather than the card face. Reviewed exact assets
+are maintained in docs/catalog-artwork-sources.json.
 """
 
 import argparse
 import hashlib
+import io
 import json
 import re
 from html.parser import HTMLParser
@@ -15,6 +19,7 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import requests
+from PIL import Image, UnidentifiedImageError
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "backend" / "cards_catalog.json"
@@ -28,6 +33,20 @@ CURATED_IMAGES = {
     "kotak-zen-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/Thumbnail-Banners-for-Zen-t.jpg",
     "kotak-811-dream-different-credit-card": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/811-dream-different-credit-card-t.jpg",
 }
+REVIEWED_IMAGES = ROOT / "docs" / "catalog-artwork-sources.json"
+if REVIEWED_IMAGES.exists():
+    CURATED_IMAGES.update({item["id"]: item["source"] for item in json.loads(REVIEWED_IMAGES.read_text())})
+
+
+def official_image_host(page, asset, curated=None):
+    """Allow the issuer's own hosts, or an explicitly reviewed CDN asset."""
+    if urlparse(asset).scheme != "https":
+        return False
+    if curated and asset == curated:
+        return True
+    issuer = (urlparse(page).hostname or "").removeprefix("www.")
+    host = urlparse(asset).hostname or ""
+    return bool(issuer) and (host == issuer or host.endswith("." + issuer))
 
 
 class Images(HTMLParser):
@@ -37,12 +56,13 @@ class Images(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         data = dict(attrs)
-        if tag == "img":
+        if tag in {"img", "source"}:
             for key in ("src", "data-src", "data-lazy-src"):
                 if data.get(key):
                     self.items.append((data[key], data.get("alt", "")))
-            if data.get("srcset"):
-                self.items.extend((part.strip().split()[0], data.get("alt", "")) for part in data["srcset"].split(","))
+            for key in ("srcset", "data-srcset"):
+                if data.get(key):
+                    self.items.extend((part.strip().split()[0], data.get("alt", "")) for part in data[key].split(",") if part.strip())
         if tag == "meta" and data.get("property") in {"og:image", "twitter:image"} and data.get("content"):
             self.items.append((data["content"], data.get("property", "")))
 
@@ -62,29 +82,13 @@ def score(card, url, alt):
 
 
 def image_info(data, content_type=""):
-    if data.startswith(b"\x89PNG\r\n\x1a\n") and len(data) >= 24:
-        return "png", int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
-    if data.startswith(b"\xff\xd8"):
-        pos = 2
-        while pos + 9 < len(data):
-            if data[pos] != 0xFF:
-                pos += 1; continue
-            marker = data[pos + 1]; pos += 2
-            if marker in {0xD8, 0xD9}:
-                continue
-            length = int.from_bytes(data[pos:pos + 2], "big")
-            if marker in range(0xC0, 0xC4):
-                return "jpg", int.from_bytes(data[pos + 5:pos + 7], "big"), int.from_bytes(data[pos + 3:pos + 5], "big")
-            pos += max(length, 2)
-    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
-        return "webp", 500, 300
-    if "svg" in content_type or data.lstrip().startswith(b"<svg"):
-        head = data[:3000].decode("utf-8", "ignore")
-        viewbox = re.search(r"viewBox=[\"']\s*[\d.]+\s+[\d.]+\s+([\d.]+)\s+([\d.]+)", head, re.I)
-        if viewbox:
-            return "svg", int(float(viewbox.group(1))), int(float(viewbox.group(2)))
-        return "svg", 500, 300
-    return None
+    try:
+        with Image.open(io.BytesIO(data)) as image:
+            image.load()
+            ext = {"PNG": "png", "JPEG": "jpg", "WEBP": "webp"}.get(image.format)
+            return (ext, *image.size) if ext else None
+    except (UnidentifiedImageError, OSError, ValueError):
+        return None
 
 
 def main():
@@ -144,8 +148,8 @@ def main():
                 rank, overlap = score(card, url, alt)
                 basename = Path(urlparse(url).path).name.lower()
                 generic = any(term in basename for term in ("feecharges", "rightline", "category-bg", "mega-menu", "logo", "icon"))
-                if urlparse(url).scheme == "https" and not generic and (url in trusted_urls or overlap >= 2):
-                    candidates.append((rank, url, alt))
+                if official_image_host(page, url, curated) and not generic and (url in trusted_urls or overlap >= 2):
+                    candidates.append((rank + (100 if url == curated else 0), url, alt))
             candidates.sort(reverse=True)
             if args.debug:
                 print({"id": card["id"], "candidate_urls": [{"score": rank, "url": url, "alt": alt} for rank, url, alt in candidates[:12]]})
@@ -186,7 +190,7 @@ def main():
         merged.extend(updated.values())
         report = merged
     report_path.write_text(json.dumps(report, indent=2) + "\n")
-    imported = sum(item["status"] in {"existing", "imported"} for item in report)
+    imported = sum(bool(card.get("imageUrl")) for card in cards)
     print(f"Image coverage: {imported}/{len(cards)}")
 
 
