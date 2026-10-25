@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const NAV_ITEMS = [
+  { label: "Home", to: "/" },
   { label: "Browse cards", to: "/cards" },
   { label: "Card comparisons", to: "/cards?mode=compare" },
   { label: "Reviews & editorials", href: `${process.env.PUBLIC_URL}/guides/` },
@@ -14,8 +15,7 @@ const NAV_ITEMS = [
 export default function CustomerNav() {
   const location = currentHashLocation();
   return (
-    <nav className="ciq-container ciq-container--wide" aria-label="Explore CardIQ">
-      <div className="mb-2 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-ink-soft)" }}>Explore CardIQ</div>
+    <nav className="ciq-container ciq-container--wide" aria-label="Main navigation">
       <div className="grid grid-cols-2 gap-2 pb-2 sm:flex sm:flex-wrap">
         {NAV_ITEMS.map((item) => {
           const active = item.to ? isActive(item.to, location.pathname, location.search) : false;
