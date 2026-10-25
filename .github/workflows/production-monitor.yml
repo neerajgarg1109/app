@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
+    inputs:
+      simulate_failure:
+        description: 'Test GitHub failure notifications without interrupting production'
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -14,4 +19,9 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
+      - name: Controlled notification test
+        if: github.event_name == 'workflow_dispatch' && inputs.simulate_failure
+        run: |
+          echo 'Intentional monitoring notification test. Production was not interrupted.'
+          exit 1
       - run: python3 ops/monitor.py

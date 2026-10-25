@@ -10,7 +10,9 @@ have been activated successfully.
   database-aware `/api/ready`, and catalogue checks every 15 minutes. A failed
   check fails the Actions run. Enable GitHub Actions failure notifications in the
   intended recipient's GitHub notification settings and verify a controlled test
-  failure arrives. No customer email address is used by this monitor.
+  failure arrives. A manual run with `simulate_failure=true` intentionally fails
+  without touching production; obtain approval for the recipient before testing.
+  No customer email address is used by this monitor.
 - `production-backup.yml`: daily at 02:13 IST, **disabled** until repository
   variable `CARDIQ_BACKUPS_ENABLED=true`. Uses environment `production-backups`.
   Uploads only AES-256-GCM encrypted MongoDB archives to GitHub Actions artifacts;
