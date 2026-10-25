@@ -67,6 +67,13 @@ def backup(output):
     uri = os.environ['MONGODB_BACKUP_URI']
     name = database_name(os.environ['MONGODB_DATABASE'])
     key = key_from_environment()  # Fail before generating plaintext if key is absent.
+    from pymongo import MongoClient
+    client = MongoClient(uri, serverSelectionTimeoutMS=5000)
+    try:
+        if client[name].cards.find_one({}, {"_id": 1}) is None:
+            raise ValueError('Source database has no CardIQ catalogue; refusing an empty or wrong-database backup')
+    finally:
+        client.close()
     output = Path(output)
     if output.exists():
         raise ValueError('Output already exists')

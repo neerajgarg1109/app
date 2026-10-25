@@ -14,13 +14,17 @@ def run():
     if not token:
         raise ValueError('Missing runner token')
     dry_run = os.environ.get('CARDIQ_REMINDERS_SEND', 'false') != 'true'
-    preflight = urllib.request.Request(origin + '/api/admin/send-review-reminders?dry_run=true',
+    # A new route prevents an older deployment that ignores dry_run from sending
+    # messages while this runner thinks it is only checking eligibility.
+    preflight = urllib.request.Request(origin + '/api/ops/review-reminders?dry_run=true',
                                      data=b'', method='POST', headers={'X-Admin-Token': token})
     with urllib.request.urlopen(preflight, timeout=30) as response:
         summary = json.load(response)
+    if summary.get('dry_run') is not True or summary.get('sent') != 0:
+        raise RuntimeError('Server did not confirm a safe dry run')
     if summary.get('needs_review', 0):
         raise RuntimeError('Ambiguous deliveries require human review before sending')
-    request = urllib.request.Request(origin + '/api/admin/send-review-reminders?dry_run=' + str(dry_run).lower(),
+    request = urllib.request.Request(origin + '/api/ops/review-reminders?dry_run=' + str(dry_run).lower(),
                                      data=b'', method='POST', headers={'X-Admin-Token': token})
     # No retries: an ambiguous delivery outcome requires human investigation.
     with urllib.request.urlopen(request, timeout=600) as response:

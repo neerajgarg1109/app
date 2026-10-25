@@ -1970,6 +1970,7 @@ async def moderate_card_review(review_id: str, payload: ReviewModerationIn, x_ad
 
 
 @api_router.post("/admin/send-review-reminders")
+@api_router.post("/ops/review-reminders")
 async def send_review_reminders(x_admin_token: Optional[str] = Header(None), dry_run: bool = False):
     runner_token = os.environ.get("REMINDER_RUNNER_TOKEN", "")
     if not (runner_token and x_admin_token and secrets.compare_digest(runner_token, x_admin_token)):

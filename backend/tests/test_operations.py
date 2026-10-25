@@ -26,6 +26,7 @@ def test_readiness_and_consented_runner_safety(monkeypatch):
             headers = {'X-Admin-Token': 'isolated-runner-token'}
             assert (await api.get('/api/admin/cards', headers=headers)).status_code == 401
             assert (await api.post('/api/admin/send-review-reminders?dry_run=true')).status_code == 401
+            assert (await api.post('/api/ops/review-reminders?dry_run=true')).status_code == 401
             now = datetime.now(timezone.utc)
             for name, consent in [('consented', True), ('no-consent', False)]:
                 await database.review_followups.insert_one({'followup_id': name, 'card_id': server.CARDS[0]['id'],
@@ -37,7 +38,7 @@ def test_readiness_and_consented_runner_safety(monkeypatch):
                 await asyncio.sleep(.01)
                 return 'synthetic-id'
             monkeypatch.setattr(server, 'send_email', delivery)
-            dry = await api.post('/api/admin/send-review-reminders?dry_run=true', headers=headers)
+            dry = await api.post('/api/ops/review-reminders?dry_run=true', headers=headers)
             assert dry.json() == {'due': 1, 'sent': 0, 'dry_run': True, 'needs_review': 0} and not sent
             runs = await asyncio.gather(*(api.post('/api/admin/send-review-reminders', headers=headers) for _ in range(4)))
             assert all(r.status_code == 200 for r in runs) and len(sent) == 1
