@@ -10,6 +10,7 @@ This is a targeted quality pass, not a full re-verification of all 261 products.
 - Fixed false fee conflicts caused by matching “Rs” inside “years” or treating ₹0 as a positive fee. Real positive-fee conflicts remain detectable.
 - Importer now validates real WebP dimensions, restricts issuer hosts, supports picture/lazy sources and prioritises reviewed exact artwork. Install its optional authoring dependencies with `pip install -r scripts/requirements-catalog.txt`. Unreviewed imports still require visual review.
 - Editorial generation no longer presents discontinued benefits as strengths.
+- Live visual QA caught portrait artwork clipping in the shared image frame. The image is now constrained to the frame with object containment so both portrait and landscape card faces remain visible.
 
 ## Coverage and remaining work
 
@@ -41,4 +42,5 @@ Continue in issuer batches, prioritising missing fees/waiver conditions, reward 
 - 111 frontend tests, 48 backend tests, 18 generated-page tests and four importer/editorial boundary tests.
 - Production frontend build and generation of 261 card, 20 issuer, 29 category and 96 comparison pages.
 - All 29 imported files were decoded and visually checked.
-- Live deployment verification is recorded in the completion message after publishing.
+- Live HTTPS verification after publishing `41d74fa`: all 29 image hashes matched the source files, all four updated API profiles matched the repository fields, and all four static card pages contained the updated highlights. Certificate validation passed for website and API. The isolated operations verification workflow also passed.
+- The follow-up image-frame fix passed all 111 frontend tests, the production build and 18 generated-page checks; final live visual verification is reported in the completion message.

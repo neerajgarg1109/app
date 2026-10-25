@@ -22,7 +22,7 @@ export default function CreditCardVisual({ card, floating = false, size = "md" }
   if (imageUrl && !imageFailed) {
     return (
       <div
-        className={`relative mx-auto grid w-full place-items-center overflow-hidden rounded-2xl border bg-white p-3 ${SIZE_CLASSES[size] || SIZE_CLASSES.md} ${floating ? "ciq-float" : ""}`}
+        className={`relative mx-auto grid w-full place-items-center overflow-hidden rounded-2xl border bg-white ${SIZE_CLASSES[size] || SIZE_CLASSES.md} ${floating ? "ciq-float" : ""}`}
         style={{
           aspectRatio: "1.586 / 1",
           borderColor: "var(--ciq-line)",
@@ -32,7 +32,7 @@ export default function CreditCardVisual({ card, floating = false, size = "md" }
         <img
           src={imageUrl}
           alt={`${card.name} card`}
-          className="h-full w-full object-contain"
+          className="absolute inset-0 h-full w-full object-contain p-3"
           onError={() => setImageFailed(true)}
         />
       </div>
