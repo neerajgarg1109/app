@@ -1966,7 +1966,7 @@ async def send_review_reminders(x_admin_token: Optional[str] = Header(None)):
     sent = 0
     for followup in due:
         token = secrets.token_urlsafe(32)
-        url = f"{PUBLIC_APP_URL}/review/{token}"
+        url = f"{PUBLIC_APP_URL}/#/review/{token}"
         card_name = names.get(followup["card_id"], "your card")
         html = (f'<table role="presentation" width="100%" style="font-family:Arial,sans-serif;background:#f6f7f5;padding:24px"><tr><td>'
                 f'<h1 style="color:#0f1a17;font-size:22px">How is {escape(card_name)} working for you?</h1>'

@@ -567,6 +567,11 @@ def test_migration_and_api_round_trip(monkeypatch):
                 })
                 reminders = await api.post("/api/admin/send-review-reminders", headers=editor_headers)
                 assert reminders.json() == {"due": 1, "sent": 1}
+                reminder_email = next(message for message in sent_emails if message["to"] == "due@example.com")
+                review_link = re.search(r'href="([^"]+)"', reminder_email["html"]).group(1)
+                assert review_link.startswith(f"{server.PUBLIC_APP_URL}/#/review/")
+                review_token = urlparse(review_link).fragment.removeprefix("/review/")
+                assert (await api.get(f"/api/reviews/invite/{review_token}")).status_code == 200
                 due_doc = await database.review_followups.find_one({"followup_id": "due-followup"})
                 assert due_doc["reminder_sent"] is True and due_doc["token_hash"] and due_doc["token_expires_at"]
                 # Current issuer facts must flow through previously shared results and later emails.

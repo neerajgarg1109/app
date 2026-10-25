@@ -76,6 +76,20 @@ describe("Admin partner-link workflow", () => {
     container.remove();
   });
 
+  test.each([
+    [{ response: { status: 401 } }, "Invalid admin key."],
+    [{ response: { status: 403 } }, "does not have permission"],
+    [new Error("Network Error"), "Couldn’t reach the admin service"],
+    [{ response: { status: 500 } }, "couldn’t load the dashboard"],
+  ])("distinguishes authentication failures from service failures", async (failure, message) => {
+    getAdminLeads.mockRejectedValueOnce(failure);
+    await act(async () => root.render(<Admin />));
+    await act(async () => setInput(container.querySelector('input[type="password"]'), "owner-token"));
+    await act(async () => click(container, "Unlock dashboard").click());
+    expect(container.textContent).toContain(message);
+    if (failure.response?.status !== 401) expect(container.textContent).not.toContain("Invalid admin key.");
+  });
+
   test("shows revenue metrics and saves complete partner attribution", async () => {
     await act(async () => root.render(<Admin />));
     const password = container.querySelector('input[type="password"]');

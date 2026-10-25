@@ -52,7 +52,7 @@ function Analyzing() {
         <p className="mt-2 text-sm font-medium transition-all" style={{ color: "var(--ciq-teal)" }}>
           {ANALYZE_STEPS[i]}
         </p>
-        {waking && <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Our service is waking up after a quiet period. Your answers are safe and your result will appear automatically.</p>}
+        {waking && <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>This is taking a little longer than usual. We’re still comparing your answers.</p>}
       </div>
     </div>
   );
@@ -97,7 +97,6 @@ function QuizApp() {
 
   const handleQuizComplete = async (ans) => {
     setAnswers(ans);
-    clearProgress();
     setError(null);
     setScreen("analyzing");
     try {
@@ -108,6 +107,7 @@ function QuizApp() {
       if (!data?.scored?.length) {
         throw new Error("The matching service returned no recommendations.");
       }
+      clearProgress();
       setScored(data.scored);
       setResultId(data.result_id);
       recordProductEvent("result_viewed", data.result_id);
@@ -128,12 +128,18 @@ function QuizApp() {
   };
 
   const refineResult = async (changes) => {
+    setError(null);
     setRefining(true);
     try {
       const nextAnswers = { ...answers, ...changes };
       const data = await submitQuiz(nextAnswers);
+      if (!data?.scored?.length) throw new Error("No recommendations returned");
       setAnswers(nextAnswers); setScored(data.scored); setResultId(data.result_id);
       window.scrollTo({ top: 0, behavior: "smooth" });
+      return true;
+    } catch (e) {
+      setError("We couldn't update your recommendation. Your previous result is still available. Please try again.");
+      return false;
     } finally { setRefining(false); }
   };
 
@@ -157,7 +163,10 @@ function QuizApp() {
       {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={exitToLanding} error={error} />}
       {screen === "analyzing" && <Analyzing />}
       {screen === "result" && scored && (
-        <Result scored={scored} resultId={resultId} answers={answers} refining={refining} onRefine={refineResult} onSaveResult={saveResult} onRestart={restart} />
+        <>
+          {error && <p role="alert" className="ciq-container px-5 py-4 text-sm">{error}</p>}
+          <Result scored={scored} resultId={resultId} answers={answers} refining={refining} onRefine={refineResult} onSaveResult={saveResult} onRestart={restart} />
+        </>
       )}
     </>
   );

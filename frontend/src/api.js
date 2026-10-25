@@ -3,14 +3,14 @@ import axios from "axios";
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const http = axios.create({ baseURL: API });
+const http = axios.create({ baseURL: API, timeout: 30000 });
 
 export async function getCards() {
   try {
     const { data } = await http.get("/cards", { params: { view: "summary" }, timeout: 2500 });
     return data;
   } catch (apiError) {
-    // GitHub Pages remains useful while Render's free service is waking up.
+    // Keep browsing available during a temporary API outage.
     // This file is generated from the same backend catalogue during each build.
     const fallbackUrl = `${process.env.PUBLIC_URL || ""}/cards-catalog-summary.json`;
     const { data } = await axios.get(fallbackUrl, { timeout: 10000 });
@@ -55,9 +55,7 @@ export async function submitQuiz(answers, lead) {
   const { data } = await http.post(
     "/quiz/submit",
     lead ? { answers, lead } : { answers },
-    // Render can take tens of seconds to wake a sleeping free-tier service.
-    // The catalogue request starts that wake-up on landing; this larger guard
-    // prevents an immediate quiz failure if a customer completes it first.
+    // Keep a finite allowance for a full catalogue recommendation request.
     { timeout: 50000 },
   );
   return data; // { result_id, scored }

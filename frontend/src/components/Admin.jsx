@@ -58,6 +58,7 @@ export default function Admin() {
   const reconciliationInput = useRef(null);
 
   const load = async (t, presetKey = preset) => {
+    t = t.trim();
     setLoading(true);
     setError(null);
     const params = rangeFor(presetKey);
@@ -81,7 +82,11 @@ export default function Admin() {
       setAuthed(true);
       localStorage.setItem("ciq_admin", t);
     } catch (e) {
-      setError("Invalid admin key.");
+      const status = e.response?.status;
+      setError(status === 401 ? "Invalid admin key."
+        : status === 403 ? "Your admin key does not have permission to load this dashboard."
+        : !e.response ? "Couldn’t reach the admin service. Check your connection and try again."
+        : "The admin service couldn’t load the dashboard. Please try again.");
       setAuthed(false);
     } finally {
       setLoading(false);
