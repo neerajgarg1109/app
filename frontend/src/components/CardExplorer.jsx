@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Check, GitCompare, Loader2, Search, Share2, X } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getCard, getCards, trackApplyClick } from "../api";
 import { recordProductEvent } from "../productAnalytics";
 import Logo from "./Logo";
 import CardDetails from "./CardDetails";
-import Compare from "./Compare";
 import CARD_CATEGORIES from "../data/cardCategories.json";
 import CustomerNav from "./CustomerNav";
 import ComparisonWorkspace from "./ComparisonWorkspace";
@@ -18,6 +17,7 @@ const POPULAR_CATEGORIES = [
 
 export default function CardExplorer() {
   const { cardId } = useParams();
+  const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [selectedCard, setSelectedCard] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -36,7 +36,6 @@ export default function CardExplorer() {
     if (linked.length >= 2) return linked;
     try { return JSON.parse(localStorage.getItem("ciq_compare_cards") || "[]").slice(0, 3); } catch (error) { return []; }
   });
-  const [showCompare, setShowCompare] = useState(false);
   const [ownedCardId, setOwnedCardId] = useState(() => localStorage.getItem("ciq_owned_card") || "");
 
   useEffect(() => {
@@ -111,7 +110,7 @@ export default function CardExplorer() {
       <CustomerNav />
 
       <main className="ciq-container ciq-container--wide">
-        {comparisonMode ? <ComparisonWorkspace cards={cards} selected={compareCards} loading={loading} error={error} ownedCardId={ownedCardId} onToggle={toggleCompare} onOwned={setOwnedCardId} onShare={shareComparison} /> : <>
+        {comparisonMode ? <ComparisonWorkspace resultsFirst={initialFilters.view === "results"} cards={cards} selected={compareCards} loading={loading} error={error} ownedCardId={ownedCardId} onToggle={toggleCompare} onOwned={setOwnedCardId} onShare={shareComparison} /> : <>
         <section className="pt-4 text-center">
           <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Explore without the quiz</div>
           <h1 className="mt-2 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Find any credit card</h1>
@@ -196,8 +195,7 @@ export default function CardExplorer() {
           </div>
         </div>
       )}
-      {!comparisonMode && compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">{ownedCardId ? "Compare with your card" : `Compare ${compareCards.length} of 3 cards`}</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => `${card.id === ownedCardId ? "Your card: " : ""}${card.name}`).join(" · ")}</div></div><button type="button" onClick={() => { setCompareIds([]); setOwnedCardId(""); }} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={shareComparison} aria-label="Share comparison" className="rounded-xl border p-2.5 disabled:opacity-40" style={{ borderColor: "var(--ciq-line)" }}><Share2 className="h-4 w-4" /></button><button type="button" disabled={compareCards.length < 2} onClick={() => setShowCompare(true)} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
-      {showCompare && !comparisonMode && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
+      {!comparisonMode && compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">{ownedCardId ? "Compare with your card" : `Compare ${compareCards.length} of 3 cards`}</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => `${card.id === ownedCardId ? "Your card: " : ""}${card.name}`).join(" · ")}</div></div><button type="button" onClick={() => { setCompareIds([]); setOwnedCardId(""); }} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={shareComparison} aria-label="Share comparison" className="rounded-xl border p-2.5 disabled:opacity-40" style={{ borderColor: "var(--ciq-line)" }}><Share2 className="h-4 w-4" /></button><button type="button" disabled={compareCards.length < 2} onClick={() => navigate("/cards?mode=compare&view=results")} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
     </div>
   );
 }

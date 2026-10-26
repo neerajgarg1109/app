@@ -1,7 +1,7 @@
 import React from "react";
 import { X, Check } from "lucide-react";
 
-export default function Compare({ cards, onClose, inline = false }) {
+export default function Compare({ cards, onClose, inline = false, showHeading = true }) {
   if (!cards || cards.length === 0) return null;
   const rows = [
     cards.some((c) => typeof c._confidence === "number") && { label: "Match", get: (c) => typeof c._confidence === "number" ? `${c._confidence}%` : "—" },
@@ -21,12 +21,12 @@ export default function Compare({ cards, onClose, inline = false }) {
         className={inline ? "overflow-x-auto bg-white" : "mt-auto max-h-[88vh] overflow-y-auto rounded-t-3xl bg-white no-scrollbar ciq-pop"}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 flex items-center justify-between border-b bg-white px-5 py-4" style={{ borderColor: "var(--ciq-line)" }}>
+        {showHeading && <div className="sticky top-0 flex items-center justify-between border-b bg-white px-5 py-4" style={{ borderColor: "var(--ciq-line)" }}>
           <h3 className="font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>Compare cards</h3>
           {!inline && <button aria-label="Close comparison" onClick={onClose} className="ciq-press grid h-9 w-9 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }}>
             <X className="h-4 w-4" style={{ color: "var(--ciq-ink)" }} />
           </button>}
-        </div>
+        </div>}
 
         <div className="p-5" style={inline ? { minWidth: cards.length === 3 ? 720 : 520 } : undefined}>
           {/* header row of card names */}

@@ -5,12 +5,15 @@ import { getCard, getCards } from "../api";
 
 jest.mock("../api", () => ({ getCard: jest.fn(), getCards: jest.fn(), trackApplyClick: jest.fn() }));
 let mockCardId;
+const mockNavigate = jest.fn(to => { window.location.hash = `#${to}`; window.dispatchEvent(new Event("hashchange")); });
 jest.mock("react-router-dom", () => ({
   Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>,
+  useNavigate: () => mockNavigate,
   useParams: () => ({ cardId: mockCardId }),
 }));
 
 global.IS_REACT_ACT_ENVIRONMENT = true;
+window.scrollTo = jest.fn();
 
 const cards = [
   {
@@ -49,6 +52,7 @@ describe("CardExplorer", () => {
   let root;
 
   beforeEach(() => {
+    mockNavigate.mockImplementation(to => { window.location.hash = `#${to}`; window.dispatchEvent(new Event("hashchange")); });
     mockCardId = undefined;
     window.location.hash = "";
     localStorage.clear();
@@ -111,9 +115,17 @@ describe("CardExplorer", () => {
     expect(container.textContent).toContain("Compare 2 of 3 cards");
     const compare = Array.from(container.querySelectorAll("button")).find((item) => item.textContent === "Compare");
     await act(async () => compare.click());
+    expect(mockNavigate).toHaveBeenCalledWith("/cards?mode=compare&view=results");
     expect(container.textContent).toContain("Compare cards");
+    expect(container.textContent).toContain("Change cards");
+    expect(container.textContent).not.toContain("Browse by category");
+    expect(container.querySelector('[aria-label="Cards selected for comparison"]')).toBeNull();
+    expect(getCard).toHaveBeenCalledWith("cashback-card");
     expect(container.textContent).toContain("Everyday Cashback");
     expect(container.textContent).toContain("Travel Plus");
+    const changeCards = Array.from(container.querySelectorAll("button")).find(item => item.textContent === "Change cards");
+    await act(async () => changeCards.click());
+    expect(container.querySelector('[aria-label="Cards selected for comparison"]')).not.toBeNull();
   });
 
   test("lets a customer mark an existing card before comparing alternatives", async () => {
