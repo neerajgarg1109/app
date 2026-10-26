@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import CARD_CATEGORIES from "../data/cardCategories.json";
 import CustomerNav from "./CustomerNav";
 import FeaturedCards from "./FeaturedCards";
+import CARD_NEWS from "../data/cardNews.json";
 
 const ICONS = { ShieldCheck, Timer, BellOff };
 
@@ -136,7 +137,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         )}
       </section>
 
-      <FeaturedCards cards={catalogCards} updates={cardUpdates} placements={featuredPlacements} />
+      <FeaturedCards cards={catalogCards} updates={cardUpdates} placements={featuredPlacements} news={CARD_NEWS} />
 
       <section className="ciq-container ciq-container--wide mt-20 pt-2 lg:mt-28 lg:pt-4">
         <div className="text-center">

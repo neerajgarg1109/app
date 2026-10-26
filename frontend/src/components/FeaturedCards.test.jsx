@@ -14,6 +14,19 @@ const cards = [
   { id: "launch", name: "Launch Card", issuer: "Bank B", applicationLinkType: "official", rewardLine: "Launch rewards", applyUrl: "https://bank.example/launch" },
 ];
 
+test("keeps upcoming news visible without adding an unlaunched product to the catalogue or new-launch list", async () => {
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  const news = [{ id: "preview", issuer: "Bank C", cardName: "Future Card", headline: "Future card announced", status: "upcoming", statusLabel: "Coming soon", summary: "Issuer preview.", availabilityNote: "Launch date not announced.", sourceUrl: "https://bank.example/announcement", verifiedOn: "2026-10-26", active: true }];
+  await act(async () => root.render(<FeaturedCards cards={[]} news={news} />));
+  expect(container.textContent).toContain("Latest news");
+  expect(container.textContent).toContain("Future Card");
+  expect(container.textContent).not.toContain("New cards worth knowing about");
+  expect(container.textContent).not.toContain("Apply now");
+  expect(container.querySelector('a[href="/cards/preview"]')).toBeNull();
+  await act(async () => root.unmount());
+});
+
 test("labels paid placement and new launches without changing rankings", async () => {
   const container = document.createElement("div");
   const root = createRoot(container);

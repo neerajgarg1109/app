@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import CreditCardVisual from "./CreditCardVisual";
 import { trackApplyClick } from "../api";
 import { recordProductEvent } from "../productAnalytics";
+import LatestNews from "./LatestNews";
 
-export default function FeaturedCards({ cards = [], updates = [], placements = null }) {
+export default function FeaturedCards({ cards = [], updates = [], placements = null, news = [] }) {
   const byId = new Map(cards.map((card) => [card.id, card]));
   const configured = Array.isArray(placements)
     ? placements.filter((item) => item.active).map((item) => {
@@ -27,12 +28,14 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
   }));
   if (partnerCard && !features.some((item) => item.card.id === partnerCard.id)) features.push({ card: partnerCard, label: "Partner feature", commercial: true, summary: partnerCard.editorial?.summary || partnerCard.rewardLine });
   if (launchCard && !features.some((item) => item.card.id === launchCard.id)) features.push({ card: launchCard, label: "New launch", commercial: false, summary: launch.summary || launchCard.editorial?.summary || launchCard.rewardLine });
-  if (!features.length) return null;
+  const hasNews = news.some((item) => item.active && ["upcoming", "announcement"].includes(item.status));
+  if (!features.length && !hasNews) return null;
   const launches = features.filter((item) => !item.commercial).slice(0, 2);
   const promotions = features.filter((item) => item.commercial).slice(0, 2);
 
   return (
     <div className="space-y-12">
+      {(launches.length > 0 || hasNews) && <div className={`ciq-container ciq-container--wide mt-12 grid items-start gap-8 ${launches.length > 0 && hasNews ? "lg:grid-cols-2" : ""}`}>
       {launches.length > 0 && <FeatureSection
         id="new-card-launches"
         eyebrow="Newly launched"
@@ -40,7 +43,10 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
         description="Recently launched credit cards in India, with the key facts and trade-offs."
         features={launches}
         updatesLink
+        embedded
       />}
+      {hasNews && <LatestNews items={news} />}
+      </div>}
       {promotions.length > 0 && <FeatureSection
         id="promoted-cards"
         eyebrow="Promoted cards"
@@ -52,21 +58,21 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
   );
 }
 
-function FeatureSection({ id, eyebrow, title, description, features, updatesLink = false }) {
+function FeatureSection({ id, eyebrow, title, description, features, updatesLink = false, embedded = false }) {
   const trackApplication = (card) => {
     Promise.resolve(trackApplyClick(card.id, null)).catch(() => {});
     recordProductEvent("apply_clicked");
   };
-  return <section className="ciq-container ciq-container--wide mt-12" aria-labelledby={`${id}-title`}>
+  return <section className={embedded ? "min-w-0" : "ciq-container ciq-container--wide mt-12"} aria-labelledby={`${id}-title`}>
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div>
         <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>{eyebrow}</div>
         <h2 id={`${id}-title`} className="mt-1 font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{title}</h2>
         <p className="mt-1 max-w-2xl text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{description}</p>
       </div>
-      {updatesLink && <Link to="/updates" className="text-sm font-semibold underline" style={{ color: "var(--ciq-teal)" }}>See all card updates</Link>}
+      {updatesLink && !embedded && <Link to="/updates" className="text-sm font-semibold underline" style={{ color: "var(--ciq-teal)" }}>See all card updates</Link>}
     </div>
-    <div className="mt-5 grid gap-4 lg:grid-cols-2">
+    <div className={`mt-5 grid gap-4 ${embedded ? "" : "lg:grid-cols-2"}`}>
         {features.map(({ card, label, commercial, summary }) => (
           <article key={`${label}-${card.id}`} className="rounded-3xl border bg-white p-5" style={{ borderColor: commercial ? "#c9c1ff" : "#b9e4da" }}>
             <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider" style={{ color: commercial ? "#5142d8" : "var(--ciq-teal)" }}>
@@ -88,5 +94,6 @@ function FeatureSection({ id, eyebrow, title, description, features, updatesLink
           </article>
         ))}
       </div>
+      {updatesLink && embedded && <Link to="/updates" className="mt-4 inline-block text-sm font-semibold underline" style={{ color: "var(--ciq-teal)" }}>See all card updates</Link>}
     </section>;
 }

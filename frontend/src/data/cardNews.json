@@ -1,0 +1,16 @@
+[
+  {
+    "id": "icici-1838-reserve-announcement",
+    "cardName": "1838 Reserve ICICI Bank Credit Card",
+    "issuer": "ICICI Bank",
+    "headline": "ICICI shares details of 1838 Reserve",
+    "summary": "ICICI’s official page introduces a premium card with travel and lifestyle privileges and zero forex markup. Access is by invitation through a Relationship Manager or registration of interest.",
+    "status": "announcement",
+    "statusLabel": "Invitation only",
+    "availabilityNote": "A future launch date is not confirmed on the issuer page.",
+    "sourceUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/1838-reserve-icici-credit-card",
+    "sourceLabel": "ICICI Bank",
+    "verifiedOn": "2026-10-26",
+    "active": true
+  }
+]
