@@ -5,6 +5,8 @@ import CreditCardVisual from "./CreditCardVisual";
 import { trackApplyClick } from "../api";
 import { recordProductEvent } from "../productAnalytics";
 import LatestNews from "./LatestNews";
+import { formatCustomerDate } from "../formatDate";
+import "./HomeHighlights.css";
 
 export default function FeaturedCards({ cards = [], updates = [], placements = null, news = [] }) {
   const byId = new Map(cards.map((card) => [card.id, card]));
@@ -34,13 +36,13 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
   const promotions = features.filter((item) => item.commercial).slice(0, 2);
 
   return (
-    <div className="space-y-12">
-      {(launches.length > 0 || hasNews) && <div className={`ciq-container ciq-container--wide mt-12 grid items-start gap-8 ${launches.length > 0 && hasNews ? "lg:grid-cols-2" : ""}`}>
+    <div className="ciq-home-highlights">
+      {(launches.length > 0 || hasNews) && <div className={`ciq-container ciq-container--wide ciq-highlights-grid ${launches.length > 0 && hasNews ? "ciq-highlights-grid--paired" : ""}`}>
       {launches.length > 0 && <FeatureSection
         id="new-card-launches"
         eyebrow="Newly launched"
-        title="New cards worth knowing about"
-        description="Recently launched credit cards in India, with the key facts and trade-offs."
+        title="New launches"
+        description="Recently released cards, at a glance."
         features={launches}
         updatesLink
         embedded
@@ -63,6 +65,23 @@ function FeatureSection({ id, eyebrow, title, description, features, updatesLink
     Promise.resolve(trackApplyClick(card.id, null)).catch(() => {});
     recordProductEvent("apply_clicked");
   };
+  if (embedded) return <section className="ciq-highlight-panel" aria-labelledby={`${id}-title`}>
+    <header className="ciq-highlight-header">
+      <span className="ciq-highlight-icon"><Sparkles className="h-5 w-5" /></span>
+      <div><h2 id={`${id}-title`} className="font-display">{title}</h2><p>{description}</p></div>
+      {updatesLink && <Link to="/updates" aria-label="See all card updates" className="ciq-highlight-updates">All updates →</Link>}
+    </header>
+    <div className="ciq-highlight-list">{features.map(({ card, label, summary }) => <article key={card.id} className="ciq-highlight-article">
+      <div className="ciq-highlight-meta"><span className="ciq-highlight-badge">{label}</span><span>{card.issuer}</span></div>
+      <h3 className="font-display">{card.name}</h3>
+      <p className="ciq-highlight-summary">{summary}</p>
+      <div className="ciq-highlight-footer">
+        <Link to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press ciq-highlight-action">View details <ArrowRight className="h-3.5 w-3.5" /></Link>
+        {card.applyUrl && card.active !== false && card.applicationsOpen !== false && <a href={card.applyUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackApplication(card)} className="ciq-highlight-secondary">Apply now <ExternalLink className="h-3 w-3" /></a>}
+        {card.verifiedOn && <span className="ciq-highlight-date">Checked <time dateTime={card.verifiedOn}>{formatCustomerDate(card.verifiedOn)}</time></span>}
+      </div>
+    </article>)}</div>
+  </section>;
   return <section className={embedded ? "min-w-0" : "ciq-container ciq-container--wide mt-12"} aria-labelledby={`${id}-title`}>
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div>

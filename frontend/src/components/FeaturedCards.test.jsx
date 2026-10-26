@@ -21,7 +21,7 @@ test("keeps upcoming news visible without adding an unlaunched product to the ca
   await act(async () => root.render(<FeaturedCards cards={[]} news={news} />));
   expect(container.textContent).toContain("Latest news");
   expect(container.textContent).toContain("Future Card");
-  expect(container.textContent).not.toContain("New cards worth knowing about");
+  expect(container.textContent).not.toContain("New launches");
   expect(container.textContent).not.toContain("Apply now");
   expect(container.querySelector('a[href="/cards/preview"]')).toBeNull();
   await act(async () => root.unmount());
@@ -33,7 +33,7 @@ test("labels paid placement and new launches without changing rankings", async (
   await act(async () => root.render(<FeaturedCards cards={cards} updates={[{ card_id: "launch", change_type: "launch", summary: "Recently launched." }]} />));
   expect(container.textContent).toContain("Partner feature");
   expect(container.textContent).toContain("Offers from CardIQ partners");
-  expect(container.textContent).toContain("New cards worth knowing about");
+  expect(container.textContent).toContain("New launches");
   expect(container.textContent).toContain("Promoted placement");
   expect(container.textContent).toContain("New launch");
   expect(container.textContent).toContain("Promotion never changes match scores");
