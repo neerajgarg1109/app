@@ -48,3 +48,15 @@ test("does not prefix the public path twice for stored static links", async () =
   await act(async () => root.unmount());
   delete process.env.PUBLIC_URL;
 });
+
+test("shows the shared footer on customer review pages", async () => {
+  mockPathname = "/review/example-invitation";
+  getSiteContent.mockRejectedValue(new Error("offline"));
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  await act(async () => root.render(<CustomerFooter />));
+  expect(container.querySelector('footer[aria-label="Site footer"]')).not.toBeNull();
+  expect(container.querySelector('a[aria-label="CardIQ home"]').getAttribute("href")).toBe("/");
+  expect(container.querySelectorAll("footer section")).toHaveLength(4);
+  await act(async () => root.unmount());
+});

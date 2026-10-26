@@ -5,6 +5,7 @@ import math
 import re
 from pathlib import Path
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
+from public_footer import CSS as FOOTER_CSS, render_footer
 
 TEMPLATES = Path(__file__).with_name('templates')
 
@@ -30,7 +31,7 @@ def cover(post):
 
 
 def shell(title, description, canonical, content, origin, schema, script=''):
-    styles = (TEMPLATES / 'guide-blog.css').read_text() + MAIN_NAV_CSS
+    styles = (TEMPLATES / 'guide-blog.css').read_text() + MAIN_NAV_CSS + FOOTER_CSS
     schema_json = json.dumps(schema, ensure_ascii=False).replace('<', '\\u003c')
     og_type = 'website' if schema.get('@type') == 'Blog' else 'article'
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -41,7 +42,7 @@ def shell(title, description, canonical, content, origin, schema, script=''):
 <header class="site-header wrap"><a class="brand" href="{origin}/"><span class="brand-mark">c</span>cardIQ<span class="brand-divider"></span><span class="brand-journal">Journal</span></a>
 <button type="button" class="back-link" onclick="history.length &gt; 1 ? history.back() : location.href='{origin}/'">← Back</button></header>{render_navigation(origin, canonical, journal=True)}
 <main id="main">{content}</main>
-<footer class="site-footer wrap"><div><a class="brand" href="{origin}/">cardIQ</a><p>Clearer choices. Better-informed cardholders.</p></div><div><a href="{origin}/methodology/">Our editorial approach</a><a href="{origin}/#/help/issuers">Issuer help</a><a href="{origin}/#/cards">Card catalogue</a></div><p class="footer-note">Card facts are dated and linked to issuer sources. Eligibility and approval are decided by the issuing bank.</p></footer>{script}</body></html>'''
+{render_footer(origin)}{script}</body></html>'''
 
 
 def article_card(post, featured=False):

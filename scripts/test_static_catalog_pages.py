@@ -67,6 +67,21 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertEqual(len(matches), 1, path)
             self.assertEqual(set(Document(matches[0]).links), expected, path)
 
+    def test_every_generated_page_has_the_same_complete_footer(self):
+        content = json.loads((ROOT / "frontend/src/data/footerContent.json").read_text())
+        from public_footer import destination
+        expected = {ORIGIN + "/"} | {destination(ORIGIN, link["url"]) for group in content["groups"] for link in group["links"]}
+        for path in self.pages:
+            source = path.read_text()
+            footers = re.findall(r'<footer[^>]*aria-label="Site footer"[^>]*>(.*?)</footer>', source, re.S)
+            self.assertEqual(len(footers), 1, path)
+            self.assertEqual(set(Document(footers[0]).links), expected, path)
+            self.assertIn(content["description"], footers[0], path)
+            self.assertIn(content["notice"], footers[0], path)
+            self.assertIn('.customer-footer .customer-footer-grid', source, path)
+            self.assertIn(f'src="{ORIGIN}/public-footer.js"', source, path)
+        self.assertTrue((BUILD / "public-footer.js").exists())
+
     def test_every_card_has_substantial_sourced_editorial_content(self):
         pages = list((BUILD / "cards").glob("*/index.html"))
         self.assertEqual({path.parent.name for path in pages}, set(CARD_IDS))
