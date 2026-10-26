@@ -132,6 +132,8 @@ describe("CardExplorer", () => {
     await act(async () => root.render(<CardExplorer />));
     await act(async () => Promise.resolve());
     expect(container.textContent).toContain("Compare cards");
+    expect(getCard).toHaveBeenCalledWith("cashback-card");
+    expect(getCard).toHaveBeenCalledWith("travel-card");
     expect(container.textContent).toContain("Everyday Cashback");
     expect(container.textContent).toContain("Travel Plus");
   });

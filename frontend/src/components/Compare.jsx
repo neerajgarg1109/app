@@ -34,7 +34,7 @@ export default function Compare({ cards, onClose, inline = false }) {
             <div />
             {cards.map((c) => (
               <div key={c.id} className="text-center">
-                <div className="mx-auto mb-2 h-10 w-16 rounded-lg" style={{ background: `linear-gradient(135deg, ${c.palette[0]}, ${c.palette[1]})` }} />
+                <div className="mx-auto mb-2 h-10 w-16 rounded-lg" style={{ background: `linear-gradient(135deg, ${c.palette?.[0] || "#312e81"}, ${c.palette?.[1] || "#6366f1"})` }} />
                 <div className="font-display text-xs font-bold leading-tight" style={{ color: "var(--ciq-ink)" }}>{c.name}</div>
               </div>
             ))}
@@ -61,7 +61,7 @@ export default function Compare({ cards, onClose, inline = false }) {
               <div className="text-xs font-semibold" style={{ color: "var(--ciq-ink-soft)" }}>Top perks</div>
               {cards.map((c) => (
                 <ul key={c.id} className="space-y-1.5">
-                  {c.highlights.slice(0, 3).map((h) => (
+                  {(c.highlights || []).slice(0, 3).map((h) => (
                     <li key={h} className="flex items-start gap-1 text-[11px] leading-snug" style={{ color: "var(--ciq-ink)" }}>
                       <Check className="mt-0.5 h-3 w-3 flex-shrink-0" style={{ color: "var(--ciq-teal-600)" }} /> {h}
                     </li>
