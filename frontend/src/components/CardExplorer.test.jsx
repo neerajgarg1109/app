@@ -144,4 +144,15 @@ describe("CardExplorer", () => {
     await act(async () => share.click());
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining("#/cards?compare=cashback-card,travel-card"));
   });
+  test("comparison mode is distinct and reacts to menu navigation", async () => {
+    await act(async () => root.render(<CardExplorer />));
+    expect(container.textContent).toContain("Browse by category");
+    await act(async () => { window.location.hash = "#/cards?mode=compare"; window.dispatchEvent(new Event("hashchange")); });
+    expect(container.textContent).toContain("Which card comes out ahead?");
+    expect(container.textContent).not.toContain("Browse by category");
+    expect(container.querySelector('input[aria-label="Find a card to compare"]')).not.toBeNull();
+    await act(async () => { window.location.hash = "#/cards"; window.dispatchEvent(new Event("hashchange")); });
+    expect(container.textContent).toContain("Browse by category");
+  });
+
 });

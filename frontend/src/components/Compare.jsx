@@ -1,7 +1,7 @@
 import React from "react";
 import { X, Check } from "lucide-react";
 
-export default function Compare({ cards, onClose }) {
+export default function Compare({ cards, onClose, inline = false }) {
   if (!cards || cards.length === 0) return null;
   const rows = [
     cards.some((c) => typeof c._confidence === "number") && { label: "Match", get: (c) => typeof c._confidence === "number" ? `${c._confidence}%` : "—" },
@@ -16,19 +16,19 @@ export default function Compare({ cards, onClose }) {
   ].filter(Boolean);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black/40" onClick={onClose}>
+    <div className={inline ? "rounded-3xl border bg-white overflow-hidden" : "fixed inset-0 z-50 flex flex-col bg-black/40"} onClick={inline ? undefined : onClose}>
       <div
-        className="mt-auto max-h-[88vh] overflow-y-auto rounded-t-3xl bg-white no-scrollbar ciq-pop"
+        className={inline ? "overflow-x-auto bg-white" : "mt-auto max-h-[88vh] overflow-y-auto rounded-t-3xl bg-white no-scrollbar ciq-pop"}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 flex items-center justify-between border-b bg-white px-5 py-4" style={{ borderColor: "var(--ciq-line)" }}>
           <h3 className="font-display text-lg font-extrabold" style={{ color: "var(--ciq-ink)" }}>Compare cards</h3>
-          <button onClick={onClose} className="ciq-press grid h-9 w-9 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }}>
+          {!inline && <button aria-label="Close comparison" onClick={onClose} className="ciq-press grid h-9 w-9 place-items-center rounded-full border" style={{ borderColor: "var(--ciq-line)" }}>
             <X className="h-4 w-4" style={{ color: "var(--ciq-ink)" }} />
-          </button>
+          </button>}
         </div>
 
-        <div className="p-5">
+        <div className="p-5" style={inline ? { minWidth: cards.length === 3 ? 720 : 520 } : undefined}>
           {/* header row of card names */}
           <div className="grid gap-2" style={{ gridTemplateColumns: `110px repeat(${cards.length}, minmax(0,1fr))` }}>
             <div />

@@ -8,6 +8,7 @@ import CardDetails from "./CardDetails";
 import Compare from "./Compare";
 import CARD_CATEGORIES from "../data/cardCategories.json";
 import CustomerNav from "./CustomerNav";
+import ComparisonWorkspace from "./ComparisonWorkspace";
 
 const PAGE_SIZE = 24;
 const POPULAR_CATEGORIES = [
@@ -21,7 +22,9 @@ export default function CardExplorer() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const initialFilters = hashFilters();
+  const [initialFilters, setRouteFilters] = useState(hashFilters);
+  const comparisonMode = initialFilters.mode === "compare" || Boolean(initialFilters.compare);
+  useEffect(() => { const update = () => setRouteFilters(hashFilters()); window.addEventListener("hashchange", update); return () => window.removeEventListener("hashchange", update); }, []);
   const [issuer, setIssuer] = useState(initialFilters.issuer || "all");
   const [category, setCategory] = useState(initialFilters.category || "all");
   const [visible, setVisible] = useState(PAGE_SIZE);
@@ -107,13 +110,14 @@ export default function CardExplorer() {
       <CustomerNav />
 
       <main className="ciq-container ciq-container--wide">
+        {comparisonMode ? <ComparisonWorkspace cards={cards} selected={compareCards} loading={loading} error={error} ownedCardId={ownedCardId} onToggle={toggleCompare} onOwned={setOwnedCardId} onShare={shareComparison} /> : <>
         <section className="pt-4 text-center">
           <div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Explore without the quiz</div>
           <h1 className="mt-2 font-display text-3xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Find any credit card</h1>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search the cards we track by card name, bank, benefit or network. Check fees, rewards, exclusions and our review.</p>
         </section>
 
-        {initialFilters.mode === "compare" && <section className="mt-5 rounded-2xl border p-4" style={{ borderColor: "#b9e4da", background: "#f2faf7" }}><div className="font-display text-base font-extrabold">Compare against a card you already have</div><p className="mt-1 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Search for your existing card and choose “I have this card”, then add up to two alternatives.</p></section>}
+
 
         <section className="sticky top-0 z-20 -mx-2 mt-6 rounded-2xl bg-[var(--ciq-bg)]/95 p-2 backdrop-blur">
           <label className="flex items-center gap-2 rounded-2xl border bg-white px-4 py-3" style={{ borderColor: "var(--ciq-line)" }}>
@@ -177,6 +181,7 @@ export default function CardExplorer() {
           {filtered.length === 0 && <div className="mt-8 rounded-2xl border bg-white p-6 text-center"><div className="font-display font-bold">No matching cards</div><p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Try a card name, issuer, benefit or a broader search.</p></div>}
           {visible < filtered.length && <button type="button" onClick={() => setVisible((count) => count + PAGE_SIZE)} className="ciq-press mt-5 w-full rounded-2xl border bg-white py-3 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>Show more cards</button>}
         </>}
+        </>}
       </main>
 
       {cardId && !loading && (
@@ -190,8 +195,8 @@ export default function CardExplorer() {
           </div>
         </div>
       )}
-      {compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">{ownedCardId ? "Compare with your card" : `Compare ${compareCards.length} of 3 cards`}</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => `${card.id === ownedCardId ? "Your card: " : ""}${card.name}`).join(" · ")}</div></div><button type="button" onClick={() => { setCompareIds([]); setOwnedCardId(""); }} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={shareComparison} aria-label="Share comparison" className="rounded-xl border p-2.5 disabled:opacity-40" style={{ borderColor: "var(--ciq-line)" }}><Share2 className="h-4 w-4" /></button><button type="button" disabled={compareCards.length < 2} onClick={() => setShowCompare(true)} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
-      {showCompare && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
+      {!comparisonMode && compareCards.length > 0 && <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}><div className="ciq-container flex items-center gap-3 py-3"><div className="min-w-0 flex-1"><div className="text-xs font-bold">{ownedCardId ? "Compare with your card" : `Compare ${compareCards.length} of 3 cards`}</div><div className="truncate text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{compareCards.map((card) => `${card.id === ownedCardId ? "Your card: " : ""}${card.name}`).join(" · ")}</div></div><button type="button" onClick={() => { setCompareIds([]); setOwnedCardId(""); }} className="text-xs font-semibold underline" style={{ color: "var(--ciq-ink-soft)" }}>Clear</button><button type="button" disabled={compareCards.length < 2} onClick={shareComparison} aria-label="Share comparison" className="rounded-xl border p-2.5 disabled:opacity-40" style={{ borderColor: "var(--ciq-line)" }}><Share2 className="h-4 w-4" /></button><button type="button" disabled={compareCards.length < 2} onClick={() => setShowCompare(true)} className="rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40" style={{ background: "var(--ciq-teal-600)" }}>Compare</button></div></div>}
+      {showCompare && !comparisonMode && <Compare cards={compareCards} onClose={() => setShowCompare(false)} />}
     </div>
   );
 }
