@@ -1,18 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NAV_ITEMS = [
-  { label: "Home", to: "/" },
-  { label: "Browse cards", to: "/cards" },
-  { label: "Card comparisons", to: "/cards?mode=compare" },
-  { label: "Reviews & editorials", href: `${process.env.PUBLIC_URL}/guides/` },
-  { label: "Value calculator", to: "/calculator" },
-  { label: "New & updated", to: "/updates" },
-  { label: "Invite-only cards", to: "/restricted-cards" },
-  { label: "Close a card", to: "/help/issuers" },
-];
+import NAV_ITEMS from "../data/mainNavigation.json";
 
-export default function CustomerNav() {
+export default function CustomerNav({ onHome } = {}) {
   const location = currentHashLocation();
   return (
     <nav className="ciq-container ciq-container--wide" aria-label="Main navigation">
@@ -25,8 +16,8 @@ export default function CustomerNav() {
             background: active ? "#f2faf7" : "#fff",
             color: active ? "var(--ciq-teal)" : "var(--ciq-ink)",
           };
-          if (item.href) return <a key={item.label} href={item.href} className={className} style={style}>{item.label}</a>;
-          return <Link key={item.label} to={item.to} aria-current={active ? "page" : undefined} className={className} style={style}>{item.label}</Link>;
+          if (item.href) return <a key={item.label} href={`${process.env.PUBLIC_URL}${item.href}`} className={className} style={style}>{item.label}</a>;
+          return <Link key={item.label} to={item.to} onClick={item.to === "/" ? onHome : undefined} aria-current={active ? "page" : undefined} className={className} style={style}>{item.label}</Link>;
         })}
       </div>
     </nav>

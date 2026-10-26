@@ -1,3 +1,4 @@
+import CustomerNav from "./CustomerNav";
 import React, { useEffect, useState } from "react";
 import { Check, RotateCcw, Star, ArrowRight, Sparkles, ChevronRight, Mail, Loader2, GitCompare, Share2, ExternalLink, Image as ImageIcon, User, Phone, X, Bookmark, Flag, SlidersHorizontal } from "lucide-react";
 import Logo from "./Logo";
@@ -228,12 +229,13 @@ export default function Result({ scored, resultId, answers, refining = false, on
 
   return (
     <div className="ciq-shell pb-28">
-      <header className="ciq-container flex items-center justify-between py-5">
+      <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
         <Logo size="md" onClick={onRestart} />
         <button onClick={onRestart} className="ciq-press flex items-center gap-1.5 rounded-full border bg-white px-3 py-1.5 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)", color: "var(--ciq-ink)" }}>
           <RotateCcw className="h-3.5 w-3.5" /> {shared ? "Take quiz" : "Retake"}
         </button>
       </header>
+      <CustomerNav onHome={onRestart} />
 
       <section className="ciq-container text-center ciq-fade-up">
         <div className="mx-auto inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold" style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}>

@@ -1,3 +1,4 @@
+import CustomerNav from "./CustomerNav";
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, Bell, ExternalLink, Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -13,7 +14,8 @@ export default function CardUpdates() {
   useEffect(() => { getCardUpdates().then((data) => setUpdates(data.updates || [])).catch(() => setError("We couldn’t load card updates.")); }, []);
 
   return <div className="ciq-shell min-h-screen pb-16">
-    <header className="ciq-container flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}><ArrowLeft className="mr-1 inline h-4 w-4" /> Home</Link></header>
+    <header className="ciq-container ciq-container--wide flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}><ArrowLeft className="mr-1 inline h-4 w-4" /> Home</Link></header>
+      <CustomerNav />
     <main className="ciq-container max-w-2xl">
       <section className="pt-4 text-center">
         <Newspaper className="mx-auto h-10 w-10" style={{ color: "var(--ciq-teal)" }} />

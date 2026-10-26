@@ -59,6 +59,14 @@ class StaticCatalogTests(unittest.TestCase):
         cls.pages = generated_pages()
         cls.documents = {path: Document(path.read_text()) for path in cls.pages}
 
+    def test_every_generated_page_has_the_complete_shared_main_menu(self):
+        items = json.loads((ROOT / "frontend/src/data/mainNavigation.json").read_text())
+        expected = {ORIGIN + ("/" if item["to"] == "/" else "/#" + item["to"]) if item.get("to") else ORIGIN + item["href"] for item in items}
+        for path in self.pages:
+            matches = re.findall(r'<nav[^>]*aria-label="Main navigation"[^>]*>(.*?)</nav>', path.read_text(), re.S)
+            self.assertEqual(len(matches), 1, path)
+            self.assertEqual(set(Document(matches[0]).links), expected, path)
+
     def test_every_card_has_substantial_sourced_editorial_content(self):
         pages = list((BUILD / "cards").glob("*/index.html"))
         self.assertEqual({path.parent.name for path in pages}, set(CARD_IDS))

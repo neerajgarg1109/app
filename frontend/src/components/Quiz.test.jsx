@@ -2,6 +2,8 @@ import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import Quiz from "./Quiz";
 
+jest.mock("react-router-dom", () => ({ Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a> }));
+
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 function buttonContaining(container, text) {

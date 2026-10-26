@@ -1,3 +1,4 @@
+import CustomerNav from "./CustomerNav";
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ExternalLink, LockKeyhole, Search } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -27,6 +28,7 @@ export default function RestrictedCards() {
 
   return <div className="ciq-shell min-h-screen pb-20">
     <header className="ciq-container ciq-container--wide flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="flex items-center gap-1 text-sm font-semibold" style={{ color: "var(--ciq-teal)" }}><ArrowLeft className="h-4 w-4" /> Home</Link></header>
+      <CustomerNav />
     <main className="ciq-container ciq-container--wide">
       <section className="rounded-3xl p-6 text-white" style={{ background: "linear-gradient(145deg,#33268f,#604ee8 60%,#0e9e98 130%)" }}>
         <LockKeyhole className="h-8 w-8" /><h1 className="mt-4 font-display text-3xl font-extrabold">Invite-only and restricted credit cards in India</h1>

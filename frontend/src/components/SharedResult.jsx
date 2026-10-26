@@ -3,6 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Loader2, ArrowRight } from "lucide-react";
 import Result from "./Result";
 import { getResult } from "../api";
+import CustomerNav from "./CustomerNav";
+import Logo from "./Logo";
+
+function ResultStatus({ children }) {
+  return <div className="ciq-shell min-h-screen"><header className="ciq-container ciq-container--wide py-5"><Logo size="md" /></header><CustomerNav /><div className="grid min-h-[65vh] place-items-center">{children}</div></div>;
+}
 
 export default function SharedResult() {
   const { resultId } = useParams();
@@ -27,15 +33,15 @@ export default function SharedResult() {
 
   if (state === "loading") {
     return (
-      <div className="ciq-shell grid min-h-screen place-items-center">
+      <ResultStatus>
         <Loader2 className="h-8 w-8 ciq-spin" style={{ color: "var(--ciq-teal-600)" }} />
-      </div>
+      </ResultStatus>
     );
   }
 
   if (state === "error") {
     return (
-      <div className="ciq-shell grid min-h-screen place-items-center">
+      <ResultStatus>
         <div className="ciq-container text-center">
           <h2 className="font-display text-2xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>Recommendation not found</h2>
           <p className="mt-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>This link may be invalid or expired.</p>
@@ -43,7 +49,7 @@ export default function SharedResult() {
             Take the quiz <ArrowRight className="h-4 w-4" />
           </button>
         </div>
-      </div>
+      </ResultStatus>
     );
   }
 

@@ -1,3 +1,4 @@
+import CustomerNav from "./CustomerNav";
 import React, { useState } from "react";
 import { ArrowLeft, ArrowRight, Loader2, Lock, Mail, User, Phone } from "lucide-react";
 import Logo from "./Logo";
@@ -35,13 +36,14 @@ export default function LeadForm({ onSubmit, onBack, submitting, error, answers 
 
   return (
     <div className="ciq-shell flex min-h-screen flex-col pb-28">
-      <header className="ciq-container flex items-center justify-between py-5">
+      <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
         <button onClick={onBack} className="ciq-press grid h-9 w-9 place-items-center rounded-full border bg-white" style={fieldStyle}>
           <ArrowLeft className="h-4 w-4" style={{ color: "var(--ciq-ink)" }} />
         </button>
         <Logo size="md" />
         <span className="w-9" />
       </header>
+      <CustomerNav />
 
       <div className="ciq-container mt-6 flex-1 ciq-fade-up">
         <div className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold" style={{ background: "#e6f5f0", color: "var(--ciq-teal)" }}>

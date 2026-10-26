@@ -1,3 +1,4 @@
+import CustomerNav from "./CustomerNav";
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import Logo from "./Logo";
@@ -42,13 +43,14 @@ export default function Quiz({ onComplete, onExit, error }) {
 
   return (
     <div className="ciq-shell flex min-h-screen flex-col pb-10">
-      <header className="ciq-container flex items-center justify-between py-5">
+      <header className="ciq-container ciq-container--wide flex items-center justify-between py-5">
         <button onClick={back} className="ciq-press grid h-9 w-9 place-items-center rounded-full border bg-white" style={{ borderColor: "var(--ciq-line)" }}>
           <ArrowLeft className="h-4 w-4" style={{ color: "var(--ciq-ink)" }} />
         </button>
         <Logo size="md" onClick={onExit} />
         <span className="text-sm font-semibold" style={{ color: "var(--ciq-ink-soft)" }}>{step + 1}/{total}</span>
       </header>
+      <CustomerNav onHome={onExit} />
 
       <div className="ciq-container">
         <div className="ciq-track"><div className="ciq-track-fill" style={{ width: `${progress}%` }} /></div>

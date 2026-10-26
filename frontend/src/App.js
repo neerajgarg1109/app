@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Landing from "./components/Landing";
@@ -16,6 +16,8 @@ import PurchaseOptimizer from "./components/PurchaseOptimizer";
 import CardUpdates from "./components/CardUpdates";
 import RestrictedCards from "./components/RestrictedCards";
 import CustomerFooter from "./components/CustomerFooter";
+import CustomerNav from "./components/CustomerNav";
+import Logo from "./components/Logo";
 import { submitQuiz } from "./api";
 import { Loader2 } from "lucide-react";
 import { recordProductEvent } from "./productAnalytics";
@@ -28,7 +30,7 @@ const ANALYZE_STEPS = [
   "Choosing your best card option",
 ];
 
-function Analyzing() {
+function Analyzing({ onHome }) {
   const [i, setI] = useState(0);
   const [waking, setWaking] = useState(false);
   useEffect(() => {
@@ -37,7 +39,10 @@ function Analyzing() {
     return () => { clearInterval(t); clearTimeout(slow); };
   }, []);
   return (
-    <div className="ciq-shell grid min-h-screen place-items-center">
+    <div className="ciq-shell">
+      <header className="ciq-container ciq-container--wide py-5"><Logo size="md" onClick={onHome} /></header>
+      <CustomerNav onHome={onHome} />
+      <div className="grid min-h-[65vh] place-items-center">
       <div className="ciq-container text-center">
         <div className="relative mx-auto grid h-24 w-24 place-items-center">
           <span className="absolute h-24 w-24 rounded-full ciq-ring" style={{ background: "rgba(13,148,136,0.25)" }} />
@@ -54,11 +59,13 @@ function Analyzing() {
         </p>
         {waking && <p className="mx-auto mt-3 max-w-sm text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>This is taking a little longer than usual. We’re still comparing your answers.</p>}
       </div>
+      </div>
     </div>
   );
 }
 
 function QuizApp() {
+  const requestSequence = useRef(0);
   const [screen, setScreen] = useState("landing"); // landing | quiz | analyzing | result
   const [answers, setAnswers] = useState(null);
   const [scored, setScored] = useState(null);
@@ -90,12 +97,14 @@ function QuizApp() {
   };
 
   const exitToLanding = () => {
+    requestSequence.current += 1;
     // keep saved progress so the user can resume
     try { setSavedProgress(JSON.parse(localStorage.getItem("ciq_quiz_progress") || "null")); } catch (e) {}
     setScreen("landing");
   };
 
   const handleQuizComplete = async (ans) => {
+    const request = ++requestSequence.current;
     setAnswers(ans);
     setError(null);
     setScreen("analyzing");
@@ -104,6 +113,7 @@ function QuizApp() {
         submitQuiz(ans),
         new Promise((resolve) => setTimeout(resolve, 450)),
       ]);
+      if (request !== requestSequence.current) return;
       if (!data?.scored?.length) {
         throw new Error("The matching service returned no recommendations.");
       }
@@ -113,6 +123,7 @@ function QuizApp() {
       recordProductEvent("result_viewed", data.result_id);
       setScreen("result");
     } catch (e) {
+      if (request !== requestSequence.current) return;
       setError("We couldn't reach the recommendation service. Please try again.");
       setScreen("quiz");
     }
@@ -161,7 +172,7 @@ function QuizApp() {
         />
       )}
       {screen === "quiz" && <Quiz onComplete={handleQuizComplete} onExit={exitToLanding} error={error} />}
-      {screen === "analyzing" && <Analyzing />}
+      {screen === "analyzing" && <Analyzing onHome={exitToLanding} />}
       {screen === "result" && scored && (
         <>
           {error && <p role="alert" className="ciq-container px-5 py-4 text-sm">{error}</p>}

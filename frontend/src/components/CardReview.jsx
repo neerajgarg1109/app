@@ -1,3 +1,4 @@
+import CustomerNav from "./CustomerNav";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Check, Loader2, Star } from "lucide-react";
@@ -26,7 +27,8 @@ export default function CardReview() {
   };
   const complete = holder && Object.values(ratings).every((value) => value >= 1);
 
-  return <div className="ciq-shell min-h-screen pb-12"><header className="ciq-container py-5"><Logo size="md" /></header><main className="ciq-container">
+  return <div className="ciq-shell min-h-screen pb-12"><header className="ciq-container ciq-container--wide py-5"><Logo size="md" /></header>
+      <CustomerNav /><main className="ciq-container">
     {status === "loading" && <div className="grid min-h-[60vh] place-items-center"><Loader2 className="h-7 w-7 ciq-spin" /></div>}
     {status === "invalid" && <div className="rounded-3xl border bg-white p-8 text-center"><h1 className="font-display text-2xl font-extrabold">This review link is unavailable</h1><p className="mt-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>It may have expired or already been used.</p></div>}
     {status === "sent" && <div className="rounded-3xl border bg-white p-8 text-center"><span className="mx-auto grid h-12 w-12 place-items-center rounded-full" style={{ background: "#e6f5f0" }}><Check className="h-6 w-6" style={{ color: "var(--ciq-teal)" }} /></span><h1 className="mt-4 font-display text-2xl font-extrabold">Thank you for reviewing your card</h1><p className="mt-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Your review will be checked before it contributes to the community rating.</p></div>}

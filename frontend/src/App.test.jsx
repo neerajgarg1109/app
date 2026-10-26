@@ -8,7 +8,7 @@ jest.mock("react-router-dom", () => ({
   HashRouter: ({ children }) => <>{children}</>,
   Routes: ({ children }) => children.find((child) => child.props.path === "/"),
   Route: ({ element }) => element,
-  Link: ({ to, children }) => <a href={to}>{children}</a>,
+  Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a>,
 }));
 jest.mock("./productAnalytics", () => ({ recordProductEvent: jest.fn() }));
 jest.mock("./components/Landing", () => ({ onStart }) => <button onClick={onStart}>Start quiz</button>);
@@ -67,6 +67,19 @@ describe("recommendation recovery", () => {
       jest.advanceTimersByTime(450);
     });
     expect(container.querySelector('[role="alert"]')).not.toBeNull();
+    expect(localStorage.getItem("ciq_quiz_progress")).not.toBeNull();
+  });
+
+  test("Home exits analysis without a late response reopening the result", async () => {
+    let resolveRequest;
+    submitQuiz.mockReturnValueOnce(new Promise((resolve) => { resolveRequest = resolve; }));
+    await act(async () => { container.querySelector("button").click(); jest.advanceTimersByTime(450); });
+    expect(container.textContent).toContain("Finding the best card");
+    await act(async () => container.querySelector('nav[aria-label="Main navigation"] a[href="/"]').click());
+    expect(container.textContent).toContain("Start quiz");
+    await act(async () => resolveRequest({ result_id: "late", scored: [{ card: { id: "late" } }] }));
+    expect(container.textContent).toContain("Start quiz");
+    expect(container.textContent).not.toContain("Recommendation ready");
     expect(localStorage.getItem("ciq_quiz_progress")).not.toBeNull();
   });
 

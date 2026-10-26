@@ -13,6 +13,8 @@ jest.mock("../api", () => ({
   trackProductEvent: jest.fn(),
 }));
 
+jest.mock("react-router-dom", () => ({ Link: ({ to, children, ...props }) => <a href={to} {...props}>{children}</a> }));
+
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
 const card = {
