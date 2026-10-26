@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 from urllib.request import urlopen
+from guide_blog import render_index as render_blog_index, render_article as render_blog_article
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
@@ -287,12 +288,12 @@ guides = [
     ("invite-only-credit-cards", "Invite-only credit cards in India", "Understand invitation-only and relationship-restricted Indian credit cards, their access routes and why exclusivity does not guarantee approval.", f"{ORIGIN}/restricted-cards/", "CardIQ separates invitation-only products from partner-channel and profession-restricted cards so customers can research the real access requirement."),
     ("close-credit-card-india", "How to close a credit card in India", "Find official issuer support and card-closure channels, prepare for outstanding balances and keep written confirmation of closure.", f"{ORIGIN}/#/help/issuers", "Pay or transfer outstanding balances, redeem rewards that may expire, use the issuer’s official closure channel and retain the closure acknowledgement. Never share an OTP, PIN or CVV with a caller."),
 ]
-guide_links = []
+guide_posts = []
 for guide_slug, guide_title, guide_description, destination, guidance in guides:
     canonical = f"{ORIGIN}/guides/{guide_slug}/"
     guide_body = f'<h1>{html.escape(guide_title)}</h1><p>{html.escape(guide_description)}</p><h2>What to do next</h2><p>{html.escape(guidance)}</p><p class="muted">Issuer terms and official service channels remain authoritative. CardIQ does not provide approval or legal advice.</p>'
-    write(Path("guides") / guide_slug, page(f"{guide_title} | CardIQ", guide_description, canonical, destination, guide_body))
-    guide_links.append(f'<li><a href="{canonical}">{html.escape(guide_title)}</a></li>')
+    topic = "Card updates" if guide_slug == "new-credit-cards" else "Access & eligibility" if guide_slug == "invite-only-credit-cards" else "Card management"
+    guide_posts.append({"slug": guide_slug, "title": guide_title, "description": guide_description, "url": canonical, "destination": destination, "body": guide_body, "category": topic})
 
 # High-intent editorial guides are generated from the same catalogue records as card pages.
 # This keeps fees, card availability and card links synchronized when the catalogue changes.
@@ -325,8 +326,7 @@ for guide_slug, guide_title, category_id, guidance in editorial_guides:
             for index, card in enumerate(shortlist, 1)
         ]},
     ]}
-    write(Path("guides") / guide_slug, page(f"{guide_title} | CardIQ", description, canonical, destination, body, structured_data=schema))
-    guide_links.append(f'<li><a href="{canonical}">{html.escape(guide_title)}</a></li>')
+    guide_posts.append({"slug": guide_slug, "title": guide_title, "description": guidance, "standfirst": description, "url": canonical, "destination": destination, "body": body, "category": "Choosing a card", "schema": schema})
     editorial_guide_slugs.append(guide_slug)
 
 # Only publish issuer-specific closure pages where an official channel has been reviewed.
@@ -344,12 +344,12 @@ for support in ISSUER_SUPPORT:
 <h2>Before requesting closure</h2><ul><li>Clear outstanding balances, pending EMIs and unbilled transactions.</li><li>Redeem eligible rewards that may expire and move recurring payments.</li><li>Download recent statements and retain the written closure acknowledgement.</li></ul>
 <h2>Official {html.escape(issuer)} channels</h2><ul>{phone}{email}<li><a href="{html.escape(support['supportUrl'], quote=True)}">Official customer support</a></li>{closure}</ul>
 <p class="muted">Blocking a card is not the same as closing the credit account. Never share your PIN, CVV or OTP. Contact details were checked {html.escape(support['checkedOn'])}; verify them on the linked issuer page.</p>'''
-    write(Path("guides") / guide_slug, page(f"How to close {product_name} | CardIQ", description, canonical, f"{ORIGIN}/#/help/issuers", body))
-    guide_links.append(f'<li><a href="{canonical}">How to close {html.escape(product_name)}</a></li>')
+    guide_posts.append({"slug": guide_slug, "title": f"How to close {product_name}", "description": description, "url": canonical, "destination": f"{ORIGIN}/#/help/issuers", "body": body, "category": "Card management"})
     closure_guide_slugs.append(guide_slug)
 
-guides_description = "Practical Indian credit card guides covering high-value card categories, new launches, comparisons, restricted access and verified issuer closure routes."
-write(Path("guides"), page("Indian credit card guides | CardIQ", guides_description, f"{ORIGIN}/guides/", f"{ORIGIN}/#/cards", f'<h1>Indian credit card guides</h1><p>{html.escape(guides_description)}</p><ul>{"".join(guide_links)}</ul>'))
+for post in guide_posts:
+    write(Path("guides") / post["slug"], render_blog_article(post, guide_posts, ORIGIN, social_links(post["title"], post["url"])))
+write(Path("guides"), render_blog_index(guide_posts, ORIGIN, social_links("CardIQ Journal", f"{ORIGIN}/guides/")))
 
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)

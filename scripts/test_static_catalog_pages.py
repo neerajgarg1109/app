@@ -182,6 +182,28 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn(">Home</a>", source, path)
             self.assertIn(f'href="{ORIGIN}/"', source, path)
 
+    def test_journal_preserves_every_guide_as_a_linked_article(self):
+        path = BUILD / "guides" / "index.html"
+        source = path.read_text()
+        schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
+        self.assertEqual(schema["@type"], "Blog")
+        expected = {f"{ORIGIN}/guides/{page.parent.name}/" for page in (BUILD / "guides").glob("*/index.html")}
+        self.assertEqual({post["url"] for post in schema["blogPost"]}, expected)
+        self.assertTrue(expected.issubset(set(self.documents[path].links)))
+        self.assertEqual(source.count("<h1>"), 1)
+        self.assertIn('aria-label="Search guides"', source)
+        self.assertIn('aria-label="Filter guides by topic"', source)
+        self.assertIn('aria-live="polite"', source)
+
+    def test_journal_articles_have_one_heading_and_related_reading(self):
+        for path in (BUILD / "guides").glob("*/index.html"):
+            source = path.read_text()
+            self.assertEqual(source.count("<h1>"), 1, path)
+            self.assertIn('class="reading-wrap"', source)
+            self.assertIn('aria-labelledby="related-title"', source)
+            self.assertIn("min read", source)
+            self.assertIn("← All guides", source)
+
     def test_best_card_guides_are_sourced_substantial_and_not_paid_rankings(self):
         pages = list((BUILD / "guides").glob("best-*/index.html"))
         self.assertGreaterEqual(len(pages), 6)
