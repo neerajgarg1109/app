@@ -22,9 +22,10 @@ export default function CardExplorer() {
   const [selectedCard, setSelectedCard] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const [initialFilters, setRouteFilters] = useState(hashFilters);
+  const initialFilters = hashFilters();
+  const [, setRouteVersion] = useState(0);
   const comparisonMode = initialFilters.mode === "compare" || Boolean(initialFilters.compare);
-  useEffect(() => { const update = () => setRouteFilters(hashFilters()); window.addEventListener("hashchange", update); return () => window.removeEventListener("hashchange", update); }, []);
+  useEffect(() => { const update = () => setRouteVersion(value => value + 1); window.addEventListener("hashchange", update); return () => window.removeEventListener("hashchange", update); }, []);
   const [issuer, setIssuer] = useState(initialFilters.issuer || "all");
   const [category, setCategory] = useState(initialFilters.category || "all");
   const [visible, setVisible] = useState(PAGE_SIZE);
@@ -35,7 +36,7 @@ export default function CardExplorer() {
     if (linked.length >= 2) return linked;
     try { return JSON.parse(localStorage.getItem("ciq_compare_cards") || "[]").slice(0, 3); } catch (error) { return []; }
   });
-  const [showCompare, setShowCompare] = useState(() => String(initialFilters.compare || "").split(",").filter(Boolean).length >= 2);
+  const [showCompare, setShowCompare] = useState(false);
   const [ownedCardId, setOwnedCardId] = useState(() => localStorage.getItem("ciq_owned_card") || "");
 
   useEffect(() => {

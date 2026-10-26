@@ -34,5 +34,6 @@ function isActive(destination, pathname, search) {
   const [path, query = ""] = destination.split("?");
   if (path === "/cards" && pathname.startsWith("/cards/")) return !query;
   if (pathname !== path) return false;
-  return query ? search === `?${query}` : !(path === "/cards" && search.includes("mode=compare"));
+  const comparing = new URLSearchParams(search).get("mode") === "compare" || new URLSearchParams(search).has("compare");
+  return path === "/cards" ? Boolean(query) === comparing : query ? search === `?${query}` : true;
 }
