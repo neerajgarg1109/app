@@ -28,7 +28,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/cashback-sbi-card.html",
     "sourceUrls": [
@@ -111,7 +111,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/sbi-card-elite.html",
     "sourceUrls": [
@@ -189,7 +189,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/sbi-card-prime.html",
     "sourceUrls": [
@@ -265,7 +265,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/simplyclick-sbi-card.html",
     "sourceUrls": [
@@ -339,7 +339,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/simplysave-sbi-card.html",
     "sourceUrls": [
@@ -413,7 +413,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/bpcl-sbi-card.html",
     "sourceUrls": [
@@ -490,7 +490,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/bpcl-sbi-card-octane.html",
     "sourceUrls": [
@@ -567,7 +567,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/air-india-sbi-signature-card.html",
     "sourceUrls": [
@@ -642,7 +642,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/sbi-card-pulse.html",
     "sourceUrls": [
@@ -717,7 +717,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/titan-sbi-card.html",
     "sourceUrls": [
@@ -794,7 +794,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-atlas-credit-card",
     "sourceUrls": [
@@ -868,7 +868,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-ace-credit-card",
     "sourceUrls": [
@@ -959,7 +959,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/flipkart-axisbank-credit-card",
     "sourceUrls": [
@@ -1049,7 +1049,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/airtel-axis-bank-credit-card",
     "sourceUrls": [
@@ -1139,7 +1139,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/indianoil-axis-bank-credit-card",
     "sourceUrls": [
@@ -1214,7 +1214,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-select-credit-card",
     "sourceUrls": [
@@ -1288,7 +1288,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-my-zone-credit-card",
     "sourceUrls": [
@@ -1361,7 +1361,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-neo-credit-card",
     "sourceUrls": [
@@ -1435,7 +1435,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-magnus-credit-card",
     "sourceUrls": [
@@ -1511,7 +1511,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-horizon-credit-card",
     "sourceUrls": [
@@ -1584,7 +1584,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/rewards-credit-card",
     "sourceUrls": [
@@ -1655,7 +1655,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/fibe-axis-bank-credit-card",
     "sourceUrls": [
@@ -1729,7 +1729,7 @@
     "feeType": "free",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/privilege-credit-card-with-unlimited-benefits",
     "sourceUrls": [
@@ -1802,7 +1802,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/amazon-pay-credit-card",
     "sourceUrls": [
@@ -1877,7 +1877,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/sapphiro-card",
     "sourceUrls": [
@@ -1951,7 +1951,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/rubyx-credit-card",
     "sourceUrls": [
@@ -2025,7 +2025,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/coral-credit-card",
     "sourceUrls": [
@@ -2098,7 +2098,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/platinum-chip-credit-card",
     "sourceUrls": [
@@ -2170,7 +2170,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/hpcl-super-saver",
     "sourceUrls": [
@@ -2243,7 +2243,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/hpcl-coral-credit-card",
     "sourceUrls": [
@@ -2318,7 +2318,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/emeralde-credit-card",
     "sourceUrls": [
@@ -2394,7 +2394,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/emeralde-private-metal-credit-card",
     "sourceUrls": [
@@ -2470,7 +2470,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/emirates-skywards/emirates-rubyx",
     "sourceUrls": [
@@ -2545,7 +2545,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/emirates-skywards/emirates-sapphiro",
     "sourceUrls": [
@@ -2619,7 +2619,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/makemytrip/makemytrip-icici-bank-credit-card",
     "sourceUrls": [
@@ -2696,7 +2696,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/millennia",
     "sourceUrls": [
@@ -2772,7 +2772,7 @@
     "feeType": "free",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/select",
     "sourceUrls": [
@@ -2848,7 +2848,7 @@
     "feeType": "free",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/wealth",
     "sourceUrls": [
@@ -2924,7 +2924,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/wow",
     "sourceUrls": [
@@ -2998,7 +2998,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/hpcl-power-fuel-credit-card",
     "sourceUrls": [
@@ -3072,7 +3072,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/hpcl-power-fuel-credit-card",
     "sourceUrls": [
@@ -3147,7 +3147,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/metal-credit-card/ashva",
     "sourceUrls": [
@@ -3223,7 +3223,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/metal-credit-card/mayura",
     "sourceUrls": [
@@ -3299,7 +3299,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/metal-credit-card/gaj",
     "sourceUrls": [
@@ -3374,7 +3374,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/swyp-emi-credit-card",
     "sourceUrls": [
@@ -3448,7 +3448,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/secured-rupay-credit-card",
     "sourceUrls": [
@@ -3524,7 +3524,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/wow-black-credit-card",
     "sourceUrls": [
@@ -3601,7 +3601,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.americanexpress.com/in/credit-cards/platinum-travel-credit-card/",
     "sourceUrls": [
@@ -3674,7 +3674,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.americanexpress.com/in/credit-cards/membership-rewards-card/",
     "sourceUrls": [
@@ -3750,7 +3750,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.americanexpress.com/in/credit-cards/smart-earn-credit-card/",
     "sourceUrls": [
@@ -3828,7 +3828,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/tata-neu-infinity-hdfc-bank-credit-card",
     "sourceUrls": [
@@ -3915,7 +3915,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/tata-neu-plus-hdfc-bank-credit-card",
     "sourceUrls": [
@@ -3996,7 +3996,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-freecharge-credit-card",
     "sourceUrls": [
@@ -4076,7 +4076,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-freecharge-plus-credit-card",
     "sourceUrls": [
@@ -4155,7 +4155,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-kwik-credit-card",
     "sourceUrls": [
@@ -4230,7 +4230,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/axis-bank-shoppers-stop-credit-card",
     "sourceUrls": [
@@ -4309,7 +4309,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/flipkart-axis-bank-super-elite-credit-card",
     "sourceUrls": [
@@ -4389,7 +4389,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/google-pay-flex-axis-bank-credit-card",
     "sourceUrls": [
@@ -4465,7 +4465,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/indianoil-premium-credit-card",
     "sourceUrls": [
@@ -4549,7 +4549,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/indigo-axis-bank-credit-card",
     "sourceUrls": [
@@ -4628,7 +4628,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/indigo-axis-bank-premium-credit-card",
     "sourceUrls": [
@@ -4706,7 +4706,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/lic-axis-bank-platinum-credit-card",
     "sourceUrls": [
@@ -4783,7 +4783,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/lic-axis-bank-signature-credit-card",
     "sourceUrls": [
@@ -4865,7 +4865,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/miles-more-credit-card",
     "sourceUrls": [
@@ -4945,7 +4945,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/my-zone-easy-credit-card",
     "sourceUrls": [
@@ -5024,7 +5024,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/privilege-easy-credit-card",
     "sourceUrls": [
@@ -5104,7 +5104,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/samsung-axis-bank-signature-credit-card",
     "sourceUrls": [
@@ -5197,7 +5197,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/scapia-axis-bank-credit-card",
     "sourceUrls": [
@@ -5277,7 +5277,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/spicejet-axis-bank-voyage-credit-card",
     "sourceUrls": [
@@ -5359,7 +5359,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.axis.bank.in/cards/credit-card/spicejet-axis-bank-voyage-black-credit-card",
     "sourceUrls": [
@@ -5437,7 +5437,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/altura-credit-card",
     "sourceUrls": [
@@ -5516,7 +5516,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/altura-plus-credit-card",
     "sourceUrls": [
@@ -5595,7 +5595,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/ananta-credit-card",
     "sourceUrls": [
@@ -5675,7 +5675,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/cheq-au-credit-card",
     "sourceUrls": [
@@ -5757,7 +5757,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/ixigo-au-credit-card",
     "sourceUrls": [
@@ -5837,7 +5837,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/laksya-credit-card",
     "sourceUrls": [
@@ -5917,7 +5917,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/lit-credit-card",
     "sourceUrls": [
@@ -5997,7 +5997,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/nomo-credit-card",
     "sourceUrls": [
@@ -6079,7 +6079,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/paytm-au-credit-card",
     "sourceUrls": [
@@ -6157,7 +6157,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/prathama-credit-card",
     "sourceUrls": [
@@ -6237,7 +6237,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/swipeup-program/xcite-credit-card",
     "sourceUrls": [
@@ -6317,7 +6317,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/swipeup-program/xcite-ace-credit-card",
     "sourceUrls": [
@@ -6400,7 +6400,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/swipeup-program/xcite-ultra-credit-card",
     "sourceUrls": [
@@ -6480,7 +6480,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/tejas-credit-card",
     "sourceUrls": [
@@ -6558,7 +6558,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/vetta-credit-card",
     "sourceUrls": [
@@ -6640,7 +6640,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/zenith-credit-card",
     "sourceUrls": [
@@ -6722,7 +6722,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/premium-banking/credit-cards/zenith-plus-credit-card",
     "sourceUrls": [
@@ -6801,7 +6801,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.au.bank.in/personal-banking/credit-cards/instapay-credit-card",
     "sourceUrls": [
@@ -6884,7 +6884,7 @@
     "feeType": "free",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/celesta-credit-card",
     "sourceUrls": [
@@ -6966,7 +6966,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/imperio-credit-card",
     "sourceUrls": [
@@ -7048,7 +7048,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/signet-credit-card",
     "sourceUrls": [
@@ -7127,7 +7127,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/rupay-wave-credit-card",
     "sourceUrls": [
@@ -7202,7 +7202,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/shaurya-sbi-card.html",
     "sourceUrls": [
@@ -7279,7 +7279,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/shaurya-select-sbi-card.html",
     "sourceUrls": [
@@ -7357,7 +7357,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/apollo-sbi-card.html",
     "sourceUrls": [
@@ -7435,7 +7435,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/apollo-sbi-card-select.html",
     "sourceUrls": [
@@ -7512,7 +7512,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/air-india-sbi-platinum-card.html",
     "sourceUrls": [
@@ -7587,7 +7587,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/html/en/personal/credit-cards/sbi-card-unnati.html",
     "sourceUrls": [
@@ -7663,7 +7663,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/irctc-premier-card.html",
     "sourceUrls": [
@@ -7738,7 +7738,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/irctc-sbi-platinum-card.html",
     "sourceUrls": [
@@ -7814,7 +7814,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/doctors-sbi-card.html",
     "sourceUrls": [
@@ -7892,7 +7892,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/doctors-ima-sbi-card.html",
     "sourceUrls": [
@@ -7972,7 +7972,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/phonepe-sbi-card-purple.html",
     "sourceUrls": [
@@ -8052,7 +8052,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/phonepe-sbi-card-select-black.html",
     "sourceUrls": [
@@ -8132,7 +8132,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/reliance-sbi-card.html",
     "sourceUrls": [
@@ -8213,7 +8213,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/reliance-sbi-card-prime.html",
     "sourceUrls": [
@@ -8292,7 +8292,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/paytm-sbi-card.html",
     "sourceUrls": [
@@ -8370,7 +8370,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/paytm-sbi-card-select.html",
     "sourceUrls": [
@@ -8448,7 +8448,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/krisflyer-sbi-card.html",
     "sourceUrls": [
@@ -8526,7 +8526,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/krisflyer-sbi-card-apex.html",
     "sourceUrls": [
@@ -8605,7 +8605,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/tata-neu-plus-sbi-card.html",
     "sourceUrls": [
@@ -8685,7 +8685,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/tata-neu-infinity-sbi-card.html",
     "sourceUrls": [
@@ -8765,7 +8765,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/indigo-sbi-card.html",
     "sourceUrls": [
@@ -8845,7 +8845,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/indigo-sbi-card-elite.html",
     "sourceUrls": [
@@ -8923,7 +8923,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/google-pay-flex-sbicard.html",
     "sourceUrls": [
@@ -8999,7 +8999,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/flipkart-sbi-card.html",
     "sourceUrls": [
@@ -9079,7 +9079,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/sbi-card-miles.html",
     "sourceUrls": [
@@ -9159,7 +9159,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/sbi-card-miles-prime.html",
     "sourceUrls": [
@@ -9239,7 +9239,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/sbi-card-miles-elite.html",
     "sourceUrls": [
@@ -9317,7 +9317,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/bom-sbi-card-prime.html",
     "sourceUrls": [
@@ -9395,7 +9395,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/bom-simplysave-sbi-card.html",
     "sourceUrls": [
@@ -9473,7 +9473,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/uco-bank-sbi-card-prime.html",
     "sourceUrls": [
@@ -9551,7 +9551,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/uco-bank-simplysave-sbi-card.html",
     "sourceUrls": [
@@ -9629,7 +9629,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/psb-sbi-card-prime.html",
     "sourceUrls": [
@@ -9707,7 +9707,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/psb-simplysave-sbi-card.html",
     "sourceUrls": [
@@ -9785,7 +9785,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/city-union-bank-sbi-card-prime.html",
     "sourceUrls": [
@@ -9863,7 +9863,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/city-union-bank-simplysave-sbi-card.html",
     "sourceUrls": [
@@ -9941,7 +9941,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/karnataka-bank-sbi-card-prime.html",
     "sourceUrls": [
@@ -10019,7 +10019,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/karnataka-bank-simplysave-sbi-card.html",
     "sourceUrls": [
@@ -10097,7 +10097,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/south-indian-bank-sbi-card-prime.html",
     "sourceUrls": [
@@ -10175,7 +10175,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/south-indian-bank-simplysave-sbi-card.html",
     "sourceUrls": [
@@ -10255,7 +10255,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/uco-bank-sbi-card-elite.html",
     "sourceUrls": [
@@ -10333,7 +10333,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/apex-credit-card",
     "sourceUrls": [
@@ -10408,7 +10408,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/aspire-banking-credit-card",
     "sourceUrls": [
@@ -10484,7 +10484,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/signature-banking-credit-card",
     "sourceUrls": [
@@ -10562,7 +10562,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/cookies-credit-card",
     "sourceUrls": [
@@ -10636,7 +10636,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/icon-credit-card",
     "sourceUrls": [
@@ -10709,7 +10709,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/indianoil-rbl-bank-credit-card",
     "sourceUrls": [
@@ -10786,7 +10786,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/indianoil-rbl-bank-xtra-credit-card",
     "sourceUrls": [
@@ -10862,7 +10862,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/irctc-rbl-bank-credit-card",
     "sourceUrls": [
@@ -10938,7 +10938,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/jalsa-credit-card",
     "sourceUrls": [
@@ -11014,7 +11014,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/platinum-maxima-credit-card",
     "sourceUrls": [
@@ -11090,7 +11090,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/platinum-maxima-plus-credit-card",
     "sourceUrls": [
@@ -11164,7 +11164,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/platinum-delight-credit-card",
     "sourceUrls": [
@@ -11238,7 +11238,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-bankbazaar-savemax-pro-credit-card",
     "sourceUrls": [
@@ -11312,7 +11312,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-patanjali-vishisht-credit-card",
     "sourceUrls": [
@@ -11386,7 +11386,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-patanjali-swarn-credit-card",
     "sourceUrls": [
@@ -11458,7 +11458,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-play-credit-card",
     "sourceUrls": [
@@ -11530,7 +11530,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-quick-pay-credit-card",
     "sourceUrls": [
@@ -11601,7 +11601,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-shoppers-stop-gold-credit-card",
     "sourceUrls": [
@@ -11675,7 +11675,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-shoppers-stop-platinum-credit-card",
     "sourceUrls": [
@@ -11749,7 +11749,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-shoppers-stop-black-credit-card",
     "sourceUrls": [
@@ -11823,7 +11823,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/shoprite-credit-card",
     "sourceUrls": [
@@ -11898,7 +11898,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/tvs-credit-rbl-bank-credit-card",
     "sourceUrls": [
@@ -11974,7 +11974,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/tvs-credit-rbl-bank-gold-credit-card",
     "sourceUrls": [
@@ -12051,7 +12051,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/world-safari-credit-card",
     "sourceUrls": [
@@ -12129,7 +12129,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/world-safari-lite-credit-card",
     "sourceUrls": [
@@ -12206,7 +12206,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/world-safari-plus-credit-card",
     "sourceUrls": [
@@ -12284,7 +12284,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "fair",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/classic",
     "sourceUrls": [
@@ -12360,7 +12360,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/FIRSTPrivateCreditCard",
     "sourceUrls": [
@@ -12437,7 +12437,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/diamond-reserve-credit-card",
     "sourceUrls": [
@@ -12515,7 +12515,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/hello-cashback-credit-card",
     "sourceUrls": [
@@ -12592,7 +12592,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/quantum-plus-credit-card",
     "sourceUrls": [
@@ -12667,7 +12667,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/indigo-credit-card",
     "sourceUrls": [
@@ -12745,7 +12745,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idfcfirst.bank.in/credit-card/lic-credit-card",
     "sourceUrls": [
@@ -12822,7 +12822,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/adani-icici-credit-card/platinum-card",
     "sourceUrls": [
@@ -12900,7 +12900,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/adani-icici-credit-card/signature-credit-card",
     "sourceUrls": [
@@ -12976,7 +12976,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/csk-card",
     "sourceUrls": [
@@ -13050,7 +13050,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/emirates-emeralde-credit-card",
     "sourceUrls": [
@@ -13125,7 +13125,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/parakram-cards/parakram",
     "sourceUrls": [
@@ -13202,7 +13202,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/parakram-cards/parakram-select",
     "sourceUrls": [
@@ -13280,7 +13280,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/times-black-icici-credit-card",
     "sourceUrls": [
@@ -13357,7 +13357,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/legend-credit-card.html",
     "sourceUrls": [
@@ -13430,7 +13430,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/nexxt-credit-card.html",
     "sourceUrls": [
@@ -13507,7 +13507,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/pinnacle-world-credit-card.html",
     "sourceUrls": [
@@ -13584,7 +13584,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/tiger-credit-card.html",
     "sourceUrls": [
@@ -13660,7 +13660,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/eazydiner-credit-card.html",
     "sourceUrls": [
@@ -13735,7 +13735,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/eazydiner-platinum-credit-card.html",
     "sourceUrls": [
@@ -13808,7 +13808,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/platinum-visa-credit-card.html",
     "sourceUrls": [
@@ -13883,7 +13883,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/platinum-rupay-credit-card.html",
     "sourceUrls": [
@@ -13959,7 +13959,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/jio-bp-mobility-credit-card.html",
     "sourceUrls": [
@@ -14036,7 +14036,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/CRED-IndusInd-Bank-ruPay-credit-card.html",
     "sourceUrls": [
@@ -14112,7 +14112,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indusind.bank.in/in/en/personal/cards/credit-card/samman-credit-card.html",
     "sourceUrls": [
@@ -14192,7 +14192,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hsbc.bank.in/credit-cards/products/live-plus/",
     "sourceUrls": [
@@ -14267,7 +14267,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hsbc.bank.in/credit-cards/products/travelone/",
     "sourceUrls": [
@@ -14342,7 +14342,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hsbc.bank.in/credit-cards/products/premier/",
     "sourceUrls": [
@@ -14419,7 +14419,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hsbc.bank.in/credit-cards/products/taj/",
     "sourceUrls": [
@@ -14494,7 +14494,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "fair",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hsbc.bank.in/credit-cards/products/visa-platinum/",
     "sourceUrls": [
@@ -14568,7 +14568,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hsbc.bank.in/credit-cards/products/rupay-cashback-credit-card/",
     "sourceUrls": [
@@ -14648,7 +14648,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-cashback-plus-credit-card.html",
     "sourceUrls": [
@@ -14723,7 +14723,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-air-plus-credit-card.html",
     "sourceUrls": [
@@ -14798,7 +14798,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/league-platinum-card.html",
     "sourceUrls": [
@@ -14874,7 +14874,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/millennia-credit-card",
     "sourceUrls": [
@@ -14947,7 +14947,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/moneyback-plus-credit-card",
     "sourceUrls": [
@@ -15017,7 +15017,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/freedom-credit-card",
     "sourceUrls": [
@@ -15088,7 +15088,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/phonepe-hdfc-bank-uno-credit-card",
     "sourceUrls": [
@@ -15161,7 +15161,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/phonepe-hdfc-bank-ultimo-credit-card",
     "sourceUrls": [
@@ -15234,7 +15234,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/infinia-credit-card",
     "sourceUrls": [
@@ -15309,7 +15309,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/diners-club-black-metal-edition-credit-card",
     "sourceUrls": [
@@ -15382,7 +15382,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/pixel-play-credit-card",
     "sourceUrls": [
@@ -15454,7 +15454,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/pixel-go-credit-card",
     "sourceUrls": [
@@ -15524,7 +15524,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/hdfc-bank-upi-rupay-credit-card",
     "sourceUrls": [
@@ -15599,7 +15599,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/regalia-gold-credit-card",
     "sourceUrls": [
@@ -15672,7 +15672,7 @@
     "feeType": "worth",
     "minSpend": "high",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/diners-privilege-credit-card",
     "sourceUrls": [
@@ -15745,7 +15745,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/swiggy-hdfc-bank-credit-card",
     "sourceUrls": [
@@ -15818,7 +15818,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/swiggy-ornge-hdfc-bank-credit-card",
     "sourceUrls": [
@@ -15891,7 +15891,7 @@
     "feeType": "worth",
     "minSpend": "high",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/swiggy-blck-hdfc-bank-credit-card",
     "sourceUrls": [
@@ -15964,7 +15964,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/marriott-bonvoy-credit-card",
     "sourceUrls": [
@@ -16037,7 +16037,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/indianoil-hdfc-bank-credit-card",
     "sourceUrls": [
@@ -16110,7 +16110,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.hdfc.bank.in/credit-cards/irctc-credit-card",
     "sourceUrls": [
@@ -16182,7 +16182,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16254,7 +16254,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16326,7 +16326,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16397,7 +16397,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16467,7 +16467,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16539,7 +16539,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16612,7 +16612,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://creditcard.pnb.bank.in/",
     "sourceUrls": [
@@ -16685,7 +16685,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/eterna",
     "sourceUrls": [
@@ -16758,7 +16758,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/bobcard-etihad-guest-premium",
     "sourceUrls": [
@@ -16831,7 +16831,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/bobcard-etihad-guest",
     "sourceUrls": [
@@ -16904,7 +16904,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/premier",
     "sourceUrls": [
@@ -16977,7 +16977,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/tiara",
     "sourceUrls": [
@@ -17052,7 +17052,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/bobcard-cashback",
     "sourceUrls": [
@@ -17124,7 +17124,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/easy",
     "sourceUrls": [
@@ -17197,7 +17197,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/select",
     "sourceUrls": [
@@ -17270,7 +17270,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/snapdeal-bobcard",
     "sourceUrls": [
@@ -17342,7 +17342,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/hpcl-energie",
     "sourceUrls": [
@@ -17415,7 +17415,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/irctc",
     "sourceUrls": [
@@ -17488,7 +17488,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/bobcard-scapia-credit-card",
     "sourceUrls": [
@@ -17560,7 +17560,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/bobcard-uni-goldx",
     "sourceUrls": [
@@ -17632,7 +17632,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/bobcard-one",
     "sourceUrls": [
@@ -17703,7 +17703,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.bobcard.co.in/credit-card-types/prime",
     "sourceUrls": [
@@ -17774,7 +17774,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idbibank.in/aspire-credit-card.aspx",
     "sourceUrls": [
@@ -17846,7 +17846,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idbibank.in/royale-signature-credit-card.aspx",
     "sourceUrls": [
@@ -17919,7 +17919,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idbibank.in/Euphoria-credit-card.aspx",
     "sourceUrls": [
@@ -17991,7 +17991,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.idbibank.in/Imperium-credit-card.aspx",
     "sourceUrls": [
@@ -18064,7 +18064,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/marquee-credit-card",
     "sourceUrls": [
@@ -18137,7 +18137,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/reserv-credit-card",
     "sourceUrls": [
@@ -18210,7 +18210,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/elite-plus-credit-card",
     "sourceUrls": [
@@ -18282,7 +18282,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/select-credit-card",
     "sourceUrls": [
@@ -18354,7 +18354,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/ace-credit-card",
     "sourceUrls": [
@@ -18426,7 +18426,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/wellness-credit-card",
     "sourceUrls": [
@@ -18499,7 +18499,7 @@
     "feeType": "premium",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/wellness-plus-credit-card",
     "sourceUrls": [
@@ -18571,7 +18571,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/rupay-credit-card",
     "sourceUrls": [
@@ -18644,7 +18644,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.sbm.bank.in/smart_banking/pdf/Kredit-PE-MITC.pdf",
     "sourceUrls": [
@@ -18716,7 +18716,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/salaryse-up-credit-card",
     "sourceUrls": [
@@ -18792,7 +18792,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.salaryse.com/level-up",
     "sourceUrls": [
@@ -18866,7 +18866,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.salaryse.com/level-up",
     "sourceUrls": [
@@ -18937,7 +18937,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.zaggle.in/knowledge-hub/news/zaggle-partners-with-pnb-to-launch-ecofriendly-cobranded-retail-credit-cards",
     "sourceUrls": [
@@ -19011,7 +19011,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/onecard",
     "sourceUrls": [
@@ -19082,7 +19082,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/scapia",
     "sourceUrls": [
@@ -19153,7 +19153,7 @@
     "feeType": "worth",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.federal.bank.in/paisabazaar-federal-cobranded-credit-card",
     "sourceUrls": [
@@ -19227,7 +19227,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.indianbank.in/wp-content/uploads/2019/03/Indian-Bank-launches-the-Indian-Bank-One-Co-Branded-Credit-Card-a-tech-enabled-credit-card-powered-by-Visa-and-RuPay.pdf",
     "sourceUrls": [
@@ -19298,7 +19298,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.utkarsh.bank.in/personal/cards/credit-card/supercard",
     "sourceUrls": [
@@ -19369,7 +19369,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/indigo-credit-card.html",
     "sourceUrls": [
@@ -19444,7 +19444,7 @@
     "feeType": "worth",
     "minSpend": "high",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/indigo-credit-card.html",
     "sourceUrls": [
@@ -19520,7 +19520,7 @@
     "feeType": "premium",
     "minSpend": "vhigh",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/white-reserve-credit-card.html",
     "sourceUrls": [
@@ -19597,7 +19597,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-upi-rupay-credit-card.html",
     "sourceUrls": [
@@ -19671,7 +19671,7 @@
     "feeType": "worth",
     "minSpend": "high",
     "creditReq": "excellent",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/white-credit-card.html",
     "sourceUrls": [
@@ -19748,7 +19748,7 @@
     "feeType": "worth",
     "minSpend": "mid",
     "creditReq": "good",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/zen-signature-credit-card/features.html",
     "sourceUrls": [
@@ -19823,7 +19823,7 @@
     "feeType": "free",
     "minSpend": "low",
     "creditReq": "new",
-    "rating": 4,
+    "rating": 4.0,
     "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
     "applyUrl": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/811-dream-different-credit-card/milestone-program.html",
     "sourceUrls": [
