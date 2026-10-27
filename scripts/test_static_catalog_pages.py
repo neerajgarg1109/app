@@ -205,18 +205,27 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn(">Home</a>", source, path)
             self.assertIn(f'href="{ORIGIN}/"', source, path)
 
-    def test_journal_preserves_every_guide_as_a_linked_article(self):
+    def test_journal_lists_editorial_guides_without_closure_articles(self):
         path = BUILD / "guides" / "index.html"
         source = path.read_text()
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
         self.assertEqual(schema["@type"], "Blog")
-        expected = {f"{ORIGIN}/guides/{page.parent.name}/" for page in (BUILD / "guides").glob("*/index.html")}
+        expected = {f"{ORIGIN}/guides/{page.parent.name}/" for page in (BUILD / "guides").glob("*/index.html") if not page.parent.name.startswith("close-")}
+        expected |= {f"{ORIGIN}/compare/{page.parent.name}/" for page in (BUILD / "compare").glob("*/index.html")}
         self.assertEqual({post["url"] for post in schema["blogPost"]}, expected)
         self.assertTrue(expected.issubset(set(self.documents[path].links)))
         self.assertEqual(source.count("<h1>"), 1)
         self.assertIn('aria-label="Search guides"', source)
         self.assertIn('aria-label="Filter guides by topic"', source)
         self.assertIn('aria-live="polite"', source)
+
+    def test_article_library_is_visible_before_news(self):
+        source = (BUILD / "guides" / "index.html").read_text()
+        self.assertLess(source.index('id="all-guides"'), source.index('class="top-news"'))
+        self.assertIn('All articles &amp; guides', source)
+        self.assertIn('data-filter="Card comparisons"', source)
+        self.assertIn('Read the comparison', source)
+        self.assertGreaterEqual(source.count('class="post-card" data-topic='), 8)
 
     def test_journal_articles_have_one_heading_and_related_reading(self):
         for path in (BUILD / "guides").glob("*/index.html"):
@@ -225,7 +234,7 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn('class="reading-wrap"', source)
             self.assertIn('aria-labelledby="related-title"', source)
             self.assertIn("min read", source)
-            self.assertIn("← All guides", source)
+            self.assertIn("← Close a card" if path.parent.name.startswith("close-") else "← All guides", source)
 
     def test_best_card_guides_are_sourced_substantial_and_not_paid_rankings(self):
         pages = list((BUILD / "guides").glob("best-*/index.html"))

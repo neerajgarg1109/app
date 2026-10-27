@@ -13,6 +13,9 @@ test("shows only sourced issuer support and filters it", async () => {
   await act(async () => root.render(<IssuerHelp />));
   expect(container.textContent).toContain("SBI Card");
   expect(container.textContent).toContain("Before closing a card");
+  expect(container.querySelector('a[href$="/guides/close-credit-card-india/"]')).not.toBeNull();
+  expect(container.querySelector('a[href$="/guides/close-sbi-card-credit-card/"]')).not.toBeNull();
+  expect(container.querySelector('a[href$="/guides/close-hdfc-bank-credit-card/"]')).not.toBeNull();
   const input = container.querySelector('input[aria-label="Search issuers"]');
   await act(async () => {
     const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;

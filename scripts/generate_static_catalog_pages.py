@@ -222,6 +222,7 @@ comparison_pairs = sorted({
     if left != right and (right, left) in directed_alternatives
 })
 comparison_links = []
+comparison_posts = []
 for left_id, right_id in comparison_pairs:
     left, right = cards_by_id[left_id], cards_by_id[right_id]
     comparison_slug = f"{left_id}-vs-{right_id}"
@@ -253,6 +254,7 @@ for left_id, right_id in comparison_pairs:
         ]},
     ]}
     write(Path("compare") / comparison_slug, page(title, description, canonical, destination, body, structured_data=schema))
+    comparison_posts.append({"slug": comparison_slug, "title": f'{left["name"]} vs {right["name"]}', "description": description, "url": canonical, "destination": destination, "body": body, "category": "Card comparisons"})
     comparison_links.append(f'<li><a href="{canonical}">{html.escape(left["name"])} vs {html.escape(right["name"])}</a></li>')
 
 compare_description = f"Browse {len(comparison_pairs)} maintained head-to-head Indian credit card comparisons with fees, rewards, benefits and trade-offs."
@@ -354,7 +356,7 @@ for support in ISSUER_SUPPORT:
 
 for post in guide_posts:
     write(Path("guides") / post["slug"], render_blog_article(post, guide_posts, ORIGIN, social_links(post["title"], post["url"])))
-write(Path("guides"), render_blog_index(guide_posts, ORIGIN, social_links("CardIQ Journal", f"{ORIGIN}/guides/")))
+write(Path("guides"), render_blog_index(guide_posts + comparison_posts, ORIGIN, social_links("CardIQ Journal", f"{ORIGIN}/guides/")))
 
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)

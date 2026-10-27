@@ -13,7 +13,7 @@
       if (visible) count++;
     });
     filters.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.filter === topic)));
-    status.textContent = `${count} ${count === 1 ? 'guide' : 'guides'} ${query || topic !== 'all' ? 'found' : 'to explore'}`;
+    status.textContent = `${count} ${count === 1 ? 'article' : 'articles'} ${query || topic !== 'all' ? 'found' : 'to explore'}`;
     document.getElementById('no-results').hidden = count !== 0;
   }
   search.addEventListener('input', update);
