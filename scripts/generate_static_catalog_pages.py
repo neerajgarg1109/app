@@ -279,16 +279,17 @@ lounge_description = f"Explore {len(lounge_cards)} Indian credit cards whose sou
 lounge_body = f'<h1>Airport lounge credit cards in India</h1><p>{html.escape(lounge_description)}</p><p class="muted">Access rules can depend on airport, terminal, network, spend thresholds and quarterly limits. Confirm current eligibility in the linked issuer terms before travelling.</p>{card_links(lounge_cards)}'
 write(Path("lounges"), page("Airport lounge credit cards in India | CardIQ", lounge_description, f"{ORIGIN}/lounges/", f"{ORIGIN}/#/cards?category=travel", lounge_body))
 
-restricted_cards = [(card, restricted_access(card)) for card in CARDS if restricted_access(card)]
+restricted_cards = [(card, access) for card in CARDS
+                    if (access := restricted_access(card)) and access["accessType"] == "invite-only"]
 restricted_columns = "".join(
     f'<article class="card"><p><strong>{html.escape(access["accessLabel"])}</strong></p><h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
     f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(access["accessExplanation"])}</p></article>'
     for card, access in restricted_cards
 )
-restricted_description = f"Research {len(restricted_cards)} invite-only and restricted-access Indian credit cards, including relationship, customer-segment and partner-channel requirements."
-restricted_body = f'''<h1>Invite-only and restricted credit cards in India</h1><p>{html.escape(restricted_description)}</p>
+restricted_description = f"Research {len(restricted_cards)} invitation-only Indian credit cards with issuer-confirmed invitation requirements."
+restricted_body = f'''<h1>Invite-only credit cards in India</h1><p>{html.escape(restricted_description)}</p>
 <p class="muted">These cards are excluded from CardIQ’s general quiz because access cannot be assumed. An invitation, relationship or listed customer segment does not guarantee approval; the issuing bank decides eligibility.</p><div class="grid">{restricted_columns}</div>'''
-write(Path("restricted-cards"), page("Invite-only and restricted credit cards in India | CardIQ", restricted_description, f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/#/restricted-cards", restricted_body))
+write(Path("restricted-cards"), page("Invite-only credit cards in India | CardIQ", restricted_description, f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/#/restricted-cards", restricted_body))
 
 guides = [
     ("new-credit-cards", "New credit cards and benefit changes in India", "Follow sourced Indian credit card launches, fee revisions, reward changes and discontinued benefits without confusing publication dates with launch dates.", f"{ORIGIN}/updates/", "Use CardIQ’s dated change log to verify what changed, when it takes effect and which issuer source supports it."),

@@ -7,9 +7,10 @@ def restricted_access(card: dict) -> Optional[dict]:
         card.get("name"), card.get("availabilityNote"), card.get("eligibilityNote"),
         card.get("coBrandPartner"), *(card.get("highlights") or []),
     ) if value).lower()
-    if card.get("recommendationEligible") is not False and not any(term in text for term in ("invite-only", "invitation-only")):
+    invitation_terms = ("invite-only", "invitation-only", "invite only", "invitation only", "by invitation")
+    if card.get("recommendationEligible") is not False and not any(term in text for term in invitation_terms):
         return None
-    if any(term in text for term in ("invite-only", "invitation-only", "by invitation")):
+    if any(term in text for term in invitation_terms):
         kind, label = "invite-only", "Invitation only"
     elif any(term in text for term in ("existing cardholder", "existing customer", "selected existing", "upgrade", "swipeup", "premier banking", "aspire banking", "signature banking", "cred member")):
         kind, label = "existing-relationship", "Existing relationship required"

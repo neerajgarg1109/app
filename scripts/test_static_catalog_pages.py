@@ -219,6 +219,12 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn('aria-label="Filter guides by topic"', source)
         self.assertIn('aria-live="polite"', source)
 
+    def test_invite_only_page_includes_infinia_and_excludes_relationship_cards(self):
+        source = (BUILD / "restricted-cards" / "index.html").read_text()
+        self.assertIn('HDFC Bank INFINIA Metal Edition', source)
+        self.assertNotIn('HSBC Premier', source)
+        self.assertNotIn('Shaurya SBI Card', source)
+
     def test_article_library_is_visible_before_news(self):
         source = (BUILD / "guides" / "index.html").read_text()
         self.assertLess(source.index('id="all-guides"'), source.index('class="top-news"'))
