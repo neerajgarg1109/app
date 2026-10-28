@@ -16,6 +16,8 @@ async def run(origin, users, duration, output):
         raise ValueError('Load tests are restricted to a local isolated API')
     if not 1 <= users <= 100 or not 10 <= duration <= 300:
         raise ValueError('Use 1–100 users for 10–300 seconds')
+    catalogue = json.loads((Path(__file__).resolve().parents[1] / 'backend/cards_catalog.json').read_text())
+    expected_card_ids = {card['id'] for card in catalogue if card.get('active') is not False}
     rows = []
     deadline = time.monotonic() + duration
     async with httpx.AsyncClient(base_url=origin, timeout=15, limits=httpx.Limits(max_connections=users, max_keepalive_connections=users)) as client:
@@ -38,7 +40,9 @@ async def run(origin, users, duration, output):
                         valid = bool(r.json().get('results'))
                     else:
                         r = await client.get('/api/cards?view=summary')
-                        valid = isinstance(r.json(), list) and len(r.json()) == 261
+                        value = r.json()
+                        valid = (isinstance(value, list) and len(value) == len(expected_card_ids)
+                                 and {card.get('id') for card in value} == expected_card_ids)
                     rows.append({'ms': round((time.monotonic()-started)*1000), 'ok': r.status_code == 200 and valid, 'kind': kind})
                 except (httpx.HTTPError, ValueError):
                     rows.append({'ms': round((time.monotonic()-started)*1000), 'ok': False, 'kind': kind})
