@@ -89,3 +89,28 @@ def test_free_fee_preference_penalises_paid_equivalent():
     paid.update(id="paid-copy", name="Paid Copy", feeType="worth", annualFeeAmount=999)
     result = recommend_cards({**BASE, "fee": "free"}, [paid, free])
     assert result[0]["card"]["id"] == "free-copy"
+
+
+def test_comma_formatted_waiver_does_not_become_a_one_rupee_threshold():
+    card = deepcopy(CARDS[0])
+    card.update(annualFee='₹500 (waived on ₹1,00,000 annual spend)', annualFeeAmount=500)
+    result = recommend_cards({**BASE, 'monthlySpend': '1000'}, [card])[0]['valueEstimate']
+    assert result['feeWaiverThreshold'] == 100000
+    assert result['feeWaived'] is False
+    assert result['effectiveAnnualFee'] == 500
+
+
+@pytest.mark.parametrize('value', ['inf', '-inf', 'NaN', '1e9999', '1e300'])
+def test_nonfinite_spending_cannot_crash_recommendation(value):
+    results = recommend_cards({**BASE, 'monthlySpend': value, 'loungeVisits': value}, CARDS[:1])
+    assert results and results[0]['valueEstimate']['annualSpendAssumption'] >= 0
+
+
+@pytest.mark.parametrize('line,expected', [
+    ('₹600 Amazon voucher requires ₹10,000 spend within the first 30 days.', 600),
+    ('Welcome voucher worth ₹1,500 on ₹30,000 spend within 60 days.', 1500),
+    ('1 point per ₹100 on other categories. Welcome benefit: a ₹500 voucher.', 500),
+])
+def test_welcome_benefit_does_not_count_qualifying_spend(line, expected):
+    profile = card_economics_profile({'highlights': [line]})
+    assert sum(item['value'] for item in profile['explicitFirstYearBenefits']) == expected

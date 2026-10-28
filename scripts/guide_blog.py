@@ -34,7 +34,8 @@ def cover(post):
 def shell(title, description, canonical, content, origin, schema, script=''):
     styles = (TEMPLATES / 'guide-blog.css').read_text() + MAIN_NAV_CSS + FOOTER_CSS
     schema_json = json.dumps(schema, ensure_ascii=False).replace('<', '\\u003c')
-    og_type = 'website' if schema.get('@type') == 'Blog' else 'article'
+    nodes = schema.get('@graph', [schema])
+    og_type = 'article' if any(node.get('@type') in ('Article', 'BlogPosting', 'NewsArticle') for node in nodes) else 'website'
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{escape(title)}</title><meta name="description" content="{escape(description)}"><link rel="canonical" href="{escape(canonical)}">
 <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}"><meta property="og:url" content="{escape(canonical)}"><meta property="og:type" content="{og_type}"><meta name="twitter:card" content="summary">
@@ -89,7 +90,7 @@ def render_index(posts, origin, share):
 <section class="editorial-note"><p class="eyebrow">A LITTLE CLARITY GOES A LONG WAY</p><h2>Useful advice, with the fine print.</h2><p>Our guides connect you to maintained card details and official issuer sources. Shortlists are editorial starting points, not approval promises or paid rankings.</p><a class="read-link" href="{origin}/methodology/">How we research cards <span aria-hidden="true">↗</span></a></section><div class="index-share">{share}</div></div>'''
     schema = {'@context': 'https://schema.org', '@type': 'Blog', 'name': 'CardIQ Journal', 'description': description, 'url': f'{origin}/guides/', 'blogPost': [{'@type': 'BlogPosting', 'headline': p['title'], 'url': p['url'], 'description': p['description']} for p in posts]}
     script = '<script>' + (TEMPLATES / 'guide-blog.js').read_text() + '</script>'
-    return shell('Credit card guides & stories | CardIQ Journal', description, f'{origin}/guides/', content, origin, schema, script)
+    return shell('Credit Card Guides & Comparisons in India | CardIQ', description, f'{origin}/guides/', content, origin, schema, script)
 
 
 def render_article(post, posts, origin, share):
@@ -104,4 +105,12 @@ def render_article(post, posts, origin, share):
 <div class="article-next"><p>Ready to put this into practice?</p><a class="nav-cta" href="{escape(post['destination'])}">Explore in CardIQ <span aria-hidden="true">↗</span></a></div>{share}</article>
 <section class="wrap related-posts" aria-labelledby="related-title"><p class="eyebrow">KEEP EXPLORING</p><h2 id="related-title">A few more good reads</h2><div class="article-grid">{related_cards}</div></section>'''
     schema = post.get('schema') or {'@context': 'https://schema.org', '@type': 'Article', 'headline': post['title'], 'description': post['description'], 'url': post['url'], 'inLanguage': 'en-IN', 'author': {'@type': 'Organization', 'name': 'CardIQ'}}
-    return shell(post['title'] + ' | CardIQ Journal', post['description'], post['url'], content, origin, schema)
+    nodes = schema.get('@graph', [schema])
+    for node in nodes:
+        if node.get('@type') in ('Article', 'BlogPosting', 'NewsArticle'):
+            node.setdefault('author', {'@type': 'Organization', 'name': 'CardIQ', 'url': f'{origin}/methodology/'})
+            node['author'].setdefault('url', f'{origin}/methodology/')
+            node.setdefault('publisher', {'@type': 'Organization', 'name': 'CardIQ', 'url': f'{origin}/'})
+            node.setdefault('mainEntityOfPage', {'@type': 'WebPage', '@id': post['url']})
+            node.setdefault('inLanguage', 'en-IN')
+    return shell(post['title'] + ' | CardIQ Guides', post['description'], post['url'], content, origin, schema)

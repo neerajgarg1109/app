@@ -466,7 +466,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert attached_lead["contact_consent"] is True and attached_lead["consent_recorded_at"]
                 assert attached_lead["phone"] == "+919876543210"
                 emailed = await api.post(f"/api/results/{anonymous_id}/email")
-                assert emailed.status_code == 200 and emailed.json()["sent_to"] == "optional@example.com"
+                assert emailed.status_code == 200 and "sent_to" not in emailed.json() and "optional@example.com" not in emailed.text
                 assert (await database.quiz_results.find_one({"result_id": anonymous_id}))["email_sent"] is True
                 assert (await api.post("/api/results/missing/email")).status_code == 404
                 no_contact = await api.post("/api/quiz/submit", json={"answers": profile()})
@@ -602,7 +602,7 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert status_created.status_code == 200 and status_created.json()["client_name"] == "integration-suite"
                 assert any(item["client_name"] == "integration-suite" for item in (await api.get("/api/status")).json())
                 partial = await api.post("/api/quiz/partial", json={
-                    "name": "Resume User", "email": "resume@example.com", "answers": {"goal": "travel"}, "step": 2,
+                    "name": "Resume User", "email": "resume@example.com", "answers": {"goal": "travel"}, "step": 2, "reminder_consent": True,
                 })
                 assert partial.status_code == 200
                 reminder_result = await api.post("/api/admin/send-reminders", headers=editor_headers)

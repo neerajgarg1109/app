@@ -18,6 +18,8 @@ export default function SharedResult() {
 
   useEffect(() => {
     let active = true;
+    setState("loading");
+    setScored(null);
     (async () => {
       try {
         const data = await getResult(resultId);

@@ -2,7 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Header, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
-from pymongo.errors import OperationFailure
+from pymongo.errors import DuplicateKeyError
 import os
 import re
 import ipaddress
@@ -40,20 +40,23 @@ db = client[os.environ['DB_NAME']]
 _link_monitor_task = None
 
 
+async def _ensure_product_event_index():
+    keys = [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1), ("experiment_id", 1), ("variant", 1)]
+    name = "unique_product_funnel_event"
+    existing = (await db.product_events.index_information()).get(name)
+    # Keep the unique index in place during ordinary restarts. Only the legacy
+    # schema requires migration; rebuilding on every boot opens a duplicate race.
+    if existing and (list(existing.get("key", [])) != keys or not existing.get("unique")):
+        await db.product_events.drop_index(name)
+    await db.product_events.create_index(keys, unique=True, name=name)
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Initialize database state and background work using FastAPI's lifespan API."""
     global _link_monitor_task
     await seed_cards(db)
-    try:
-        await db.product_events.drop_index("unique_product_funnel_event")
-    except OperationFailure:
-        pass
-    await db.product_events.create_index(
-        [("event", 1), ("session_id", 1), ("result_id", 1), ("card_id", 1), ("channel", 1), ("page_type", 1), ("experiment_id", 1), ("variant", 1)],
-        unique=True,
-        name="unique_product_funnel_event",
-    )
+    await _ensure_product_event_index()
     await db.product_events.create_index("created_at", name="product_event_created_at")
     await db.partner_conversions.create_index("external_id", unique=True, name="unique_partner_conversion")
     await db.partner_conversions.create_index("created_at", name="partner_conversion_created_at")
@@ -613,7 +616,7 @@ def _token_expired(value: Optional[datetime]) -> bool:
 
 def _card_for_client(card: dict) -> dict:
     """Expose an admin override as applyUrl while retaining the sourced issuer URL."""
-    public = dict(card)
+    public = {key: value for key, value in card.items() if key not in {"_id", "draft", "adminManaged", "publicationStatus", "applyLinkPausedReason"}}
     override = public.pop("applyUrlOverride", None)
     status = public.pop("applyLinkStatus", "live" if override else "official")
     public["officialApplyUrl"] = public.get("applyUrl")
@@ -664,7 +667,7 @@ def _card_summary_for_client(card: dict) -> dict:
 
 def _require_admin(token: Optional[str], minimum: str = "viewer") -> str:
     roles = {ADMIN_VIEWER_TOKEN: "viewer", ADMIN_EDITOR_TOKEN: "editor", ADMIN_PUBLISHER_TOKEN: "publisher", ADMIN_TOKEN: "owner"}
-    roles.pop(None, None)
+    roles = {secret: role for secret, role in roles.items() if secret}
     role = roles.get(token)
     levels = {"viewer": 0, "editor": 1, "publisher": 2, "owner": 3}
     if not role:
@@ -940,7 +943,8 @@ async def subscribe_card_alerts(payload: CardAlertSubscriptionIn):
 @api_router.post("/card-alerts/unsubscribe")
 async def unsubscribe_card_alerts(payload: CardAlertUnsubscribeIn):
     result = await db.card_alert_subscriptions.update_one(
-        {"unsubscribe_token_hash": hashlib.sha256(payload.token.encode()).hexdigest(), "status": "active"},
+        {"$or": [{"unsubscribe_token_hash": hashlib.sha256(payload.token.encode()).hexdigest()},
+                  {"unsubscribe_token_hashes": hashlib.sha256(payload.token.encode()).hexdigest()}], "status": "active"},
         {"$set": {"status": "unsubscribed", "unsubscribed_at": datetime.now(timezone.utc)}},
     )
     if not result.modified_count:
@@ -959,7 +963,18 @@ async def send_card_change_alert(payload: AdminCardAlertSendIn, x_admin_token: O
         raise HTTPException(status_code=422, detail="Source URL must already be a verified source for this card")
     existing = await db.card_alert_campaigns.find_one({"idempotency_key": payload.idempotency_key}, {"_id": 0})
     if existing:
-        return {"status": "already_sent", "sent": existing.get("sent", 0), "failed": existing.get("failed", 0)}
+        return {"status": "in_progress" if existing.get("delivery_state") == "sending" else "already_sent",
+                "sent": existing.get("sent", 0), "failed": existing.get("failed", 0)}
+    # MongoDB's built-in unique _id atomically reserves this campaign even when
+    # multiple workers receive the same request at the same time.
+    campaign_id = "card-alert:" + payload.idempotency_key
+    try:
+        await db.card_alert_campaigns.insert_one({"_id": campaign_id,
+            "campaign_id": str(uuid.uuid4()), "idempotency_key": payload.idempotency_key,
+            "delivery_state": "sending", "sent": 0, "failed": 0,
+            "created_at": datetime.now(timezone.utc)})
+    except DuplicateKeyError:
+        return {"status": "in_progress", "sent": 0, "failed": 0}
     query = {"status": "active", "$or": [
         {"scope_type": "all"}, {"scope_type": "card", "scope_value": card["id"]},
         {"scope_type": "issuer", "scope_value": card["issuer"]},
@@ -974,6 +989,13 @@ async def send_card_change_alert(payload: AdminCardAlertSendIn, x_admin_token: O
                    f'<p style="font-size:12px;color:#667">You received this service alert because you asked CardIQ to track {escape(card["name"])} or {escape(card["issuer"])}. '
                    f'<a href="{escape(unsubscribe_url)}">Unsubscribe</a>. CardIQ will never ask for sensitive banking credentials.</p>')
         try:
+            # Keep prior email links valid, and persist the new link before send.
+            hashes = [hashlib.sha256(token.encode()).hexdigest()]
+            if subscription.get("unsubscribe_token_hash"):
+                hashes.append(subscription["unsubscribe_token_hash"])
+            await db.card_alert_subscriptions.update_one(
+                {"subscription_id": subscription["subscription_id"]},
+                {"$addToSet": {"unsubscribe_token_hashes": {"$each": hashes}}})
             await send_email(to=subscription["email"], subject=f'Card update: {payload.title}', html=message)
             sent += 1
             await db.card_alert_subscriptions.update_one({"subscription_id": subscription["subscription_id"]}, {"$set": {
@@ -981,11 +1003,11 @@ async def send_card_change_alert(payload: AdminCardAlertSendIn, x_admin_token: O
         except Exception as error:
             failed += 1
             logger.error("Card alert delivery failed for subscription %s: %s", subscription.get("subscription_id"), error)
-    await db.card_alert_campaigns.insert_one({"campaign_id": str(uuid.uuid4()), "idempotency_key": payload.idempotency_key,
+    await db.card_alert_campaigns.update_one({"_id": campaign_id}, {"$set": {"delivery_state": "finished",
         "card_id": card["id"], "issuer": card["issuer"], "title": payload.title, "summary": payload.summary,
         "card_name": card["name"], "change_type": payload.change_type, "effective_date": payload.effective_date,
         "source_url": payload.source_url, "matched": len(subscriptions), "sent": sent, "failed": failed,
-        "created_at": datetime.now(timezone.utc)})
+        "completed_at": datetime.now(timezone.utc)}})
     return {"status": "sent", "matched": len(subscriptions), "sent": sent, "failed": failed}
 
 
@@ -1078,20 +1100,34 @@ async def submit_cardholder_review(token: str, payload: CardholderReviewIn):
     if not payload.current_holder or any(value < 1 or value > 5 for value in ratings):
         raise HTTPException(status_code=422, detail="Current cardholder confirmation and ratings from 1–5 are required")
     token_hash = hashlib.sha256(token.encode()).hexdigest()
-    invite = await db.review_followups.find_one({"token_hash": token_hash, "review_submitted": False})
-    if not invite or _token_expired(invite.get("token_expires_at")):
+    # Consume the invitation atomically before yielding to the review insert.
+    invite = await db.review_followups.find_one_and_update(
+        {"token_hash": token_hash, "review_submitted": False,
+         "token_expires_at": {"$gt": datetime.now(timezone.utc)}},
+        {"$set": {"review_submitted": True}})
+    if not invite:
         raise HTTPException(status_code=404, detail="Review link is invalid or expired")
     review = payload.model_dump()
     review.update({"review_id": str(uuid.uuid4()), "card_id": invite["card_id"], "followup_id": invite["followup_id"],
                    "status": "pending", "created_at": datetime.now(timezone.utc)})
-    await db.cardholder_reviews.insert_one(review)
-    await db.review_followups.update_one({"followup_id": invite["followup_id"]}, {"$set": {"review_submitted": True}, "$unset": {"token_hash": ""}})
+    try:
+        await db.cardholder_reviews.insert_one(review)
+    except Exception:
+        # A database timeout may mean the insert succeeded. Keep the invitation
+        # consumed so retries cannot create duplicate reviews.
+        await db.review_followups.update_one(
+            {"followup_id": invite["followup_id"], "token_hash": token_hash},
+            {"$set": {"review_submission_state": "needs_review"}})
+        raise HTTPException(status_code=503, detail="Review submission needs verification; please contact support") from None
+    await db.review_followups.update_one(
+        {"followup_id": invite["followup_id"], "token_hash": token_hash},
+        {"$unset": {"token_hash": ""}})
     return {"status": "submitted_for_review"}
 
 
 @api_router.get("/cards/{card_id}")
 async def get_card(card_id: str):
-    card = await db.cards.find_one({"id": card_id}, {"_id": 0})
+    card = await db.cards.find_one({"id": card_id, "publicationStatus": {"$ne": "draft"}}, {"_id": 0})
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
     return _card_for_client(card)
@@ -1101,7 +1137,7 @@ async def get_card(card_id: str):
 async def compare_cards(payload: CompareIn):
     if not payload.ids:
         raise HTTPException(status_code=400, detail="No card ids provided")
-    cards = await db.cards.find({"id": {"$in": payload.ids}}, {"_id": 0}).to_list(20)
+    cards = await db.cards.find({"id": {"$in": payload.ids}, "publicationStatus": {"$ne": "draft"}}, {"_id": 0}).to_list(20)
     order = {cid: i for i, cid in enumerate(payload.ids)}
     cards.sort(key=lambda c: order.get(c["id"], 999))
     return [_card_for_client(card) for card in cards]
@@ -1348,7 +1384,7 @@ async def email_result(result_id: str):
     html = _build_recommendation_email(lead.get("name", "there"), top["card"], top["reasons"])
     email_id = await send_email(to=lead["email"], subject=subject, html=html)
     await db.quiz_results.update_one({"result_id": result_id}, {"$set": {"email_sent": True}})
-    return {"status": "success", "email_id": email_id, "sent_to": lead["email"]}
+    return {"status": "success", "email_id": email_id}
 
 
 @api_router.post("/status", response_model=StatusCheck)
@@ -1880,7 +1916,8 @@ class PartialIn(BaseModel):
     name: Optional[str] = None
     email: EmailStr
     answers: Dict[str, str] = {}
-    step: int = 0
+    step: int = Field(default=0, ge=0, le=100)
+    reminder_consent: bool = False
 
 
 @api_router.post("/quiz/partial")
@@ -1896,6 +1933,8 @@ async def save_partial(payload: PartialIn):
                 "answers": payload.answers,
                 "step": payload.step,
                 "completed": False,
+                "reminder_consent": payload.reminder_consent,
+                "reminder_consent_at": now if payload.reminder_consent else None,
                 "updated_at": now,
             },
             "$setOnInsert": {"created_at": now, "reminder_sent": False},
@@ -1931,7 +1970,7 @@ def _build_reminder_email(name: str) -> str:
 async def send_reminders(x_admin_token: Optional[str] = Header(None)):
     _require_admin(x_admin_token, "editor")
     pending = await db.partial_sessions.find(
-        {"completed": {"$ne": True}, "reminder_sent": {"$ne": True}}, {"_id": 0}
+        {"completed": {"$ne": True}, "reminder_sent": {"$ne": True}, "reminder_consent": True}, {"_id": 0}
     ).to_list(1000)
     sent = 0
     for p in pending:

@@ -64,8 +64,8 @@ export default function Result({ scored, resultId, answers, refining = false, on
         phone: emailPhone.trim(),
         contact_consent: true,
       });
-      const data = await emailResult(resultId);
-      setSentTo(data.sent_to || "");
+      await emailResult(resultId);
+      setSentTo(emailAddress.trim());
       setEmailState("sent");
       recordProductEvent("lead_submitted", resultId);
       sessionStorage.setItem(`ciq_contact_prompt_${resultId}`, "submitted");

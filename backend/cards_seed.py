@@ -7,6 +7,7 @@ cardIQ estimates, not issuer underwriting criteria or approval probabilities.
 import json
 import re
 import hashlib
+import math
 from pathlib import Path
 from pymongo import UpdateOne
 
@@ -88,7 +89,8 @@ _MONTHLY_SPEND = {"low": 12000, "mid": 35000, "high": 75000, "vhigh": 125000}
 
 def _number(value, fallback=0):
     try:
-        return max(0, float(value))
+        number = float(value)
+        return max(0, number) if math.isfinite(number) and number <= 12_000_000 else fallback
     except (TypeError, ValueError):
         return fallback
 
@@ -100,8 +102,17 @@ def _explicit_first_year_benefits(card):
         if not re.search(r"welcome|gift|voucher|membership worth|joining benefit", line, re.I):
             continue
         values = []
-        for raw in re.findall(r"(?:₹|Rs\.?\s*)([\d,]+)", line, re.I):
-            amount = int(raw.replace(",", ""))
+        for match in re.finditer(r"(?:₹|Rs\.?\s*)([\d,]+)", line, re.I):
+            before = line[max(0, match.start() - 45):match.start()]
+            after = line[match.end():match.end() + 55].split(".")[0].split(";")[0]
+            # A qualifying-spend amount is a condition, never the gift value.
+            if re.search(r"(?:on|requires?|spend(?:s|ing)?(?:\s+of)?|purchases?\s+of)\s*$", before, re.I):
+                continue
+            labelled_before = re.search(r"(?:gift|voucher|membership)(?:\s+worth|\s+of)?\s*$", before, re.I)
+            labelled_after = re.match(r"\s*(?:[\w/-]+\s+){0,3}(?:gift|voucher|membership)\b", after, re.I)
+            if not (labelled_before or labelled_after):
+                continue
+            amount = int(match.group(1).replace(",", ""))
             if 0 < amount <= 50000:
                 values.append(amount)
         if values:
@@ -117,10 +128,10 @@ def _explicit_first_year_benefits(card):
 
 def _fee_waiver_threshold(card):
     text = card.get("annualFee", "")
-    match = re.search(r"waiv\w*\s+(?:on|at|after)\s+₹?\s*([\d.]+)\s*(lakh|lac|thousand)?", text, re.I)
+    match = re.search(r"waiv\w*\s+(?:on|at|after)\s+₹?\s*([\d,]+(?:\.\d+)?)\s*(lakh|lac|thousand)?", text, re.I)
     if not match:
         return None
-    amount = float(match.group(1))
+    amount = float(match.group(1).replace(",", ""))
     unit = (match.group(2) or "").lower()
     return round(amount * (100000 if unit in {"lakh", "lac"} else 1000 if unit == "thousand" else 1))
 

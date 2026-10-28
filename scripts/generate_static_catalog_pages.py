@@ -16,7 +16,7 @@ from public_footer import CSS as FOOTER_CSS, render_footer
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 from restricted_access import restricted_access
-BUILD = ROOT / "frontend" / "build"
+BUILD = Path(os.environ.get("CARDIQ_BUILD_DIR", ROOT / "frontend" / "build"))
 CATEGORIES = json.loads((ROOT / "frontend" / "src" / "data" / "cardCategories.json").read_text())
 ISSUER_SUPPORT = json.loads((ROOT / "frontend" / "src" / "data" / "issuerSupport.json").read_text())
 DEFAULT_ORIGIN = json.loads((ROOT / "frontend" / "package.json").read_text())["homepage"]
@@ -164,7 +164,8 @@ def editorial_analysis(card):
     return f'<section><h2>CardIQ editorial view</h2><p>{html.escape(verdict)}</p><div class="grid"><div class="card"><h3>A good fit when</h3><ul>{list_html(good_fit)}</ul></div><div class="card"><h3>Think twice when</h3><ul>{list_html(think_twice[:2])}</ul></div></div><p class="muted">This analysis is derived from the sourced fees, rewards and conditions on this page. It is not approval advice or a paid ranking.</p></section>'
 
 
-clean_generated_routes()
+if os.environ.get("CARDIQ_PRESERVE_GENERATED") != "true":
+    clean_generated_routes()
 cards_by_id = {card["id"]: card for card in CARDS}
 
 for card in CARDS:
@@ -179,14 +180,14 @@ for card in CARDS:
     canonical = f'{ORIGIN}/cards/{card["id"]}/'
     schema = {"@context": "https://schema.org", "@graph": [
         {"@type": "WebPage", "name": f"{name} review", "description": description, "url": canonical, "inLanguage": "en-IN", "dateModified": card.get("verifiedOn")},
-        {"@type": "Product", "name": name, "brand": {"@type": "Brand", "name": issuer}, "description": description, "url": canonical, **({"image": image_url} if image_url else {})},
+        {"@type": "CreditCard", "name": name, "provider": {"@type": "Organization", "name": issuer}, "areaServed": "IN", "feesAndCommissionsSpecification": card.get("termsNote", "Confirm fees and conditions with the issuer."), "description": description, "url": canonical, **({"image": image_url} if image_url else {})},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Credit cards", "item": f"{ORIGIN}/catalog/"},
             {"@type": "ListItem", "position": 2, "name": issuer, "item": f"{ORIGIN}/issuers/{slug(issuer)}/"},
             {"@type": "ListItem", "position": 3, "name": name, "item": canonical},
         ]},
     ]}
-    write(Path("cards") / card["id"], page(f"{name} review: fees, rewards and benefits | CardIQ", description, canonical, route, body, image_url=image_url, structured_data=schema))
+    write(Path("cards") / card["id"], page(f"{name} review: Fees & Rewards | CardIQ" if len(name) <= 33 else f"{name} review | CardIQ", description, canonical, route, body, image_url=image_url, structured_data=schema))
 
 issuers = sorted({card["issuer"] for card in CARDS})
 for issuer in issuers:
@@ -228,7 +229,7 @@ for left_id, right_id in comparison_pairs:
     comparison_slug = f"{left_id}-vs-{right_id}"
     canonical = f"{ORIGIN}/compare/{comparison_slug}/"
     destination = f"{ORIGIN}/#/cards?compare={quote(left_id)},{quote(right_id)}"
-    title = f'{left["name"]} vs {right["name"]}: fees, rewards and benefits | CardIQ'
+    title = f'{left["name"]} vs {right["name"]} | CardIQ'
     description = f'Compare {left["name"]} and {right["name"]} on annual fees, joining fees, rewards, benefits and important limitations.'
     reasons = []
     for card, target in ((left, right_id), (right, left_id)):
@@ -259,7 +260,7 @@ for left_id, right_id in comparison_pairs:
 
 compare_description = f"Browse {len(comparison_pairs)} maintained head-to-head Indian credit card comparisons with fees, rewards, benefits and trade-offs."
 compare_body = f'<h1>Indian credit card comparisons</h1><p>{html.escape(compare_description)}</p><p class="muted">These pairings come from CardIQ’s maintained editorial alternatives—not automatically generated combinations.</p><ul>{"".join(comparison_links)}</ul>'
-write(Path("compare"), page("Compare Indian credit cards side by side | CardIQ", compare_description, f"{ORIGIN}/compare/", f"{ORIGIN}/#/cards", compare_body))
+write(Path("compare"), page("Compare Indian credit cards side by side | CardIQ", compare_description, f"{ORIGIN}/compare/", f"{ORIGIN}/#/cards?mode=compare", compare_body))
 
 # A verification history is useful and accurate; it must not be presented as a launch date.
 verification_dates = sorted({card.get("verifiedOn") for card in CARDS if card.get("verifiedOn")}, reverse=True)

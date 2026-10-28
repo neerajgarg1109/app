@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 from restricted_access import restricted_access
-BUILD = ROOT / "frontend" / "build"
+BUILD = Path(os.environ.get("CARDIQ_BUILD_DIR", ROOT / "frontend" / "build"))
 MANIFEST = json.loads((BUILD / "catalog-manifest.json").read_text())
 CARD_IDS = MANIFEST["card_ids"]
 CARDS_BY_ID = {card["id"]: card for card in json.loads((ROOT / "backend" / "cards_catalog.json").read_text())}
@@ -95,7 +95,8 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn("Issuer source", source)
             self.assertIn('application/ld+json', source)
             self.assertIn('BreadcrumbList', source)
-            self.assertIn('Product', source)
+            self.assertIn('CreditCard', source)
+            self.assertNotIn('\"@type\": \"Product\"', source)
             self.assertNotRegex(source.lower(), r"likely to meet|guaranteed approval|approval odds")
 
     def test_titles_descriptions_and_canonicals_are_unique(self):
@@ -224,6 +225,18 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn('HDFC Bank INFINIA Metal Edition', source)
         self.assertNotIn('HSBC Premier', source)
         self.assertNotIn('Shaurya SBI Card', source)
+
+    def test_article_metadata_identifies_author_publisher_and_page(self):
+        for path in (BUILD / "guides").glob("*/index.html"):
+            source = path.read_text()
+            schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
+            articles = [node for node in schema.get("@graph", [schema]) if node.get("@type") == "Article"]
+            self.assertTrue(articles, path)
+            for node in articles:
+                self.assertEqual(node["author"]["url"], f"{ORIGIN}/methodology/")
+                self.assertEqual(node["publisher"]["name"], "CardIQ")
+                self.assertEqual(node["mainEntityOfPage"]["@id"], self.documents[path].meta["canonical"])
+            self.assertIn('property="og:type" content="article"', source)
 
     def test_article_library_is_visible_before_news(self):
         source = (BUILD / "guides" / "index.html").read_text()

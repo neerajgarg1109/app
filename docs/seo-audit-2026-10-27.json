@@ -1,0 +1,80 @@
+{
+  "sitemap_urls_checked": 431,
+  "errors": [],
+  "warnings": [
+    "Long title (86 characters): https://findmybest.cards/compare/cub-salaryse-level-up-virtual-vs-rbl-salaryse-up/",
+    "Long title (79 characters): https://findmybest.cards/compare/federal-paisabazaar-paisaback-vs-sbm-kredit-pe/",
+    "Long title (83 characters): https://findmybest.cards/compare/federal-paisabazaar-paisaback-vs-utkarsh-supermoney-supercard/",
+    "Long title (75 characters): https://findmybest.cards/compare/hdfc-tata-neu-infinity-vs-sbi-reliance-sbi-card-prime/",
+    "Long title (73 characters): https://findmybest.cards/compare/icici-emirates-emeralde-credit-card-vs-sbi-krisflyer-sbi-card-apex/",
+    "Long title (77 characters): https://findmybest.cards/compare/sbi-bom-sbi-card-prime-vs-sbi-city-union-bank-sbi-card-prime/",
+    "Long title (76 characters): https://findmybest.cards/compare/sbi-bom-sbi-card-prime-vs-sbi-karnataka-bank-sbi-card-prime/",
+    "Long title (72 characters): https://findmybest.cards/compare/sbi-city-union-bank-sbi-card-prime-vs-sbi-karnataka-bank-sbi-card-prime/"
+  ],
+  "production_samples": [
+    {
+      "path": "/robots.txt",
+      "status": 200,
+      "final_url": "https://findmybest.cards/robots.txt",
+      "bytes": 69,
+      "title": [],
+      "canonical": [],
+      "content": "User-agent: *\nAllow: /\nSitemap: https://findmybest.cards/sitemap.xml\n"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": 200,
+      "final_url": "https://findmybest.cards/sitemap.xml",
+      "bytes": 38373,
+      "title": [],
+      "canonical": [],
+      "urls": 431
+    },
+    {
+      "path": "/",
+      "status": 200,
+      "final_url": "https://findmybest.cards/",
+      "bytes": 1328,
+      "title": [
+        "cardIQ \u2014 Find the right credit card"
+      ],
+      "canonical": [
+        "https://findmybest.cards/"
+      ]
+    },
+    {
+      "path": "/guides/",
+      "status": 200,
+      "final_url": "https://findmybest.cards/guides/",
+      "bytes": 205388,
+      "title": [
+        "Credit card guides &amp; stories | CardIQ Journal"
+      ],
+      "canonical": [
+        "https://findmybest.cards/guides/"
+      ]
+    },
+    {
+      "path": "/cards/hdfc-infinia-credit-card/",
+      "status": 200,
+      "final_url": "https://findmybest.cards/cards/hdfc-infinia-credit-card/",
+      "bytes": 14508,
+      "title": [
+        "HDFC Bank INFINIA Metal Edition review: fees, rewards and benefits | CardIQ"
+      ],
+      "canonical": [
+        "https://findmybest.cards/cards/hdfc-infinia-credit-card/"
+      ]
+    },
+    {
+      "path": "/not-a-real-cardiq-page-20261027/",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "scope": "Live HTTP checks for six representative endpoints; all sitemap targets audited in a fresh local production build.",
+  "not_verified": [
+    "Google Search Console index coverage, queries and rankings",
+    "Field Core Web Vitals and Lighthouse performance",
+    "Full production crawl of all 431 URLs"
+  ]
+}
