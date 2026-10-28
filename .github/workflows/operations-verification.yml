@@ -8,7 +8,9 @@ permissions:
   contents: read
 jobs:
   isolated-verification:
-    runs-on: ubuntu-24.04
+    # MongoDB 8.0 rejects newer kernels (SERVER-121912); 22.04 uses kernel 6.8.
+    # Revisit after the MongoDB image supports the newer hosted-runner kernel.
+    runs-on: ubuntu-22.04
     timeout-minutes: 20
     services:
       mongodb:
