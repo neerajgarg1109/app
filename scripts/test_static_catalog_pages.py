@@ -54,6 +54,11 @@ def generated_pages():
 
 
 class StaticCatalogTests(unittest.TestCase):
+    def test_conditional_free_new_cards_are_excluded_from_lifetime_free_category(self):
+        source = (BUILD / "categories/lifetime-free/index.html").read_text()
+        for card_id in ("pnb-kiwi-credit-card", "sbm-niyo-global-credit-card"):
+            self.assertNotIn(f'/cards/{card_id}/', source)
+
     @classmethod
     def setUpClass(cls):
         cls.pages = generated_pages()

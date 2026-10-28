@@ -12,7 +12,7 @@ test("shows the sourced ICICI announcement without presenting it as an open appl
   expect(container.textContent).toContain("Latest news");
   expect(container.textContent).toContain("1838 Reserve");
   expect(container.textContent).toContain("Invitation only");
-  expect(container.textContent).toContain("A future launch date is not confirmed");
+  expect(container.textContent).toContain("Currently listed by ICICI Bank; invitation required");
   expect(container.textContent).not.toContain("Apply now");
   expect(container.textContent).not.toContain("Coming soon");
   const source = container.querySelector("a");

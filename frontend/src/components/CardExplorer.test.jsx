@@ -1,6 +1,6 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
-import CardExplorer from "./CardExplorer";
+import CardExplorer, { matchesCategory } from "./CardExplorer";
 import { getCard, getCards } from "../api";
 
 jest.mock("../api", () => ({ getCard: jest.fn(), getCards: jest.fn(), trackApplyClick: jest.fn() }));
@@ -14,6 +14,13 @@ jest.mock("react-router-dom", () => ({
 
 global.IS_REACT_ACT_ENVIRONMENT = true;
 window.scrollTo = jest.fn();
+
+test("conditional free offers stay out of lifetime-free but remain in low-fee browsing", () => {
+  const conditional = { annualFeeAmount: 0, joiningFeeAmount: 0, lifetimeFree: false };
+  expect(matchesCategory(conditional, "lifetime-free")).toBe(false);
+  expect(matchesCategory(conditional, "low-fee")).toBe(true);
+  expect(matchesCategory({ annualFeeAmount: 0 }, "lifetime-free")).toBe(true);
+});
 
 const cards = [
   {

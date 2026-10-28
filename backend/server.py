@@ -638,7 +638,7 @@ CARD_SUMMARY_FIELDS = {
     "minSpend", "creditReq", "rating", "verifiedOn", "applicationsOpen", "secured", "active",
     "coBrandPartner", "imageUrl", "editorial", "recommendationEligible",
     "applyUrl", "officialApplyUrl", "applicationLinkType", "affiliateDisclosureRequired",
-    "homepagePlacement",
+    "homepagePlacement", "lifetimeFree",
 }
 CARD_SUMMARY_SOURCE_FIELDS = CARD_SUMMARY_FIELDS | {
     "applyUrlOverride", "applyLinkStatus", "applyPartner", "applyCampaignId", "applyTrackingId",

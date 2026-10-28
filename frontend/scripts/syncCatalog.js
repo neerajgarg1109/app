@@ -7,7 +7,7 @@ const summaryDestination = path.resolve(__dirname, "../public/cards-catalog-summ
 
 const summaryFields = new Set([
   "id", "name", "issuer", "tagline", "network", "palette", "accent", "annualFee", "annualFeeAmount",
-  "joiningFee", "joiningFeeAmount", "rewardLine", "bestFor", "feeType", "minSpend", "creditReq", "rating",
+  "joiningFee", "joiningFeeAmount", "lifetimeFree", "rewardLine", "bestFor", "feeType", "minSpend", "creditReq", "rating",
   "verifiedOn", "applicationsOpen", "secured", "active", "coBrandPartner", "imageUrl",
   "editorial", "recommendationEligible", "applyUrl", "homepagePlacement",
 ]);

@@ -200,9 +200,10 @@ export default function CardExplorer() {
   );
 }
 
-function matchesCategory(card, category) {
+export function matchesCategory(card, category) {
   const definition = CARD_CATEGORIES.find((item) => item.id === category);
   if (!definition) return true;
+  if (category === "lifetime-free" && card.lifetimeFree === false) return false;
   const text = [card.name, card.rewardLine, card.feeType, card.network, ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
   const checks = [];
   if (definition.keywords?.length) checks.push(definition.keywords.some((keyword) => text.includes(keyword)));

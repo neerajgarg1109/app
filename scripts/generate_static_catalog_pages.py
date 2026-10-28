@@ -97,6 +97,8 @@ def clean_generated_routes():
 
 
 def category_match(card, definition):
+    if definition.get("id") == "lifetime-free" and card.get("lifetimeFree") is False:
+        return False
     text = " ".join(str(value) for value in [card.get("name"), card.get("rewardLine"), card.get("feeType"), card.get("network"), *(card.get("bestFor") or []), *(card.get("highlights") or [])]).lower()
     checks = []
     if definition.get("keywords"):

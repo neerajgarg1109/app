@@ -4,7 +4,7 @@ Each card carries its own `verifiedOn` date. Catalogue and issuer totals are cal
 
 ## Data and interpretation
 
-- `backend/cards_catalog.json` holds issuer facts, official product links, citations and the verification date. Descriptions are original summaries; no issuer logos or artwork are included.
+- `backend/cards_catalog.json` holds issuer facts, official product links, citations and the verification date. Descriptions are original summaries; reviewed official artwork is hosted locally with provenance in `docs/catalog-artwork-sources.json`.
 - Fees below exclude GST unless nil. First-year/joining fees can differ from renewal fees. A spend waiver is conditional, not lifetime-free. Acquisition offers must be confirmed at application.
 - Reward points, airline miles, myCash and Amazon Pay balance are different currencies. Accelerated rates apply only to eligible categories, often with caps. Read each card’s highlights and linked issuer terms.
 - `bestFor`, `feeType`, `minSpend` and `creditReq` are editorial quiz hints. They do not assert issuer credit-score cutoffs or guarantee approval. Secured cards explicitly require fixed deposits.
@@ -17,6 +17,10 @@ Each card carries its own `verifiedOn` date. Catalogue and issuer totals are cal
 Verify current product availability, fees, caps, exclusions, lounge qualification and product URLs before changing data. Refresh `verifiedOn`, `sourceUrls` and `applicationsOpen` together. SBI’s current product pages load their details from official `/json/templatedata/…` endpoints; those URLs are cited as well as the product pages.
 
 Startup upserts every repository catalogue record and marks only the known demo IDs inactive. It does not delete demo documents, leads, results or user-added cards. Current `/api/cards` excludes archived demos; new recommendations also exclude paused applications and products whose invitation or existing-card eligibility is not established by the quiz. Direct card lookups remain available for history. Results retain snapshots only as a fallback for removed cards; current database facts are refreshed and rescored whenever a shared result or result email is opened.
+
+## Missing-product expansion, 29 October 2026
+
+Added Eternal SBI, ICICI 1838 Reserve, PNB Kiwi, SBM Paisa+, SBM Niyo Global and SBM Magnet with official artwork, preserving all 261 earlier records. The catalogue now has 267 cards across 20 issuers. See [verification and validation](catalog-expansion-2026-10-29.md). These are additions to CardIQ, not six claimed new bank launches. `lifetimeFree: false` excludes explicitly conditional free offers or fee-bearing physical variants from the Lifetime Free category while retaining their published base fees.
 
 ## Expansion of 10 fintech co-branded consumer cards
 

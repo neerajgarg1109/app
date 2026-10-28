@@ -346,5 +346,83 @@
     ],
     "reviewedOn": "2026-10-26",
     "review": "Visually checked official product artwork; exact issuer product association."
+  },
+  {
+    "id": "sbi-eternal-sbi-card",
+    "page": "https://www.sbicard.com/en/personal/credit-cards/eternal-sbi-card.html",
+    "source": "https://www.sbicard.com/static-resources/img/card/product-detail-assets/all-other-cards-left-banners/eternal-sbi-card/front-eternal-card.png",
+    "filename": "sbi-eternal-sbi-card-e14263050c.png",
+    "size": [
+      300,
+      477
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer artwork; original bytes retained. Exact issuer product association.",
+    "sha256": "e14263050c88b146bdbb3b9979627ac296863981b48cb6b1a45cafd9ec80ce44"
+  },
+  {
+    "id": "icici-1838-reserve-credit-card",
+    "page": "https://www.icici.bank.in/personal-banking/cards/credit-card/1838-reserve-icici-credit-card",
+    "source": "https://www.icici.bank.in/content/dam/icicibank-revamp/images/productbannerv2/1838-first-view-cc-banner-mobile.webp",
+    "filename": "icici-1838-reserve-credit-card-e830c56678.webp",
+    "size": [
+      360,
+      385
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer artwork; original bytes retained. Issuer promotional product artwork.",
+    "sha256": "e830c5667845d84d54776a9e574c65d6f66a4bcebfb6f2a842c8365ce351d135"
+  },
+  {
+    "id": "pnb-kiwi-credit-card",
+    "page": "https://creditcard.pnb.bank.in/types18.html",
+    "source": "https://creditcard.pnb.bank.in/images/kiwi-co-branded-credit-card.png",
+    "filename": "pnb-kiwi-credit-card-5f5ea0f124.png",
+    "size": [
+      624,
+      188
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer artwork; original bytes retained. Issuer front-and-back product illustration.",
+    "sha256": "5f5ea0f12447bb68431a2732434e1b23081cdb704c8cd4eb9afe3a226dccd1dd"
+  },
+  {
+    "id": "sbm-paisabazaar-paisa-plus-credit-card",
+    "page": "https://www.paisabazaar.com/sbm-bank/paisabazaar-paisa-plus-credit-card/",
+    "source": "https://www.sbm.bank.in/images/cards/PB_paisaplus_Rupay_CC.webp",
+    "filename": "sbm-paisabazaar-paisa-plus-credit-card-9cc985fb79.webp",
+    "size": [
+      305,
+      313
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer artwork; original bytes retained. Exact issuer product association.",
+    "sha256": "9cc985fb792c6e800846dfce787cd00d0a908ce7002184ef2f9d0ebc2d99fa8d"
+  },
+  {
+    "id": "sbm-niyo-global-credit-card",
+    "page": "https://goniyo.com/fd-credit-card",
+    "source": "https://www.sbm.bank.in/images/cards/consumer-niyo.webp",
+    "filename": "sbm-niyo-global-credit-card-20483b7c0a.webp",
+    "size": [
+      296,
+      303
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer artwork; original bytes retained. Exact issuer product association.",
+    "sha256": "20483b7c0a220c0a43e796d934ee55196eef67ddd0c4bc71bf048f53fe9c5a92"
+  },
+  {
+    "id": "sbm-magnet-credit-card",
+    "page": "https://www.sbm.bank.in/personal-banking/cards/secured-credit-card",
+    "source": "https://www.sbm.bank.in/images/cards/SBM-Magnet-Gild-Card.webp",
+    "filename": "sbm-magnet-credit-card-d1b2760eb2.webp",
+    "size": [
+      296,
+      303
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer artwork; original bytes retained. Exact issuer product association.",
+    "sha256": "d1b2760eb23705df9b2177bd5b20d4635dc1c6e96d42469f3cb4abb1d7839890"
   }
 ]

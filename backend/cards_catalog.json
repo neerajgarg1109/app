@@ -19868,5 +19868,402 @@
     "rewardCurrency": "Kotak Reward Points",
     "imageUrl": "/cards/kotak-811-dream-different-credit-card-818394a743.jpg",
     "imageSourceUrl": "https://www.kotak.bank.in/content/dam/Kotak/product_card_images/811-dream-different-credit-card-t.jpg"
+  },
+  {
+    "id": "sbi-eternal-sbi-card",
+    "name": "Eternal SBI Card",
+    "issuer": "SBI Card",
+    "coBrandPartner": "Eternal",
+    "tagline": "Up to 10% instant discount across eligible Eternal platforms; 1% cashback on other eligible purchases",
+    "network": "Issuer-selected variant",
+    "palette": [
+      "#172554",
+      "#1e40af"
+    ],
+    "accent": "#fbbf24",
+    "annualFee": "₹499 + GST (renewal waived on ₹2 lakh eligible annual spend)",
+    "annualFeeAmount": 499,
+    "joiningFee": "₹499 + GST",
+    "joiningFeeAmount": 499,
+    "rewardLine": "Up to 10% instant discount across eligible Eternal platforms; 1% cashback on other eligible purchases",
+    "highlights": [
+      "10% instant discount on eligible Zomato, District and Blinkit beauty/electronics purchases; 5% on other Blinkit categories. Combined monthly discount cap: ₹2,000.",
+      "Up to 5% on selected preferred partners with a separate ₹1,000 monthly cap; merchant and coupon conditions apply.",
+      "Six-month Zomato Gold welcome membership; renewal fee waiver requires ₹2 lakh eligible annual spend."
+    ],
+    "bestFor": [
+      "dining",
+      "shopping",
+      "online",
+      "cashback"
+    ],
+    "feeType": "worth",
+    "minSpend": "low",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.sbicard.com/en/personal/credit-cards/eternal-sbi-card.html",
+    "sourceUrls": [
+      "https://www.sbicard.com/en/personal/credit-cards/eternal-sbi-card.html",
+      "https://www.sbicard.com/json/templatedata/product/card/data/en/personal/eternal-sbi-card.json",
+      "https://www.sbicard.com/en/most-important-terms-and-conditions.page"
+    ],
+    "verifiedOn": "2026-10-29",
+    "applicationsOpen": true,
+    "availabilityNote": "Issuer-controlled availability: no online application is enabled in the checked issuer catalogue. Check current access through SBI Card or the Eternal apps.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": false,
+    "catalogBatch": "verified-missing-products-2026-10-29",
+    "termsNote": "Eligible transactions only; issuer exclusions, caps, redemption rules and benefit conditions apply. Confirm current fees and application availability before applying.",
+    "imageUrl": "/cards/sbi-eternal-sbi-card-e14263050c.png",
+    "imageSourceUrl": "https://www.sbicard.com/static-resources/img/card/product-detail-assets/all-other-cards-left-banners/eternal-sbi-card/front-eternal-card.png",
+    "editorial": {
+      "summary": "A low-fee co-branded card for regular Zomato, Blinkit and District use, with capped platform discounts and a separate eligible-purchase cashback programme.",
+      "idealFor": [
+        "People who already use Eternal platforms regularly."
+      ],
+      "strengths": [
+        "Up to 10% instant discount across eligible Eternal platforms; 1% cashback on other eligible purchases"
+      ],
+      "tradeoffs": [
+        "Platform discounts and partner cashback have separate caps and exclusions.",
+        "The checked issuer catalogue does not enable an online application; confirm access before relying on this card."
+      ],
+      "verdict": "Compare the fee against discounts on your normal platform purchases and check current onboarding access first.",
+      "alternatives": []
+    },
+    "eligibilityNote": "Issuer-controlled availability: no online application is enabled in the checked issuer catalogue. Check current access through SBI Card or the Eternal apps.",
+    "rewardCurrency": "Instant discounts and statement cashback"
+  },
+  {
+    "id": "icici-1838-reserve-credit-card",
+    "name": "1838 Reserve ICICI Bank Credit Card",
+    "issuer": "ICICI Bank",
+    "coBrandPartner": "Times Internet",
+    "tagline": "Premium club memberships, concierge services and rewards on eligible purchases",
+    "network": "Visa",
+    "palette": [
+      "#172554",
+      "#1e40af"
+    ],
+    "accent": "#fbbf24",
+    "annualFee": "₹1,75,000 + GST (no annual fee waiver)",
+    "annualFeeAmount": 175000,
+    "joiningFee": "₹1,75,000 + GST",
+    "joiningFeeAmount": 175000,
+    "rewardLine": "Premium club memberships, concierge services and rewards on eligible purchases",
+    "highlights": [
+      "By invitation only; express interest through ICICI Bank or your Relationship Manager.",
+      "Selected private-club, travel and lifestyle privileges have their own booking, membership and redemption conditions.",
+      "No annual fee waiver and no add-on cards under the currently published product terms."
+    ],
+    "bestFor": [
+      "premium",
+      "travel",
+      "rewards"
+    ],
+    "feeType": "premium",
+    "minSpend": "vhigh",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.icici.bank.in/personal-banking/cards/credit-card/1838-reserve-icici-credit-card",
+    "sourceUrls": [
+      "https://www.icici.bank.in/personal-banking/cards/credit-card/1838-reserve-icici-credit-card"
+    ],
+    "verifiedOn": "2026-10-29",
+    "applicationsOpen": true,
+    "availabilityNote": "By invitation only. Contact your ICICI Bank Relationship Manager or express interest; registration does not assure an invitation.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": false,
+    "catalogBatch": "verified-missing-products-2026-10-29",
+    "termsNote": "Eligible transactions only; issuer exclusions, caps, redemption rules and benefit conditions apply. Confirm current fees and application availability before applying.",
+    "imageUrl": "/cards/icici-1838-reserve-credit-card-e830c56678.webp",
+    "imageSourceUrl": "https://www.icici.bank.in/content/dam/icicibank-revamp/images/productbannerv2/1838-first-view-cc-banner-mobile.webp",
+    "editorial": {
+      "summary": "An invitation-only luxury card whose substantial fee depends on personal use of its memberships and curated services.",
+      "idealFor": [
+        "Invited customers who can use the specified memberships and concierge services."
+      ],
+      "strengths": [
+        "Premium club memberships, concierge services and rewards on eligible purchases"
+      ],
+      "tradeoffs": [
+        "The joining and annual fees are each ₹1,75,000 before GST, without a spend waiver.",
+        "Access requires an issuer invitation; advertised benefit valuations are not cash savings."
+      ],
+      "verdict": "Assess each usable membership against the full fee with your Relationship Manager before accepting an invitation.",
+      "alternatives": []
+    },
+    "eligibilityNote": "By invitation only. Contact your ICICI Bank Relationship Manager or express interest; registration does not assure an invitation.",
+    "rewardCurrency": "Reward points"
+  },
+  {
+    "id": "pnb-kiwi-credit-card",
+    "name": "PNB Kiwi Credit Card",
+    "issuer": "Punjab National Bank",
+    "coBrandPartner": "Kiwi",
+    "tagline": "1.5% Kiwis on eligible scan-and-pay transactions and 0.5% on eligible online transactions",
+    "network": "RuPay",
+    "palette": [
+      "#172554",
+      "#1e40af"
+    ],
+    "accent": "#fbbf24",
+    "annualFee": "No annual fee for virtual card; physical card ₹750 + GST (waived on ₹1.5 lakh previous-year spend)",
+    "annualFeeAmount": 0,
+    "joiningFee": "No joining fee for virtual card; physical card ₹500 + GST",
+    "joiningFeeAmount": 0,
+    "rewardLine": "1.5% Kiwis on eligible scan-and-pay transactions and 0.5% on eligible online transactions",
+    "highlights": [
+      "The virtual card has no joining or annual fee; physical-card fees are separate.",
+      "Monthly Kiwis earn is capped at 1% of the credit limit under the issuer product terms.",
+      "Applications are managed through Kiwi; the partner bank is assigned based on the applicant profile. Paid Neon offers are separate."
+    ],
+    "bestFor": [
+      "upi",
+      "rewards",
+      "online"
+    ],
+    "feeType": "free",
+    "minSpend": "low",
+    "creditReq": "good",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://creditcard.pnb.bank.in/types18.html",
+    "sourceUrls": [
+      "https://creditcard.pnb.bank.in/types18.html",
+      "https://gokiwi.in/helpcenter/cardapplication/4d1/"
+    ],
+    "verifiedOn": "2026-10-29",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to issuer availability, eligibility and approval.",
+    "secured": false,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "verified-missing-products-2026-10-29",
+    "termsNote": "Eligible transactions only; issuer exclusions, caps, redemption rules and benefit conditions apply. Confirm current fees and application availability before applying.",
+    "imageUrl": "/cards/pnb-kiwi-credit-card-5f5ea0f124.png",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/kiwi-co-branded-credit-card.png",
+    "editorial": {
+      "summary": "A virtual-first RuPay card for eligible merchant UPI payments through Kiwi; physical-card charges make the selected format important.",
+      "idealFor": [
+        "People who use Kiwi for eligible merchant UPI payments."
+      ],
+      "strengths": [
+        "1.5% Kiwis on eligible scan-and-pay transactions and 0.5% on eligible online transactions"
+      ],
+      "tradeoffs": [
+        "The physical card costs ₹500 to join and ₹750 annually before GST, subject to its spend waiver.",
+        "Rewards are Kiwis with programme conditions and a credit-limit-linked monthly cap."
+      ],
+      "verdict": "Check the assigned bank and virtual-versus-physical fee terms in Kiwi before completing an application.",
+      "alternatives": []
+    },
+    "rewardCurrency": "Kiwis",
+    "lifetimeFree": false
+  },
+  {
+    "id": "sbm-paisabazaar-paisa-plus-credit-card",
+    "name": "SBM Paisabazaar Paisa+ Credit Card",
+    "issuer": "SBM Bank India",
+    "coBrandPartner": "Paisabazaar",
+    "tagline": "FD-backed RuPay card with CashPoints on eligible online, offline and UPI purchases",
+    "network": "RuPay",
+    "palette": [
+      "#172554",
+      "#1e40af"
+    ],
+    "accent": "#fbbf24",
+    "annualFee": "₹499 + GST (waived on ₹50,000 eligible annual spend)",
+    "annualFeeAmount": 499,
+    "joiningFee": "No joining fee",
+    "joiningFeeAmount": 0,
+    "rewardLine": "FD-backed RuPay card with CashPoints on eligible online, offline and UPI purchases",
+    "highlights": [
+      "Requires a fixed deposit from ₹2,000; the issuer KFS specifies a credit limit of 90% of the FD amount.",
+      "Online rewards depend on the FD slab; UPI rewards have a monthly spending condition. Check the linked reward structure.",
+      "Annual fee waiver requires ₹50,000 spend before renewal; cancellation within six months costs ₹499 + GST."
+    ],
+    "bestFor": [
+      "credit",
+      "upi",
+      "rewards"
+    ],
+    "feeType": "worth",
+    "minSpend": "low",
+    "creditReq": "new",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.paisabazaar.com/sbm-bank/paisabazaar-paisa-plus-credit-card/",
+    "sourceUrls": [
+      "https://www.paisabazaar.com/sbm-bank/paisabazaar-paisa-plus-credit-card/",
+      "https://www.sbm.bank.in/personal-banking/cards/secured-credit-card",
+      "https://www.sbm.bank.in/pdf/kfs/PB_paisaplus_KFS.pdf",
+      "https://www.sbm.bank.in/pdf/notice-board/PB_paisaplus_Reward-Structure.pdf"
+    ],
+    "verifiedOn": "2026-10-29",
+    "applicationsOpen": true,
+    "availabilityNote": "Subject to issuer availability, eligibility and approval.",
+    "secured": true,
+    "active": true,
+    "recommendationEligible": true,
+    "catalogBatch": "verified-missing-products-2026-10-29",
+    "termsNote": "Eligible transactions only; issuer exclusions, caps, redemption rules and benefit conditions apply. Confirm current fees and application availability before applying.",
+    "imageUrl": "/cards/sbm-paisabazaar-paisa-plus-credit-card-9cc985fb79.webp",
+    "imageSourceUrl": "https://www.sbm.bank.in/images/cards/PB_paisaplus_Rupay_CC.webp",
+    "editorial": {
+      "summary": "A secured RuPay card distributed by Paisabazaar with a small minimum deposit and a conditional annual fee waiver.",
+      "idealFor": [
+        "People comfortable locking a fixed deposit to obtain a secured credit card."
+      ],
+      "strengths": [
+        "FD-backed RuPay card with CashPoints on eligible online, offline and UPI purchases"
+      ],
+      "tradeoffs": [
+        "The fixed deposit remains security for the card and early cancellation carries a fee.",
+        "The annual fee and reward conditions need to be considered alongside the deposit."
+      ],
+      "verdict": "Compare the deposit commitment and achievable fee waiver with other secured cards before opening the FD.",
+      "alternatives": []
+    },
+    "rewardCurrency": "CashPoints"
+  },
+  {
+    "id": "sbm-niyo-global-credit-card",
+    "name": "SBM Niyo Global Credit Card",
+    "issuer": "SBM Bank India",
+    "coBrandPartner": "Niyo",
+    "tagline": "FD-backed travel card with zero issuer forex markup on eligible foreign-currency purchases",
+    "network": "Visa Platinum",
+    "palette": [
+      "#172554",
+      "#1e40af"
+    ],
+    "accent": "#fbbf24",
+    "annualFee": "No annual fee under current waiver (published ₹500 fee waived)",
+    "annualFeeAmount": 0,
+    "joiningFee": "No joining fee under current waiver (published ₹500 fee waived)",
+    "joiningFeeAmount": 0,
+    "rewardLine": "FD-backed travel card with zero issuer forex markup on eligible foreign-currency purchases",
+    "highlights": [
+      "Requires an SBM fixed deposit; Niyo lists a ₹5,000 minimum for the SBM route.",
+      "Published ₹500 joining and annual fees are currently waived; confirm the offer in the app.",
+      "Visa conversion rates apply. ATM fees, GST on applicable charges and merchant currency conversion are separate."
+    ],
+    "bestFor": [
+      "travel",
+      "forex",
+      "credit"
+    ],
+    "feeType": "free",
+    "minSpend": "low",
+    "creditReq": "new",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://goniyo.com/fd-credit-card",
+    "sourceUrls": [
+      "https://goniyo.com/fd-credit-card",
+      "https://www.sbm.bank.in/personal-banking/cards/secured-credit-card",
+      "https://www.sbm.bank.in/pdf/kfs/Niyo-KFS.pdf",
+      "https://goniyo.com/sbm-scc/how-scc-works"
+    ],
+    "verifiedOn": "2026-10-29",
+    "applicationsOpen": true,
+    "availabilityNote": "Available through the Niyo app for eligible Niyo debit-card customers; the SBM route and serviceable location must be confirmed in the app.",
+    "secured": true,
+    "active": true,
+    "recommendationEligible": false,
+    "catalogBatch": "verified-missing-products-2026-10-29",
+    "termsNote": "Eligible transactions only; issuer exclusions, caps, redemption rules and benefit conditions apply. Confirm current fees and application availability before applying.",
+    "imageUrl": "/cards/sbm-niyo-global-credit-card-20483b7c0a.webp",
+    "imageSourceUrl": "https://www.sbm.bank.in/images/cards/consumer-niyo.webp",
+    "editorial": {
+      "summary": "An FD-backed Niyo travel card issued by SBM Bank, with zero issuer forex markup and currently waived membership fees.",
+      "idealFor": [
+        "Eligible Niyo customers who want an FD-backed card for foreign-currency purchases."
+      ],
+      "strengths": [
+        "FD-backed travel card with zero issuer forex markup on eligible foreign-currency purchases"
+      ],
+      "tradeoffs": [
+        "A fixed deposit is required and funds remain tied to the card.",
+        "Zero issuer markup does not remove ATM fees or merchant dynamic-currency-conversion costs.",
+        "Confirm the SBM application route and current fee waiver in Niyo."
+      ],
+      "verdict": "Consider it when the deposit commitment suits you and the Niyo app confirms SBM onboarding for your profile.",
+      "alternatives": []
+    },
+    "eligibilityNote": "Available through the Niyo app for eligible Niyo debit-card customers; the SBM route and serviceable location must be confirmed in the app.",
+    "forexMarkup": "0% issuer forex markup; network conversion rates and other applicable charges remain separate",
+    "lifetimeFree": false
+  },
+  {
+    "id": "sbm-magnet-credit-card",
+    "name": "SBM Magnet Credit Card",
+    "issuer": "SBM Bank India",
+    "coBrandPartner": "Gild",
+    "tagline": "FD-backed card with Magnet Coin rewards on eligible purchases",
+    "network": "Visa Platinum",
+    "palette": [
+      "#172554",
+      "#1e40af"
+    ],
+    "accent": "#fbbf24",
+    "annualFee": "No annual fee",
+    "annualFeeAmount": 0,
+    "joiningFee": "No joining fee",
+    "joiningFeeAmount": 0,
+    "rewardLine": "FD-backed card with Magnet Coin rewards on eligible purchases",
+    "highlights": [
+      "The issuer KFS specifies a credit limit of 90% of the fixed deposit amount.",
+      "No joining or annual membership fee; the KFS separately lists FD-closure and early card-cancellation charges.",
+      "Magnet Coins follow programme redemption terms; they are not represented here as a flat cash-return rate."
+    ],
+    "bestFor": [
+      "credit",
+      "rewards"
+    ],
+    "feeType": "free",
+    "minSpend": "low",
+    "creditReq": "new",
+    "rating": 4.0,
+    "ratingBasis": "Neutral cardIQ editorial baseline, not a customer or issuer rating.",
+    "applyUrl": "https://www.sbm.bank.in/personal-banking/cards/secured-credit-card",
+    "sourceUrls": [
+      "https://www.sbm.bank.in/personal-banking/cards/secured-credit-card",
+      "https://www.sbm.bank.in/pdf/kfs/SBM-Magnet-CC-Key-Fact-Statement.pdf",
+      "https://www.sbm.bank.in/pdf/notice-board/SBM-Magnet-MITC.pdf"
+    ],
+    "verifiedOn": "2026-10-29",
+    "applicationsOpen": true,
+    "availabilityNote": "Available through a partner channel. The issuer lists this product, but a current public partner-onboarding route was not verified; confirm availability with SBM Bank.",
+    "secured": true,
+    "active": true,
+    "recommendationEligible": false,
+    "catalogBatch": "verified-missing-products-2026-10-29",
+    "termsNote": "Eligible transactions only; issuer exclusions, caps, redemption rules and benefit conditions apply. Confirm current fees and application availability before applying.",
+    "imageUrl": "/cards/sbm-magnet-credit-card-d1b2760eb2.webp",
+    "imageSourceUrl": "https://www.sbm.bank.in/images/cards/SBM-Magnet-Gild-Card.webp",
+    "editorial": {
+      "summary": "A secured card in SBM Bank’s catalogue, carrying Magnet/Gild branding and a reward currency that needs separate redemption review.",
+      "idealFor": [
+        "People evaluating the issuer’s FD-backed partner-card options."
+      ],
+      "strengths": [
+        "FD-backed card with Magnet Coin rewards on eligible purchases"
+      ],
+      "tradeoffs": [
+        "Current partner onboarding must be confirmed with the bank before opening a deposit.",
+        "The KFS lists a 1% FD-closure charge and ₹499 card cancellation in the first year, plus applicable taxes."
+      ],
+      "verdict": "Use the listing to compare fees and deposit requirements, then verify current partner availability directly with SBM Bank.",
+      "alternatives": []
+    },
+    "eligibilityNote": "Available through a partner channel. The issuer lists this product, but a current public partner-onboarding route was not verified; confirm availability with SBM Bank.",
+    "forexMarkup": "2.49% + applicable taxes",
+    "rewardCurrency": "Magnet Coins"
   }
 ]
