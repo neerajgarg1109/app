@@ -64,6 +64,7 @@ def page(title, description, canonical, destination, body, image_url=None, struc
     schema_markup = html.escape(json.dumps(schema, ensure_ascii=False), quote=False)
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="{ORIGIN}/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="{ORIGIN}/favicon.svg"><link rel="icon" type="image/png" sizes="48x48" href="{ORIGIN}/favicon-48.png"><link rel="apple-touch-icon" sizes="180x180" href="{ORIGIN}/apple-touch-icon.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap">
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">

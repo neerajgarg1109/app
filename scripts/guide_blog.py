@@ -37,6 +37,7 @@ def shell(title, description, canonical, content, origin, schema, script=''):
     nodes = schema.get('@graph', [schema])
     og_type = 'article' if any(node.get('@type') in ('Article', 'BlogPosting', 'NewsArticle') for node in nodes) else 'website'
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="{origin}/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="{origin}/favicon.svg"><link rel="icon" type="image/png" sizes="48x48" href="{origin}/favicon-48.png"><link rel="apple-touch-icon" sizes="180x180" href="{origin}/apple-touch-icon.png">
 <title>{escape(title)}</title><meta name="description" content="{escape(description)}"><link rel="canonical" href="{escape(canonical)}">
 <meta property="og:title" content="{escape(title)}"><meta property="og:description" content="{escape(description)}"><meta property="og:url" content="{escape(canonical)}"><meta property="og:type" content="{og_type}"><meta name="twitter:card" content="summary">
 <script type="application/ld+json">{schema_json}</script><style>{styles}</style></head><body>
