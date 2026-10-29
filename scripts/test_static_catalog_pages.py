@@ -59,10 +59,12 @@ class StaticCatalogTests(unittest.TestCase):
         pages = list((BUILD / 'compare').glob('*/index.html'))
         self.assertGreater(len(pages), 0)
         for path in pages:
-            slug = path.parent.name
             source = path.read_text()
-            for card_id in slug.split('-vs-'):
-                card = CARDS_BY_ID[card_id]
+            schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S)[1])
+            products = [node for node in schema['@graph'] if node.get('@type') == 'FinancialProduct']
+            self.assertEqual(len(products), 2)
+            for product in products:
+                card = CARDS_BY_ID[product['url'].rstrip('/').split('/')[-1]]
                 if card.get('imageUrl'):
                     self.assertIn(html.escape(card['imageUrl'], quote=True), source)
         source = (BUILD / 'catalog' / 'index.html').read_text()
@@ -180,9 +182,10 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertNotRegex(source.lower(), r"likely to meet|guaranteed approval|approval odds")
 
     def test_titles_descriptions_and_canonicals_are_unique(self):
-        titles = [doc.title for doc in self.documents.values()]
-        descriptions = [doc.meta.get("description") for doc in self.documents.values()]
-        canonicals = [doc.meta.get("canonical") for doc in self.documents.values()]
+        canonical_docs = [doc for path, doc in self.documents.items() if doc.meta["canonical"] == f"{ORIGIN}/{path.parent.relative_to(BUILD).as_posix()}/"]
+        titles = [doc.title for doc in canonical_docs]
+        descriptions = [doc.meta.get("description") for doc in canonical_docs]
+        canonicals = [doc.meta.get("canonical") for doc in canonical_docs]
         self.assertNotIn("", titles + descriptions + canonicals)
         self.assertEqual(len(titles), len(set(titles)))
         self.assertEqual(len(descriptions), len(set(descriptions)))
@@ -214,7 +217,12 @@ class StaticCatalogTests(unittest.TestCase):
         for path, document in self.documents.items():
             for link in document.links:
                 if link.startswith(f"{ORIGIN}/") and "#" not in link:
-                    self.assertIn(link, generated, f"Broken generated link in {path}: {link}")
+                    if urlparse(link).path.startswith('/go/'):
+                        target = BUILD / urlparse(link).path.strip('/') / 'index.html'
+                        self.assertTrue(target.is_file(), link)
+                        self.assertIn('noindex,nofollow', target.read_text())
+                    else:
+                        self.assertIn(link, generated, f"Broken generated link in {path}: {link}")
 
     def test_methodology_discloses_sources_automation_and_revenue(self):
         source = (BUILD / "methodology" / "index.html").read_text().lower()
@@ -238,8 +246,8 @@ class StaticCatalogTests(unittest.TestCase):
         for path in pages:
             source = path.read_text()
             self.assertIn("Key decision", source)
-            self.assertIn("Annual fee:", source)
-            self.assertIn("Joining fee:", source)
+            self.assertIn("Renewal fee + GST", source)
+            self.assertIn("Joining fee + GST", source)
             self.assertIn("CardIQ view", source)
             self.assertIn("#/cards?compare=", source)
             self.assertIn('"@type": "ItemList"', source)
@@ -292,7 +300,7 @@ class StaticCatalogTests(unittest.TestCase):
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
         self.assertEqual(schema["@type"], "Blog")
         expected = {f"{ORIGIN}/guides/{page.parent.name}/" for page in (BUILD / "guides").glob("*/index.html") if not page.parent.name.startswith("close-")}
-        expected |= {f"{ORIGIN}/compare/{page.parent.name}/" for page in (BUILD / "compare").glob("*/index.html")}
+        expected |= {self.documents[page].meta["canonical"] for page in (BUILD / "compare").glob("*/index.html")}
         self.assertEqual({post["url"] for post in schema["blogPost"]}, expected)
         self.assertTrue(expected.issubset(set(self.documents[path].links)))
         self.assertEqual(source.count("<h1>"), 1)

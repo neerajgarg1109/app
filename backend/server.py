@@ -1,6 +1,7 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Header, Response, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Header, Response, Request, Query
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import DuplicateKeyError
 import os
@@ -10,7 +11,7 @@ import logging
 import httpx
 from html import escape
 from html.parser import HTMLParser
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr, field_validator
 from typing import List, Dict, Optional, Any
@@ -848,6 +849,42 @@ async def get_restricted_cards():
         if access:
             results.append({**_card_for_client(card), **access, "recommendationExcluded": True})
     return {"cards": sorted(results, key=lambda item: (item["accessType"], item["issuer"], item["name"]))}
+
+
+COMPARISON_PLACEMENTS = {"verdict_box_card_a", "verdict_box_card_b", "calculator_winner_cta", "sticky_mobile_bar", "fallback_footer_ltf", "unattributed"}
+
+
+@api_router.get("/go/{card_id}")
+async def comparison_apply_redirect(card_id: str, subid: str = Query("unattributed", max_length=40), pair: Optional[str] = Query(None, max_length=200, pattern=r"^[a-z0-9]+(?:-[a-z0-9]+)*$")):
+    if subid not in COMPARISON_PLACEMENTS:
+        raise HTTPException(status_code=422, detail="Unknown comparison placement")
+    card = await db.cards.find_one({"id": card_id, **CATALOG_QUERY}, {"_id": 0})
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+    if card.get("active") is False or card.get("applicationsOpen") is False:
+        raise HTTPException(status_code=409, detail="Applications are not currently confirmed open. Check the issuer's current availability.")
+    partner = bool(card.get("applyUrlOverride") and card.get("applyLinkStatus", "live") == "live")
+    destination = _validated_apply_url(card.get("applyUrlOverride") if partner else card.get("applyUrl"))
+    if not destination:
+        raise HTTPException(status_code=503, detail="Issuer destination unavailable")
+    if partner:
+        parsed = urlparse(destination)
+        params = parse_qsl(parsed.query, keep_blank_values=True)
+        keys = {key for key, _ in params}
+        # Preserve existing network/campaign attribution instead of overwriting partner parameters.
+        params.append(("cardiq_subid" if "subid" in keys else "subid", subid))
+        if pair: params.append(("cardiq_pair" if "pair" in keys else "pair", pair))
+        destination = urlunparse(parsed._replace(query=urlencode(params)))
+    await db.apply_events.insert_one({
+        "event_id": str(uuid.uuid4()), "card_id": card_id, "result_id": None,
+        "link_type": "partner" if partner else "official", "placement_id": subid,
+        "comparison_slug": pair, "partner_name": card.get("applyPartner") if partner else None,
+        "campaign_id": card.get("applyCampaignId") if partner else None,
+        "tracking_id": card.get("applyTrackingId") if partner else None,
+        "destination_url": destination, "expected_payout": card.get("expectedPayout") if partner else None,
+        "created_at": datetime.now(timezone.utc),
+    })
+    return RedirectResponse(destination, status_code=302, headers={"Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow"})
 
 
 @api_router.post("/cards/{card_id}/apply-click")

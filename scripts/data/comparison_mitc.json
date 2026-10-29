@@ -1,0 +1,57 @@
+{
+  "HDFC Bank": {
+    "url": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/personal-mitc/combined-mitc-02-sept-2026-swiggy.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "ICICI Bank": {
+    "url": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/docs/pdf/mitc-cc-gk-t.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "CSB Bank": {
+    "url": "https://csb.bank.in/pdf/edge-csb-bank-ruPay-credit-card-mitc_2025.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "AU Small Finance Bank": {
+    "url": "https://www.au.bank.in/credit-cards/mitc%28with-schedule-of-charges%29.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "SBI Card": {
+    "url": "https://www.sbicard.com/sbi-card-en/assets/docs/pdf/most-important-terms-and-conditions/mitc-english.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "Axis Bank": {
+    "url": "https://www.axis.bank.in/docs/default-source/default-document-library/mitc-credit-cards.pdf?sfvrsn=aba4dce4_35",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "IDFC FIRST Bank": {
+    "url": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/pdf/credit-card/MITC-Document-Customer.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "HSBC": {
+    "url": "https://www.hsbc.bank.in/content/dam/hsbc/in/documents/credit-cards/visa-cashback/terms-and-condition.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "American Express India": {
+    "url": "https://www.americanexpress.com/content/dam/amex/in/legal/mitc/Lending_MITC_English.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "IndusInd Bank": {
+    "url": "https://www.indusind.bank.in/content/dam/indusind-corporate/credit-cards/MITC_Premium.pdf",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  },
+  "Punjab National Bank": {
+    "url": "https://creditcard.pnb.bank.in/PDF/MITC.PDF",
+    "linkCheckedOn": "2026-10-29",
+    "pdfValidated": true
+  }
+}

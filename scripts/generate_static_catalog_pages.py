@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.parse import quote
 from urllib.request import urlopen
 from public_fonts import font_links
+from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page
 from comparison_editorial import render_comparison
 from guide_blog import render_index as render_blog_index, render_article as render_blog_article
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
@@ -61,14 +62,14 @@ def social_links(title, canonical):
 </div></section>'''
 
 
-def page(title, description, canonical, destination, body, image_url=None, structured_data=None):
+def page(title, description, canonical, destination, body, image_url=None, structured_data=None, head_extra=""):
     image_meta = f'<meta property="og:image" content="{html.escape(image_url, quote=True)}"><meta name="twitter:card" content="summary_large_image">' if image_url else '<meta name="twitter:card" content="summary">'
     schema = structured_data or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "description": description, "url": canonical, "inLanguage": "en-IN"}
-    schema_markup = html.escape(json.dumps(schema, ensure_ascii=False), quote=False)
+    schema_markup = json.dumps(schema, ensure_ascii=False).replace("<", "\\u003c")
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="{ORIGIN}/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="{ORIGIN}/favicon.svg"><link rel="icon" type="image/png" sizes="48x48" href="{ORIGIN}/favicon-48.png"><link rel="apple-touch-icon" sizes="180x180" href="{ORIGIN}/apple-touch-icon.png">
-{font_links()}
+{font_links()}{head_extra}
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
 <meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">{image_meta}<script type="application/ld+json">{schema_markup}</script>
@@ -242,44 +243,38 @@ comparison_pairs = sorted({
 })
 comparison_links = []
 comparison_posts = []
-for left_id, right_id in comparison_pairs:
-    left, right = cards_by_id[left_id], cards_by_id[right_id]
-    comparison_slug = f"{left_id}-vs-{right_id}"
-    canonical = f"{ORIGIN}/compare/{comparison_slug}/"
-    destination = f"{ORIGIN}/#/cards?compare={quote(left_id)},{quote(right_id)}"
-    title = f'{left["name"]} vs {right["name"]} | CardIQ'
-    description = f'Compare {left["name"]} and {right["name"]} on annual fees, joining fees, rewards, benefits and important limitations.'
-    reasons = []
-    for card, target in ((left, right_id), (right, left_id)):
-        reason = next((item.get("reason") for item in (card.get("editorial") or {}).get("alternatives", []) if item.get("id") == target), None)
-        if reason and reason not in reasons:
-            reasons.append(reason)
-    decision = "".join(f"<li>{html.escape(reason)}</li>" for reason in reasons)
-    columns = "".join(
-        f'<article class="card">{card_artwork(card)}<h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
-        f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(card.get("rewardLine", ""))}</p>'
-        f'<p><strong>Annual fee:</strong> {html.escape(card.get("annualFee", "Not specified"))}</p>'
-        f'<p><strong>Joining fee:</strong> {html.escape(card.get("joiningFee", "Not specified"))}</p>'
-        f'<p><strong>Network:</strong> {html.escape(card.get("network", "Issuer-selected"))}</p>'
-        f'<h3>CardIQ view</h3><p>{html.escape((card.get("editorial") or {}).get("summary", "Review the documented benefits and conditions before deciding."))}</p></article>'
-        for card in (left, right)
-    )
-    body = f'<h1>{html.escape(left["name"])} vs {html.escape(right["name"])}</h1><p>{html.escape(description)}</p><div class="grid">{columns}</div><h2>Key decision</h2><ul>{decision}</ul><p class="muted">Facts were last checked {html.escape(max(left.get("verifiedOn", ""), right.get("verifiedOn", "")))}. Follow each card page to the linked issuer terms before applying.</p>'
-    schema = {"@context": "https://schema.org", "@graph": [
-        {"@type": "WebPage", "name": title, "description": description, "url": canonical, "inLanguage": "en-IN"},
-        {"@type": "ItemList", "name": f'{left["name"]} and {right["name"]}', "itemListElement": [
-            {"@type": "ListItem", "position": 1, "url": f'{ORIGIN}/cards/{left_id}/', "name": left["name"]},
-            {"@type": "ListItem", "position": 2, "url": f'{ORIGIN}/cards/{right_id}/', "name": right["name"]},
-        ]},
-    ]}
-    body += render_comparison(comparison_slug, left, right)
-    write(Path("compare") / comparison_slug, page(title, description, canonical, destination, body, structured_data=schema))
-    comparison_posts.append({"slug": comparison_slug, "title": f'{left["name"]} vs {right["name"]}', "description": description, "url": canonical, "destination": destination, "body": body, "category": "Card comparisons", "artwork": [{"url": card["imageUrl"], "name": card["name"]} for card in (left, right) if card.get("imageUrl")]})
+priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
+comparison_routes = [(f"{left}-vs-{right}", left, right, None) for left,right in comparison_pairs]
+comparison_routes += [(row['slug'], row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS]
+comparison_canonicals = []
+comparison_styles = (ROOT / 'scripts/templates/comparison.css').read_text()
+shutil.copyfile(ROOT / 'scripts/templates/comparison-calculator.js', BUILD / 'comparison-calculator.js')
+for route_slug, left_id, right_id, custom in comparison_routes:
+    primary = custom or priority_by_pair.get(frozenset((left_id, right_id)))
+    left, right = (cards_by_id[primary['cardA']], cards_by_id[primary['cardB']]) if primary else (cards_by_id[left_id], cards_by_id[right_id])
+    meta = generateComparisonSeoMeta(left, right, primary or {'slug': route_slug}, ORIGIN)
+    canonical = meta['canonicalUrl']
+    destination = f'{ORIGIN}/#/cards?compare={quote(left["id"])},{quote(right["id"])}'
+    extra = render_comparison(f'{left_id}-vs-{right_id}', left, right)
+    body, schema = render_comparison_page(left, right, meta, CARDS, primary, extra)
+    head = f'<style>{comparison_styles}</style><script defer src="{ORIGIN}/comparison-calculator.js"></script>'
+    write(Path('compare') / route_slug, page(meta['title'], meta['metaDescription'], canonical, destination, body, structured_data=schema, head_extra=head))
+    if route_slug != meta['slug']:
+        continue  # Preserve old URLs with full content and the preferred canonical; no duplicate sitemap entry.
+    comparison_canonicals.append(canonical)
+    comparison_posts.append({'slug':route_slug,'title':f'{left["name"]} vs {right["name"]}','description':meta['metaDescription'],'url':canonical,'destination':destination,'body':body,'category':'Card comparisons','artwork':[{'url':card['imageUrl'],'name':card['name']} for card in (left,right) if card.get('imageUrl')]})
     comparison_links.append(f'<li><a href="{canonical}">{html.escape(left["name"])} vs {html.escape(right["name"])}</a></li>')
 
-compare_description = f"Browse {len(comparison_pairs)} maintained head-to-head Indian credit card comparisons with fees, rewards, benefits and trade-offs."
-compare_body = f'<h1>Indian credit card comparisons</h1><p>{html.escape(compare_description)}</p><p class="muted">These pairings come from CardIQ’s maintained editorial alternatives—not automatically generated combinations.</p><ul>{"".join(comparison_links)}</ul>'
-write(Path("compare"), page("Compare Indian credit cards side by side | CardIQ", compare_description, f"{ORIGIN}/compare/", f"{ORIGIN}/#/cards?mode=compare", compare_body))
+compare_description = f"Browse {len(comparison_canonicals)} maintained Indian credit card comparisons with fees, reward scenarios, exclusions and issuer sources."
+compare_body = f'<h1>Indian credit card comparisons</h1><p>{html.escape(compare_description)}</p><p class="muted">Twenty priority matchups and maintained editorial pairings. Estimates do not guarantee approval or savings.</p><ul>{"".join(comparison_links)}</ul>'
+write(Path('compare'), page('Compare Indian credit cards side by side | CardIQ',compare_description,f'{ORIGIN}/compare/',f'{ORIGIN}/#/cards?mode=compare',compare_body))
+
+# Static-host bridge: the backend makes the authoritative destination decision and records placement.
+api_origin = os.environ.get('CARDIQ_API_ORIGIN', 'https://api.findmybest.cards').rstrip('/')
+for card in CARDS:
+    endpoint = f'{api_origin}/api/go/{card["id"]}'
+    script_target = json.dumps(endpoint).replace('<','\\u003c')
+    write(Path('go') / card['id'], f'<!doctype html><html lang="en-IN"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Continue to the issuer | CardIQ</title></head><body><h1>Continue to {html.escape(card["name"])}</h1><p>The issuer decides eligibility and approval. CardIQ may earn a commission through a partner link.</p><a href="{html.escape(endpoint,quote=True)}" rel="sponsored nofollow noopener">Continue to issuer</a><script>location.replace({script_target}+location.search)</script><noscript><p>Use the link above to continue. Placement tracking is unavailable without JavaScript.</p></noscript></body></html>')
 
 # A verification history is useful and accurate; it must not be presented as a launch date.
 verification_dates = sorted({card.get("verifiedOn") for card in CARDS if card.get("verifiedOn")}, reverse=True)
@@ -415,14 +410,14 @@ sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug in editorial_gu
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
 sitemap_urls += [f'{ORIGIN}/issuers/{slug(issuer)}/' for issuer in issuers]
 sitemap_urls += [f'{ORIGIN}/categories/{category["id"]}/' for category in published_categories]
-sitemap_urls += [f'{ORIGIN}/compare/{left}-vs-{right}/' for left, right in comparison_pairs]
+sitemap_urls += comparison_canonicals
 sitemap_urls += [f'{ORIGIN}/updates/{verified_on}/' for verified_on in verification_dates]
 (BUILD / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(f"  <url><loc>{html.escape(url)}</loc></url>" for url in sitemap_urls) + "\n</urlset>\n")
 (BUILD / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n")
 homepage = BUILD / "index.html"
 homepage.write_text(homepage.read_text().replace("%REACT_APP_PUBLIC_APP_URL%", ORIGIN))
 (BUILD / "catalog-manifest.json").write_text(json.dumps({
-    "source": CATALOG_SOURCE, "origin": ORIGIN, "card_ids": [card["id"] for card in CARDS],
+    "source": CATALOG_SOURCE, "origin": ORIGIN, "card_ids": [card["id"] for card in CARDS], "comparison_urls": comparison_canonicals, "priority_comparisons": [row["slug"] for row in TOP_COMPARISONS],
 }, indent=2))
 
-print(f"Generated {len(CARDS)} card, {len(issuers)} issuer, {len(published_categories)} category and {len(comparison_pairs)} comparison pages")
+print(f"Generated {len(CARDS)} card, {len(issuers)} issuer, {len(published_categories)} category and {len(comparison_canonicals)} canonical comparison pages")

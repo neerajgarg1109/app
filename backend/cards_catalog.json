@@ -20337,5 +20337,69 @@
     "eligibilityNote": "Available through a partner channel. The issuer lists this product, but a current public partner-onboarding route was not verified; confirm availability with SBM Bank.",
     "forexMarkup": "2.49% + applicable taxes",
     "rewardCurrency": "Magnet Coins"
+  },
+  {
+    "id": "csb-jupiter-edge-rupay",
+    "name": "Jupiter Edge CSB Bank RuPay",
+    "issuer": "CSB Bank",
+    "network": "RuPay",
+    "palette": [
+      "#39213e",
+      "#7d3c66"
+    ],
+    "accent": "#ffca73",
+    "annualFee": "No annual fee",
+    "annualFeeAmount": 0,
+    "joiningFee": "No joining fee for original Edge; Edge+ is separate",
+    "joiningFeeAmount": 0,
+    "lifetimeFree": true,
+    "rewardLine": "Jewels on eligible purchases; selected category and redemption conditions apply",
+    "highlights": [
+      "The original Edge has nil joining and renewal fees under the issuer MITC; Edge+ is a different product.",
+      "UPI works for eligible merchant payments; person-to-person transfers are not supported.",
+      "Jewels are reward units, not a direct cashback percentage. Check conversion value, selected reward category and caps in the Jupiter app."
+    ],
+    "exclusions": [
+      "Merchant UPI only; transfers to friends are not supported.",
+      "Cash withdrawals are not enabled. Other reward exclusions and MCC restrictions require the current reward schedule."
+    ],
+    "bestFor": [
+      "upi",
+      "rewards"
+    ],
+    "feeType": "free",
+    "minSpend": "low",
+    "creditReq": "good",
+    "rating": 4,
+    "ratingBasis": "Neutral editorial baseline, not a customer rating.",
+    "applyUrl": "https://jupiter.money/edge-csb-rupay-credit-card/",
+    "sourceUrls": [
+      "https://jupiter.money/edge-csb-rupay-credit-card/",
+      "https://csb.bank.in/pdf/edge-csb-bank-ruPay-credit-card-mitc_2025.pdf",
+      "https://jupiter.money/edge-upi-terms-and-conditions/"
+    ],
+    "verifiedOn": "2026-10-29",
+    "active": true,
+    "applicationsOpen": true,
+    "secured": false,
+    "coBrandPartner": "Jupiter",
+    "availabilityNote": "Limited access through Jupiter; age, credit score, KYC and issuer approval conditions apply.",
+    "forexMarkup": "3.5% plus applicable GST under the issuer MITC.",
+    "termsNote": "Original Edge only; verify the exact product offered. Jewels are not statement cashback.",
+    "editorial": {
+      "summary": "The original CSB Edge RuPay is a no-annual-fee option for eligible merchant UPI users in Jupiter. Compare Jewels redemption and category rules with PNB Kiwi before applying.",
+      "idealFor": [
+        "Existing Jupiter users who understand Jewels redemption."
+      ],
+      "strengths": [
+        "Nil joining and annual fees for the original Edge."
+      ],
+      "tradeoffs": [
+        "Limited access and issuer approval; do not confuse Edge with Edge+.",
+        "Cash-equivalent reward economics are not modelled until redemption and caps are verified."
+      ],
+      "verdict": "Consider the original Edge when its app access and reward redemption fit your spending. Approval and reward eligibility remain subject to issuer checks and conditions.",
+      "alternatives": []
+    }
   }
 ]

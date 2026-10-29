@@ -55,6 +55,8 @@ jobs:
       - name: Check reviewed comparison examples and discovery audit
         run: |
           python3 ../scripts/test_comparison_editorial.py
+          python3 ../scripts/test_comparison_engine.py
+          node ../scripts/test_comparison_calculator.cjs
           python3 ../scripts/test_audit_seo.py
       - uses: actions/upload-pages-artifact@v3
         with:

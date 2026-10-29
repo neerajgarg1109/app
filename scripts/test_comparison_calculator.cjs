@@ -1,0 +1,10 @@
+const assert = require('node:assert/strict');
+const { estimate } = require('./templates/comparison-calculator.js');
+const sbi = {rules:{online:[.05,2000]},annualFee:999,joiningFee:999,waiver:200000};
+assert.deepEqual(estimate(sbi,10000,'online','renewal'),{gross:6000,fee:1178.82,net:4821.18});
+assert.equal(estimate(sbi,100000,'online','renewal').gross,24000);
+assert.equal(estimate(sbi,20000,'online','renewal').fee,0);
+assert.equal(estimate(sbi,20000,'online','first').fee,1178.82);
+assert.equal(estimate(sbi,20000,'upi','renewal').net,null);
+assert.equal(estimate({rules:{online:[.05,4000,3]},annualFee:500,joiningFee:500,waiver:null},100000,'online','renewal').gross,16000);
+console.log('Calculator arithmetic passed: caps, GST, first/renewal fees and unknown categories.');
