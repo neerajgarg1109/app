@@ -25,7 +25,7 @@ export default function CardDetails({ card, heading = "Card details", compact = 
         </p>
       </div>
 
-      {!compact && <CreditCardVisual card={card} size="sm" />}
+      <CreditCardVisual card={card} size={compact ? "sm" : "md"} />
 
       <section className="rounded-2xl border bg-white p-4" style={{ borderColor: "var(--ciq-line)" }}>
         <div className="text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>At a glance</div>

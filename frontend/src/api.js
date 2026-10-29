@@ -287,3 +287,10 @@ export async function sendAdminReviewReminders(token) {
   const { data } = await http.post("/admin/send-review-reminders", {}, { headers: { "X-Admin-Token": token } });
   return data;
 }
+
+export async function uploadAdminCardImage(token, file) {
+  const { data } = await http.post("/admin/card-images", file, {
+    headers: { "X-Admin-Token": token, "Content-Type": file.type || "application/octet-stream" },
+  });
+  return new URL(data.path, `${BACKEND_URL || window.location.origin}/`).href;
+}

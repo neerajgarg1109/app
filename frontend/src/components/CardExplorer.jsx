@@ -1,3 +1,4 @@
+import CreditCardVisual from "./CreditCardVisual";
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Check, GitCompare, Loader2, Search, Share2, X } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -166,7 +167,7 @@ export default function CardExplorer() {
               return <article key={card.id} className="rounded-2xl border bg-white p-4 text-left" style={{ borderColor: comparing ? "var(--ciq-teal-600)" : "var(--ciq-line)" }}>
               <Link to={`/cards/${encodeURIComponent(card.id)}`} className="ciq-press block">
                 <div className="flex items-start gap-3">
-                  <div className="h-12 w-20 flex-shrink-0 rounded-xl" style={{ background: `linear-gradient(135deg, ${card.palette?.[0] || "#172554"}, ${card.palette?.[1] || "#1e40af"})` }} />
+                  <div className="w-20 flex-shrink-0"><CreditCardVisual card={card} size="thumbnail" /></div>
                   <div className="min-w-0 flex-1"><div className="font-display text-sm font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</div><div className="mt-0.5 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</div></div>
                 </div>
                 <p className="mt-3 text-xs font-semibold leading-relaxed" style={{ color: "var(--ciq-ink)" }}>{card.rewardLine}</p>

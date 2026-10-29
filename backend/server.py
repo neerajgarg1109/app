@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Header, Response
+from fastapi import FastAPI, APIRouter, HTTPException, Header, Response, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -23,6 +23,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone, timedelta
 
 from cards_seed import CARDS, seed_cards, recommend_cards, card_economics_profile, CATALOG_QUERY, RECOMMENDABLE_QUERY
+from card_images import normalize_card_image, validate_card_image_url, MAX_IMAGE_BYTES
 from restricted_access import restricted_access
 from email_transport import deliver_email, EmailConfigurationError, EmailDeliveryError
 
@@ -729,6 +730,10 @@ def _admin_card_doc(payload: AdminCardIn, card_id: str, existing: Optional[dict]
     if not 0 <= values["rating"] <= 5 or values["annualFeeAmount"] < 0 or values["joiningFeeAmount"] < 0:
         raise HTTPException(status_code=422, detail="Fees and rating must be valid positive values")
     values["applyUrl"] = _validated_apply_url(values["applyUrl"])
+    try:
+        values["imageUrl"] = validate_card_image_url(values.get("imageUrl"))
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
     values["name"], values["issuer"] = name, issuer
     values["variants"] = list(dict.fromkeys(v.strip() for v in values["variants"] if v.strip()))
     for list_field in ("highlights", "welcomeBenefits", "milestoneBenefits", "loungeBenefits", "exclusions"):
@@ -1525,6 +1530,38 @@ async def update_admin_card(card_id: str, payload: AdminCardIn, x_admin_token: O
     await db.cards.update_one({"id": card_id}, {"$set": {"draft": doc}})
     updated = await db.cards.find_one({"id": card_id}, {"_id": 0})
     return _admin_card(updated)
+
+
+@api_router.post("/admin/card-images")
+async def upload_admin_card_image(request: Request, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "editor")
+    data = bytearray()
+    async for chunk in request.stream():
+        data.extend(chunk)
+        if len(data) > MAX_IMAGE_BYTES:
+            raise HTTPException(status_code=413, detail="Choose an image up to 2 MB.")
+    try:
+        image = await asyncio.to_thread(normalize_card_image, bytes(data))
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+    image_id = hashlib.sha256(image).hexdigest()
+    await db.card_images.update_one({"_id": image_id}, {"$setOnInsert": {
+        "data": image, "created_at": datetime.now(timezone.utc),
+    }}, upsert=True)
+    return {"path": f"/api/card-images/{image_id}", "content_type": "image/webp"}
+
+
+@api_router.get("/card-images/{image_id}")
+async def get_card_image(image_id: str):
+    if not re.fullmatch(r"[a-f0-9]{64}", image_id):
+        raise HTTPException(status_code=404, detail="Card image not found")
+    image = await db.card_images.find_one({"_id": image_id})
+    if not image:
+        raise HTTPException(status_code=404, detail="Card image not found")
+    return Response(content=image["data"], media_type="image/webp", headers={
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "X-Content-Type-Options": "nosniff",
+    })
 
 
 @api_router.post("/admin/cards/{card_id}/publish")

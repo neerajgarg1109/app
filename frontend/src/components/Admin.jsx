@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3, Send, Clock, Link2, Search, Save, LayoutDashboard, Users, Building2, Plus, Pencil, X, History, Archive, Upload, Activity, MessageSquare } from "lucide-react";
 import Logo from "./Logo";
+import CardArtworkEditor from "./CardArtworkEditor";
+import CreditCardVisual from "./CreditCardVisual";
 import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert, checkAdminApplyLinks, getAdminApplyLinkHealth, importAdminReconciliation, getAdminSiteContent, updateAdminSiteContent } from "../api";
 import { catalogQualityIssues } from "../catalogQuality";
 import SiteContentEditor from "./SiteContentEditor";
@@ -580,7 +582,7 @@ export default function Admin() {
           </div>
         </section>}
 
-        {editingCard && <CardEditor key={editingCard.id || "new"} card={editingCard} saving={Boolean(savingCard)} onClose={() => setEditingCard(null)} onSave={saveCatalogCard} />}
+        {editingCard && <CardEditor token={token} key={editingCard.id || "new"} card={editingCard} saving={Boolean(savingCard)} onClose={() => setEditingCard(null)} onSave={saveCatalogCard} />}
         {previewCard && <DraftPreview card={previewCard} canEdit={canEdit} canPublish={canPublish} saving={savingCard === previewCard.id} onRecommendationPreview={(answers) => previewAdminCardRecommendation(token, previewCard.id, answers)} onClose={() => setPreviewCard(null)} onPublish={() => publishCard(previewCard)} onDiscard={() => discardDraft(previewCard)} />}
         {historyCard && <HistoryModal card={historyCard} versions={versions} canRollback={canPublish} onRollback={(versionId) => rollbackVersion(historyCard, versionId)} onClose={() => setHistoryCard(null)} />}
 
@@ -669,6 +671,7 @@ function DraftPreview({ card, canEdit, canPublish, saving, onClose, onPublish, o
         <div><div className="text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>Draft preview</div><h2 className="mt-1 font-display text-2xl font-extrabold">{card.name}</h2><p className="mt-1 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer} · {(card.variants || [card.network]).filter(Boolean).join(" · ")}</p></div>
         <button onClick={onClose} className="rounded-full border p-2" style={{ borderColor: "var(--ciq-line)" }}><X className="h-4 w-4" /></button>
       </div>
+      <div className="mt-5"><CreditCardVisual card={card} size="sm" /></div>
       <div className="mt-5 grid grid-cols-2 gap-3">
         <PreviewFact label="Annual fee" value={card.annualFee} />
         <PreviewFact label="Joining fee" value={card.joiningFee} />
@@ -695,12 +698,14 @@ function PreviewFact({ label, value, wide }) {
 
 function CheckPublishIcon() { return <Save className="h-4 w-4" />; }
 
-function CardEditor({ card, saving, onClose, onSave }) {
+function CardEditor({ card, saving, token, onClose, onSave }) {
+  const [imageUploading, setImageUploading] = useState(false);
   const [form, setForm] = useState({ ...NEW_CARD, ...card, editorial: { ...NEW_CARD.editorial, ...(card.editorial || {}) }, applyUrl: card.applyUrl || card.official_apply_url || "" });
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const setEditorial = (key, value) => setForm((current) => ({ ...current, editorial: { ...current.editorial, [key]: value } }));
   const submit = (e) => {
     e.preventDefault();
+    if (imageUploading) return;
     onSave({
       ...form,
       variants: Array.isArray(form.variants) ? form.variants : String(form.variants || "").split(",").map((v) => v.trim()).filter(Boolean),
@@ -725,6 +730,7 @@ function CardEditor({ card, saving, onClose, onSave }) {
         <button type="button" onClick={onClose} className="rounded-full border p-2" style={{ borderColor: "var(--ciq-line)" }} aria-label="Close"><X className="h-4 w-4" /></button>
       </div>
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <CardArtworkEditor card={form} token={token} imageUrl={form.imageUrl} onChange={value => set("imageUrl", value)} onBusyChange={setImageUploading} />
         <label className={labelClass}>Card name<input required className={inputClass} value={form.name} onChange={(e) => set("name", e.target.value)} /></label>
         <label className={labelClass}>Issuer<input required className={inputClass} value={form.issuer} onChange={(e) => set("issuer", e.target.value)} /></label>
         <label className={labelClass}>Card variants<input className={inputClass} value={Array.isArray(form.variants) ? form.variants.join(", ") : form.variants} onChange={(e) => set("variants", e.target.value)} placeholder="Visa, Mastercard, RuPay" /></label>
@@ -767,7 +773,6 @@ function CardEditor({ card, saving, onClose, onSave }) {
         </div>
         <label className={`${labelClass} sm:col-span-2`}>Issuer source URLs <span className="font-normal">(one HTTPS URL per line)</span><textarea rows="3" className={inputClass} value={listText(form.sourceUrls)} onChange={(e) => set("sourceUrls", e.target.value)} /></label>
         <label className={`${labelClass} sm:col-span-2`}>Official apply URL<input required type="url" className={inputClass} value={form.applyUrl} onChange={(e) => set("applyUrl", e.target.value)} placeholder="https://issuer.example/card" /></label>
-        <label className={`${labelClass} sm:col-span-2`}>Card image URL<input className={inputClass} value={form.imageUrl || ""} onChange={(e) => set("imageUrl", e.target.value)} placeholder="/cards/card.png or https://…" /></label>
       </div>
       <div className="mt-4 flex flex-wrap gap-5 text-sm">
         <label className="flex items-center gap-2"><input type="checkbox" checked={form.active} onChange={(e) => set("active", e.target.checked)} /> Active</label>
@@ -775,7 +780,7 @@ function CardEditor({ card, saving, onClose, onSave }) {
       </div>
       <div className="mt-6 flex justify-end gap-2">
         <button type="button" onClick={onClose} className="rounded-xl border px-4 py-2.5 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}>Cancel</button>
-        <button disabled={saving} className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60" style={{ background: "var(--ciq-teal-600)" }}>{saving ? <Loader2 className="h-4 w-4 ciq-spin" /> : <Save className="h-4 w-4" />} Save draft</button>
+        <button disabled={saving || imageUploading} className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60" style={{ background: "var(--ciq-teal-600)" }}>{saving ? <Loader2 className="h-4 w-4 ciq-spin" /> : <Save className="h-4 w-4" />} Save draft</button>
       </div>
     </form>
   </div>;

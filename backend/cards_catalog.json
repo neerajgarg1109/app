@@ -1624,7 +1624,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-rewards-credit-card-aab2c470c0.webp",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/creditcard/webp/rewards.webp"
   },
   {
     "id": "axis-fibe-axis-bank-credit-card",
@@ -3643,7 +3645,9 @@
           "reason": "A similarly priced alternative for comparing airport lounge access and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/amex-platinum-travel-credit-card-6fe44d7d08.webp",
+    "imageSourceUrl": "https://icm.aexp-static.com/Internet/internationalcardshop/en_in/images/cards/bold_plat_travel_in.jpg"
   },
   {
     "id": "amex-membership-rewards-credit-card",
@@ -3791,7 +3795,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/amex-smart-earn-credit-card-311d95de3d.webp",
+    "imageSourceUrl": "https://icm.aexp-static.com/Internet/internationalcardshop/en_in/images/cards/en_in-smart-earn-credit-card.png"
   },
   {
     "id": "hdfc-tata-neu-infinity",
@@ -10606,7 +10612,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-cookies-f1fd811999.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-cookies-credit-card_1.webp?VersionId=wdnZD6pEmUBTRPAXWXD1jRUgGYrc4WDj"
   },
   {
     "id": "rbl-icon",
@@ -10679,7 +10687,9 @@
           "reason": "A lower-fee way to compare similar strengths in reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-icon-efcfaff6b3.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-icon-credit-card_1.webp?VersionId=K9yvxtb1chCTzuZd4F33o_WJxiw10jOk"
   },
   {
     "id": "rbl-indianoil-rbl-bank",
@@ -11208,7 +11218,9 @@
           "reason": "A lower-fee way to compare similar strengths in reward points and shopping rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-platinum-delight-eb9cc78a68.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-platinum-delight-credit-card.webp?VersionId=KEVt2Jgiu0CHiJVMrdxES6.qr_RXu3eL"
   },
   {
     "id": "rbl-rbl-bank-bankbazaar-savemax-pro",
@@ -11281,7 +11293,9 @@
           "reason": "A similarly priced alternative for comparing reward points and fuel savings."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-rbl-bank-bankbazaar-savemax-pro-ef2c7b0ffa.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-bankbazaar-savemax-pro-credit-card_1.webp?VersionId=WPuajtLo.GbcI80gUIvLy1XqYVZl86_N"
   },
   {
     "id": "rbl-rbl-bank-patanjali-vishisht",
@@ -11355,7 +11369,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-rbl-bank-patanjali-vishisht-64b028b584.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2026-01/rbl-bank-patanjali-vishisht-credit-card_3.webp?VersionId=_jOLpAIRYSyvRJivBUdeUa5CSQTuABYc"
   },
   {
     "id": "rbl-rbl-bank-patanjali-swarn",
@@ -11429,7 +11445,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-rbl-bank-patanjali-swarn-8aa9e171ba.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2026-01/rbl-bank-patanjali-swarn-credit-card_3.webp?VersionId=TAMWJQiPik9PjoTg3U47rpzsrREuaiEv"
   },
   {
     "id": "rbl-rbl-bank-play",
@@ -11501,7 +11519,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-rbl-bank-play-2d065b0035.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-play-credit-card_1.webp?VersionId=crdyV8pS0I0rSxhiUakHuEUG6KSKMKD2"
   },
   {
     "id": "rbl-rbl-bank-quick-pay",
@@ -11572,7 +11592,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/rbl-rbl-bank-quick-pay-69fbfacc54.webp",
+    "imageSourceUrl": "https://d34s92jlbrwuc5.cloudfront.net/2025-09/rbl-bank-quick-pay-credit-card.webp?VersionId=9dEHG2UQN.fWd245gGGAL2QY13gGM9aO"
   },
   {
     "id": "rbl-rbl-bank-shoppers-stop-gold",
@@ -13018,7 +13040,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/icici-csk-card-022c4bb045.webp",
+    "imageSourceUrl": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/credit-card/csk/csk-mobile.webp"
   },
   {
     "id": "icici-emirates-emeralde-credit-card",
@@ -14987,7 +15011,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/hdfc-moneyback-plus-credit-card-82af5378e7.webp",
+    "imageSourceUrl": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/moneyback-plus-credit-card?fmt=png-alpha"
   },
   {
     "id": "hdfc-freedom-credit-card",
@@ -15057,7 +15083,9 @@
           "reason": "A similarly priced alternative for comparing reward points and shopping rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/hdfc-freedom-credit-card-01053fbffc.webp",
+    "imageSourceUrl": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/freedom-credit-card?fmt=webp-alpha"
   },
   {
     "id": "hdfc-phonepe-hdfc-bank-uno-credit-card",
@@ -15494,7 +15522,9 @@
           "reason": "A higher-fee option to compare for broader benefits around online spending and straightforward cashback."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/hdfc-pixel-go-credit-card-d32ce8df6b.webp",
+    "imageSourceUrl": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/pixel-go-compare-card?fmt=webp-alpha"
   },
   {
     "id": "hdfc-hdfc-bank-upi-rupay-credit-card",
@@ -16224,7 +16254,9 @@
           "reason": "A similarly priced alternative for comparing reward points and shopping rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-rupay-platinum-b534057120.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/rupay_platinum.jpg"
   },
   {
     "id": "punjab-national-bank-pnb-rupay-select",
@@ -16296,7 +16328,9 @@
           "reason": "A similarly priced alternative for comparing reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-rupay-select-e2ace12d29.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/rupay_select.jpg"
   },
   {
     "id": "punjab-national-bank-pnb-rupay-millennial",
@@ -16368,7 +16402,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-rupay-millennial-1b22091710.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/pnb_rupay_milin.jpg"
   },
   {
     "id": "punjab-national-bank-pnb-visa-classic",
@@ -16437,7 +16473,9 @@
           "reason": "A similarly priced alternative for comparing reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-visa-classic-d019b95353.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/thum_clasic.jpg"
   },
   {
     "id": "punjab-national-bank-pnb-visa-gold",
@@ -16509,7 +16547,9 @@
           "reason": "A lower-fee way to compare similar strengths in reward points and shopping rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-visa-gold-f5a7972c65.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/types_gold.jpg"
   },
   {
     "id": "punjab-national-bank-pnb-visa-platinum",
@@ -16581,7 +16621,9 @@
           "reason": "A similarly priced alternative for comparing reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-visa-platinum-b9321791ec.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/visa-pplatinum-card.png"
   },
   {
     "id": "punjab-national-bank-pnb-visa-signature",
@@ -16654,7 +16696,9 @@
           "reason": "A higher-fee option to compare for broader benefits around airport lounge access and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/punjab-national-bank-pnb-visa-signature-a54abfd3a0.webp",
+    "imageSourceUrl": "https://creditcard.pnb.bank.in/images/visa-signature-card.png"
   },
   {
     "id": "bobcard-bobcard-eterna",
@@ -16727,7 +16771,9 @@
           "reason": "A higher-fee option to compare for broader benefits around airport lounge access and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-eterna-8360fbca86.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/b4pj5ukl/bobcard-eterna_1920-x-1253.png"
   },
   {
     "id": "bobcard-bobcard-etihad-guest-premium",
@@ -16800,7 +16846,9 @@
           "reason": "A similarly priced alternative for comparing airport lounge access and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-etihad-guest-premium-aa29c9b503.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/qjmjd45y/etihad-premium-card.png"
   },
   {
     "id": "bobcard-bobcard-etihad-guest",
@@ -16873,7 +16921,9 @@
           "reason": "A higher-fee option to compare for broader benefits around reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-etihad-guest-8b3b897d06.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/wzrczpii/etihad-base-card.png"
   },
   {
     "id": "bobcard-bobcard-premier",
@@ -16946,7 +16996,9 @@
           "reason": "A higher-fee option to compare for broader benefits around reward points and travel benefits."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-premier-54dc03815c.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/gi1doffr/bobcard-premier_1920-x-1253-px.png"
   },
   {
     "id": "bobcard-bobcard-tiara",
@@ -17021,7 +17073,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and airport lounge access."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-tiara-6b66b277cb.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in/media/irwcbwv4/tiara-card-cutout-01.png"
   },
   {
     "id": "bobcard-bobcard-cashback",
@@ -17166,7 +17220,9 @@
           "reason": "A similarly priced alternative for comparing reward points and shopping rewards."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-easy-7b838de15b.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/d2cgmf1f/bobcard-easy_1920-x-1253.png"
   },
   {
     "id": "bobcard-bobcard-select",
@@ -17239,7 +17295,9 @@
           "reason": "A lower-fee way to compare similar strengths in reward points and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-select-49722fa864.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/yscnf1yg/bobcard-select_1920-x-1253-px.png"
   },
   {
     "id": "bobcard-snapdeal-bobcard",
@@ -17312,7 +17370,9 @@
           "reason": "A lower-fee way to compare similar strengths in shopping rewards and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-snapdeal-bobcard-cdb236cc16.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/cyoco1ml/bobcard-snapdeal_1920-x-1253-px.png"
   },
   {
     "id": "bobcard-hpcl-energie-bobcard",
@@ -17529,7 +17589,9 @@
           "reason": "A similarly priced alternative for comparing reward points and international spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-scapia-09995a147f.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/ozfnyysf/scapia-card-1-3.png"
   },
   {
     "id": "bobcard-bobcard-uni-goldx",
@@ -17601,7 +17663,9 @@
           "reason": "A similarly priced alternative for comparing reward points and international spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-uni-goldx-c361f9fdc0.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/c0kp4pou/bobcard.png"
   },
   {
     "id": "bobcard-bobcard-one",
@@ -17673,7 +17737,9 @@
           "reason": "A similarly priced alternative for comparing reward points and international spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-one-d33a1f609b.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/2kzlsrds/bobcard-one_1253-x-1920-px.png"
   },
   {
     "id": "bobcard-bobcard-prime",
@@ -17744,7 +17810,9 @@
           "reason": "A similarly priced alternative for comparing reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/bobcard-bobcard-prime-aac80d982a.webp",
+    "imageSourceUrl": "https://media.bobcard.co.in//media/5synwitx/bobcard-prime_1920-x-1253-px.png"
   },
   {
     "id": "idbi-bank-idbi-bank-aspire-platinum",
@@ -18834,7 +18902,9 @@
           "reason": "A similarly priced alternative for comparing reward points and airport lounge access."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/cub-salaryse-level-up-3c1e766b9c.webp",
+    "imageSourceUrl": "https://cdn.prod.website-files.com/68875ad5f637d6bc52db6a4e/69254e34528d5d512a8b13d7_68d0e02bf701dd565a1eab5b6e0ea4cb_digital%20card%20CVP%20image.avif"
   },
   {
     "id": "cub-salaryse-level-up-virtual",
@@ -18905,7 +18975,9 @@
           "reason": "A similarly priced alternative for comparing reward points and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/cub-salaryse-level-up-virtual-3c1e766b9c.webp",
+    "imageSourceUrl": "https://cdn.prod.website-files.com/68875ad5f637d6bc52db6a4e/69254e34528d5d512a8b13d7_68d0e02bf701dd565a1eab5b6e0ea4cb_digital%20card%20CVP%20image.avif"
   },
   {
     "id": "pnb-zaggle-twin",

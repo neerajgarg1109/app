@@ -1,0 +1,180 @@
+{
+  "date": "2026-10-29",
+  "status": "implemented locally; not deployed",
+  "cards": 267,
+  "cards_with_artwork": 239,
+  "new_artwork_added": 36,
+  "local_artwork_total_bytes": 14578170,
+  "missing_cards": [
+    {
+      "id": "axis-google-pay-flex-axis-bank-credit-card",
+      "name": "Google Pay Flex Axis Bank",
+      "issuer": "Axis Bank",
+      "official_page": "https://www.axis.bank.in/cards/credit-card/google-pay-flex-axis-bank-credit-card"
+    },
+    {
+      "id": "federal-celesta-credit-card",
+      "name": "Federal Bank Celesta",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/celesta-credit-card"
+    },
+    {
+      "id": "federal-imperio-credit-card",
+      "name": "Federal Bank Imperio",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/imperio-credit-card"
+    },
+    {
+      "id": "federal-signet-credit-card",
+      "name": "Federal Bank Signet",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/signet-credit-card"
+    },
+    {
+      "id": "federal-wave",
+      "name": "Federal Bank RuPay Wave",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/rupay-wave-credit-card"
+    },
+    {
+      "id": "idfc-quantum-plus-credit-card",
+      "name": "IDFC FIRST Quantum+",
+      "issuer": "IDFC FIRST Bank",
+      "official_page": "https://www.idfcfirst.bank.in/credit-card/quantum-plus-credit-card"
+    },
+    {
+      "id": "bobcard-bobcard-cashback",
+      "name": "BOBCARD Cashback",
+      "issuer": "BOBCARD",
+      "official_page": "https://www.bobcard.co.in/credit-card-types/bobcard-cashback"
+    },
+    {
+      "id": "bobcard-hpcl-energie-bobcard",
+      "name": "HPCL ENERGIE BOBCARD",
+      "issuer": "BOBCARD",
+      "official_page": "https://www.bobcard.co.in/credit-card-types/hpcl-energie"
+    },
+    {
+      "id": "bobcard-irctc-bobcard",
+      "name": "IRCTC BOBCARD",
+      "issuer": "BOBCARD",
+      "official_page": "https://www.bobcard.co.in/credit-card-types/irctc"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-aspire-platinum",
+      "name": "IDBI Bank Aspire Platinum",
+      "issuer": "IDBI Bank",
+      "official_page": "https://www.idbibank.in/aspire-credit-card.aspx"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-royale-signature",
+      "name": "IDBI Bank Royale Signature",
+      "issuer": "IDBI Bank",
+      "official_page": "https://www.idbibank.in/royale-signature-credit-card.aspx"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-euphoria-world",
+      "name": "IDBI Bank Euphoria World",
+      "issuer": "IDBI Bank",
+      "official_page": "https://www.idbibank.in/Euphoria-credit-card.aspx"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-imperium-platinum",
+      "name": "IDBI Bank Imperium Platinum",
+      "issuer": "IDBI Bank",
+      "official_page": "https://www.idbibank.in/Imperium-credit-card.aspx"
+    },
+    {
+      "id": "yes-bank-yes-bank-marquee",
+      "name": "YES BANK MARQUEE",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/marquee-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-reserv",
+      "name": "YES BANK RESERV",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/reserv-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-elite",
+      "name": "YES BANK ELITE+",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/elite-plus-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-select",
+      "name": "YES BANK SELECT",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/select-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-ace",
+      "name": "YES BANK ACE",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/ace-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-wellness",
+      "name": "YES BANK Wellness",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/wellness-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-wellness-plus",
+      "name": "YES BANK Wellness Plus",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/wellness-plus-credit-card"
+    },
+    {
+      "id": "yes-bank-yes-bank-rupay-credit-card",
+      "name": "YES BANK RuPay Credit Card",
+      "issuer": "YES BANK",
+      "official_page": "https://www.yesbank.in/personal-banking/yes-individual/cards/credit-cards/rupay-credit-card"
+    },
+    {
+      "id": "sbm-kredit-pe",
+      "name": "SBM Kredit.Pe Credit Card",
+      "issuer": "SBM Bank India",
+      "official_page": "https://www.sbm.bank.in/smart_banking/pdf/Kredit-PE-MITC.pdf"
+    },
+    {
+      "id": "federal-one",
+      "name": "Federal Bank One Credit Card",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/onecard"
+    },
+    {
+      "id": "federal-scapia",
+      "name": "Federal Bank Scapia Credit Card",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/scapia"
+    },
+    {
+      "id": "federal-paisabazaar-paisaback",
+      "name": "Federal Paisabazaar Paisaback Credit Card",
+      "issuer": "Federal Bank",
+      "official_page": "https://www.federal.bank.in/paisabazaar-federal-cobranded-credit-card"
+    },
+    {
+      "id": "indian-bank-one",
+      "name": "Indian Bank One Credit Card",
+      "issuer": "Indian Bank",
+      "official_page": "https://www.indianbank.in/wp-content/uploads/2019/03/Indian-Bank-launches-the-Indian-Bank-One-Co-Branded-Credit-Card-a-tech-enabled-credit-card-powered-by-Visa-and-RuPay.pdf"
+    },
+    {
+      "id": "utkarsh-supermoney-supercard",
+      "name": "Utkarsh super.money superCard",
+      "issuer": "Utkarsh Small Finance Bank",
+      "official_page": "https://www.utkarsh.bank.in/personal/cards/credit-card/supercard"
+    },
+    {
+      "id": "kotak-upi-rupay-credit-card",
+      "name": "Kotak UPI RuPay Credit Card",
+      "issuer": "Kotak Mahindra Bank",
+      "official_page": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-upi-rupay-credit-card.html"
+    }
+  ],
+  "invalid_images": [],
+  "pending_reason": "Exact suitable issuer artwork not yet verified. Sources include blocked pages, inaccessible assets and promotional banners without a usable face. No substitute artwork was assigned."
+}

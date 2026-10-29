@@ -121,9 +121,16 @@ def category_match(card, definition):
     return any(checks)
 
 
+def card_artwork(card):
+    image = card.get("imageUrl")
+    if not image:
+        return ''
+    return f'<img class="product-image" src="{html.escape(image, quote=True)}" alt="{html.escape(card["name"], quote=True)} card" width="240" height="180" loading="lazy" decoding="async">'
+
+
 def card_links(cards):
     return '<div class="grid">' + "".join(
-        f'<article class="card"><h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
+        f'<article class="card">{card_artwork(card)}<h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
         f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(card.get("rewardLine", ""))}</p>'
         f'<p><strong>Annual fee:</strong> {html.escape(card.get("annualFee", "Not specified"))}</p></article>'
         for card in cards
@@ -249,7 +256,7 @@ for left_id, right_id in comparison_pairs:
             reasons.append(reason)
     decision = "".join(f"<li>{html.escape(reason)}</li>" for reason in reasons)
     columns = "".join(
-        f'<article class="card"><h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
+        f'<article class="card">{card_artwork(card)}<h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
         f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(card.get("rewardLine", ""))}</p>'
         f'<p><strong>Annual fee:</strong> {html.escape(card.get("annualFee", "Not specified"))}</p>'
         f'<p><strong>Joining fee:</strong> {html.escape(card.get("joiningFee", "Not specified"))}</p>'
@@ -267,7 +274,7 @@ for left_id, right_id in comparison_pairs:
     ]}
     body += render_comparison(comparison_slug, left, right)
     write(Path("compare") / comparison_slug, page(title, description, canonical, destination, body, structured_data=schema))
-    comparison_posts.append({"slug": comparison_slug, "title": f'{left["name"]} vs {right["name"]}', "description": description, "url": canonical, "destination": destination, "body": body, "category": "Card comparisons"})
+    comparison_posts.append({"slug": comparison_slug, "title": f'{left["name"]} vs {right["name"]}', "description": description, "url": canonical, "destination": destination, "body": body, "category": "Card comparisons", "artwork": [{"url": card["imageUrl"], "name": card["name"]} for card in (left, right) if card.get("imageUrl")]})
     comparison_links.append(f'<li><a href="{canonical}">{html.escape(left["name"])} vs {html.escape(right["name"])}</a></li>')
 
 compare_description = f"Browse {len(comparison_pairs)} maintained head-to-head Indian credit card comparisons with fees, rewards, benefits and trade-offs."
@@ -348,7 +355,7 @@ for guide_slug, guide_title, category_id, guidance in editorial_guides:
             for index, card in enumerate(shortlist, 1)
         ]},
     ]}
-    guide_posts.append({"slug": guide_slug, "title": guide_title, "description": guidance, "standfirst": description, "url": canonical, "destination": destination, "body": body, "category": "Choosing a card", "schema": schema})
+    guide_posts.append({"slug": guide_slug, "title": guide_title, "description": guidance, "standfirst": description, "url": canonical, "destination": destination, "body": body, "category": "Choosing a card", "schema": schema, "artwork": [{"url": card["imageUrl"], "name": card["name"]} for card in shortlist if card.get("imageUrl")][:2]})
     editorial_guide_slugs.append(guide_slug)
 
 # Only publish issuer-specific closure pages where an official channel has been reviewed.

@@ -1,3 +1,4 @@
+import CreditCardVisual from "./CreditCardVisual";
 import React from "react";
 import { X, Check } from "lucide-react";
 
@@ -34,7 +35,7 @@ export default function Compare({ cards, onClose, inline = false, showHeading = 
             <div />
             {cards.map((c) => (
               <div key={c.id} className="text-center">
-                <div className="mx-auto mb-2 h-10 w-16 rounded-lg" style={{ background: `linear-gradient(135deg, ${c.palette?.[0] || "#312e81"}, ${c.palette?.[1] || "#6366f1"})` }} />
+                <div className="mx-auto mb-3 w-full max-w-[160px]"><CreditCardVisual card={c} size="sm" /></div>
                 <div className="font-display text-xs font-bold leading-tight" style={{ color: "var(--ciq-ink)" }}>{c.name}</div>
               </div>
             ))}

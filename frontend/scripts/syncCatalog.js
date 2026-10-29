@@ -26,4 +26,8 @@ const summaries = cards.map((card) => {
   return summary;
 });
 fs.writeFileSync(summaryDestination, `${JSON.stringify(summaries)}\n`, "utf8");
+// Keep artwork available for historical result payloads that predate an image import.
+const artworkDestination = path.resolve(__dirname, "../src/data/cardArtwork.json");
+const artwork = Object.fromEntries(cards.filter(card => card.imageUrl).map(card => [card.id, card.imageUrl]));
+fs.writeFileSync(artworkDestination, `${JSON.stringify(artwork, null, 2)}\n`, "utf8");
 console.log(`Generated static full and summary fallbacks with ${cards.length} cards.`);

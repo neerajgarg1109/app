@@ -424,5 +424,437 @@
     "reviewedOn": "2026-10-29",
     "review": "Visually checked official issuer artwork; original bytes retained. Exact issuer product association.",
     "sha256": "d1b2760eb23705df9b2177bd5b20d4635dc1c6e96d42469f3cb4abb1d7839890"
+  },
+  {
+    "id": "amex-platinum-travel-credit-card",
+    "page": "https://www.americanexpress.com/in/credit-cards/platinum-travel-credit-card/",
+    "source": "https://icm.aexp-static.com/Internet/internationalcardshop/en_in/images/cards/bold_plat_travel_in.jpg",
+    "filename": "amex-platinum-travel-credit-card-6fe44d7d08.webp",
+    "size": [
+      640,
+      405
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "amex-smart-earn-credit-card",
+    "page": "https://www.americanexpress.com/in/credit-cards/smart-earn-credit-card/",
+    "source": "https://icm.aexp-static.com/Internet/internationalcardshop/en_in/images/cards/en_in-smart-earn-credit-card.png",
+    "filename": "amex-smart-earn-credit-card-311d95de3d.webp",
+    "size": [
+      480,
+      304
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-cookies",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/cookies-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-cookies-credit-card_1.webp?VersionId=wdnZD6pEmUBTRPAXWXD1jRUgGYrc4WDj",
+    "filename": "rbl-cookies-f1fd811999.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-icon",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/icon-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-icon-credit-card_1.webp?VersionId=K9yvxtb1chCTzuZd4F33o_WJxiw10jOk",
+    "filename": "rbl-icon-efcfaff6b3.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-platinum-delight",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/platinum-delight-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-platinum-delight-credit-card.webp?VersionId=KEVt2Jgiu0CHiJVMrdxES6.qr_RXu3eL",
+    "filename": "rbl-platinum-delight-eb9cc78a68.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-rbl-bank-bankbazaar-savemax-pro",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-bankbazaar-savemax-pro-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-bankbazaar-savemax-pro-credit-card_1.webp?VersionId=WPuajtLo.GbcI80gUIvLy1XqYVZl86_N",
+    "filename": "rbl-rbl-bank-bankbazaar-savemax-pro-ef2c7b0ffa.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-rbl-bank-patanjali-vishisht",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-patanjali-vishisht-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2026-01/rbl-bank-patanjali-vishisht-credit-card_3.webp?VersionId=_jOLpAIRYSyvRJivBUdeUa5CSQTuABYc",
+    "filename": "rbl-rbl-bank-patanjali-vishisht-64b028b584.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-rbl-bank-patanjali-swarn",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-patanjali-swarn-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2026-01/rbl-bank-patanjali-swarn-credit-card_3.webp?VersionId=TAMWJQiPik9PjoTg3U47rpzsrREuaiEv",
+    "filename": "rbl-rbl-bank-patanjali-swarn-8aa9e171ba.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-rbl-bank-play",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-play-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2025-06/rbl-bank-play-credit-card_1.webp?VersionId=crdyV8pS0I0rSxhiUakHuEUG6KSKMKD2",
+    "filename": "rbl-rbl-bank-play-2d065b0035.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "rbl-rbl-bank-quick-pay",
+    "page": "https://www.rbl.bank.in/personal-banking/cards/credit-cards/rbl-bank-quick-pay-credit-card",
+    "source": "https://d34s92jlbrwuc5.cloudfront.net/2025-09/rbl-bank-quick-pay-credit-card.webp?VersionId=9dEHG2UQN.fWd245gGGAL2QY13gGM9aO",
+    "filename": "rbl-rbl-bank-quick-pay-69fbfacc54.webp",
+    "size": [
+      640,
+      366
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "hdfc-moneyback-plus-credit-card",
+    "page": "https://www.hdfc.bank.in/credit-cards/moneyback-plus-credit-card",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/moneyback-plus-credit-card?fmt=png-alpha",
+    "filename": "hdfc-moneyback-plus-credit-card-82af5378e7.webp",
+    "size": [
+      640,
+      404
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "hdfc-freedom-credit-card",
+    "page": "https://www.hdfc.bank.in/credit-cards/freedom-credit-card",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/freedom-credit-card?fmt=webp-alpha",
+    "filename": "hdfc-freedom-credit-card-01053fbffc.webp",
+    "size": [
+      640,
+      403
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "axis-rewards-credit-card",
+    "page": "https://www.axis.bank.in/cards/credit-card",
+    "source": "https://www.axis.bank.in/images/default-source/creditcard/webp/rewards.webp",
+    "filename": "axis-rewards-credit-card-aab2c470c0.webp",
+    "size": [
+      244,
+      154
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-visa-gold",
+    "page": "https://creditcard.pnb.bank.in/types1.html",
+    "source": "https://creditcard.pnb.bank.in/images/types_gold.jpg",
+    "filename": "punjab-national-bank-pnb-visa-gold-f5a7972c65.webp",
+    "size": [
+      640,
+      140
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-visa-classic",
+    "page": "https://creditcard.pnb.bank.in/types2.html",
+    "source": "https://creditcard.pnb.bank.in/images/thum_clasic.jpg",
+    "filename": "punjab-national-bank-pnb-visa-classic-d019b95353.webp",
+    "size": [
+      640,
+      140
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-visa-platinum",
+    "page": "https://creditcard.pnb.bank.in/types3.html",
+    "source": "https://creditcard.pnb.bank.in/images/visa-pplatinum-card.png",
+    "filename": "punjab-national-bank-pnb-visa-platinum-b9321791ec.webp",
+    "size": [
+      624,
+      188
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-rupay-platinum",
+    "page": "https://creditcard.pnb.bank.in/types5.html",
+    "source": "https://creditcard.pnb.bank.in/images/rupay_platinum.jpg",
+    "filename": "punjab-national-bank-pnb-rupay-platinum-b534057120.webp",
+    "size": [
+      640,
+      140
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-rupay-select",
+    "page": "https://creditcard.pnb.bank.in/types6.html",
+    "source": "https://creditcard.pnb.bank.in/images/rupay_select.jpg",
+    "filename": "punjab-national-bank-pnb-rupay-select-e2ace12d29.webp",
+    "size": [
+      640,
+      140
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-visa-signature",
+    "page": "https://creditcard.pnb.bank.in/types9.html",
+    "source": "https://creditcard.pnb.bank.in/images/visa-signature-card.png",
+    "filename": "punjab-national-bank-pnb-visa-signature-a54abfd3a0.webp",
+    "size": [
+      624,
+      188
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "punjab-national-bank-pnb-rupay-millennial",
+    "page": "https://creditcard.pnb.bank.in/types10.html",
+    "source": "https://creditcard.pnb.bank.in/images/pnb_rupay_milin.jpg",
+    "filename": "punjab-national-bank-pnb-rupay-millennial-1b22091710.webp",
+    "size": [
+      640,
+      140
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-eterna",
+    "page": "https://www.bobcard.co.in/credit-card-types/eterna",
+    "source": "https://media.bobcard.co.in//media/b4pj5ukl/bobcard-eterna_1920-x-1253.png",
+    "filename": "bobcard-bobcard-eterna-8360fbca86.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-etihad-guest-premium",
+    "page": "https://www.bobcard.co.in/credit-card-types/bobcard-etihad-guest-premium",
+    "source": "https://media.bobcard.co.in//media/qjmjd45y/etihad-premium-card.png",
+    "filename": "bobcard-bobcard-etihad-guest-premium-aa29c9b503.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-premier",
+    "page": "https://www.bobcard.co.in/credit-card-types/premier",
+    "source": "https://media.bobcard.co.in//media/gi1doffr/bobcard-premier_1920-x-1253-px.png",
+    "filename": "bobcard-bobcard-premier-54dc03815c.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-easy",
+    "page": "https://www.bobcard.co.in/credit-card-types/easy",
+    "source": "https://media.bobcard.co.in//media/d2cgmf1f/bobcard-easy_1920-x-1253.png",
+    "filename": "bobcard-bobcard-easy-7b838de15b.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-select",
+    "page": "https://www.bobcard.co.in/credit-card-types/select",
+    "source": "https://media.bobcard.co.in//media/yscnf1yg/bobcard-select_1920-x-1253-px.png",
+    "filename": "bobcard-bobcard-select-49722fa864.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-snapdeal-bobcard",
+    "page": "https://www.bobcard.co.in/credit-card-types/snapdeal-bobcard",
+    "source": "https://media.bobcard.co.in//media/cyoco1ml/bobcard-snapdeal_1920-x-1253-px.png",
+    "filename": "bobcard-snapdeal-bobcard-cdb236cc16.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-scapia",
+    "page": "https://www.bobcard.co.in/credit-card-types/bobcard-scapia-credit-card",
+    "source": "https://media.bobcard.co.in//media/ozfnyysf/scapia-card-1-3.png",
+    "filename": "bobcard-bobcard-scapia-09995a147f.webp",
+    "size": [
+      640,
+      640
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-uni-goldx",
+    "page": "https://www.bobcard.co.in/credit-card-types/bobcard-uni-goldx",
+    "source": "https://media.bobcard.co.in//media/c0kp4pou/bobcard.png",
+    "filename": "bobcard-bobcard-uni-goldx-c361f9fdc0.webp",
+    "size": [
+      640,
+      437
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-one",
+    "page": "https://www.bobcard.co.in/credit-card-types/bobcard-one",
+    "source": "https://media.bobcard.co.in//media/2kzlsrds/bobcard-one_1253-x-1920-px.png",
+    "filename": "bobcard-bobcard-one-d33a1f609b.webp",
+    "size": [
+      418,
+      640
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-prime",
+    "page": "https://www.bobcard.co.in/credit-card-types/prime",
+    "source": "https://media.bobcard.co.in//media/5synwitx/bobcard-prime_1920-x-1253-px.png",
+    "filename": "bobcard-bobcard-prime-aac80d982a.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "icici-csk-card",
+    "page": "https://www.icici.bank.in/personal-banking/cards/credit-card/csk-card",
+    "source": "https://www.icici.bank.in/content/dam/icicibank/india/managed-assets/revamp-page-images/credit-card/csk/csk-mobile.webp",
+    "filename": "icici-csk-card-022c4bb045.webp",
+    "size": [
+      260,
+      214
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "cub-salaryse-level-up",
+    "page": "https://www.salaryse.com/level-up",
+    "source": "https://cdn.prod.website-files.com/68875ad5f637d6bc52db6a4e/69254e34528d5d512a8b13d7_68d0e02bf701dd565a1eab5b6e0ea4cb_digital%20card%20CVP%20image.avif",
+    "filename": "cub-salaryse-level-up-3c1e766b9c.webp",
+    "size": [
+      640,
+      640
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "cub-salaryse-level-up-virtual",
+    "page": "https://www.salaryse.com/level-up",
+    "source": "https://cdn.prod.website-files.com/68875ad5f637d6bc52db6a4e/69254e34528d5d512a8b13d7_68d0e02bf701dd565a1eab5b6e0ea4cb_digital%20card%20CVP%20image.avif",
+    "filename": "cub-salaryse-level-up-virtual-3c1e766b9c.webp",
+    "size": [
+      640,
+      640
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "hdfc-pixel-go-credit-card",
+    "page": "https://www.hdfc.bank.in/credit-cards/pixel-go-credit-card",
+    "source": "https://s7ap1.scene7.com/is/image/hdfcbankPWS/pixel-go-compare-card?fmt=webp-alpha",
+    "filename": "hdfc-pixel-go-credit-card-d32ce8df6b.webp",
+    "size": [
+      125,
+      78
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-etihad-guest",
+    "page": "https://www.bobcard.co.in/credit-card-types/bobcard-etihad-guest",
+    "source": "https://media.bobcard.co.in//media/wzrczpii/etihad-base-card.png",
+    "filename": "bobcard-bobcard-etihad-guest-8b3b897d06.webp",
+    "size": [
+      640,
+      418
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "bobcard-bobcard-tiara",
+    "page": "https://www.bobcard.co.in/credit-card-types/tiara",
+    "source": "https://media.bobcard.co.in/media/irwcbwv4/tiara-card-cutout-01.png",
+    "filename": "bobcard-bobcard-tiara-6b66b277cb.webp",
+    "size": [
+      418,
+      640
+    ],
+    "reviewedOn": "2026-10-29",
+    "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
   }
 ]

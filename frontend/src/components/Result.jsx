@@ -2,7 +2,7 @@ import CustomerNav from "./CustomerNav";
 import React, { useEffect, useState } from "react";
 import { Check, RotateCcw, Star, ArrowRight, Sparkles, ChevronRight, Mail, Loader2, GitCompare, Share2, ExternalLink, Image as ImageIcon, User, Phone, X, Bookmark, Flag, SlidersHorizontal } from "lucide-react";
 import Logo from "./Logo";
-import CreditCardVisual from "./CreditCardVisual";
+import CreditCardVisual, { getCardArtwork } from "./CreditCardVisual";
 import Compare from "./Compare";
 import CardDetails from "./CardDetails";
 import SharePanel from "./SharePanel";
@@ -153,33 +153,31 @@ export default function Result({ scored, resultId, answers, refining = false, on
       ctx.fillStyle = "#f6f7f5";
       ctx.fillRect(0, 0, W, H);
 
-      // card panel gradient
-      const grad = ctx.createLinearGradient(90, 170, 990, 640);
-      grad.addColorStop(0, card.palette[0]);
-      grad.addColorStop(1, card.palette[1]);
-      roundRect(ctx, 90, 170, 900, 470, 40);
-      ctx.fillStyle = grad;
-      ctx.fill();
-
-      // brand on card
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "800 46px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText("card", 140, 250);
-      const cw = ctx.measureText("card").width;
-      ctx.fillStyle = card.accent;
-      ctx.fillText("IQ", 140 + cw, 250);
-
-      // chip
-      ctx.fillStyle = "#e9c766";
-      roundRect(ctx, 140, 300, 90, 64, 12); ctx.fill();
-
-      // card name on card
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "800 64px 'Plus Jakarta Sans', sans-serif";
-      ctx.fillText(card.name, 140, 500);
-      ctx.font = "500 32px Inter, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,0.85)";
-      ctx.fillText(card.rewardLine, 140, 560);
+      // Use the issuer artwork in exported results as well as on the page.
+      let artwork = null;
+      const artworkUrl = getCardArtwork(card);
+      if (artworkUrl) {
+        artwork = await new Promise(resolve => {
+          const image = new Image();
+          const timeout = setTimeout(() => resolve(null), 5000);
+          image.crossOrigin = "anonymous";
+          image.onload = () => { clearTimeout(timeout); resolve(image); };
+          image.onerror = () => { clearTimeout(timeout); resolve(null); };
+          image.src = artworkUrl;
+        });
+      }
+      if (artwork) {
+        const scale = Math.min(900 / artwork.naturalWidth, 470 / artwork.naturalHeight);
+        const width = artwork.naturalWidth * scale;
+        const height = artwork.naturalHeight * scale;
+        ctx.drawImage(artwork, 90 + (900 - width) / 2, 170 + (470 - height) / 2, width, height);
+      } else {
+        ctx.fillStyle = "#55615c";
+        ctx.font = "600 44px Inter, sans-serif";
+        ctx.fillText(truncate(card.name, 36), 90, 380);
+        ctx.font = "400 30px Inter, sans-serif";
+        ctx.fillText("Official artwork unavailable", 90, 435);
+      }
 
       // heading
       ctx.fillStyle = "#0f1a17";
@@ -385,7 +383,7 @@ export default function Result({ scored, resultId, answers, refining = false, on
           <div className="mt-3 space-y-3">
             {alternates.map((alt, index) => (
               <button type="button" key={alt.card.id} onClick={() => setSelectedAlternate(alt.card)} className="ciq-press flex w-full items-center gap-3 rounded-2xl border bg-white p-3 text-left" style={{ borderColor: "var(--ciq-line)" }} aria-label={`View full details for ${alt.card.name}`}>
-                <div className="h-11 w-16 flex-shrink-0 rounded-lg" style={{ background: `linear-gradient(135deg, ${alt.card.palette[0]}, ${alt.card.palette[1]})` }} />
+                <div className="w-20 flex-shrink-0"><CreditCardVisual card={alt.card} size="thumbnail" /></div>
                 <div className="min-w-0 flex-1">
                   <div className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>#{index + 2} option · Full details</div>
                   <div className="truncate font-display text-sm font-bold" style={{ color: "var(--ciq-ink)" }}>{alt.card.name}</div>

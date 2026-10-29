@@ -1,3 +1,4 @@
+import CreditCardVisual from "./CreditCardVisual";
 import CustomerNav from "./CustomerNav";
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ExternalLink, LockKeyhole, Search } from "lucide-react";
@@ -40,7 +41,7 @@ export default function RestrictedCards() {
       {error && <p role="alert" className="mt-6 text-sm text-red-700">{error}</p>}
       <p className="mt-4 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{visible.length} card{visible.length === 1 ? "" : "s"} shown</p>
       <div className="mt-3 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{visible.map((card) => <article key={card.id} className="rounded-2xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>
-        <div className="text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>{card.accessLabel}</div>
+        <div className="mb-4"><CreditCardVisual card={card} size="sm" /></div><div className="text-xs font-bold uppercase tracking-wide" style={{ color: "var(--ciq-teal)" }}>{card.accessLabel}</div>
         <h2 className="mt-2 font-display text-xl font-extrabold" style={{ color: "var(--ciq-ink)" }}>{card.name}</h2><p className="text-sm" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</p>
         <p className="mt-4 text-sm font-semibold" style={{ color: "var(--ciq-ink)" }}>{card.rewardLine}</p><p className="mt-2 text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{card.accessExplanation}</p>
         <p className="mt-3 text-xs" style={{ color: "var(--ciq-ink-soft)" }}><strong>Annual fee:</strong> {card.annualFee}</p>

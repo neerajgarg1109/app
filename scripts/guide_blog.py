@@ -28,6 +28,10 @@ def theme(post):
 
 
 def cover(post):
+    artwork = post.get('artwork', [])
+    if artwork:
+        images = ''.join(f'<img src="{escape(item["url"])}" alt="{escape(item["name"])} card" width="240" height="152" loading="lazy" decoding="async">' for item in artwork)
+        return f'<div class="cover cover--artwork">{images}</div>'
     labels = {'cashback': 'Everyday rewards', 'travel': 'Miles & moments', 'fuel': 'Everyday journeys', 'rupay': 'Pay your way', 'first': 'A fresh start', 'lifetime': 'Less fee. More value.', 'close': 'A clean slate', 'invite': 'Beyond the invitation', 'updates': 'What’s changing'}
     return f'<div class="cover cover--{theme(post)}" aria-hidden="true"><span class="cover-kicker">THE CARDIQ JOURNAL</span><div class="cover-orbit"></div><div class="cover-card cover-card--back"></div><div class="cover-card cover-card--front"><span class="cover-chip"></span><span>{labels[theme(post)]}</span><i>cardIQ</i></div></div>'
 

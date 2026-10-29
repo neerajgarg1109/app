@@ -55,6 +55,21 @@ def generated_pages():
 
 
 class StaticCatalogTests(unittest.TestCase):
+    def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
+        pages = list((BUILD / 'compare').glob('*/index.html'))
+        self.assertGreater(len(pages), 0)
+        for path in pages:
+            slug = path.parent.name
+            source = path.read_text()
+            for card_id in slug.split('-vs-'):
+                card = CARDS_BY_ID[card_id]
+                if card.get('imageUrl'):
+                    self.assertIn(html.escape(card['imageUrl'], quote=True), source)
+        source = (BUILD / 'catalog' / 'index.html').read_text()
+        for card in CARDS_BY_ID.values():
+            if card.get('imageUrl'):
+                self.assertIn(html.escape(card['imageUrl'], quote=True), source)
+
     def test_brand_fonts_do_not_block_first_render_or_use_css_import_chains(self):
         for path in self.pages + [BUILD / 'index.html']:
             source = path.read_text()
