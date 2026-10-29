@@ -9,6 +9,8 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 from urllib.request import urlopen
+from public_fonts import font_links
+from comparison_editorial import render_comparison
 from guide_blog import render_index as render_blog_index, render_article as render_blog_article
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
 from public_footer import CSS as FOOTER_CSS, render_footer
@@ -66,7 +68,7 @@ def page(title, description, canonical, destination, body, image_url=None, struc
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="{ORIGIN}/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="{ORIGIN}/favicon.svg"><link rel="icon" type="image/png" sizes="48x48" href="{ORIGIN}/favicon-48.png"><link rel="apple-touch-icon" sizes="180x180" href="{ORIGIN}/apple-touch-icon.png">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap">
+{font_links()}
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
 <meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">{image_meta}<script type="application/ld+json">{schema_markup}</script>
@@ -263,6 +265,7 @@ for left_id, right_id in comparison_pairs:
             {"@type": "ListItem", "position": 2, "url": f'{ORIGIN}/cards/{right_id}/', "name": right["name"]},
         ]},
     ]}
+    body += render_comparison(comparison_slug, left, right)
     write(Path("compare") / comparison_slug, page(title, description, canonical, destination, body, structured_data=schema))
     comparison_posts.append({"slug": comparison_slug, "title": f'{left["name"]} vs {right["name"]}', "description": description, "url": canonical, "destination": destination, "body": body, "category": "Card comparisons"})
     comparison_links.append(f'<li><a href="{canonical}">{html.escape(left["name"])} vs {html.escape(right["name"])}</a></li>')

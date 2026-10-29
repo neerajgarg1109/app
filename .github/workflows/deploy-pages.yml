@@ -52,6 +52,10 @@ jobs:
           CARDIQ_PUBLIC_ORIGIN: https://findmybest.cards
       - name: Audit sitemap targets, metadata and internal links
         run: python3 ../scripts/audit_seo.py --build build
+      - name: Check reviewed comparison examples and discovery audit
+        run: |
+          python3 ../scripts/test_comparison_editorial.py
+          python3 ../scripts/test_audit_seo.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/build

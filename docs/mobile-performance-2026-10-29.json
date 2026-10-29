@@ -1,0 +1,52 @@
+{
+  "checkedOn": "2026-10-29",
+  "baseline_release": "2b1be90c4b0183f34d354ffe145065a8f7280b09",
+  "tool": "PageSpeed Insights UI; Lighthouse 13.5.0",
+  "device": "Emulated Moto G Power; slow 4G; initial page load",
+  "field_data": "No Data on all three pages; no field INP or Core Web Vitals assessment established",
+  "measurements": "Pre-change lab measurements; not post-change scores",
+  "pages": [
+    {
+      "page": "Homepage",
+      "url": "https://findmybest.cards/",
+      "report": "https://pagespeed.web.dev/analysis/https-findmybest-cards/8hn4fc03al?form_factor=mobile",
+      "performance": 82,
+      "accessibility": 98,
+      "best_practices": 100,
+      "seo": 100,
+      "fcp_seconds": 3.0,
+      "lcp_seconds": 3.4,
+      "tbt_ms": 0,
+      "cls": 0.077,
+      "speed_index_seconds": 4.8
+    },
+    {
+      "page": "Cashback guide",
+      "url": "https://findmybest.cards/guides/best-cashback-credit-cards-india/",
+      "report": "https://pagespeed.web.dev/analysis/https-findmybest-cards-guides-best-cashback-credit-cards-india/7km6g0li32?form_factor=mobile",
+      "performance": 87,
+      "accessibility": 95,
+      "best_practices": 100,
+      "seo": 100,
+      "fcp_seconds": 3.2,
+      "lcp_seconds": 3.2,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_seconds": 3.2
+    },
+    {
+      "page": "CASHBACK SBI review",
+      "url": "https://findmybest.cards/cards/sbi-cashback-sbi/",
+      "report": "https://pagespeed.web.dev/analysis/https-findmybest-cards-cards-sbi-cashback-sbi/snb559n271?form_factor=mobile",
+      "performance": 89,
+      "accessibility": 100,
+      "best_practices": 100,
+      "seo": 100,
+      "fcp_seconds": 2.9,
+      "lcp_seconds": 3.0,
+      "tbt_ms": 0,
+      "cls": 0,
+      "speed_index_seconds": 2.9
+    }
+  ]
+}

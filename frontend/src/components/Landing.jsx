@@ -81,6 +81,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
       </header>
       <CustomerNav />
 
+      <main>
       {/* Hero */}
       <section className="ciq-container ciq-container--reading pt-6 text-center ciq-fade-up lg:pt-12">
         <div
@@ -156,6 +157,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
         </div>
       </section>
 
+      </main>
       {/* sticky CTA */}
       <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
         <button

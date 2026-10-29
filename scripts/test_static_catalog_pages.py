@@ -55,6 +55,22 @@ def generated_pages():
 
 
 class StaticCatalogTests(unittest.TestCase):
+    def test_brand_fonts_do_not_block_first_render_or_use_css_import_chains(self):
+        for path in self.pages + [BUILD / 'index.html']:
+            source = path.read_text()
+            self.assertNotIn('@import url(', source, path)
+            self.assertIn('display=optional', source, path)
+            self.assertRegex(source, r'<link[^>]+(?:media="print")[^>]+onload=', path)
+
+    def test_three_reviewed_comparisons_have_examples_and_primary_sources(self):
+        from comparison_editorial import REVIEWS
+        for slug in REVIEWS:
+            source = (BUILD / 'compare' / slug / 'index.html').read_text()
+            self.assertIn('Worked spending examples', source)
+            self.assertIn('Sources for this comparison', source)
+            self.assertIn('Comparison terms reviewed', source)
+            self.assertIn('before fees and taxes', source)
+
     def test_card_pages_expose_current_fees_access_and_context_without_javascript(self):
         for card_id, card in CARDS_BY_ID.items():
             source = (BUILD / 'cards' / card_id / 'index.html').read_text()

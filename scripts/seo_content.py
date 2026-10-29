@@ -2,7 +2,7 @@
 from html import escape
 from urllib.parse import quote
 
-CSS = '.card-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0}.card-facts dt{font-weight:700}.card-facts dd{margin:4px 0 0;overflow-wrap:anywhere}.product-image{display:block;width:240px;max-width:100%;height:180px;object-fit:contain;margin:16px auto}.research-links{display:flex;flex-wrap:wrap;gap:8px 20px}.table-scroll{overflow-x:auto}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #e4e2f1;padding:12px}'
+CSS = '.card-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0}.card-facts dt{font-weight:700}.card-facts dd{margin:4px 0 0;overflow-wrap:anywhere}.product-image{display:block;width:240px;max-width:100%;height:180px;object-fit:contain;margin:16px auto}.research-links{display:flex;flex-wrap:wrap;gap:8px 20px}.table-scroll{overflow-x:auto}.table-scroll table{min-width:540px}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #e4e2f1;padding:12px}'
 
 TOPICS = {
     'cashback': ('best-cashback-credit-cards-india', 'Choosing a cashback card', [

@@ -19,6 +19,7 @@ test("presents the commercial proposition with transparent trust links", async (
   const root = createRoot(container);
   await act(async () => root.render(<Landing onStart={jest.fn()} />));
   await act(async () => Promise.resolve());
+  expect(container.querySelectorAll("main")).toHaveLength(1);
   expect(container.textContent).toContain("find the best card for your needs");
   expect(container.textContent).toContain("Clear comparisons. Honest trade-offs. Built around you.");
   expect(container.textContent).not.toContain("Independent.");
