@@ -9,7 +9,6 @@ import re
 import hashlib
 import math
 from pathlib import Path
-from pymongo import UpdateOne
 
 CARDS = json.loads(Path(__file__).with_name("cards_catalog.json").read_text())
 CATALOG_VERSION = hashlib.sha256(
@@ -32,6 +31,8 @@ RECOMMENDABLE_QUERY = {
 
 async def seed_cards(db):
     """Refresh issuer facts; archive only known demo records after upserts succeed."""
+    from pymongo import UpdateOne
+
     catalog_ids = [item["id"] for item in CARDS]
     state = await db.catalog_meta.find_one({"_id": "repository_catalog"}, {"version": 1})
     if state and state.get("version") == CATALOG_VERSION:
