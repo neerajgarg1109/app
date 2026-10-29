@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regression checks for CardIQ's generated, indexable catalogue pages."""
 import json
+import html
 import os
 import re
 import sys
@@ -54,6 +55,49 @@ def generated_pages():
 
 
 class StaticCatalogTests(unittest.TestCase):
+    def test_card_pages_expose_current_fees_access_and_context_without_javascript(self):
+        for card_id, card in CARDS_BY_ID.items():
+            source = (BUILD / 'cards' / card_id / 'index.html').read_text()
+            self.assertIn(html.escape(card['joiningFee']), source, card_id)
+            self.assertIn(html.escape(card['annualFee']), source, card_id)
+            self.assertIn('Fees and application requirements', source, card_id)
+            self.assertIn('Continue your research', source, card_id)
+            if card.get('imageUrl'):
+                self.assertIn(f'src="{html.escape(card["imageUrl"], quote=True)}"', source, card_id)
+            access = restricted_access(card)
+            if access:
+                self.assertIn(html.escape(access['accessExplanation']), source, card_id)
+
+    def test_decision_guides_add_distinct_questions_and_clear_examples(self):
+        for topic in ('cashback', 'lifetime-free', 'travel', 'fuel', 'rupay-upi', 'first'):
+            guide_slug = 'best-rupay-upi-credit-cards-india' if topic == 'rupay-upi' else f'best-{topic}-credit-cards-india'
+            source = (BUILD / 'guides' / guide_slug / 'index.html').read_text()
+            self.assertIn('A practical comparison', source)
+            self.assertIn(f'href="{ORIGIN}/methodology/">', source)
+        cashback = (BUILD / 'guides/best-cashback-credit-cards-india/index.html').read_text()
+        self.assertIn('Hypothetical example', cashback)
+        self.assertIn('not an offer from a listed card', cashback)
+
+    def test_shortlists_require_positive_benefits_and_unconditional_free_fees(self):
+        cashback = Document((BUILD / 'guides/best-cashback-credit-cards-india/index.html').read_text())
+        for link in cashback.links:
+            if f'{ORIGIN}/cards/' in link:
+                card_id = link.split('/cards/', 1)[1].strip('/')
+                self.assertIn('cashback', CARDS_BY_ID[card_id].get('bestFor', []))
+        free = Document((BUILD / 'guides/best-lifetime-free-credit-cards-india/index.html').read_text())
+        for link in free.links:
+            if f'{ORIGIN}/cards/' in link:
+                card = CARDS_BY_ID[link.split('/cards/', 1)[1].strip('/')]
+                self.assertEqual(card['joiningFeeAmount'], 0)
+                self.assertEqual(card['annualFeeAmount'], 0)
+                self.assertNotIn('current', card['annualFee'].lower())
+
+    def test_closure_hub_links_to_every_issuer_without_mixing_editorial_topics(self):
+        hub = (BUILD / 'guides/close-credit-card-india/index.html').read_text()
+        for path in (BUILD / 'guides').glob('close-*/index.html'):
+            if path.parent.name != 'close-credit-card-india':
+                self.assertIn(f'{ORIGIN}/guides/{path.parent.name}/', hub)
+
     def test_conditional_free_new_cards_are_excluded_from_lifetime_free_category(self):
         source = (BUILD / "categories/lifetime-free/index.html").read_text()
         for card_id in ("pnb-kiwi-credit-card", "sbm-niyo-global-credit-card"):

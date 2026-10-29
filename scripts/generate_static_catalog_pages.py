@@ -12,6 +12,7 @@ from urllib.request import urlopen
 from guide_blog import render_index as render_blog_index, render_article as render_blog_article
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
 from public_footer import CSS as FOOTER_CSS, render_footer
+from seo_content import CSS as SEO_CSS, product_facts, product_research, category_research, choosing_section, shortlist_matches
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
@@ -69,7 +70,7 @@ def page(title, description, canonical, destination, body, image_url=None, struc
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
 <link rel="canonical" href="{html.escape(canonical, quote=True)}">
 <meta property="og:title" content="{html.escape(title, quote=True)}"><meta property="og:description" content="{html.escape(description, quote=True)}"><meta property="og:url" content="{html.escape(canonical, quote=True)}"><meta property="og:type" content="website">{image_meta}<script type="application/ld+json">{schema_markup}</script>
-<style>body{{margin:0;background:#f8f7ff;color:#172033;font:16px/1.55 Inter,Arial,sans-serif}}header,main,footer{{max-width:960px;margin:auto;padding:24px}}header{{max-width:1280px;display:flex;justify-content:space-between;align-items:center;gap:16px}}header nav{{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}}a{{color:#4538c8}}.brand{{font-size:22px;font-weight:800;text-decoration:none}}.nav-action{{border:1px solid #d8d5e8;border-radius:999px;background:white;color:#4538c8;padding:8px 13px;font:700 14px Inter,Arial,sans-serif;text-decoration:none;cursor:pointer}}h1{{font-size:38px;line-height:1.15}}.cta{{display:inline-block;background:#5b4ff0;color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:700}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}}.card,.share{{background:white;border:1px solid #e4e2f1;border-radius:16px;padding:16px}}.share{{margin-top:24px}}.share-links{{display:flex;flex-wrap:wrap;gap:8px}}.share-links a,.share-links button{{border:1px solid #d8d5e8;border-radius:10px;background:white;color:#4538c8;padding:9px 12px;font:600 14px Inter,Arial,sans-serif;text-decoration:none;cursor:pointer}}.muted{{color:#5d6478}}li{{margin:7px 0}}@media(max-width:600px){{header{{align-items:flex-start}}header nav{{gap:8px}}header nav>a:last-child{{display:none}}h1{{font-size:32px}}}}{MAIN_NAV_CSS}{FOOTER_CSS}</style></head>
+<style>body{{margin:0;background:#f8f7ff;color:#172033;font:16px/1.55 Inter,Arial,sans-serif}}header,main,footer{{max-width:960px;margin:auto;padding:24px}}header{{max-width:1280px;display:flex;justify-content:space-between;align-items:center;gap:16px}}header nav{{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}}a{{color:#4538c8}}.brand{{font-size:22px;font-weight:800;text-decoration:none}}.nav-action{{border:1px solid #d8d5e8;border-radius:999px;background:white;color:#4538c8;padding:8px 13px;font:700 14px Inter,Arial,sans-serif;text-decoration:none;cursor:pointer}}h1{{font-size:38px;line-height:1.15}}.cta{{display:inline-block;background:#5b4ff0;color:white;text-decoration:none;padding:12px 18px;border-radius:12px;font-weight:700}}.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}}.card,.share{{background:white;border:1px solid #e4e2f1;border-radius:16px;padding:16px}}.share{{margin-top:24px}}.share-links{{display:flex;flex-wrap:wrap;gap:8px}}.share-links a,.share-links button{{border:1px solid #d8d5e8;border-radius:10px;background:white;color:#4538c8;padding:9px 12px;font:600 14px Inter,Arial,sans-serif;text-decoration:none;cursor:pointer}}.muted{{color:#5d6478}}li{{margin:7px 0}}@media(max-width:600px){{header{{align-items:flex-start}}header nav{{gap:8px}}header nav>a:last-child{{display:none}}h1{{font-size:32px}}}}{MAIN_NAV_CSS}{SEO_CSS}{FOOTER_CSS}</style></head>
 <body><header><a class="brand" href="{ORIGIN}/">cardIQ</a><button class="nav-action" type="button" onclick="history.length &gt; 1 ? history.back() : location.href='{ORIGIN}/'">← Back</button></header>{render_navigation(ORIGIN, canonical)}<main>{body}{social_links(title, canonical)}<p><a class="cta" href="{html.escape(destination, quote=True)}">Explore and compare in CardIQ</a></p></main>{render_footer(ORIGIN)}</body></html>'''
 
 
@@ -170,6 +171,7 @@ def editorial_analysis(card):
 if os.environ.get("CARDIQ_PRESERVE_GENERATED") != "true":
     clean_generated_routes()
 cards_by_id = {card["id"]: card for card in CARDS}
+category_counts = {category['id']: sum(category_match(card, category) for card in CARDS) for category in CATEGORIES}
 
 for card in CARDS:
     name, issuer = card["name"], card["issuer"]
@@ -177,10 +179,14 @@ for card in CARDS:
     description = editorial.get("summary") or f'{name}: {card.get("rewardLine", "")}. Annual fee: {card.get("annualFee", "Not specified")}. Sourced card details from CardIQ.'
     route = f'{ORIGIN}/#/cards/{quote(card["id"])}'
     facts = "".join(f"<li>{html.escape(item)}</li>" for item in card.get("highlights", []))
-    sources = "".join(f'<li><a href="{html.escape(url, quote=True)}">Issuer source {index + 1}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
+    sources = "".join(f'<li><a href="{html.escape(url, quote=True)}">Issuer source {index + 1}: {html.escape(url.split("/")[2])}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
     body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
     image_url = f'{ORIGIN}{card["imageUrl"]}' if card.get("imageUrl", "").startswith("/") else card.get("imageUrl")
     canonical = f'{ORIGIN}/cards/{card["id"]}/'
+    body = body.replace('</h1>', '</h1>' + product_facts(card, ORIGIN, restricted_access(card)), 1)
+    related_categories = [category for category in CATEGORIES if category_match(card, category)
+                          and category_counts[category['id']] >= 3]
+    body += product_research(card, related_categories, ORIGIN, slug(issuer))
     schema = {"@context": "https://schema.org", "@graph": [
         {"@type": "WebPage", "name": f"{name} review", "description": description, "url": canonical, "inLanguage": "en-IN", "dateModified": card.get("verifiedOn")},
         {"@type": "CreditCard", "name": name, "provider": {"@type": "Organization", "name": issuer}, "areaServed": "IN", "feesAndCommissionsSpecification": card.get("termsNote", "Confirm fees and conditions with the issuer."), "description": description, "url": canonical, **({"image": image_url} if image_url else {})},
@@ -209,7 +215,7 @@ for category in CATEGORIES:
     published_categories.append(category)
     description = category["description"]
     destination = f'{ORIGIN}/#/cards?category={category["id"]}'
-    body = f'<h1>{html.escape(category["label"])} credit cards in India</h1><p>{html.escape(description)}</p><p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches)}'
+    body = f'<h1>{html.escape(category["label"])} credit cards in India</h1><p>{html.escape(description)}</p>{category_research(category["id"], ORIGIN)}<p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches)}'
     write(Path("categories") / category["id"], page(f'{category["label"]} credit cards in India | CardIQ', description, f'{ORIGIN}/categories/{category["id"]}/', destination, body))
 
 # Only publish comparisons that both cards' maintained editorial records recommend.
@@ -321,7 +327,7 @@ editorial_guides = [
 editorial_guide_slugs = []
 for guide_slug, guide_title, category_id, guidance in editorial_guides:
     definition = category_by_id[category_id]
-    matches = [card for card in CARDS if card.get("active", True) and card.get("applicationsOpen", True) and not restricted_access(card) and category_match(card, definition)]
+    matches = [card for card in CARDS if card.get("active", True) and card.get("applicationsOpen", True) and not restricted_access(card) and category_match(card, definition) and shortlist_matches(card, category_id)]
     matches.sort(key=lambda card: (-len(card.get("sourceUrls") or []), -len(card.get("highlights") or []), -float(card.get("rating") or 0), card["name"]))
     shortlist = matches[:12]
     description = f"CardIQ’s sourced shortlist of {len(shortlist)} {definition['label'].lower()} credit cards in India, with fees, benefits and important trade-offs to verify."
@@ -329,6 +335,7 @@ for guide_slug, guide_title, category_id, guidance in editorial_guides:
     destination = f"{ORIGIN}/#/cards?category={category_id}"
     body = f'''<h1>{html.escape(guide_title)}</h1><p>{html.escape(description)}</p>
 <h2>How to choose</h2><p>{html.escape(guidance)}</p>
+{choosing_section(category_id)}
 <p class="muted">This is an editorial shortlist, not a personalised recommendation or approval ranking. Eligible cards are ordered by the completeness of their maintained sources and decision-critical details—not from best to worst. No issuer can pay to improve its position.</p>
 {card_links(shortlist)}<h2>Check before applying</h2><ul><li>Confirm the current fee, waiver threshold and applicable GST.</li><li>Check reward caps, excluded transactions and redemption value.</li><li>Open the card page to review dated issuer sources and CardIQ’s trade-offs.</li></ul>'''
     schema = {"@context": "https://schema.org", "@graph": [

@@ -97,12 +97,17 @@ def render_index(posts, origin, share):
 def render_article(post, posts, origin, share):
     body = re.sub(r'^<h1>.*?</h1><p>.*?</p>', '', post['body'], count=1, flags=re.S)
     closing = post['category'] == 'Card management'
+    if post['slug'] == 'close-credit-card-india':
+        issuer_guides = [p for p in posts if p['category'] == 'Card management' and p['slug'] != post['slug']]
+        body += '<h2>Find your issuer’s closure guide</h2><ul>' + ''.join(
+            f'<li><a href="{escape(p["url"])}">{escape(p["title"])}</a></li>' for p in issuer_guides
+        ) + '</ul>'
     back_url = f'{origin}/#/help/issuers' if closing else f'{origin}/guides/'
     back_label = '← Close a card' if closing else '← All guides'
     related = [p for p in posts if p['slug'] != post['slug'] and (p['category'] == 'Card management') == closing]
     related.sort(key=lambda p: p['category'] != post['category'])
     related_cards = ''.join(article_card(p) for p in related[:3])
-    content = f'''<article class="reading-wrap"><a class="breadcrumb" href="{back_url}">{back_label}</a><header class="article-header"><p class="eyebrow">{escape(post['category'])}</p><h1>{escape(post['title'])}</h1><p class="standfirst">{escape(post.get('standfirst', post['description']))}</p><div class="byline"><span class="author-mark">c</span><span>By <strong>CardIQ</strong></span><span>·</span><span>{minutes(post['body'])} min read</span></div></header><div class="prose">{body}</div>
+    content = f'''<article class="reading-wrap"><a class="breadcrumb" href="{back_url}">{back_label}</a><header class="article-header"><p class="eyebrow">{escape(post['category'])}</p><h1>{escape(post['title'])}</h1><p class="standfirst">{escape(post.get('standfirst', post['description']))}</p><div class="byline"><span class="author-mark">c</span><span>By <a href="{origin}/methodology/"><strong>CardIQ editorial</strong></a></span><span>·</span><span>{minutes(post['body'])} min read</span></div></header><div class="prose">{body}</div>
 <div class="article-next"><p>Ready to put this into practice?</p><a class="nav-cta" href="{escape(post['destination'])}">Explore in CardIQ <span aria-hidden="true">↗</span></a></div>{share}</article>
 <section class="wrap related-posts" aria-labelledby="related-title"><p class="eyebrow">KEEP EXPLORING</p><h2 id="related-title">A few more good reads</h2><div class="article-grid">{related_cards}</div></section>'''
     schema = post.get('schema') or {'@context': 'https://schema.org', '@type': 'Article', 'headline': post['title'], 'description': post['description'], 'url': post['url'], 'inLanguage': 'en-IN', 'author': {'@type': 'Organization', 'name': 'CardIQ'}}

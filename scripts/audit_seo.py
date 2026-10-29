@@ -5,7 +5,7 @@ from collections import Counter
 from html.parser import HTMLParser
 import json
 from pathlib import Path
-from urllib.parse import urlparse, unquote
+from urllib.parse import urlparse, unquote, urljoin
 import xml.etree.ElementTree as ET
 
 
@@ -46,6 +46,7 @@ def audit(build):
     urls = [node.text for node in ET.parse(build / 'sitemap.xml').findall('{*}url/{*}loc')]
     origin = urlparse(urls[0]).netloc
     errors, warnings, titles, descriptions = [], [], [], []
+    linked_urls = set()
     def local_path(url):
         path = unquote(urlparse(url).path).lstrip('/')
         target = build / path
@@ -68,13 +69,18 @@ def audit(build):
         titles.append(page.title)
         descriptions.extend(page.description)
         for link in page.links:
+            resolved = urljoin(url, link).split('#', 1)[0].split('?', 1)[0]
+            if resolved != url:
+                linked_urls.add(resolved)
             parsed = urlparse(link)
             if parsed.scheme in ('mailto', 'tel') or parsed.netloc not in ('', origin) or parsed.fragment: continue
             if not local_path(link).is_file(): errors.append(f'Broken internal link in {url}: {link}')
     for label, values in [('title', titles), ('description', descriptions), ('sitemap URL', urls)]:
         for value, count in Counter(values).items():
             if count > 1: errors.append(f'Duplicate {label} ({count}): {value}')
-    return {'sitemap_urls_checked': len(urls), 'errors': sorted(set(errors)), 'warnings': warnings}
+    orphan_urls = sorted(set(urls) - linked_urls)
+    errors.extend(f'No crawlable internal link to sitemap page: {url}' for url in orphan_urls)
+    return {'sitemap_urls_checked': len(urls), 'orphan_urls': orphan_urls, 'errors': sorted(set(errors)), 'warnings': warnings}
 
 
 if __name__ == '__main__':
