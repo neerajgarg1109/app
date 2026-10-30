@@ -31,6 +31,11 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             event=await server.db.apply_events.find_one({'placement_id':'list_card'})
             assert event['source_page']=='best-cashback-credit-cards-india'
             assert (await client.get('/api/go/compare-card?subid=list_card&source=https://evil.example')).status_code==422
+            for placement in ('card_page_hero', 'card_page_verdict', 'card_page_sticky'):
+                response=await client.get('/api/go/compare-card?subid='+placement+'&source=compare-card')
+                assert response.status_code==302
+                event=await server.db.apply_events.find_one({'placement_id':placement})
+                assert event['source_page']=='compare-card'
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyLinkStatus':'paused'}})
             response=await client.get('/api/go/compare-card?subid=calculator_winner_cta&pair=test-pair&url=https://evil.example')
             assert response.headers['location']=='https://issuer.example/card'

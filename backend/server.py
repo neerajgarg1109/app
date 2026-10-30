@@ -851,7 +851,7 @@ async def get_restricted_cards():
     return {"cards": sorted(results, key=lambda item: (item["accessType"], item["issuer"], item["name"]))}
 
 
-COMPARISON_PLACEMENTS = {"verdict_box_card_a", "verdict_box_card_b", "calculator_winner_cta", "sticky_mobile_bar", "fallback_footer_ltf", "list_card", "unattributed"}
+COMPARISON_PLACEMENTS = {"verdict_box_card_a", "verdict_box_card_b", "calculator_winner_cta", "sticky_mobile_bar", "fallback_footer_ltf", "list_card", "card_page_hero", "card_page_verdict", "card_page_sticky", "unattributed"}
 
 
 @api_router.get("/go/{card_id}")

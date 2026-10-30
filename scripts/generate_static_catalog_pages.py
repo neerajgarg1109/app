@@ -140,6 +140,24 @@ def card_links(cards, source):
     ) + "</div>"
 
 
+def public_card_application(card):
+    access = restricted_access(card)
+    return (card.get('active', True) and card.get('applicationsOpen', True)
+            and bool(card.get('applyUrl')) and not (access and access['accessType'] == 'invite-only'))
+
+
+def card_application_cta(card, placement):
+    if public_card_application(card):
+        name = html.escape(card.get('shortName') or card['name'])
+        return f'<a class="cta" href="{ORIGIN}/go/{quote(card["id"])}/?subid={placement}&amp;source={quote(card["id"])}" rel="sponsored nofollow noopener" target="_blank">Apply for {name} →</a>'
+    return f'<a href="{ORIGIN}/guides/best-first-credit-cards-india/">Explore secured and first-card alternatives →</a><span class="muted"> Approval and deposit requirements depend on the issuer.</span>'
+
+
+def matching_comparisons(card):
+    links = ''.join(f'<li><a href="{ORIGIN}/compare/{comparison_slug}/">{html.escape(cards_by_id[left]["name"])} vs {html.escape(cards_by_id[right]["name"])}</a></li>' for comparison_slug,left,right in card_comparisons[card['id']])
+    return f'<h3>Compare before deciding</h3><ul>{links}</ul>' if links else f'<h3>Compare before deciding</h3><p>No maintained head-to-head comparison is published for this card yet. <a href="{ORIGIN}/compare/">Browse card comparisons</a>.</p>'
+
+
 def editorial_analysis(card):
     stored = card.get("editorial") or {}
     if stored.get("summary") and stored.get("verdict"):
@@ -148,13 +166,13 @@ def editorial_analysis(card):
             f'<li><a href="{ORIGIN}/cards/{html.escape(item["id"])}/">{html.escape(item["name"])}</a> — {html.escape(item["reason"])}</li>'
             for item in stored.get("alternatives", [])
         )
-        alternatives_section = f'<h3>Compare before deciding</h3><ul>{alternatives}</ul>' if alternatives else ""
+        alternatives_section = matching_comparisons(card) + (f'<h3>Other cards to consider</h3><ul>{alternatives}</ul>' if alternatives else '')
         return (
             f'<section><h2>CardIQ editorial view</h2><h3>Our take</h3><p>{html.escape(stored["summary"])}</p>'
             f'<div class="grid"><div class="card"><h3>Who it suits</h3><ul>{list_html(stored.get("idealFor", []))}</ul></div>'
             f'<div class="card"><h3>Key strengths</h3><ul>{list_html(stored.get("strengths", []))}</ul></div></div>'
             f'<h3>Trade-offs to understand</h3><ul>{list_html(stored.get("tradeoffs", []))}</ul>'
-            f'<h3>CardIQ verdict</h3><p>{html.escape(stored["verdict"])}</p>{alternatives_section}'
+            f'<h3>CardIQ verdict</h3><p>{html.escape(stored["verdict"])}</p><p>{card_application_cta(card, "card_page_verdict")}</p>{alternatives_section}'
             '<p class="muted">This CardIQ editorial assessment is maintained separately from issuer facts and commercial links. CardIQ may earn a commission from some applications. Verify current terms before applying.</p></section>'
         )
     labels = {"cashback": "cashback", "shopping": "shopping", "online": "online purchases", "travel": "travel", "dining": "dining", "lounge": "airport lounge access", "rewards": "reward points", "forex": "international spending", "fuel": "fuel", "grocery": "groceries", "upi": "UPI payments", "secured": "building credit"}
@@ -177,13 +195,38 @@ def editorial_analysis(card):
     if not think_twice:
         think_twice.append("Most of your spending falls outside the card's eligible reward categories.")
     list_html = lambda items: "".join(f"<li>{html.escape(item)}</li>" for item in items)
-    return f'<section><h2>CardIQ editorial view</h2><p>{html.escape(verdict)}</p><div class="grid"><div class="card"><h3>A good fit when</h3><ul>{list_html(good_fit)}</ul></div><div class="card"><h3>Think twice when</h3><ul>{list_html(think_twice[:2])}</ul></div></div><p class="muted">This analysis is derived from the sourced fees, rewards and conditions on this page. It is not approval advice or a paid ranking.</p></section>'
+    return f'<section><h2>CardIQ editorial view</h2><h3>CardIQ verdict</h3><p>{html.escape(verdict)}</p><p>{card_application_cta(card, "card_page_verdict")}</p>{matching_comparisons(card)}<div class="grid"><div class="card"><h3>A good fit when</h3><ul>{list_html(good_fit)}</ul></div><div class="card"><h3>Think twice when</h3><ul>{list_html(think_twice[:2])}</ul></div></div><p class="muted">This analysis is derived from the sourced fees, rewards and conditions on this page. It is not approval advice or a paid ranking.</p></section>'
 
 
 if os.environ.get("CARDIQ_PRESERVE_GENERATED") != "true":
     clean_generated_routes()
 cards_by_id = {card["id"]: card for card in CARDS}
 category_counts = {category['id']: sum(category_match(card, category) for card in CARDS) for category in CATEGORIES}
+
+# Only publish comparisons that both cards' maintained editorial records recommend.
+# This prevents the SEO layer from manufacturing arbitrary or thin pairings.
+directed_alternatives = {
+    (card["id"], alternative["id"])
+    for card in CARDS
+    for alternative in (card.get("editorial") or {}).get("alternatives", [])
+    if alternative.get("id") in cards_by_id
+}
+comparison_pairs = sorted({
+    tuple(sorted((left, right)))
+    for left, right in directed_alternatives
+    if left != right and (right, left) in directed_alternatives
+})
+priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
+card_comparisons = {card['id']: [] for card in CARDS}
+seen_comparisons = set()
+for comparison_slug, left_id, right_id in ([(row['slug'], row['cardA'], row['cardB']) for row in TOP_COMPARISONS] + [(f'{a}-vs-{b}', a, b) for a,b in comparison_pairs]):
+    primary = priority_by_pair.get(frozenset((left_id, right_id)))
+    comparison_slug = primary['slug'] if primary else comparison_slug
+    if comparison_slug in seen_comparisons:
+        continue
+    seen_comparisons.add(comparison_slug)
+    for card_id in (left_id, right_id):
+        card_comparisons[card_id].append((comparison_slug, left_id, right_id))
 
 for card in CARDS:
     name, issuer = card["name"], card["issuer"]
@@ -195,7 +238,11 @@ for card in CARDS:
     body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
     image_url = f'{ORIGIN}{card["imageUrl"]}' if card.get("imageUrl", "").startswith("/") else card.get("imageUrl")
     canonical = f'{ORIGIN}/cards/{card["id"]}/'
-    body = body.replace('</h1>', '</h1>' + product_facts(card, ORIGIN, restricted_access(card)), 1)
+    fee_box = product_facts(card, ORIGIN, restricted_access(card))
+    actions = f'<div class="card-page-actions">{card_application_cta(card, "card_page_hero")} <a href="{ORIGIN}/calculator/?card={quote(card["id"])}">Calculate my ₹ value</a></div>'
+    fee_box = fee_box.replace('</dl>', '</dl>' + actions, 1)
+    body = body.replace('</h1>', '</h1>' + fee_box, 1)
+    body += f'<aside class="card-page-sticky" aria-label="Card application">{card_application_cta(card, "card_page_sticky")}</aside>' 
     related_categories = [category for category in CATEGORIES if category_match(card, category)
                           and category_counts[category['id']] >= 3]
     body += product_research(card, related_categories, ORIGIN, slug(issuer))
@@ -208,7 +255,7 @@ for card in CARDS:
             {"@type": "ListItem", "position": 3, "name": name, "item": canonical},
         ]},
     ]}
-    write(Path("cards") / card["id"], page(f"{name} review: Fees & Rewards | CardIQ" if len(name) <= 33 else f"{name} review | CardIQ", description, canonical, route, body, image_url=image_url, structured_data=schema))
+    write(Path("cards") / card["id"], page(f"{name} review: Fees & Rewards | CardIQ" if len(name) <= 33 else f"{name} review | CardIQ", description, canonical, route, body, image_url=image_url, structured_data=schema, head_extra='<style>.card-page-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:18px}.card-page-sticky{display:none}@media(max-width:640px){body{padding-bottom:110px}.card-page-sticky{display:block;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:#fff;box-shadow:0 -3px 15px #0002}.card-page-sticky a{display:block;text-align:center}}</style>'))
 
 issuers = sorted({card["issuer"] for card in CARDS})
 for issuer in issuers:
@@ -230,19 +277,6 @@ for category in CATEGORIES:
     body = f'<h1>{html.escape(category["label"])} credit cards in India</h1><p>{html.escape(description)}</p>{category_research(category["id"], ORIGIN)}<p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches, "categories-" + category["id"])}'
     write(Path("categories") / category["id"], page(f'{category["label"]} credit cards in India | CardIQ', description, f'{ORIGIN}/categories/{category["id"]}/', destination, body))
 
-# Only publish comparisons that both cards' maintained editorial records recommend.
-# This prevents the SEO layer from manufacturing arbitrary or thin pairings.
-directed_alternatives = {
-    (card["id"], alternative["id"])
-    for card in CARDS
-    for alternative in (card.get("editorial") or {}).get("alternatives", [])
-    if alternative.get("id") in cards_by_id
-}
-comparison_pairs = sorted({
-    tuple(sorted((left, right)))
-    for left, right in directed_alternatives
-    if left != right and (right, left) in directed_alternatives
-})
 comparison_links = []
 comparison_posts = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}

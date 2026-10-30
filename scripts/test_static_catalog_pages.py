@@ -164,6 +164,36 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn("'/updates': '/guides/new-credit-cards/'", hydration)
         self.assertIn("'/restricted-cards': '/guides/invite-only-credit-cards/'", hydration)
 
+    def test_card_pages_have_tracked_placements_and_complete_matching_comparisons(self):
+        from urllib.parse import parse_qs
+        comparison_urls = MANIFEST['comparison_urls']
+        from comparison_engine import TOP_COMPARISONS
+        priority = [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS]
+        for card_id in CARD_IDS:
+            source = (BUILD / 'cards' / card_id / 'index.html').read_text()
+            document = Document(source)
+            apply = [link for link in document.links if '/go/' in link]
+            if apply:
+                placements = [parse_qs(urlparse(link).query) for link in apply]
+                self.assertEqual({p['subid'][0] for p in placements}, {'card_page_hero','card_page_verdict','card_page_sticky'})
+                self.assertTrue(all(p['source'] == [card_id] for p in placements))
+                self.assertEqual(source.count('rel="sponsored nofollow noopener" target="_blank"'), 3)
+            else:
+                self.assertIn('Explore secured and first-card alternatives', source)
+            self.assertIn('/calculator/?card=' + card_id, source)
+            matching = []
+            for url in comparison_urls:
+                path = BUILD / urlparse(url).path.strip('/') / 'index.html'
+                graph = re.search(r'<script type="application/ld\+json">(.*?)</script>',path.read_text(),re.S).group(1)
+                products = [n for n in json.loads(graph)['@graph'] if n['@type']=='FinancialProduct']
+                if any('/cards/' + card_id + '/' in n.get('url','') for n in products): matching.append(url)
+            links = [link for link in document.links if link in comparison_urls]
+            self.assertEqual(set(links), set(matching), card_id)
+            self.assertEqual([link for link in links if link in priority], [link for link in priority if link in matching], card_id)
+        sbi = (BUILD / 'cards/sbi-cashback-sbi/index.html').read_text()
+        for pair in ('sbi-cashback-vs-hdfc-millennia', 'sbi-cashback-vs-amazon-pay-icici', 'rbl-jalsa-vs-sbi-cashback-sbi'):
+            self.assertIn('/compare/' + pair + '/', sbi)
+
     def test_comparison_index_priority_order_and_list_application_links(self):
         from comparison_engine import TOP_COMPARISONS
         from urllib.parse import parse_qs
@@ -270,7 +300,7 @@ class StaticCatalogTests(unittest.TestCase):
                         self.assertTrue(target.is_file(), link)
                         self.assertIn('noindex,nofollow', target.read_text())
                     else:
-                        self.assertIn(link, generated, f"Broken generated link in {path}: {link}")
+                        self.assertIn(link.split("?", 1)[0], generated, f"Broken generated link in {path}: {link}")
 
     def test_methodology_discloses_sources_automation_and_revenue(self):
         source = (BUILD / "methodology" / "index.html").read_text().lower()
