@@ -164,11 +164,34 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn("'/updates': '/guides/new-credit-cards/'", hydration)
         self.assertIn("'/restricted-cards': '/guides/invite-only-credit-cards/'", hydration)
 
+    def test_comparison_index_priority_order_and_list_application_links(self):
+        from comparison_engine import TOP_COMPARISONS
+        from urllib.parse import parse_qs
+        source = (BUILD / 'compare/index.html').read_text()
+        listing = re.search(r'<ul>(.*?)</ul>', source, re.S).group(1)
+        links = Document(listing).links
+        self.assertEqual(links[:20], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
+        for path in self.pages:
+            relative = path.relative_to(BUILD).as_posix()
+            if not relative.startswith(('catalog/', 'categories/', 'issuers/', 'guides/')):
+                continue
+            for article in re.findall(r'<article class="card">.*?</article>', path.read_text(), re.S):
+                if '<strong>Annual fee:</strong>' not in article:
+                    continue
+                self.assertIn('View details', article, relative)
+                if 'Applications closed' in article:
+                    continue
+                apply = next(link for link in Document(article).links if '/go/' in link)
+                query = parse_qs(urlparse(apply).query)
+                self.assertEqual(query['subid'], ['list_card'])
+                self.assertTrue(query['source'][0])
+                self.assertIn('rel="sponsored nofollow noopener" target="_blank"', article)
+
     def test_every_generated_page_has_the_complete_shared_main_menu(self):
         items = json.loads((ROOT / "frontend/src/data/mainNavigation.json").read_text())
         expected = {ORIGIN + ("/" if item["to"] == "/" else "/#" + item["to"]) if item.get("to") else ORIGIN + item["href"] for item in items}
-        expected -= {ORIGIN + '/#/updates', ORIGIN + '/#/restricted-cards'}
-        expected |= {ORIGIN + '/guides/new-credit-cards/', ORIGIN + '/guides/invite-only-credit-cards/'}
+        expected -= {ORIGIN + '/#' + route for route in ('/updates', '/restricted-cards', '/cards', '/cards?mode=compare', '/calculator')}
+        expected |= {ORIGIN + route for route in ('/guides/new-credit-cards/', '/guides/invite-only-credit-cards/', '/catalog/', '/compare/', '/calculator/')}
         for path in self.pages:
             matches = re.findall(r'<nav[^>]*aria-label="Main navigation"[^>]*>(.*?)</nav>', path.read_text(), re.S)
             self.assertEqual(len(matches), 1, path)

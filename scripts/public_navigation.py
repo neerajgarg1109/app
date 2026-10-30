@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 ITEMS = json.loads((ROOT / 'frontend/src/data/mainNavigation.json').read_text())
-STATIC_DESTINATIONS = {'/updates': '/guides/new-credit-cards/', '/restricted-cards': '/guides/invite-only-credit-cards/'}
+STATIC_DESTINATIONS = {'/cards': '/catalog/', '/cards?mode=compare': '/compare/', '/calculator': '/calculator/', '/updates': '/guides/new-credit-cards/', '/restricted-cards': '/guides/invite-only-credit-cards/'}
 CSS = '''.main-navigation{display:block;width:100%;max-width:1280px;margin:14px auto 0;padding:0 32px;box-sizing:border-box}.main-navigation-links{display:flex;flex-wrap:wrap;gap:8px}.main-navigation a{display:inline-block;border:1px solid #e4e2f1;border-radius:999px;background:#fff;color:#202337;padding:8px 12px;font:600 13px/1.5 Inter,Arial,sans-serif;text-decoration:none;box-sizing:border-box}.main-navigation a[aria-current=page]{border-color:#6350d7;background:#f2efff;color:#5142bd}.main-navigation a:hover{border-color:#aaa0df}.main-navigation a:focus-visible{outline:3px solid #a89ae9;outline-offset:3px}.journal-main-navigation{max-width:1180px}@media(max-width:640px){.main-navigation{padding:0 20px}.main-navigation-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.main-navigation a{border-radius:12px;text-align:center;font-size:12px;padding:8px}}'''
 
 

@@ -25,6 +25,12 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             assert event['placement_id']=='verdict_box_card_a'
             assert event['comparison_slug']=='sbi-cashback-vs-hdfc-millennia'
             assert event['link_type']=='partner'
+            response=await client.get('/api/go/compare-card?subid=list_card&source=best-cashback-credit-cards-india')
+            assert response.status_code==302
+            assert parse_qs(urlparse(response.headers['location']).query)['source']==['best-cashback-credit-cards-india']
+            event=await server.db.apply_events.find_one({'placement_id':'list_card'})
+            assert event['source_page']=='best-cashback-credit-cards-india'
+            assert (await client.get('/api/go/compare-card?subid=list_card&source=https://evil.example')).status_code==422
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyLinkStatus':'paused'}})
             response=await client.get('/api/go/compare-card?subid=calculator_winner_cta&pair=test-pair&url=https://evil.example')
             assert response.headers['location']=='https://issuer.example/card'

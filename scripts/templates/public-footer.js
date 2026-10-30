@@ -9,7 +9,7 @@
     if (!value.startsWith('/') || value.startsWith('//')) throw new Error('Invalid footer destination');
     const base = new URL(origin).pathname.replace(/\/$/, '');
     const path = base && value.startsWith(base + '/') ? value.slice(base.length) : value;
-    const staticRoutes = {'/updates': '/guides/new-credit-cards/', '/restricted-cards': '/guides/invite-only-credit-cards/'};
+    const staticRoutes = {'/cards': '/catalog/', '/cards?mode=compare': '/compare/', '/calculator': '/calculator/', '/updates': '/guides/new-credit-cards/', '/restricted-cards': '/guides/invite-only-credit-cards/'};
     if (staticRoutes[path]) return origin + staticRoutes[path];
     const spa = path === '/' || ['/cards', '/updates', '/restricted-cards', '/calculator', '/wallet-optimizer', '/alerts', '/help/issuers'].some(route => path.startsWith(route));
     return origin + (spa ? '/#' + path : path);
