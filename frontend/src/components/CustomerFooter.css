@@ -18,3 +18,5 @@
 .customer-footer .customer-footer-notice{margin-top:32px;border-top:1px solid #e4e2f1;padding-top:20px;color:#5d6478;font-size:11px;line-height:1.65}
 @media(max-width:1023px){.customer-footer .customer-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.customer-footer .customer-footer-about{grid-column:1/-1}}
 @media(max-width:639px){.customer-footer .customer-footer-grid{grid-template-columns:minmax(0,1fr);gap:28px}.customer-footer .customer-footer-inner{padding-top:32px;padding-bottom:32px}}
+
+.editorial-transparency{max-width:1180px;margin:36px auto;padding:24px;line-height:1.7;color:#34344b;background:#f6f5fb;border-radius:16px}.editorial-transparency h2{font-size:18px;font-weight:700;margin:0 0 10px}.editorial-transparency p{margin:0}

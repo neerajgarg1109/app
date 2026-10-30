@@ -29,6 +29,7 @@
     const values = models.map(model => {
       const value = estimate(model, monthly, category.value, year.value);
       const box = root.querySelector('[data-result="' + model.id + '"]');
+      box.querySelector('[data-fee-label]').textContent = year.value === 'first' ? 'First-year cost (including 18% GST; renewal waiver not applied)' : 'Effective cost after spend waiver (including 18% GST)';
       ['gross', 'fee', 'net'].forEach(key => { box.querySelector('[data-value="' + key + '"]').textContent = money(value[key]); });
       return value;
     });

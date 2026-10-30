@@ -195,6 +195,26 @@ class StaticCatalogTests(unittest.TestCase):
         for pair in ('sbi-cashback-vs-hdfc-millennia', 'sbi-cashback-vs-amazon-pay-icici', 'rbl-jalsa-vs-sbi-cashback-sbi'):
             self.assertIn('/compare/' + pair + '/', sbi)
 
+    def test_homepage_prerenders_shared_copy_and_every_page_discloses_affiliates(self):
+        copy = json.loads((ROOT / 'frontend/src/data/homeCopy.json').read_text())
+        footer = json.loads((ROOT / 'frontend/src/data/footerContent.json').read_text())
+        source = (BUILD / 'index.html').read_text()
+        self.assertIn('<h1>' + html.escape(copy['headline']) + '</h1>', source)
+        self.assertIn(str(len(CARD_IDS)) + ' Indian credit cards', source)
+        self.assertIn(copy['primaryCta'], source)
+        self.assertIn(copy['secondaryCta'], source)
+        for tool in copy['tools']:
+            self.assertIn(html.escape(tool['title']), source)
+        for path in self.pages + [BUILD / 'index.html']:
+            text = path.read_text()
+            self.assertIn(html.escape(footer['transparency']['body']), text, path)
+            self.assertLess(text.index('Our Editorial &amp; Financial Transparency'), text.index('<footer'), path)
+        for path in (BUILD / 'compare').glob('*/index.html'):
+            text = path.read_text()
+            self.assertIn('Estimated annual rewards (₹ equivalent)', text)
+            self.assertNotIn('100% approval-rate FD cards', text)
+            self.assertNotIn('Cash in Pocket', text)
+
     def test_comparison_index_priority_order_and_list_application_links(self):
         from comparison_engine import TOP_COMPARISONS
         from urllib.parse import parse_qs
@@ -465,7 +485,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / "index.html").read_text()
         document = Document(source)
         self.assertEqual(document.meta.get("canonical"), f"{ORIGIN}/")
-        self.assertIn(f'href="{urlparse(ORIGIN).path}/catalog/"', source)
+        self.assertIn(f'href="{ORIGIN}/catalog/"', source)
 
 
 if __name__ == "__main__":

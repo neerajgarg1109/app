@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import quote
 from urllib.request import urlopen
 from public_fonts import font_links
+from homepage_copy import render_homepage_copy
 from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page, comparison_excerpt
 from comparison_editorial import render_comparison
 from guide_blog import render_index as render_blog_index, render_article as render_blog_article
@@ -456,7 +457,11 @@ sitemap_urls += [f'{ORIGIN}/updates/{verified_on}/' for verified_on in verificat
 (BUILD / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(f"  <url><loc>{html.escape(url)}</loc></url>" for url in sitemap_urls) + "\n</urlset>\n")
 (BUILD / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n")
 homepage = BUILD / "index.html"
-homepage.write_text(homepage.read_text().replace("%REACT_APP_PUBLIC_APP_URL%", ORIGIN))
+home_source = homepage.read_text().replace("%REACT_APP_PUBLIC_APP_URL%", ORIGIN)
+home_source = re.sub(r'<noscript><h1>.*?</noscript>', '<noscript>Enable JavaScript for the personalised finder. The research links below work without it.</noscript>', home_source, count=1, flags=re.S)
+home_source = re.sub(r'<div id="root">.*?</div><!--cardiq-prerender-end-->', '<div id="root"></div>', home_source, count=1, flags=re.S)
+home_source = home_source.replace('<div id="root"></div>', '<div id="root">' + render_homepage_copy(CARDS, ORIGIN) + '</div><!--cardiq-prerender-end-->', 1)
+homepage.write_text(home_source)
 (BUILD / "catalog-manifest.json").write_text(json.dumps({
     "source": CATALOG_SOURCE, "origin": ORIGIN, "card_ids": [card["id"] for card in CARDS], "comparison_urls": comparison_canonicals, "priority_comparisons": [row["slug"] for row in TOP_COMPARISONS],
 }, indent=2))

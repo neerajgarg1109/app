@@ -1,0 +1,42 @@
+{
+  "headline": "Stop letting the wrong credit card cost you rewards.",
+  "subheadline": "We compare {cards} Indian credit cards across {issuers} banks and issuers. No sponsored rankings. No sugarcoated bank brochures. Check fees, MITC exclusions and estimated annual rupee value for your spending.",
+  "primaryCta": "Find My Best Card in 60 Sec →",
+  "secondaryCta": "Compare Top Cards Side-by-Side",
+  "pillars": [
+    [
+      "{cards} Cards Catalogued",
+      "Issuer-sourced fees, terms and Schedule of Charges"
+    ],
+    [
+      "No Sponsored Rankings",
+      "Compensation never determines our rankings"
+    ],
+    [
+      "Track 2026 Benefit Changes",
+      "Check lounge caps, UPI rules and utility fee exclusions"
+    ]
+  ],
+  "tools": [
+    {
+      "title": "Find Your Best Card",
+      "text": "Get a recommendation built around your actual monthly spend.",
+      "url": "/calculator/"
+    },
+    {
+      "title": "Head-to-Head Comparisons",
+      "text": "SBI Cashback vs Millennia, Airtel Axis vs Swiggy & more.",
+      "url": "/compare/"
+    },
+    {
+      "title": "The Rupee Calculator",
+      "text": "See your estimated net annual value after fees and 18% GST.",
+      "url": "/calculator/"
+    },
+    {
+      "title": "Wallet Optimizer",
+      "text": "Check which card actually gives maximum reward for a planned purchase.",
+      "url": "/#/wallet-optimizer"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "description": "Clear credit-card information for India, including fees, benefits, trade-offs, comparisons and official issuer sources.",
-  "notice": "Card names, images and trademarks belong to their respective owners. Always verify current fees, eligibility and benefits on the issuer\u2019s website before applying.",
+  "notice": "Card names, images and trademarks belong to their respective owners. Always verify current fees, eligibility and benefits on the issuer’s website before applying.",
   "groups": [
     {
       "title": "Discover cards",
@@ -82,5 +82,9 @@
         }
       ]
     }
-  ]
+  ],
+  "transparency": {
+    "heading": "Our Editorial & Financial Transparency",
+    "body": "How CardIQ Makes Money: We may earn an affiliate commission when you apply through our partner links. However, compensation never influences our rankings or comparisons. If a card has terrible fee waivers or hidden exclusion traps, we call it out anyway. Your CIBIL score is worth more than our commission."
+  }
 }

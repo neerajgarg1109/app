@@ -19,6 +19,8 @@ export default function CustomerFooter() {
   if (pathname.startsWith("/admin") || new URLSearchParams(search).get("embedded") === "1") return null;
 
   return (
+    <>
+    <section className="editorial-transparency" aria-label="Editorial and financial transparency"><h2>{CONTENT.transparency.heading}</h2><p>{CONTENT.transparency.body}</p></section>
     <footer className="customer-footer" aria-label="Site footer">
       <div className="customer-footer-inner">
         <div className="customer-footer-grid">
@@ -38,6 +40,7 @@ export default function CustomerFooter() {
         <div className="customer-footer-notice">© {new Date().getFullYear()} CardIQ. {CONTENT.notice}</div>
       </div>
     </footer>
+    </>
   );
 }
 

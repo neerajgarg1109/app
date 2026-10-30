@@ -7,20 +7,21 @@ import { Link } from "react-router-dom";
 import CARD_CATEGORIES from "../data/cardCategories.json";
 import CustomerNav from "./CustomerNav";
 import FeaturedCards from "./FeaturedCards";
+import HOME_COPY from "../data/homeCopy.json";
 import CARD_NEWS from "../data/cardNews.json";
 
 const ICONS = { ShieldCheck, Timer, BellOff };
 
 const PRIMARY_INTENTS = [
-  { title: "Find my best card", text: "Get a recommendation based on how you spend.", icon: Sparkles, action: "quiz" },
+  { title: HOME_COPY.tools[0].title, text: HOME_COPY.tools[0].text, icon: Sparkles, action: "quiz" },
   { title: "Search cards", text: "Check fees, rewards, exclusions and our review.", icon: Search, to: "/cards" },
-  { title: "Compare cards", text: "Compare a card you own with other options.", icon: GitCompare, to: "/cards?mode=compare" },
+  { title: HOME_COPY.tools[1].title, text: HOME_COPY.tools[1].text, icon: GitCompare, href: `${process.env.PUBLIC_URL}/compare/` },
   { title: "New card launches", text: "See new cards and important benefit changes.", icon: Newspaper, to: "/updates" },
 ];
 
 const MORE_INTENTS = [
-  { title: "Calculate my annual value", text: "Rank cards using your monthly spending and annual fees.", icon: Calculator, to: "/calculator" },
-  { title: "Pick a card from my wallet", text: "See which card best fits a planned purchase.", icon: Calculator, to: "/wallet-optimizer" },
+  { title: HOME_COPY.tools[2].title, text: HOME_COPY.tools[2].text, icon: Calculator, to: "/calculator" },
+  { title: HOME_COPY.tools[3].title, text: HOME_COPY.tools[3].text, icon: Calculator, to: "/wallet-optimizer" },
   { title: "Explore restricted-access cards", text: "Understand invite-only, relationship and special-channel cards.", icon: LockKeyhole, to: "/restricted-cards" },
   { title: "Browse by issuer", text: "See every catalogued card from each issuer.", icon: Building2, to: "/cards?browse=issuers" },
   { title: "Issuer help & card closure", text: "Use verified official support and closure channels.", icon: PhoneCall, to: "/help/issuers" },
@@ -30,7 +31,7 @@ const MORE_INTENTS = [
 const ALL_INTENTS = [...PRIMARY_INTENTS, ...MORE_INTENTS];
 
 export default function Landing({ onStart, onResume, resumeStep, savedResult }) {
-  const [catalogStats, setCatalogStats] = useState({ cards: null, issuers: null });
+  const [catalogStats, setCatalogStats] = useState({ cards: 268, issuers: 21 });
   const [catalogCards, setCatalogCards] = useState([]);
   const [cardUpdates, setCardUpdates] = useState([]);
   const [featuredPlacements, setFeaturedPlacements] = useState(null);
@@ -91,18 +92,16 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           <Sparkles className="h-3.5 w-3.5" /> Clear comparisons. Honest trade-offs. Built around you.
         </div>
         <h1 className="font-display text-[34px] leading-[1.1] font-extrabold sm:text-5xl lg:text-6xl" style={{ color: "var(--ciq-ink)" }}>
-          Your clearest path to the <span className="ciq-gradient-text">right credit card</span>
+          {HOME_COPY.headline}
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-[15px] leading-relaxed sm:text-base" style={{ color: "var(--ciq-ink-soft)" }}>
-          CardIQ checks {catalogStats.cards == null ? "the cards we track" : `${catalogStats.cards} cards from ${catalogStats.issuers} banks and issuers`}, weighs the fees and fine print against how you spend, and helps you find the best card for your needs.
+          {HOME_COPY.subheadline.replace('{cards}', catalogStats.cards).replace('{issuers}', catalogStats.issuers)}
         </p>
 
+        <div className="mt-6 flex flex-wrap justify-center gap-4"><button type="button" onClick={onStart} className="ciq-primary-gradient rounded-full px-6 py-3 font-semibold text-white">{HOME_COPY.primaryCta}</button><a href={`${process.env.PUBLIC_URL}/compare/`} className="rounded-full border px-6 py-3 font-semibold">{HOME_COPY.secondaryCta}</a></div>
+        <p className="mt-2 text-xs">About a minute to enter your preferences. Savings and approval depend on your spending and issuer terms.</p>
         <div className="ciq-soft-glow mx-auto mt-6 grid max-w-2xl grid-cols-3 overflow-hidden rounded-2xl border bg-white/90 text-center backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
-          {[
-            [catalogStats.cards == null ? "—" : String(catalogStats.cards), "cards catalogued"],
-            [catalogStats.issuers == null ? "—" : String(catalogStats.issuers), "issuers covered"],
-            [String(CARD_CATEGORIES.length), "card categories"],
-          ].map(([value, label], index) => (
+          {HOME_COPY.pillars.map(([value, label]) => [value.replace('{cards}', catalogStats.cards), label]).map(([value, label], index) => (
             <div key={label} className="ciq-stat px-2 py-3" style={{ borderLeft: index ? "1px solid var(--ciq-line)" : "none" }}>
               <div className="font-display text-base font-extrabold" style={{ color: "var(--ciq-ink)" }}>{value}</div>
               <div className="mt-0.5 text-[10px] leading-tight" style={{ color: "var(--ciq-ink-soft)" }}>{label}</div>
