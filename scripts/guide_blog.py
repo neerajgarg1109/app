@@ -3,6 +3,7 @@ import html
 import json
 import math
 import re
+from financial_copy import explicit_fee_tax
 from datetime import date
 from pathlib import Path
 from public_fonts import font_links
@@ -87,7 +88,7 @@ def render_index(posts, origin, share):
     categories = list(dict.fromkeys(post['category'] for post in posts))
     filters = '<button type="button" data-filter="all" aria-pressed="true">All articles</button>' + ''.join(f'<button type="button" data-filter="{escape(cat)}" aria-pressed="false">{escape(cat)}</button>' for cat in categories)
     cards = ''.join(article_card(post) for post in ordered)
-    description = 'Practical credit card guides, thoughtful shortlists and clear explanations of fees, rewards and the fine print.'
+    description = 'Find the card that fits your spending. Check fees + 18% GST, reward caps and exclusions before you apply.'
     content = f'''<section class="journal-hero wrap"><p class="eyebrow">THE CARDIQ JOURNAL</p><h1>News, offers <span>&amp; insights</span></h1><p class="hero-description">{description}</p></section>
 <div class="wrap journal-content">
 <section id="all-guides" class="article-library" aria-labelledby="library-title"><div class="library-heading"><div><p class="eyebrow">THE FULL CARDIQ LIBRARY</p><h2 id="library-title">All articles &amp; guides</h2></div><label class="search-label"><span>Search guides</span><input type="search" id="guide-search" placeholder="Search a topic or issuer…" aria-label="Search guides"></label></div>
@@ -113,7 +114,8 @@ def render_article(post, posts, origin, share):
     related = [p for p in posts if p['slug'] != post['slug'] and (p['category'] == 'Card management') == closing]
     related.sort(key=lambda p: p['category'] != post['category'])
     related_cards = ''.join(article_card(p) for p in related[:3])
-    content = f'''<article class="reading-wrap"><a class="breadcrumb" href="{back_url}">{back_label}</a><header class="article-header"><p class="eyebrow">{escape(post['category'])}</p><h1>{escape(post['title'])}</h1><p class="standfirst">{escape(post.get('standfirst', post['description']))}</p><div class="byline"><span class="author-mark">c</span><span>By <a href="{origin}/methodology/"><strong>CardIQ editorial</strong></a></span><span>·</span><span>{minutes(post['body'])} min read</span></div></header><div class="prose">{body}</div>
+    action_label = 'Compare fees. Check exclusions. Choose for your usual spending.' if not closing else 'Check your balance. Follow the issuer’s closure process.'
+    content = f'''<article class="reading-wrap"><a class="breadcrumb" href="{back_url}">{back_label}</a><header class="article-header"><p class="eyebrow">{escape(post['category'])}</p><h1>{escape(post['title'])}</h1><p class="standfirst">{escape(explicit_fee_tax(post.get('standfirst', post['description'])))}</p><p class="guide-action-label">{escape(action_label)}</p><div class="byline"><span class="author-mark">c</span><span>By <a href="{origin}/methodology/"><strong>CardIQ editorial</strong></a></span><span>·</span><span>{minutes(post['body'])} min read</span></div></header><div class="prose">{body}</div>
 <div class="article-next"><p>Ready to put this into practice?</p><a class="nav-cta" href="{escape(post['destination'])}">Explore in CardIQ <span aria-hidden="true">↗</span></a></div>{share}</article>
 <section class="wrap related-posts" aria-labelledby="related-title"><p class="eyebrow">KEEP EXPLORING</p><h2 id="related-title">A few more good reads</h2><div class="article-grid">{related_cards}</div></section>'''
     schema = post.get('schema') or {'@context': 'https://schema.org', '@type': 'Article', 'headline': post['title'], 'description': post['description'], 'url': post['url'], 'inLanguage': 'en-IN', 'author': {'@type': 'Organization', 'name': 'CardIQ'}}

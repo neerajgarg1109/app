@@ -1,5 +1,6 @@
 """Decision-focused content and crawlable research paths for public pages."""
 from html import escape
+from financial_copy import fee_copy
 from urllib.parse import quote
 
 CSS = '.card-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:0}.card-facts dt{font-weight:700}.card-facts dd{margin:4px 0 0;overflow-wrap:anywhere}.product-image{display:block;width:240px;max-width:100%;height:180px;object-fit:contain;margin:16px auto}.research-links{display:flex;flex-wrap:wrap;gap:8px 20px}.table-scroll{overflow-x:auto}.table-scroll table{min-width:540px}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #e4e2f1;padding:12px}'
@@ -80,8 +81,8 @@ def category_research(category_id, origin):
 
 
 def product_facts(card, origin, access):
-    fields = [('Joining fee', card.get('joiningFee', 'Confirm with issuer')),
-              ('Annual / renewal fee', card.get('annualFee', 'Confirm with issuer')),
+    fields = [('Joining fee', fee_copy(card, 'joiningFee')),
+              ('Annual / renewal fee', fee_copy(card)),
               ('Card network', card.get('network', 'Confirm with issuer')),
               ('Availability', (access or {}).get('accessExplanation') or card.get('availabilityNote') or 'Subject to issuer availability and approval.')]
     if card.get('secured'):

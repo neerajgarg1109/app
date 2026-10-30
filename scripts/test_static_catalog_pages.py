@@ -13,6 +13,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 from restricted_access import restricted_access
+from financial_copy import fee_copy
 BUILD = Path(os.environ.get("CARDIQ_BUILD_DIR", ROOT / "frontend" / "build"))
 MANIFEST = json.loads((BUILD / "catalog-manifest.json").read_text())
 CARD_IDS = MANIFEST["card_ids"]
@@ -91,8 +92,8 @@ class StaticCatalogTests(unittest.TestCase):
     def test_card_pages_expose_current_fees_access_and_context_without_javascript(self):
         for card_id, card in CARDS_BY_ID.items():
             source = (BUILD / 'cards' / card_id / 'index.html').read_text()
-            self.assertIn(html.escape(card['joiningFee']), source, card_id)
-            self.assertIn(html.escape(card['annualFee']), source, card_id)
+            self.assertIn(html.escape(fee_copy(card, 'joiningFee')), source, card_id)
+            self.assertIn(html.escape(fee_copy(card)), source, card_id)
             self.assertIn('Fees and application requirements', source, card_id)
             self.assertIn('Continue your research', source, card_id)
             if card.get('imageUrl'):

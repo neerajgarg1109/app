@@ -33,6 +33,14 @@ class ComparisonEngineTests(unittest.TestCase):
             self.assertTrue(all(q['name'] in body for q in faq['mainEntity']))
             self.assertEqual(body.count('subid=fallback_footer_ltf'),2)
 
+    def test_fee_copy_is_explicit_without_taxing_spend_or_rewards(self):
+        from financial_copy import fee_copy, explicit_fee_tax
+        self.assertEqual(fee_copy({'annualFeeAmount':999,'annualFee':'₹999 + GST (waived at ₹2 lakh spend)'}), '₹999 + 18% GST (waived at ₹2 lakh spend)')
+        self.assertEqual(fee_copy({'annualFeeAmount':0,'annualFee':'No annual fee'}), 'No annual fee')
+        self.assertEqual(explicit_fee_tax('Earn ₹1,000 cashback on ₹20,000 spend'), 'Earn ₹1,000 cashback on ₹20,000 spend')
+        self.assertEqual(explicit_fee_tax('₹999 + 18% GST'), '₹999 + 18% GST')
+        self.assertEqual(explicit_fee_tax('₹999 annually'), '₹999 + 18% GST annually')
+
     def test_currency_and_evidence_word_boundaries(self):
         self.assertEqual(money(200000), "₹2,00,000.00")
         self.assertEqual(money(-1234.5), "₹-1,234.50")

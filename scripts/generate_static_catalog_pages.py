@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate crawlable GitHub Pages entry documents for public catalog routes."""
 import html
+from financial_copy import fee_copy, explicit_fee_tax
 import json
 import os
 import re
@@ -133,7 +134,7 @@ def card_links(cards, source):
     return '<div class="grid">' + "".join(
         f'<article class="card">{card_artwork(card)}<h2><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">{html.escape(card["name"])}</a></h2>'
         f'<p class="muted">{html.escape(card["issuer"])}</p><p>{html.escape(card.get("rewardLine", ""))}</p>'
-        f'<p><strong>Annual fee:</strong> {html.escape(card.get("annualFee", "Not specified"))}</p>'
+        f'<p><strong>Annual fee:</strong> {html.escape(fee_copy(card))}</p>'
         f'<p><a href="{ORIGIN}/cards/{html.escape(card["id"])}/">View details</a> · '
         + (f'<a class="cta" href="{ORIGIN}/go/{quote(card["id"])}/?subid=list_card&amp;source={quote(source)}" rel="sponsored nofollow noopener" target="_blank">Apply now →</a>' if card.get('active', True) and card.get('applicationsOpen', True) else '<span>Applications closed</span>') + '</p></article>' 
         for card in cards
@@ -168,11 +169,11 @@ def editorial_analysis(card):
         )
         alternatives_section = matching_comparisons(card) + (f'<h3>Other cards to consider</h3><ul>{alternatives}</ul>' if alternatives else '')
         return (
-            f'<section><h2>CardIQ editorial view</h2><h3>Our take</h3><p>{html.escape(stored["summary"])}</p>'
+            f'<section><h2>CardIQ editorial view</h2><h3>Our take</h3><p>{html.escape(explicit_fee_tax(stored["summary"]))}</p>'
             f'<div class="grid"><div class="card"><h3>Who it suits</h3><ul>{list_html(stored.get("idealFor", []))}</ul></div>'
             f'<div class="card"><h3>Key strengths</h3><ul>{list_html(stored.get("strengths", []))}</ul></div></div>'
             f'<h3>Trade-offs to understand</h3><ul>{list_html(stored.get("tradeoffs", []))}</ul>'
-            f'<h3>CardIQ verdict</h3><p>{html.escape(stored["verdict"])}</p><p>{card_application_cta(card, "card_page_verdict")}</p>{alternatives_section}'
+            f'<h3>CardIQ verdict</h3><p>{html.escape(explicit_fee_tax(stored["verdict"]))}</p><p>{card_application_cta(card, "card_page_verdict")}</p>{alternatives_section}'
             '<p class="muted">This CardIQ editorial assessment is maintained separately from issuer facts and commercial links. CardIQ may earn a commission from some applications. Verify current terms before applying.</p></section>'
         )
     labels = {"cashback": "cashback", "shopping": "shopping", "online": "online purchases", "travel": "travel", "dining": "dining", "lounge": "airport lounge access", "rewards": "reward points", "forex": "international spending", "fuel": "fuel", "grocery": "groceries", "upi": "UPI payments", "secured": "building credit"}
