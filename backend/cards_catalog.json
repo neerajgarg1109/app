@@ -78,7 +78,11 @@
     "exclusions": [
       "Cashback excludes utilities/telecom, insurance, fuel, rent, wallets, education, jewellery, railways, gift shops, government payments, tolls, gaming and quasi-cash, among other excluded categories.",
       "Flexipay and merchant EMI transactions do not earn cashback."
-    ]
+    ],
+    "applyUrlOverride": "https://example.com/cardiq-demo/sbi-cashback-sbi",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-sbi-cashback-sbi"
   },
   {
     "id": "sbi-elite",
@@ -1018,7 +1022,11 @@
     ],
     "loungeBenefits": [
       "Complimentary domestic lounge access was discontinued in June 2025."
-    ]
+    ],
+    "applyUrlOverride": "https://example.com/cardiq-demo/axis-flipkart-axisbank-credit-card",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-axis-flipkart-axisbank-credit-card"
   },
   {
     "id": "axis-airtel-axis-bank-credit-card",
@@ -1108,7 +1116,11 @@
       "Cashback excludes utilities/telecom outside Airtel Thanks, EMI, cash advances, fuel, rent, wallets, jewellery, insurance, education, government payments, gift cards, tolls and card fees.",
       "Partner wallet loads and gift-card purchases do not earn partner value-back.",
       "Rent and wallet loads do not count toward the annual fee waiver."
-    ]
+    ],
+    "applyUrlOverride": "https://example.com/cardiq-demo/axis-airtel-axis-bank-credit-card",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-axis-airtel-axis-bank-credit-card"
   },
   {
     "id": "axis-indianoil-axis-bank-credit-card",
@@ -2970,7 +2982,11 @@
           "reason": "A similarly priced alternative for comparing reward points and international spending."
         }
       ]
-    }
+    },
+    "applyUrlOverride": "https://example.com/cardiq-demo/idfc-wow",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-idfc-wow"
   },
   {
     "id": "idfc-hpcl-power-fuel-credit-card",
@@ -3885,7 +3901,11 @@
           "reason": "A higher-fee option to compare for broader benefits around online spending and reward points."
         }
       ]
-    }
+    },
+    "applyUrlOverride": "https://example.com/cardiq-demo/hdfc-tata-neu-infinity",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-hdfc-tata-neu-infinity"
   },
   {
     "id": "hdfc-tata-neu-plus",
@@ -5249,7 +5269,11 @@
           "reason": "A higher-fee option to compare for broader benefits around reward points and airport lounge access."
         }
       ]
-    }
+    },
+    "applyUrlOverride": "https://example.com/cardiq-demo/axis-scapia-axis-bank-credit-card",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-axis-scapia-axis-bank-credit-card"
   },
   {
     "id": "axis-spicejet-axis-bank-voyage-credit-card",
@@ -5812,7 +5836,11 @@
       ]
     },
     "imageUrl": "/cards/au-ixigo-au-credit-card-52d986c582.webp",
-    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/ixigo-4?fmt=webp"
+    "imageSourceUrl": "https://aemassets.au.bank.in/is/image/aubank/ixigo-4?fmt=webp",
+    "applyUrlOverride": "https://example.com/cardiq-demo/au-ixigo-au-credit-card",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-au-ixigo-au-credit-card"
   },
   {
     "id": "au-laksya-credit-card",
@@ -14261,7 +14289,11 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and international spending."
         }
       ]
-    }
+    },
+    "applyUrlOverride": "https://example.com/cardiq-demo/hsbc-live-plus",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-hsbc-live-plus"
   },
   {
     "id": "hsbc-travelone",
@@ -14940,7 +14972,11 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
         }
       ]
-    }
+    },
+    "applyUrlOverride": "https://example.com/cardiq-demo/hdfc-millennia-credit-card",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-hdfc-millennia-credit-card"
   },
   {
     "id": "hdfc-moneyback-plus-credit-card",
@@ -15817,7 +15853,11 @@
           "reason": "A higher-fee option to compare for broader benefits around online spending and dining rewards."
         }
       ]
-    }
+    },
+    "applyUrlOverride": "https://example.com/cardiq-demo/hdfc-swiggy-hdfc-bank-credit-card",
+    "applyLinkStatus": "testing",
+    "applyPartner": "Demo placeholder — replace before activating",
+    "applyCampaignId": "demo-hdfc-swiggy-hdfc-bank-credit-card"
   },
   {
     "id": "hdfc-swiggy-ornge-hdfc-bank-credit-card",

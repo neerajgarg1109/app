@@ -20,22 +20,32 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             params=parse_qs(urlparse(response.headers['location']).query)
             assert params['campaign']==['keep']
             assert params['subid']==['original']
-            assert params['cardiq_subid']==['verdict_box_card_a']
+            assert params['cardiq_subid']==['verdict_box_card_a_sbi-cashback-vs-hdfc-millennia']
             event=await server.db.apply_events.find_one({'card_id':card['id']})
             assert event['placement_id']=='verdict_box_card_a'
             assert event['comparison_slug']=='sbi-cashback-vs-hdfc-millennia'
             assert event['link_type']=='partner'
+            assert event['tracking_sub_id']=='verdict_box_card_a_sbi-cashback-vs-hdfc-millennia'
             response=await client.get('/api/go/compare-card?subid=list_card&source=best-cashback-credit-cards-india')
             assert response.status_code==302
             assert parse_qs(urlparse(response.headers['location']).query)['source']==['best-cashback-credit-cards-india']
             event=await server.db.apply_events.find_one({'placement_id':'list_card'})
             assert event['source_page']=='best-cashback-credit-cards-india'
+            assert event['tracking_sub_id']=='list_card_best-cashback-credit-cards-india'
             assert (await client.get('/api/go/compare-card?subid=list_card&source=https://evil.example')).status_code==422
             for placement in ('card_page_hero', 'card_page_verdict', 'card_page_sticky'):
                 response=await client.get('/api/go/compare-card?subid='+placement+'&source=compare-card')
                 assert response.status_code==302
                 event=await server.db.apply_events.find_one({'placement_id':placement})
                 assert event['source_page']=='compare-card'
+            await server.db.cards.update_one({'id':card['id']},{'$set':{'applyUrlOverride':'https://partner.example/apply?campaign=keep'}})
+            response=await client.get('/api/go/compare-card?subid=list_card&pair=priority-pair&source=catalog')
+            assert parse_qs(urlparse(response.headers['location']).query)['subid']==['list_card_priority-pair']
+            response=await client.get('/api/go/compare-card')
+            assert parse_qs(urlparse(response.headers['location']).query)['subid']==['direct_click_cardiq-site']
+            await server.db.cards.update_one({'id':card['id']},{'$set':{'applyUrlOverride':'https://example.com/cardiq-demo/compare-card','applyLinkStatus':'testing'}})
+            response=await client.get('/api/go/compare-card?subid=direct_click')
+            assert response.headers['location']=='https://issuer.example/card'
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyLinkStatus':'paused'}})
             response=await client.get('/api/go/compare-card?subid=calculator_winner_cta&pair=test-pair&url=https://evil.example')
             assert response.headers['location']=='https://issuer.example/card'

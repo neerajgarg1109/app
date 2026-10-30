@@ -698,7 +698,7 @@ def test_expansion_preserves_existing_92_and_adds_distinct_products():
     # Preserve the original products; baseline includes the targeted issuer-source
     # corrections recorded in docs/catalog-fact-checks-2026-10-26.json.
     frozen = [
-        {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial", "homepagePlacement"}}
+        {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial", "homepagePlacement", "applyUrlOverride", "applyLinkStatus", "applyPartner", "applyCampaignId"}}
         for card in CARDS[:92]
     ]
     encoded = json.dumps(frozen, sort_keys=True, ensure_ascii=False).encode()
