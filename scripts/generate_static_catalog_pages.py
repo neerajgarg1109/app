@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import quote
 from urllib.request import urlopen
 from public_fonts import font_links
-from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page
+from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page, comparison_excerpt
 from comparison_editorial import render_comparison
 from guide_blog import render_index as render_blog_index, render_article as render_blog_article
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
@@ -262,7 +262,7 @@ for route_slug, left_id, right_id, custom in comparison_routes:
     if route_slug != meta['slug']:
         continue  # Preserve old URLs with full content and the preferred canonical; no duplicate sitemap entry.
     comparison_canonicals.append(canonical)
-    comparison_posts.append({'slug':route_slug,'title':f'{left["name"]} vs {right["name"]}','description':meta['metaDescription'],'url':canonical,'destination':destination,'body':body,'category':'Card comparisons','artwork':[{'url':card['imageUrl'],'name':card['name']} for card in (left,right) if card.get('imageUrl')]})
+    comparison_posts.append({'slug':route_slug,'title':f'{left["name"]} vs {right["name"]}','description':comparison_excerpt(left, right),'priorityRank':next((i for i,row in enumerate(TOP_COMPARISONS) if row['slug']==route_slug),None),'url':canonical,'destination':destination,'body':body,'category':'Card comparisons','artwork':[{'url':card['imageUrl'],'name':card['name']} for card in (left,right) if card.get('imageUrl')]})
     comparison_links.append(f'<li><a href="{canonical}">{html.escape(left["name"])} vs {html.escape(right["name"])}</a></li>')
 
 compare_description = f"Browse {len(comparison_canonicals)} maintained Indian credit card comparisons with fees, reward scenarios, exclusions and issuer sources."

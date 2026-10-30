@@ -141,9 +141,34 @@ class StaticCatalogTests(unittest.TestCase):
         cls.pages = generated_pages()
         cls.documents = {path: Document(path.read_text()) for path in cls.pages}
 
+    def test_guides_prioritizes_curated_comparisons_and_unique_factual_excerpts(self):
+        from comparison_engine import TOP_COMPARISONS, comparison_excerpt
+        source = (BUILD / 'guides/index.html').read_text()
+        cards = re.findall(r'<article class="post-card".*?</article>', source, re.S)
+        self.assertGreater(len(cards), 20)
+        for card, priority in zip(cards[:20], TOP_COMPARISONS):
+            self.assertIn('/compare/' + priority['slug'] + '/', card)
+            self.assertIn('Popular Comparison', card)
+        self.assertNotIn('Popular Comparison', ''.join(cards[20:]))
+        snippets = []
+        for row in TOP_COMPARISONS:
+            excerpt = comparison_excerpt(CARDS_BY_ID[row['cardA']], CARDS_BY_ID[row['cardB']])
+            self.assertIn(html.escape(excerpt), source)
+            self.assertIn('annual fee', excerpt)
+            self.assertNotIn('See dated issuer sources and a spending scenario', excerpt)
+            snippets.append(excerpt)
+        self.assertEqual(len(set(snippets)), 20)
+        self.assertNotIn('/#/updates', source)
+        self.assertNotIn('/#/restricted-cards', source)
+        hydration = (BUILD / 'public-footer.js').read_text()
+        self.assertIn("'/updates': '/guides/new-credit-cards/'", hydration)
+        self.assertIn("'/restricted-cards': '/guides/invite-only-credit-cards/'", hydration)
+
     def test_every_generated_page_has_the_complete_shared_main_menu(self):
         items = json.loads((ROOT / "frontend/src/data/mainNavigation.json").read_text())
         expected = {ORIGIN + ("/" if item["to"] == "/" else "/#" + item["to"]) if item.get("to") else ORIGIN + item["href"] for item in items}
+        expected -= {ORIGIN + '/#/updates', ORIGIN + '/#/restricted-cards'}
+        expected |= {ORIGIN + '/guides/new-credit-cards/', ORIGIN + '/guides/invite-only-credit-cards/'}
         for path in self.pages:
             matches = re.findall(r'<nav[^>]*aria-label="Main navigation"[^>]*>(.*?)</nav>', path.read_text(), re.S)
             self.assertEqual(len(matches), 1, path)

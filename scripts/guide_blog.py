@@ -57,9 +57,10 @@ def article_card(post, featured=False):
     category, title, url = (escape(post[key]) for key in ('category', 'title', 'url'))
     read_label = 'Read the comparison' if post['category'] == 'Card comparisons' else 'Read the guide'
     data = f'data-topic="{category}" data-search="{escape(post["title"] + " " + post["description"] + " " + post["category"])}"'
+    badge = '<span class="popular-comparison">Popular Comparison</span>' if post.get('priorityRank') is not None else ''
     return f'''<article class="{'featured-post' if featured else 'post-card'}" {data}>
 <a class="cover-link" href="{url}" aria-label="Read {title}">{cover(post)}</a>
-<div class="post-card-content"><div class="article-meta"><span>{'Editor’s pick · ' if featured else ''}{category}</span><span>{minutes(post['body'])} min read</span></div>
+<div class="post-card-content">{badge}<div class="article-meta"><span>{'Editor’s pick · ' if featured else ''}{category}</span><span>{minutes(post['body'])} min read</span></div>
 <h{'2' if featured else '3'}><a href="{url}">{title}</a></h{'2' if featured else '3'}><p>{escape(post['description'])}</p>
 <a class="read-link" href="{url}">{read_label} <span aria-hidden="true">↗</span></a></div></article>'''
 
@@ -77,12 +78,12 @@ def news_section(origin):
 <div class="post-card-content"><div class="article-meta"><span>{escape(item['statusLabel'])}</span><time datetime="{checked.isoformat()}">Verified {label}</time></div><h3><a href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">{escape(item['headline'])}</a></h3><p>{escape(item['summary'])}</p><p class="news-caveat">{escape(item['availabilityNote'])}</p><a class="read-link" href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">Read at {escape(item['sourceLabel'])} <span aria-hidden="true">↗</span></a></div></article>''')
     if not cards:
         return ''
-    return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">Top News <span>&amp; Offers</span></h2><p>Card announcements, benefit changes and offers, with official sources.</p></div><a class="read-link" href="{origin}/#/updates">View all updates <span aria-hidden="true">→</span></a></div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Availability and offer eligibility remain subject to issuer terms.</p></section>'''
+    return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">Top News <span>&amp; Offers</span></h2><p>Card announcements, benefit changes and offers, with official sources.</p></div><a class="read-link" href="{origin}/guides/new-credit-cards/">View all updates <span aria-hidden="true">→</span></a></div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Availability and offer eligibility remain subject to issuer terms.</p></section>'''
 
 
 def render_index(posts, origin, share):
     posts = [post for post in posts if post['category'] != 'Card management']
-    ordered = sorted(posts, key=lambda post: post['category'] != 'Choosing a card')
+    ordered = sorted(posts, key=lambda post: (0, post['priorityRank']) if post.get('priorityRank') is not None else (1, post['slug']) if post['category'] == 'Card comparisons' else (2, post['slug']))
     categories = list(dict.fromkeys(post['category'] for post in posts))
     filters = '<button type="button" data-filter="all" aria-pressed="true">All articles</button>' + ''.join(f'<button type="button" data-filter="{escape(cat)}" aria-pressed="false">{escape(cat)}</button>' for cat in categories)
     cards = ''.join(article_card(post) for post in ordered)
@@ -94,7 +95,7 @@ def render_index(posts, origin, share):
 <div class="article-grid">{cards}</div><div id="no-results" class="empty-state" hidden><h3>No guides found</h3><p>Try another topic or issuer.</p><button type="button" id="reset-search">Show all guides</button></div></section>
 {news_section(origin)}
 <section class="editorial-note"><p class="eyebrow">A LITTLE CLARITY GOES A LONG WAY</p><h2>Useful advice, with the fine print.</h2><p>Our guides connect you to maintained card details and official issuer sources. Shortlists are editorial starting points, not approval promises or paid rankings.</p><a class="read-link" href="{origin}/methodology/">How we research cards <span aria-hidden="true">↗</span></a></section><div class="index-share">{share}</div></div>'''
-    schema = {'@context': 'https://schema.org', '@type': 'Blog', 'name': 'CardIQ Journal', 'description': description, 'url': f'{origin}/guides/', 'blogPost': [{'@type': 'BlogPosting', 'headline': p['title'], 'url': p['url'], 'description': p['description']} for p in posts]}
+    schema = {'@context': 'https://schema.org', '@type': 'Blog', 'name': 'CardIQ Journal', 'description': description, 'url': f'{origin}/guides/', 'blogPost': [{'@type': 'BlogPosting', 'headline': p['title'], 'url': p['url'], 'description': p['description']} for p in ordered]}
     script = '<script>' + (TEMPLATES / 'guide-blog.js').read_text() + '</script>'
     return shell('Credit Card Guides & Comparisons in India | CardIQ', description, f'{origin}/guides/', content, origin, schema, script)
 

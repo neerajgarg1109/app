@@ -74,6 +74,25 @@ def short_name(card):
     return name
 
 
+def comparison_excerpt(left, right):
+    """Use maintained issuer attributes, without inferring LTF from a zero fee alone."""
+    facts = []
+    for card in (left, right):
+        fee = card.get('annualFeeAmount')
+        fee_text = 'annual fee not verified' if fee is None else ('no annual fee' if fee == 0 else money(fee).removesuffix('.00') + ' annual fee before GST')
+        if fee == 0 and 'lifetime' in str(card.get('annualFee', '')).lower():
+            fee_text += ' (lifetime-free offer; check eligibility)'
+        facts.append(f"{short_name(card)}: {fee_text}")
+    # Keep a real pair-specific benefit, rather than a common editorial template.
+    detail = next((str(c.get('forexMarkup')) for c in (left, right) if c.get('forexMarkup')), '')
+    if detail:
+        source = next(c for c in (left, right) if c.get('forexMarkup'))
+        facts.append(f"{short_name(source)} forex: {detail}")
+    elif left.get('rewardLine'):
+        facts.append(f"{short_name(left)} rewards: {left['rewardLine']}")
+    return '. '.join(facts).rstrip('.') + '.'
+
+
 def generateComparisonSeoMeta(cardA, cardB, customOverride=None, origin='https://findmybest.cards'):
     priority = next((p for p in TOP_COMPARISONS if {p['cardA'], p['cardB']} == {cardA['id'], cardB['id']}), {})
     custom = {**priority, **(customOverride or {})}
