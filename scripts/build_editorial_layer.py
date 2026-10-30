@@ -105,7 +105,7 @@ def editorial(card, cards):
         verdict = f"Shortlist it only if you can repeatedly use the premium benefits and comfortably recover the fee. Pay particular attention to this condition: {tradeoffs[0]}"
     else:
         summary = f"{card['name']} is a paid card focused on {audience}, charging ₹{fee:,.0f} annually before GST."
-        verdict = f"It deserves a place on the shortlist when your normal spending makes {sentence(card.get('rewardLine')).rstrip('.').lower()} valuable enough to clear the fee. Factor in this condition: {tradeoffs[0]}"
+        verdict = f"It deserves a place on the shortlist when your normal spending makes {sentence(card.get('rewardLine')).rstrip('.')} valuable enough to clear the fee. Factor in this condition: {tradeoffs[0]}"
 
     ideal_for = [f"People who prioritise {label}." for label in labels[:2]]
     if card.get("secured"):

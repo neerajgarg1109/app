@@ -102,7 +102,19 @@ def clean_generated_routes():
                 shutil.rmtree(child)
 
 
+def category_title(category):
+    label = category['label']
+    return label if label.lower().endswith('credit cards') else label + ' credit cards'
+
+
+def has_current_lounge(card):
+    details = ' '.join([*(card.get('loungeBenefits') or []), *[line for line in card.get('highlights', []) if 'lounge' in line.lower()]])
+    return bool(card.get('active', True) and card.get('applicationsOpen', True) and 'lounge' in details.lower() and not re.search(r'discontinued|no lounge|not eligible|none', details, re.I))
+
+
 def category_match(card, definition):
+    if definition["id"] in ("domestic-lounge", "international-lounge") and not has_current_lounge(card):
+        return False
     if definition.get("id") == "lifetime-free" and card.get("lifetimeFree") is False:
         return False
     text = " ".join(str(value) for value in [card.get("name"), card.get("rewardLine"), card.get("feeType"), card.get("network"), *(card.get("bestFor") or []), *(card.get("highlights") or [])]).lower()
@@ -276,8 +288,8 @@ for category in CATEGORIES:
     published_categories.append(category)
     description = category["description"]
     destination = f'{ORIGIN}/#/cards?category={category["id"]}'
-    body = f'<h1>{html.escape(category["label"])} credit cards in India</h1><p>{html.escape(description)}</p>{category_research(category["id"], ORIGIN)}<p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches, "categories-" + category["id"])}'
-    write(Path("categories") / category["id"], page(f'{category["label"]} credit cards in India | CardIQ', description, f'{ORIGIN}/categories/{category["id"]}/', destination, body))
+    body = f'<h1>{html.escape(category_title(category))} in India</h1><p>{html.escape(description)}</p>{category_research(category["id"], ORIGIN)}<p class="muted">{len(matches)} matching cards · Details checked against issuer or official partner sources.</p>{card_links(matches, "categories-" + category["id"])}'
+    write(Path("categories") / category["id"], page(f'{category_title(category)} in India | CardIQ', description, f'{ORIGIN}/categories/{category["id"]}/', destination, body))
 
 comparison_links = []
 comparison_posts = []
@@ -331,7 +343,7 @@ updates_description = "Follow CardIQ’s dated Indian credit card catalogue chec
 updates_body = f'<h1>CardIQ catalogue updates</h1><p>{html.escape(updates_description)}</p><ul>{"".join(update_links)}</ul>'
 write(Path("updates"), page("Indian credit card catalogue updates | CardIQ", updates_description, f"{ORIGIN}/updates/", f"{ORIGIN}/#/cards?sort=recent", updates_body))
 
-lounge_cards = [card for card in CARDS if "lounge" in " ".join([*(card.get("bestFor") or []), *(card.get("highlights") or []), *(card.get("loungeBenefits") or [])]).lower()]
+lounge_cards = [card for card in CARDS if has_current_lounge(card)]
 lounge_description = f"Explore {len(lounge_cards)} Indian credit cards whose sourced catalogue details mention airport lounge access or lounge benefits."
 lounge_body = f'<h1>Airport lounge credit cards in India</h1><p>{html.escape(lounge_description)}</p><p class="muted">Access rules can depend on airport, terminal, network, spend thresholds and quarterly limits. Confirm current eligibility in the linked issuer terms before travelling.</p>{card_links(lounge_cards, "lounges")}'
 write(Path("lounges"), page("Airport lounge credit cards in India | CardIQ", lounge_description, f"{ORIGIN}/lounges/", f"{ORIGIN}/#/cards?category=travel", lounge_body))
@@ -377,7 +389,7 @@ for guide_slug, guide_title, category_id, guidance in editorial_guides:
     matches = [card for card in CARDS if card.get("active", True) and card.get("applicationsOpen", True) and not restricted_access(card) and category_match(card, definition) and shortlist_matches(card, category_id)]
     matches.sort(key=lambda card: (-len(card.get("sourceUrls") or []), -len(card.get("highlights") or []), -float(card.get("rating") or 0), card["name"]))
     shortlist = matches[:12]
-    description = f"CardIQ’s sourced shortlist of {len(shortlist)} {definition['label'].lower()} credit cards in India, with fees, benefits and important trade-offs to verify."
+    description = f"CardIQ’s sourced shortlist of {len(shortlist)} {category_title(definition).lower()} in India, with fees, benefits and important trade-offs to verify."
     canonical = f"{ORIGIN}/guides/{guide_slug}/"
     destination = f"{ORIGIN}/#/cards?category={category_id}"
     body = f'''<h1>{html.escape(guide_title)}</h1><p>{html.escape(description)}</p>
@@ -417,7 +429,7 @@ for post in guide_posts:
     write(Path("guides") / post["slug"], render_blog_article(post, guide_posts, ORIGIN, social_links(post["title"], post["url"])))
 write(Path("guides"), render_blog_index(guide_posts + comparison_posts, ORIGIN, social_links("CardIQ Journal", f"{ORIGIN}/guides/")))
 
-category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category["label"])} credit cards</a></li>' for category in published_categories)
+category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category_title(category))}</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
 catalog_body = f'''<h1>Explore Indian credit cards</h1><p>Browse CardIQ’s sourced catalogue by use case or issuer. Each card page brings together fees, rewards, important limitations, source links and a transparent editorial view.</p>
 <p><a class="cta" href="{ORIGIN}/calculator/">Estimate annual card value</a></p>

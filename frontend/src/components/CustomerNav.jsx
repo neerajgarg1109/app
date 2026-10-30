@@ -9,14 +9,15 @@ export default function CustomerNav({ onHome } = {}) {
     <nav className="ciq-container ciq-container--wide" aria-label="Main navigation">
       <div className="grid grid-cols-2 gap-2 pb-2 sm:flex sm:flex-wrap">
         {NAV_ITEMS.map((item) => {
-          const active = item.to ? isActive(item.to, location.pathname, location.search) : false;
+          const current = location.pathname;
+          const active = item.href === "/" ? current === "/" : item.href === "/catalog/" ? current.startsWith("/cards") : item.href === "/calculator/" ? current.startsWith("/calculator") : false;
           const className = "ciq-press rounded-xl border bg-white px-3 py-2 text-center text-xs font-semibold sm:rounded-full sm:text-sm";
           const style = {
             borderColor: active ? "var(--ciq-teal-600)" : "var(--ciq-line)",
             background: active ? "#f2faf7" : "#fff",
             color: active ? "var(--ciq-teal)" : "var(--ciq-ink)",
           };
-          if (item.href) return <a key={item.label} href={`${process.env.PUBLIC_URL}${item.href}`} className={className} style={style}>{item.label}</a>;
+          if (item.href) return <a key={item.label} href={`${process.env.PUBLIC_URL}${item.href}`} onClick={item.href === "/" && onHome ? (event) => { event.preventDefault(); onHome(); } : undefined} aria-current={active ? "page" : undefined} className={className} style={style}>{item.label}</a>;
           return <Link key={item.label} to={item.to} onClick={item.to === "/" ? onHome : undefined} aria-current={active ? "page" : undefined} className={className} style={style}>{item.label}</Link>;
         })}
       </div>

@@ -98,7 +98,7 @@ export default function Landing({ onStart, onResume, resumeStep, savedResult }) 
           {HOME_COPY.subheadline.replace('{cards}', catalogStats.cards).replace('{issuers}', catalogStats.issuers)}
         </p>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-4"><button type="button" onClick={onStart} className="ciq-primary-gradient rounded-full px-6 py-3 font-semibold text-white">{HOME_COPY.primaryCta}</button><a href={`${process.env.PUBLIC_URL}/compare/`} className="rounded-full border px-6 py-3 font-semibold">{HOME_COPY.secondaryCta}</a></div>
+        <div className="mt-6 flex flex-wrap justify-center gap-4"><button type="button" onClick={() => { window.location.href = `${process.env.PUBLIC_URL}/calculator/`; }} className="ciq-primary-gradient rounded-full px-6 py-3 font-semibold text-white">{HOME_COPY.primaryCta}</button><a href={`${process.env.PUBLIC_URL}/compare/`} className="rounded-full border px-6 py-3 font-semibold">{HOME_COPY.secondaryCta}</a></div>
         <p className="mt-2 text-xs">About a minute to enter your preferences. Savings and approval depend on your spending and issuer terms.</p>
         <div className="ciq-soft-glow mx-auto mt-6 grid max-w-2xl grid-cols-3 overflow-hidden rounded-2xl border bg-white/90 text-center backdrop-blur" style={{ borderColor: "var(--ciq-line)" }}>
           {HOME_COPY.pillars.map(([value, label]) => [value.replace('{cards}', catalogStats.cards), label]).map(([value, label], index) => (

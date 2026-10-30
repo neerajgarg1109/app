@@ -215,6 +215,25 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertNotIn('100% approval-rate FD cards', text)
             self.assertNotIn('Cash in Pocket', text)
 
+    def test_six_template_regressions(self):
+        catalog = (BUILD / 'catalog/index.html').read_text()
+        for label in ('First-Time &amp; Beginner Credit Cards', 'Student Credit Cards', 'Co-Branded Credit Cards', 'Fintech &amp; App-Based Credit Cards', 'Hotel &amp; Stay Credit Cards', 'Grocery &amp; Supermarket Credit Cards', 'Utility Bill Payment Credit Cards', 'Insurance Payment Credit Cards', 'Education &amp; School Fee Credit Cards', 'Rent Payment Credit Cards'):
+            self.assertIn(label, catalog)
+        lounge = (BUILD / 'lounges/index.html').read_text()
+        self.assertNotIn('/cards/axis-airtel-axis-bank-credit-card/', lounge)
+        for category in ('domestic-lounge', 'international-lounge'):
+            self.assertNotIn('/cards/axis-airtel-axis-bank-credit-card/', (BUILD / 'categories' / category / 'index.html').read_text())
+        comparison = (BUILD / 'compare/sbi-cashback-vs-hdfc-millennia/index.html').read_text()
+        self.assertNotIn('+ 18% GST annually before GST', comparison)
+        for label in ('Utility bills &amp; telecom','Insurance premiums','Fuel &amp; rent','Gold / jewellery','School / education'):
+            row = next(r for r in re.findall(r'<tr>.*?</tr>', comparison, re.S) if label in r)
+            self.assertNotIn('No cashback on utilities', row)
+            self.assertIn('Cashback excludes', row)
+        ace = (BUILD / 'cards/axis-axis-bank-ace-credit-card/index.html').read_text()
+        self.assertIn('subid=card_page_hero', ace)
+        self.assertIn('/compare/', ace)
+        self.assertIn('Our Editorial &amp; Financial Transparency', ace)
+
     def test_comparison_index_priority_order_and_list_application_links(self):
         from comparison_engine import TOP_COMPARISONS
         from urllib.parse import parse_qs
@@ -241,8 +260,6 @@ class StaticCatalogTests(unittest.TestCase):
     def test_every_generated_page_has_the_complete_shared_main_menu(self):
         items = json.loads((ROOT / "frontend/src/data/mainNavigation.json").read_text())
         expected = {ORIGIN + ("/" if item["to"] == "/" else "/#" + item["to"]) if item.get("to") else ORIGIN + item["href"] for item in items}
-        expected -= {ORIGIN + '/#' + route for route in ('/updates', '/restricted-cards', '/cards', '/cards?mode=compare', '/calculator')}
-        expected |= {ORIGIN + route for route in ('/guides/new-credit-cards/', '/guides/invite-only-credit-cards/', '/catalog/', '/compare/', '/calculator/')}
         for path in self.pages:
             matches = re.findall(r'<nav[^>]*aria-label="Main navigation"[^>]*>(.*?)</nav>', path.read_text(), re.S)
             self.assertEqual(len(matches), 1, path)

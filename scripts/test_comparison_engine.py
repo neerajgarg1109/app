@@ -40,6 +40,7 @@ class ComparisonEngineTests(unittest.TestCase):
         self.assertEqual(explicit_fee_tax('Earn ₹1,000 cashback on ₹20,000 spend'), 'Earn ₹1,000 cashback on ₹20,000 spend')
         self.assertEqual(explicit_fee_tax('₹999 + 18% GST'), '₹999 + 18% GST')
         self.assertEqual(explicit_fee_tax('₹999 annually'), '₹999 + 18% GST annually')
+        self.assertEqual(explicit_fee_tax('charging ₹999 annually before GST'), 'charging ₹999 + 18% GST annually')
 
     def test_currency_and_evidence_word_boundaries(self):
         self.assertEqual(money(200000), "₹2,00,000.00")

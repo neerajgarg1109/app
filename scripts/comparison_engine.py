@@ -154,6 +154,10 @@ def evidence(card):
 def known_text(card, terms, fallback='Not verified in the maintained record. Check the linked issuer terms.'):
     lines = [card.get('rewardLine',''), *(card.get('highlights') or []), *(card.get('exclusions') or []), *(card.get('loungeBenefits') or []), card.get('forexMarkup','')]
     found = list(dict.fromkeys(line for line in lines if line and any(re.search(r'\b' + re.escape(t), line.lower()) for t in terms)))
+    if terms == ['utilit','telecom'] or terms in (['insurance'], ['fuel','rent'], ['gold purchases','jewellery','jewelry'], ['education','school']):
+        exclusions = [line for line in found if re.search(r'no cashback|exclud|no reward|do not earn', line, re.I)]
+        if exclusions:
+            return max(exclusions, key=lambda line: (len(set(re.findall(r'[a-z]+', line.lower()))), len(line)))
     return ' '.join(found) or fallback
 
 

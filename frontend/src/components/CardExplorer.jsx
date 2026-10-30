@@ -204,6 +204,10 @@ export default function CardExplorer() {
 export function matchesCategory(card, category) {
   const definition = CARD_CATEGORIES.find((item) => item.id === category);
   if (!definition) return true;
+  if (["domestic-lounge", "international-lounge"].includes(category)) {
+    const lounge = [...(card.loungeBenefits || []), ...(card.highlights || []).filter(line => /lounge/i.test(line))].join(" ");
+    if (card.active === false || card.applicationsOpen === false || !/lounge/i.test(lounge) || /discontinued|no lounge|not eligible|none/i.test(lounge)) return false;
+  }
   if (category === "lifetime-free" && card.lifetimeFree === false) return false;
   const text = [card.name, card.rewardLine, card.feeType, card.network, ...(card.bestFor || []), ...(card.highlights || [])].join(" ").toLowerCase();
   const checks = [];

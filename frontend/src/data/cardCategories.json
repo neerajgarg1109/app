@@ -1,34 +1,309 @@
 [
-  {"id":"cashback","label":"Cashback","description":"Compare cards that return eligible spending as direct cashback, including caps, exclusions and annual fees.","keywords":["cashback"]},
-  {"id":"rewards","label":"Rewards","description":"Compare reward-point cards by earn rate, redemption currency, fees and important exclusions.","keywords":["reward point","rewards","points per"]},
-  {"id":"lifetime-free","label":"Lifetime free","description":"Explore cards with no joining or annual fee and compare the rewards still available without a recurring charge.","annualFeeMax":0},
-  {"id":"low-fee","label":"Low annual fee","description":"Compare accessible cards charging no more than ₹500 annually before taxes and fee waivers.","annualFeeMax":500},
-  {"id":"premium","label":"Premium","description":"Compare premium cards with higher fees, travel privileges, milestone benefits and enhanced rewards.","annualFeeMin":3000},
-  {"id":"super-premium","label":"Super premium","description":"Compare top-tier cards charging ₹10,000 or more annually and assess whether their premium benefits justify the fee.","annualFeeMin":10000},
-  {"id":"travel","label":"Travel","description":"Compare cards offering travel rewards, airline or hotel benefits, lounge access and lower foreign-currency costs.","keywords":["travel","airline","flight","hotel","air miles","airmiles"]},
-  {"id":"domestic-lounge","label":"Domestic lounge","description":"Compare cards with domestic airport lounge access, including visit limits and spending conditions.","keywords":["domestic lounge","airport lounge"]},
-  {"id":"international-lounge","label":"International lounge","description":"Compare cards providing international airport lounge access and review network or programme conditions.","keywords":["international lounge","priority pass"]},
-  {"id":"low-forex","label":"Low forex markup","description":"Compare cards designed to reduce foreign-currency transaction costs for international purchases and travel.","keywords":["forex","foreign-currency","foreign currency","international transaction"]},
-  {"id":"airline","label":"Airline and air miles","description":"Compare airline-focused and air-mile cards by accelerated earn rates, transfer partners and travel conditions.","keywords":["airline","air india","indigo","vistara","emirates","etihad","air miles","airmiles","bluchips"]},
-  {"id":"hotel","label":"Hotels","description":"Compare cards offering hotel rewards, memberships, room benefits and accelerated hotel booking value.","keywords":["hotel","marriott","taj","club vistara"]},
-  {"id":"fuel","label":"Fuel","description":"Compare fuel cards by accelerated rewards, surcharge waivers, eligible outlets and monthly caps.","keywords":["fuel","petrol","bpcl","indianoil","hpcl"]},
-  {"id":"online-shopping","label":"Online shopping","description":"Compare cards rewarding online purchases across marketplaces, brand partners and general e-commerce spending.","keywords":["online","flipkart","amazon","myntra","shopping"]},
-  {"id":"dining","label":"Dining and food delivery","description":"Compare cards rewarding restaurants, dining memberships and food-delivery purchases.","keywords":["dining","restaurant","swiggy","zomato","food delivery","eazydiner"]},
-  {"id":"grocery","label":"Groceries","description":"Compare cards offering accelerated rewards or cashback on supermarket and grocery purchases.","keywords":["grocery","groceries","supermarket"]},
-  {"id":"utilities","label":"Utility bills","description":"Compare cards that reward eligible electricity, water, gas, telecom and other recurring utility payments.","keywords":["utilities","utility","bill payment","electricity"]},
-  {"id":"entertainment","label":"Movies and entertainment","description":"Compare cards providing movie offers, entertainment rewards and ticket-booking benefits.","keywords":["movie","entertainment","pvr","inox","bookmyshow"]},
-  {"id":"health-wellness","label":"Health and wellness","description":"Compare cards offering pharmacy, healthcare, fitness or wellness-related rewards and privileges.","keywords":["health","pharmacy","medical","fitness","wellness","apollo"]},
-  {"id":"golf","label":"Golf","description":"Compare cards offering complimentary golf rounds, lessons or related premium privileges.","keywords":["golf"]},
-  {"id":"rupay-upi","label":"RuPay and UPI","description":"Compare RuPay credit cards that may be linked to supported UPI apps, alongside their fees and rewards.","keywords":["rupay","upi"]},
-  {"id":"secured","label":"Secured and FD-backed","description":"Compare cards issued against a fixed deposit for customers building or rebuilding their credit profile.","secured":true,"keywords":["fixed deposit","secured"]},
-  {"id":"beginner","label":"First credit card","description":"Compare accessible starter cards with simpler fees and rewards for customers beginning their credit journey.","keywords":["starter","beginner","first credit"],"creditReq":"new"},
-  {"id":"student","label":"Students","description":"Explore cards and secured options relevant to students or customers without an established credit history.","keywords":["student","no credit history"],"creditReq":"new"},
-  {"id":"co-branded","label":"Co-branded cards","description":"Compare cards created with airlines, retailers, fintechs and lifestyle brands, including partner-specific limitations.","coBranded":true},
-  {"id":"fintech","label":"Fintech cards","description":"Compare app-led and fintech-partnered cards while clearly identifying the regulated issuing bank.","fintech":true},
-  {"id":"railway","label":"Railway travel","description":"Compare cards offering railway booking rewards, IRCTC benefits or railway lounge access.","keywords":["railway","irctc","train"]},
-  {"id":"insurance","label":"Insurance payments","description":"Compare cards whose published terms address insurance spending, rewards or exclusions.","keywords":["insurance"]},
-  {"id":"education","label":"Education payments","description":"Compare cards whose terms specifically address school, college or education-payment rewards and exclusions.","keywords":["education","school"]},
-  {"id":"rent","label":"Rent payments","description":"Compare cards whose published terms disclose how rent transactions are treated for rewards or exclusions.","keywords":["rent","rental"]},
-  {"id":"concierge","label":"Concierge services","description":"Compare premium cards providing concierge assistance for travel, dining and lifestyle requests.","keywords":["concierge"]},
-  {"id":"roadside-assistance","label":"Roadside assistance","description":"Compare cards offering vehicle breakdown, towing or emergency roadside-assistance benefits.","keywords":["roadside","towing"]}
+  {
+    "id": "cashback",
+    "label": "Cashback",
+    "description": "Compare cards that return eligible spending as direct cashback, including caps, exclusions and annual fees.",
+    "keywords": [
+      "cashback"
+    ]
+  },
+  {
+    "id": "rewards",
+    "label": "Rewards",
+    "description": "Compare reward-point cards by earn rate, redemption currency, fees and important exclusions.",
+    "keywords": [
+      "reward point",
+      "rewards",
+      "points per"
+    ]
+  },
+  {
+    "id": "lifetime-free",
+    "label": "Lifetime free",
+    "description": "Explore cards with no joining or annual fee and compare the rewards still available without a recurring charge.",
+    "annualFeeMax": 0
+  },
+  {
+    "id": "low-fee",
+    "label": "Low annual fee",
+    "description": "Compare accessible cards charging no more than ₹500 annually before taxes and fee waivers.",
+    "annualFeeMax": 500
+  },
+  {
+    "id": "premium",
+    "label": "Premium",
+    "description": "Compare premium cards with higher fees, travel privileges, milestone benefits and enhanced rewards.",
+    "annualFeeMin": 3000
+  },
+  {
+    "id": "super-premium",
+    "label": "Super premium",
+    "description": "Compare top-tier cards charging ₹10,000 or more annually and assess whether their premium benefits justify the fee.",
+    "annualFeeMin": 10000
+  },
+  {
+    "id": "travel",
+    "label": "Travel",
+    "description": "Compare cards offering travel rewards, airline or hotel benefits, lounge access and lower foreign-currency costs.",
+    "keywords": [
+      "travel",
+      "airline",
+      "flight",
+      "hotel",
+      "air miles",
+      "airmiles"
+    ]
+  },
+  {
+    "id": "domestic-lounge",
+    "label": "Domestic lounge",
+    "description": "Compare cards with domestic airport lounge access, including visit limits and spending conditions.",
+    "keywords": [
+      "domestic lounge",
+      "airport lounge"
+    ]
+  },
+  {
+    "id": "international-lounge",
+    "label": "International lounge",
+    "description": "Compare cards providing international airport lounge access and review network or programme conditions.",
+    "keywords": [
+      "international lounge",
+      "priority pass"
+    ]
+  },
+  {
+    "id": "low-forex",
+    "label": "Low forex markup",
+    "description": "Compare cards designed to reduce foreign-currency transaction costs for international purchases and travel.",
+    "keywords": [
+      "forex",
+      "foreign-currency",
+      "foreign currency",
+      "international transaction"
+    ]
+  },
+  {
+    "id": "airline",
+    "label": "Airline and air miles",
+    "description": "Compare airline-focused and air-mile cards by accelerated earn rates, transfer partners and travel conditions.",
+    "keywords": [
+      "airline",
+      "air india",
+      "indigo",
+      "vistara",
+      "emirates",
+      "etihad",
+      "air miles",
+      "airmiles",
+      "bluchips"
+    ]
+  },
+  {
+    "id": "hotel",
+    "label": "Hotel & Stay Credit Cards",
+    "description": "Compare cards offering hotel rewards, memberships, room benefits and accelerated hotel booking value.",
+    "keywords": [
+      "hotel",
+      "marriott",
+      "taj",
+      "club vistara"
+    ]
+  },
+  {
+    "id": "fuel",
+    "label": "Fuel",
+    "description": "Compare fuel cards by accelerated rewards, surcharge waivers, eligible outlets and monthly caps.",
+    "keywords": [
+      "fuel",
+      "petrol",
+      "bpcl",
+      "indianoil",
+      "hpcl"
+    ]
+  },
+  {
+    "id": "online-shopping",
+    "label": "Online shopping",
+    "description": "Compare cards rewarding online purchases across marketplaces, brand partners and general e-commerce spending.",
+    "keywords": [
+      "online",
+      "flipkart",
+      "amazon",
+      "myntra",
+      "shopping"
+    ]
+  },
+  {
+    "id": "dining",
+    "label": "Dining and food delivery",
+    "description": "Compare cards rewarding restaurants, dining memberships and food-delivery purchases.",
+    "keywords": [
+      "dining",
+      "restaurant",
+      "swiggy",
+      "zomato",
+      "food delivery",
+      "eazydiner"
+    ]
+  },
+  {
+    "id": "grocery",
+    "label": "Grocery & Supermarket Credit Cards",
+    "description": "Compare cards offering accelerated rewards or cashback on supermarket and grocery purchases.",
+    "keywords": [
+      "grocery",
+      "groceries",
+      "supermarket"
+    ]
+  },
+  {
+    "id": "utilities",
+    "label": "Utility Bill Payment Credit Cards",
+    "description": "Compare cards that reward eligible electricity, water, gas, telecom and other recurring utility payments.",
+    "keywords": [
+      "utilities",
+      "utility",
+      "bill payment",
+      "electricity"
+    ]
+  },
+  {
+    "id": "entertainment",
+    "label": "Movies and entertainment",
+    "description": "Compare cards providing movie offers, entertainment rewards and ticket-booking benefits.",
+    "keywords": [
+      "movie",
+      "entertainment",
+      "pvr",
+      "inox",
+      "bookmyshow"
+    ]
+  },
+  {
+    "id": "health-wellness",
+    "label": "Health and wellness",
+    "description": "Compare cards offering pharmacy, healthcare, fitness or wellness-related rewards and privileges.",
+    "keywords": [
+      "health",
+      "pharmacy",
+      "medical",
+      "fitness",
+      "wellness",
+      "apollo"
+    ]
+  },
+  {
+    "id": "golf",
+    "label": "Golf",
+    "description": "Compare cards offering complimentary golf rounds, lessons or related premium privileges.",
+    "keywords": [
+      "golf"
+    ]
+  },
+  {
+    "id": "rupay-upi",
+    "label": "RuPay and UPI",
+    "description": "Compare RuPay credit cards that may be linked to supported UPI apps, alongside their fees and rewards.",
+    "keywords": [
+      "rupay",
+      "upi"
+    ]
+  },
+  {
+    "id": "secured",
+    "label": "Secured and FD-backed",
+    "description": "Compare cards issued against a fixed deposit for customers building or rebuilding their credit profile.",
+    "secured": true,
+    "keywords": [
+      "fixed deposit",
+      "secured"
+    ]
+  },
+  {
+    "id": "beginner",
+    "label": "First-Time & Beginner Credit Cards",
+    "description": "Compare accessible starter cards with simpler fees and rewards for customers beginning their credit journey.",
+    "keywords": [
+      "starter",
+      "beginner",
+      "first credit"
+    ],
+    "creditReq": "new"
+  },
+  {
+    "id": "student",
+    "label": "Student Credit Cards",
+    "description": "Explore cards and secured options relevant to students or customers without an established credit history.",
+    "keywords": [
+      "student",
+      "no credit history"
+    ],
+    "creditReq": "new"
+  },
+  {
+    "id": "co-branded",
+    "label": "Co-Branded Credit Cards",
+    "description": "Compare cards created with airlines, retailers, fintechs and lifestyle brands, including partner-specific limitations.",
+    "coBranded": true
+  },
+  {
+    "id": "fintech",
+    "label": "Fintech & App-Based Credit Cards",
+    "description": "Compare app-led and fintech-partnered cards while clearly identifying the regulated issuing bank.",
+    "fintech": true
+  },
+  {
+    "id": "railway",
+    "label": "Railway travel",
+    "description": "Compare cards offering railway booking rewards, IRCTC benefits or railway lounge access.",
+    "keywords": [
+      "railway",
+      "irctc",
+      "train"
+    ]
+  },
+  {
+    "id": "insurance",
+    "label": "Insurance Payment Credit Cards",
+    "description": "Compare cards whose published terms address insurance spending, rewards or exclusions.",
+    "keywords": [
+      "insurance"
+    ]
+  },
+  {
+    "id": "education",
+    "label": "Education & School Fee Credit Cards",
+    "description": "Compare cards whose terms specifically address school, college or education-payment rewards and exclusions.",
+    "keywords": [
+      "education",
+      "school"
+    ]
+  },
+  {
+    "id": "rent",
+    "label": "Rent Payment Credit Cards",
+    "description": "Compare cards whose published terms disclose how rent transactions are treated for rewards or exclusions.",
+    "keywords": [
+      "rent",
+      "rental"
+    ]
+  },
+  {
+    "id": "concierge",
+    "label": "Concierge services",
+    "description": "Compare premium cards providing concierge assistance for travel, dining and lifestyle requests.",
+    "keywords": [
+      "concierge"
+    ]
+  },
+  {
+    "id": "roadside-assistance",
+    "label": "Roadside assistance",
+    "description": "Compare cards offering vehicle breakdown, towing or emergency roadside-assistance benefits.",
+    "keywords": [
+      "roadside",
+      "towing"
+    ]
+  }
 ]

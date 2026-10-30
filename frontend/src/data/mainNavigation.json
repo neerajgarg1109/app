@@ -1,10 +1,26 @@
 [
-  { "label": "Home", "to": "/" },
-  { "label": "Browse cards", "to": "/cards" },
-  { "label": "Card comparisons", "to": "/cards?mode=compare" },
-  { "label": "Reviews & editorials", "href": "/guides/" },
-  { "label": "Value calculator", "to": "/calculator" },
-  { "label": "New & updated", "to": "/updates" },
-  { "label": "Invite-only cards", "to": "/restricted-cards" },
-  { "label": "Close a card", "to": "/help/issuers" }
+  {
+    "label": "Home",
+    "href": "/"
+  },
+  {
+    "label": "Compare Cards",
+    "href": "/compare/"
+  },
+  {
+    "label": "Browse 268 Cards",
+    "href": "/catalog/"
+  },
+  {
+    "label": "₹ Value Calculator",
+    "href": "/calculator/"
+  },
+  {
+    "label": "Lounges & Forex",
+    "href": "/lounges/"
+  },
+  {
+    "label": "Guides & News",
+    "href": "/guides/"
+  }
 ]

@@ -96,6 +96,7 @@ def product_facts(card, origin, access):
 def product_research(card, categories, origin, issuer_slug):
     links = [f'<a href="{origin}/issuers/{issuer_slug}/">Compare {escape(card["issuer"])} credit cards</a>']
     for category in categories[:3]:
-        links.append(f'<a href="{origin}/categories/{quote(category["id"])}/">{escape(category["label"])} credit cards</a>')
+        label = category['label'] if category['label'].lower().endswith('credit cards') else category['label'] + ' credit cards'
+        links.append(f'<a href="{origin}/categories/{quote(category["id"])}/">{escape(label)}</a>')
     links.append(f'<a href="{origin}/methodology/">How CardIQ researches and compares cards</a>')
     return '<section><h2>Continue your research</h2><div class="research-links">' + ''.join(links) + '</div></section>'

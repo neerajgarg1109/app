@@ -6,6 +6,7 @@ def explicit_fee_tax(text):
     text = str(text)
     text = re.sub(r'(₹[\d,]+(?:\.\d+)?)\s*(?:before GST|pre-GST|\+\s*GST)', r'\1 + 18% GST', text, flags=re.I)
     text = re.sub(r'(₹[\d,]+(?:\.\d+)?)(?![\d,.])(?=\s+(?:annually|annual fee|joining fee|renewal fee|fee\b))', r'\1 + 18% GST', text, flags=re.I)
+    text = re.sub(r'(\+ 18% GST(?:\s+annually)?)\s+before GST', r'\1', text, flags=re.I)
     return text
 
 

@@ -31,8 +31,8 @@ export default function CustomerFooter() {
           {groups.map((group, index) => (
             <section key={group.title} aria-labelledby={`footer-group-${index}`}>
               <h2 id={`footer-group-${index}`}>{group.title}</h2>
-              <ul>{group.links.map(({ label, url }) => <li key={`${label}-${url}`}>
-                {isSpaDestination(url) ? <Link to={url}>{label}</Link> : <a href={publicDestination(url)}>{label}</a>}
+              <ul>{group.links.map(({ label, url: storedUrl }) => <li key={`${label}-${storedUrl}`}>
+                {isSpaDestination(footerRoute(storedUrl)) ? <Link to={footerRoute(storedUrl)}>{label}</Link> : <a href={publicDestination(footerRoute(storedUrl))}>{label}</a>}
               </li>)}</ul>
             </section>
           ))}
@@ -45,7 +45,7 @@ export default function CustomerFooter() {
 }
 
 function isSpaDestination(url) {
-  return url === "/" || ["/cards", "/updates", "/restricted-cards", "/calculator", "/wallet-optimizer", "/alerts", "/help/issuers"].some((path) => url.startsWith(path));
+  return [ "/wallet-optimizer", "/alerts", "/help/issuers"].some((path) => url.startsWith(path));
 }
 
 function publicDestination(url) {
@@ -53,4 +53,8 @@ function publicDestination(url) {
   const publicUrl = process.env.PUBLIC_URL || "";
   if (publicUrl && (url === publicUrl || url.startsWith(`${publicUrl}/`))) return url;
   return `${publicUrl}${url}`;
+}
+
+function footerRoute(url) {
+  return ({"/": "/", "/cards": "/catalog/", "/cards?mode=compare": "/compare/", "/calculator": "/calculator/", "/updates": "/guides/new-credit-cards/", "/restricted-cards": "/guides/invite-only-credit-cards/"})[url] || url;
 }
