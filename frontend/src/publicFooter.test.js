@@ -14,7 +14,7 @@ test("static pages show Admin-published links using the same public and app rout
   run(jest.fn().mockResolvedValue({ ok: true, json: async () => ({ footer_groups: [{ title: "Research", links: [{ label: "Cards", url: "/cards?mode=compare" }, { label: "Guides", url: "/guides/" }] }] }) }));
   await flush();
   expect(document.querySelector('h2').textContent).toBe("Research");
-  expect(Array.from(document.querySelectorAll('a')).map(a => a.href)).toEqual(["https://findmybest.cards/#/cards?mode=compare", "https://findmybest.cards/guides/"]);
+  expect(Array.from(document.querySelectorAll('a')).map(a => a.href)).toEqual(["https://findmybest.cards/compare/", "https://findmybest.cards/guides/"]);
   expect(document.querySelector('.customer-footer-about').textContent).toBe("CardIQ");
 });
 
@@ -28,4 +28,11 @@ test("invalid destinations leave the existing footer intact", async () => {
   run(jest.fn().mockResolvedValue({ ok: true, json: async () => ({ footer_groups: [{ title: "Unsafe", links: [{ label: "Link", url: "javascript:alert(1)" }] }] }) }));
   await flush();
   expect(document.querySelector('section').textContent).toBe("Fallback links");
+});
+
+ test("static footer maps catalogue, calculator and research navigation to crawlable routes", async () => {
+  const routes = {"/cards": "/catalog/", "/calculator": "/calculator/", "/updates": "/guides/new-credit-cards/", "/restricted-cards": "/guides/invite-only-credit-cards/"};
+  run(jest.fn().mockResolvedValue({ok: true, json: async () => ({footer_groups: [{title: "Discover", links: Object.keys(routes).map(url => ({label: url, url}))}]})}));
+  await flush();
+  expect(Array.from(document.querySelectorAll('a')).map(a => a.href)).toEqual(Object.values(routes).map(url => "https://findmybest.cards" + url));
 });
