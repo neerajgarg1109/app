@@ -215,6 +215,14 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertNotIn('100% approval-rate FD cards', text)
             self.assertNotIn('Cash in Pocket', text)
 
+    def test_fee_wording_and_card_intro_are_clean(self):
+        for path in self.pages:
+            source = path.read_text()
+            self.assertNotRegex(source, r'(?i)₹[\d,]+(?: \+ 18% GST)? (?:annually|annual fee) before GST', str(path))
+        for card_id in CARD_IDS:
+            source = (BUILD / 'cards' / card_id / 'index.html').read_text()
+            self.assertNotRegex(source, r'Checked [^<]*</p><p>.*?</p><section><h2>CardIQ editorial view', card_id)
+
     def test_six_template_regressions(self):
         catalog = (BUILD / 'catalog/index.html').read_text()
         for label in ('First-Time &amp; Beginner Credit Cards', 'Student Credit Cards', 'Co-Branded Credit Cards', 'Fintech &amp; App-Based Credit Cards', 'Hotel &amp; Stay Credit Cards', 'Grocery &amp; Supermarket Credit Cards', 'Utility Bill Payment Credit Cards', 'Insurance Payment Credit Cards', 'Education &amp; School Fee Credit Cards', 'Rent Payment Credit Cards'):

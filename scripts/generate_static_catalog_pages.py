@@ -246,10 +246,11 @@ for card in CARDS:
     name, issuer = card["name"], card["issuer"]
     editorial = card.get("editorial") or {}
     description = editorial.get("summary") or f'{name}: {card.get("rewardLine", "")}. Annual fee: {card.get("annualFee", "Not specified")}. Sourced card details from CardIQ.'
+    description = explicit_fee_tax(description)
     route = f'{ORIGIN}/#/cards/{quote(card["id"])}'
     facts = "".join(f"<li>{html.escape(item)}</li>" for item in card.get("highlights", []))
     sources = "".join(f'<li><a href="{html.escape(url, quote=True)}">Issuer source {index + 1}: {html.escape(url.split("/")[2])}</a></li>' for index, url in enumerate(card.get("sourceUrls", [])))
-    body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p><p>{html.escape(description)}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
+    body = f'<h1>{html.escape(name)}</h1><p class="muted">{html.escape(issuer)} · Checked {html.escape(card.get("verifiedOn", "date unavailable"))}</p>{editorial_analysis(card)}<h2>Benefits, limits and conditions</h2><ul>{facts}</ul><h2>Sources</h2><ul>{sources}</ul>'
     image_url = f'{ORIGIN}{card["imageUrl"]}' if card.get("imageUrl", "").startswith("/") else card.get("imageUrl")
     canonical = f'{ORIGIN}/cards/{card["id"]}/'
     fee_box = product_facts(card, ORIGIN, restricted_access(card))

@@ -39,8 +39,19 @@ class ComparisonEngineTests(unittest.TestCase):
         self.assertEqual(fee_copy({'annualFeeAmount':0,'annualFee':'No annual fee'}), 'No annual fee')
         self.assertEqual(explicit_fee_tax('Earn ₹1,000 cashback on ₹20,000 spend'), 'Earn ₹1,000 cashback on ₹20,000 spend')
         self.assertEqual(explicit_fee_tax('₹999 + 18% GST'), '₹999 + 18% GST')
+        self.assertEqual(explicit_fee_tax('₹999 annual fee plus GST'), '₹999 + 18% GST annual fee')
         self.assertEqual(explicit_fee_tax('₹999 annually'), '₹999 + 18% GST annually')
         self.assertEqual(explicit_fee_tax('charging ₹999 annually before GST'), 'charging ₹999 + 18% GST annually')
+
+    def test_legacy_annual_fee_wording_is_normalized_and_idempotent(self):
+        from financial_copy import explicit_fee_tax
+        for suffix in ('annually', 'annual fee'):
+            for tax in ('', ' + 18% GST'):
+                with self.subTest(suffix=suffix, tax=tax):
+                    source = f'₹5,000{tax} {suffix} before GST'
+                    expected = f'₹5,000 + 18% GST {suffix}'
+                    self.assertEqual(explicit_fee_tax(source), expected)
+                    self.assertEqual(explicit_fee_tax(expected), expected)
 
     def test_currency_and_evidence_word_boundaries(self):
         self.assertEqual(money(200000), "₹2,00,000.00")

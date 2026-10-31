@@ -89,7 +89,7 @@ def editorial(card, cards):
     tradeoffs = [sentence(item) for item in card.get("exclusions") or []]
     tradeoffs.extend(item for item in highlights if LIMITATION.search(item) and item not in tradeoffs)
     if fee:
-        tradeoffs.append(f"The ₹{fee:,.0f} annual fee plus GST needs to be justified by benefits you will actually use.")
+        tradeoffs.append(f"The ₹{fee:,.0f} + 18% GST annual fee needs to be justified by benefits you will actually use.")
     if not tradeoffs:
         tradeoffs.append("Reward value depends on eligible merchant categories and the issuer's current terms.")
     tradeoffs = list(dict.fromkeys(tradeoffs))[:3]
@@ -101,10 +101,10 @@ def editorial(card, cards):
         summary = f"{card['name']} is a no-annual-fee option centred on {audience}."
         verdict = f"A sensible long-term choice when you want {audience} without a recurring membership charge. Check this condition before applying: {tradeoffs[0]}"
     elif fee >= 5000:
-        summary = f"{card['name']} is a premium card built around {audience}, with a ₹{fee:,.0f} annual fee before GST."
+        summary = f"{card['name']} is a premium card built around {audience}, with a ₹{fee:,.0f} + 18% GST annual fee."
         verdict = f"Shortlist it only if you can repeatedly use the premium benefits and comfortably recover the fee. Pay particular attention to this condition: {tradeoffs[0]}"
     else:
-        summary = f"{card['name']} is a paid card focused on {audience}, charging ₹{fee:,.0f} annually before GST."
+        summary = f"{card['name']} is a paid card focused on {audience}, charging ₹{fee:,.0f} + 18% GST annually."
         verdict = f"It deserves a place on the shortlist when your normal spending makes {sentence(card.get('rewardLine')).rstrip('.')} valuable enough to clear the fee. Factor in this condition: {tradeoffs[0]}"
 
     ideal_for = [f"People who prioritise {label}." for label in labels[:2]]
