@@ -6966,7 +6966,9 @@
           "reason": "A similarly priced alternative for comparing airport lounge access and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/federal-celesta-credit-card-a561bef306.webp",
+    "imageSourceUrl": "https://www.federal.bank.in/documents/10180/0/Celesta++Master-01.png"
   },
   {
     "id": "federal-imperio-credit-card",
@@ -7048,7 +7050,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/federal-imperio-credit-card-4723fff79e.webp",
+    "imageSourceUrl": "https://www.federal.bank.in/documents/10180/0/Imperio+Master.png"
   },
   {
     "id": "federal-signet-credit-card",
@@ -7130,7 +7134,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/federal-signet-credit-card-7aed646317.webp",
+    "imageSourceUrl": "https://www.federal.bank.in/documents/10180/0/Signet+Master+Card.png"
   },
   {
     "id": "federal-wave",
@@ -7206,7 +7212,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/federal-wave-70164182bd.webp",
+    "imageSourceUrl": "https://www.federal.bank.in/documents/10180/0/wave+rupay+card.png"
   },
   {
     "id": "sbi-shaurya-sbi-card",
@@ -12685,7 +12693,9 @@
           "reason": "A similarly priced alternative for comparing shopping rewards and online spending."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/idfc-quantum-plus-credit-card-0c790f319e.webp",
+    "imageSourceUrl": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/quantum-cc/Quantum-Banner-1-Updated-002.png"
   },
   {
     "id": "idfc-indigo-credit-card",

@@ -856,5 +856,65 @@
     ],
     "reviewedOn": "2026-10-29",
     "review": "Visually checked official issuer product artwork against the named card. Hosted locally; some issuer assets include a product background or card reverse."
+  },
+  {
+    "id": "federal-celesta-credit-card",
+    "page": "https://www.federal.bank.in/celesta-credit-card",
+    "source": "https://www.federal.bank.in/documents/10180/0/Celesta++Master-01.png",
+    "filename": "federal-celesta-credit-card-a561bef306.webp",
+    "size": [
+      399,
+      640
+    ],
+    "reviewedOn": "2026-10-31",
+    "review": "Visually checked exact official issuer product artwork. Converted to WebP with proportions and transparency preserved."
+  },
+  {
+    "id": "federal-imperio-credit-card",
+    "page": "https://www.federal.bank.in/imperio-credit-card",
+    "source": "https://www.federal.bank.in/documents/10180/0/Imperio+Master.png",
+    "filename": "federal-imperio-credit-card-4723fff79e.webp",
+    "size": [
+      640,
+      400
+    ],
+    "reviewedOn": "2026-10-31",
+    "review": "Visually checked exact official issuer product artwork. Converted to WebP with proportions and transparency preserved."
+  },
+  {
+    "id": "federal-signet-credit-card",
+    "page": "https://www.federal.bank.in/signet-credit-card",
+    "source": "https://www.federal.bank.in/documents/10180/0/Signet+Master+Card.png",
+    "filename": "federal-signet-credit-card-7aed646317.webp",
+    "size": [
+      640,
+      403
+    ],
+    "reviewedOn": "2026-10-31",
+    "review": "Visually checked exact official issuer product artwork. Converted to WebP with proportions and transparency preserved."
+  },
+  {
+    "id": "federal-wave",
+    "page": "https://www.federal.bank.in/rupay-wave-credit-card",
+    "source": "https://www.federal.bank.in/documents/10180/0/wave+rupay+card.png",
+    "filename": "federal-wave-70164182bd.webp",
+    "size": [
+      640,
+      415
+    ],
+    "reviewedOn": "2026-10-31",
+    "review": "Visually checked exact official issuer product artwork. Converted to WebP with proportions and transparency preserved."
+  },
+  {
+    "id": "idfc-quantum-plus-credit-card",
+    "page": "https://www.idfcfirst.bank.in/credit-card/quantum-plus-credit-card",
+    "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/quantum-cc/Quantum-Banner-1-Updated-002.png",
+    "filename": "idfc-quantum-plus-credit-card-0c790f319e.webp",
+    "size": [
+      433,
+      640
+    ],
+    "reviewedOn": "2026-10-31",
+    "review": "Visually checked exact official issuer product artwork. Converted to WebP with proportions and transparency preserved."
   }
 ]
