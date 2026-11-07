@@ -317,6 +317,7 @@ class ValueCalculatorIn(BaseModel):
     dining: int = Field(default=0, ge=0, le=2_000_000)
     travel: int = Field(default=0, ge=0, le=2_000_000)
     fuel: int = Field(default=0, ge=0, le=2_000_000)
+    utilities: int = Field(default=0, ge=0, le=2_000_000)
     international: int = Field(default=0, ge=0, le=2_000_000)
     other: int = Field(default=0, ge=0, le=2_000_000)
     lounge_visits: int = Field(default=0, ge=0, le=100)
@@ -851,7 +852,7 @@ async def get_restricted_cards():
     return {"cards": sorted(results, key=lambda item: (item["accessType"], item["issuer"], item["name"]))}
 
 
-COMPARISON_PLACEMENTS = {"verdict_box_card_a", "verdict_box_card_b", "calculator_winner_cta", "sticky_mobile_bar", "fallback_footer_ltf", "list_card", "card_page_hero", "card_page_verdict", "card_page_sticky", "direct_click", "unattributed"}
+COMPARISON_PLACEMENTS = {"verdict_box_card_a", "verdict_box_card_b", "calculator_winner_cta", "calculator_result_row", "sticky_mobile_bar", "fallback_footer_ltf", "list_card", "card_page_hero", "card_page_verdict", "card_page_sticky", "direct_click", "unattributed"}
 
 
 @api_router.get("/go/{card_id}")
@@ -1194,6 +1195,7 @@ async def calculate_card_value(payload: ValueCalculatorIn):
         "dining": payload.dining,
         "travel": payload.travel,
         "fuel": payload.fuel,
+        "utilities": payload.utilities,
         "international": payload.international,
         "other": payload.other,
     }
@@ -1217,6 +1219,7 @@ async def calculate_card_value(payload: ValueCalculatorIn):
         "diningSpend": str(payload.dining),
         "travelSpend": str(payload.travel),
         "fuelSpend": str(payload.fuel),
+        "utilitiesSpend": str(payload.utilities),
         "internationalSpend": str(payload.international),
         "loungeVisits": str(payload.lounge_visits),
     }

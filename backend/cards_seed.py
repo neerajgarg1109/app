@@ -284,6 +284,7 @@ def recommend_cards(answers, cards, *, include_unavailable=False):
             "diningSpend": {"dining"},
             "travelSpend": {"travel", "flights", "lounge"},
             "fuelSpend": {"fuel", "utilities"},
+            "utilitiesSpend": {"utilities", "fuel"},
             "internationalSpend": {"forex", "travel"},
         }
         matched_monthly = sum(

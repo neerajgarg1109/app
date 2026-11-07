@@ -1,9 +1,9 @@
 import CreditCardVisual from "./CreditCardVisual";
 import CustomerNav from "./CustomerNav";
 import React, { useState } from "react";
-import { ArrowLeft, Calculator, ExternalLink, Loader2, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Calculator, Loader2, ShieldCheck } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { calculateCardValue, trackApplyClick } from "../api";
+import { calculateCardValue } from "../api";
 import { recordProductEvent } from "../productAnalytics";
 import Logo from "./Logo";
 
@@ -12,26 +12,36 @@ const SPEND_FIELDS = [
   ["dining", "Dining & food delivery"],
   ["travel", "Flights, hotels & travel"],
   ["fuel", "Fuel"],
+  ["utilities", "Utilities"],
   ["international", "International spends"],
   ["other", "Everything else"],
 ];
 
 const EMPTY = Object.fromEntries(SPEND_FIELDS.map(([key]) => [key, ""]));
+const BUDGET_PRESETS = [
+  { id: "lite", name: "Lite Spender", amount: "₹25k/mo", values: { online: 10000, dining: 5000, utilities: 5000, other: 5000 } },
+  { id: "balanced", name: "Balanced Optimizer", amount: "₹60k/mo", values: { online: 25000, dining: 10000, travel: 5000, fuel: 5000, utilities: 5000, other: 10000 } },
+  { id: "hni", name: "HNI / Travel Spender", amount: "₹1.5L+/mo", values: { online: 50000, travel: 40000, dining: 25000, utilities: 15000, other: 20000 } },
+];
 
 export default function ValueCalculator() {
   const { search } = useLocation();
   const embedded = new URLSearchParams(search).get("embedded") === "1";
   const [form, setForm] = useState({ ...EMPTY, lounge_visits: "0", fee_preference: "worth" });
+  const [activePreset, setActivePreset] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const set = (key, value) => setForm((current) => ({ ...current, [key]: value }));
-  const submit = async (event) => {
-    event.preventDefault();
+  const setSpend = (key, value) => {
+    setForm((current) => ({ ...current, [key]: value }));
+    setActivePreset("");
+  };
+  const calculate = async (values) => {
     setLoading(true); setError("");
     try {
-      const payload = Object.fromEntries(Object.entries(form).map(([key, value]) => [key, key === "fee_preference" ? value : Number(value || 0)]));
+      const payload = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, key === "fee_preference" ? value : Number(value || 0)]));
       setResult(await calculateCardValue(payload));
       recordProductEvent("calculator_completed");
       window.setTimeout(() => {
@@ -42,11 +52,15 @@ export default function ValueCalculator() {
       setError(requestError?.response?.data?.detail || "We couldn’t calculate this scenario. Please try again.");
     } finally { setLoading(false); }
   };
-
-  const apply = (card) => {
-    if (!card.applyUrl) return;
-    trackApplyClick(card.id, null).catch(() => {});
-    window.open(card.applyUrl, "_blank", "noopener,noreferrer");
+  const submit = (event) => {
+    event.preventDefault();
+    calculate(form);
+  };
+  const choosePreset = (preset) => {
+    const next = { ...EMPTY, lounge_visits: form.lounge_visits, fee_preference: form.fee_preference, ...Object.fromEntries(Object.entries(preset.values).map(([key, value]) => [key, String(value)])) };
+    setForm(next);
+    setActivePreset(preset.id);
+    calculate(next);
   };
 
   return <div className={`ciq-shell ${embedded ? "pb-4" : "min-h-screen pb-16"}`}>
@@ -66,8 +80,12 @@ export default function ValueCalculator() {
       <form onSubmit={submit} className="mt-7 rounded-3xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>
         <h2 className="font-display text-lg font-extrabold">Your monthly spending</h2>
         <p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Use approximate amounts. Do not enter card numbers, account details or transaction data.</p>
+        <div className="mt-4" aria-label="Monthly spend presets">
+          <p className="mb-2 text-xs font-bold" style={{ color: "var(--ciq-ink-soft)" }}>Quick presets</p>
+          <div className="grid gap-2 sm:grid-cols-3">{BUDGET_PRESETS.map((preset) => <button key={preset.id} type="button" aria-pressed={activePreset === preset.id} onClick={() => choosePreset(preset)} className="ciq-press rounded-xl border px-3 py-2.5 text-left transition-colors" style={{ borderColor: activePreset === preset.id ? "var(--ciq-teal)" : "var(--ciq-line)", background: activePreset === preset.id ? "#eef9f6" : "#fff" }}><span className="block text-xs font-bold">{preset.name}</span><span className="mt-0.5 block text-[11px]" style={{ color: "var(--ciq-ink-soft)" }}>{preset.amount}</span></button>)}</div>
+        </div>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {SPEND_FIELDS.map(([key, label]) => <label key={key} className="text-xs font-semibold">{label}<span className="mt-1 flex items-center rounded-xl border bg-white px-3" style={{ borderColor: "var(--ciq-line)" }}><span style={{ color: "var(--ciq-ink-soft)" }}>₹</span><input aria-label={label} min="0" max="2000000" inputMode="numeric" type="number" value={form[key]} onChange={(event) => set(key, event.target.value)} placeholder="0" className="w-full bg-transparent px-2 py-2.5 text-sm outline-none" /></span></label>)}
+          {SPEND_FIELDS.map(([key, label]) => <label key={key} className="text-xs font-semibold">{label}<span className="mt-1 flex items-center rounded-xl border bg-white px-3" style={{ borderColor: "var(--ciq-line)" }}><span style={{ color: "var(--ciq-ink-soft)" }}>₹</span><input aria-label={label} min="0" max="2000000" inputMode="numeric" type="number" value={form[key]} onChange={(event) => setSpend(key, event.target.value)} placeholder="0" className="w-full bg-transparent px-2 py-2.5 text-sm outline-none" /></span></label>)}
           <label className="text-xs font-semibold">Airport lounge visits per year<input aria-label="Airport lounge visits per year" min="0" max="100" type="number" value={form.lounge_visits} onChange={(event) => set("lounge_visits", event.target.value)} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 text-sm outline-none" style={{ borderColor: "var(--ciq-line)" }} /></label>
           <label className="text-xs font-semibold">Annual-fee preference<select aria-label="Annual-fee preference" value={form.fee_preference} onChange={(event) => set("fee_preference", event.target.value)} className="mt-1 w-full rounded-xl border bg-white px-3 py-2.5 text-sm outline-none" style={{ borderColor: "var(--ciq-line)" }}><option value="free">Lifetime-free only preferred</option><option value="worth">Pay a fee when value justifies it</option><option value="premium">Premium benefits are welcome</option></select></label>
         </div>
@@ -83,7 +101,7 @@ export default function ValueCalculator() {
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs"><ValueFact label="Estimated annual rewards (₹ equivalent)" value={`${money(item.valueEstimate.grossLow)}–${money(item.valueEstimate.grossHigh)}`} /><ValueFact label="Renewal fee used" value={item.valueEstimate.feeWaived ? "Waived at this spend" : money(item.valueEstimate.effectiveAnnualFee)} /><ValueFact label="First-year joining fee" value={money(item.card.joiningFeeAmount || 0)} /><ValueFact label="Explicit benefits counted" value={money((item.valueEstimate.firstYearBenefitsValue || 0) + (item.valueEstimate.loungeValue || 0))} /></div>
           <p className="mt-3 text-xs leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>{item.card.rewardLine}</p>
           <div className="mt-2 flex items-center justify-between rounded-xl px-3 py-2 text-[10px]" style={{ background: item.valueEstimate.economicsQuality === "high" ? "#eef9f6" : "#fff8e8", color: "var(--ciq-ink-soft)" }}><span className="font-bold uppercase tracking-wide">Estimate quality: {item.valueEstimate.economicsQuality || "limited"}</span><span>{item.valueEstimate.economicsCoverage ?? 0}% of tracked economics valued</span></div>
-          <div className="mt-3 grid grid-cols-2 gap-2"><Link to={`/cards/${encodeURIComponent(item.card.id)}`} className="rounded-xl border py-2.5 text-center text-xs font-semibold" style={{ borderColor: "var(--ciq-line)" }}>See full details</Link><button type="button" disabled={!item.card.applyUrl} onClick={() => apply(item.card)} className="inline-flex items-center justify-center gap-1 rounded-xl py-2.5 text-xs font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>Apply on bank <ExternalLink className="h-3.5 w-3.5" /></button></div>
+          <div className="mt-3 grid grid-cols-2 gap-2"><Link to={`/cards/${encodeURIComponent(item.card.id)}`} className="rounded-xl border py-2.5 text-center text-xs font-semibold" style={{ borderColor: "var(--ciq-line)" }}>See full details</Link><a href={`/go/${encodeURIComponent(item.card.id)}/?subid=calculator_result_row&source=calculator`} rel="sponsored nofollow noopener" target="_blank" className="inline-flex items-center justify-center rounded-xl py-2.5 text-xs font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>Apply Now →</a></div>
         </article>)}</div>
       </section>}
     </main>

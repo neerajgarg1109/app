@@ -40,8 +40,35 @@ test("calculates a spend scenario without collecting contact details", async () 
   expect(container.textContent).toContain("Explicit benefits counted");
   expect(container.textContent).toContain("₹1,200");
   expect(container.textContent).toContain("Joining fees, GST on fees and interest are not included");
+  const applyLink = container.querySelector('a[href="/go/cashback/?subid=calculator_result_row&source=calculator"]');
+  expect(applyLink.textContent).toBe("Apply Now →");
+  expect(applyLink.getAttribute("rel")).toBe("sponsored nofollow noopener");
+  expect(applyLink.getAttribute("target")).toBe("_blank");
   expect(container.querySelector('input[type="email"]')).toBeNull();
   expect(container.querySelector('input[type="tel"]')).toBeNull();
+  await act(async () => root.unmount());
+  container.remove();
+});
+
+test("budget presets fill their spend buckets and calculate immediately", async () => {
+  mockSearch = "";
+  calculateCardValue.mockResolvedValue({ monthlySpend: 25000, annualSpend: 300000, results: [] });
+  const container = document.createElement("div");
+  const root = createRoot(container);
+  await act(async () => root.render(<ValueCalculator />));
+
+  await act(async () => container.querySelector('button[aria-pressed="false"]').click());
+  expect(calculateCardValue).toHaveBeenLastCalledWith(expect.objectContaining({ online: 10000, dining: 5000, utilities: 5000, other: 5000 }));
+  expect(container.querySelector('button[aria-pressed="true"]').textContent).toContain("Lite Spender");
+  expect(container.textContent).toContain("₹25,000 a month");
+
+  const balanced = Array.from(container.querySelectorAll("button")).find((button) => button.textContent.includes("Balanced Optimizer"));
+  await act(async () => balanced.click());
+  expect(calculateCardValue).toHaveBeenLastCalledWith(expect.objectContaining({ online: 25000, dining: 10000, travel: 5000, fuel: 5000, utilities: 5000, other: 10000 }));
+
+  const hni = Array.from(container.querySelectorAll("button")).find((button) => button.textContent.includes("HNI / Travel Spender"));
+  await act(async () => hni.click());
+  expect(calculateCardValue).toHaveBeenLastCalledWith(expect.objectContaining({ online: 50000, travel: 40000, dining: 25000, utilities: 15000, other: 20000 }));
   await act(async () => root.unmount());
   container.remove();
 });
