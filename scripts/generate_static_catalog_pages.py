@@ -70,7 +70,8 @@ def page(title, description, canonical, destination, body, image_url=None, struc
     schema_markup = json.dumps(schema, ensure_ascii=False).replace("<", "\\u003c")
     return f'''<!doctype html><html lang="en-IN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="cuelinks-verification" content="VERIFY-CL-XDN19F2J">
+<meta name="mitgo-verification" content="afed6872-2cee-4593-b36a-278c25c18a21" />
+    <meta name="cuelinks-verification" content="VERIFY-CL-XDN19F2J">
 <link rel="icon" href="{ORIGIN}/favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="{ORIGIN}/favicon.svg"><link rel="icon" type="image/png" sizes="48x48" href="{ORIGIN}/favicon-48.png"><link rel="apple-touch-icon" sizes="180x180" href="{ORIGIN}/apple-touch-icon.png">
 {font_links()}{head_extra}
 <title>{html.escape(title)}</title><meta name="description" content="{html.escape(description, quote=True)}">
