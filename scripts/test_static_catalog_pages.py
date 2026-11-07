@@ -219,6 +219,9 @@ class StaticCatalogTests(unittest.TestCase):
         for path in self.pages + [BUILD / 'index.html']:
             text = path.read_text()
             self.assertIn('<meta name="cuelinks-verification" content="VERIFY-CL-XDN19F2J"', text, path)
+            self.assertIn("334577", text, path)
+            self.assertIn("cdn0.cuelinks.com/js/", text, path)
+            self.assertIn("cuelinksv2.js", text, path)
             self.assertIn(html.escape(footer['transparency']['body']), text, path)
             self.assertLess(text.index('Our Editorial &amp; Financial Transparency'), text.index('<footer'), path)
         for path in (BUILD / 'compare').glob('*/index.html'):

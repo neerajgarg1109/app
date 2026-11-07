@@ -52,7 +52,7 @@ def shell(title, description, canonical, content, origin, schema, script=''):
 <header class="site-header wrap"><a class="brand" href="{origin}/"><span class="brand-mark">c</span>cardIQ<span class="brand-divider"></span><span class="brand-journal">Journal</span></a>
 <button type="button" class="back-link" onclick="history.length &gt; 1 ? history.back() : location.href='{origin}/'">← Back</button></header>{render_navigation(origin, canonical, journal=True)}
 <main id="main">{content}</main>
-{render_footer(origin)}{script}</body></html>'''
+{render_footer(origin)}{script}<script type="text/javascript">var cId = '334577';(function(d, t){{var s = document.createElement('script');s.type = 'text/javascript';s.async = true;s.src = (document.location.protocol == 'https:' ? 'https://cdn0.cuelinks.com/js/' : 'http://cdn0.cuelinks.com/js/') + 'cuelinksv2.js';document.getElementsByTagName('body')[0].appendChild(s);}}());</script></body></html>'''
 
 
 def article_card(post, featured=False):
