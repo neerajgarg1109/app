@@ -4459,7 +4459,9 @@
           "reason": "A higher-fee option to compare for broader benefits around shopping rewards and reward points."
         }
       ]
-    }
+    },
+    "imageUrl": "/cards/axis-google-pay-flex-axis-bank-credit-card-4aa6fce356.png",
+    "imageSourceUrl": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/google-pay-flex-credit-card-1366x400.png"
   },
   {
     "id": "axis-indianoil-premium-credit-card",
@@ -20450,6 +20452,60 @@
       ],
       "verdict": "Consider the original Edge when its app access and reward redemption fit your spending. Approval and reward eligibility remain subject to issuer checks and conditions.",
       "alternatives": []
-    }
+    },
+    "imageUrl": "/cards/csb-jupiter-edge-rupay-extracted.png",
+    "imageSourceUrl": "https://jupiter.money/assets/images/credit-card/rupay-switch-cvp.lottie"
+  },
+  {
+    "id": "csb-jupiter-edge-plus-mastercard",
+    "name": "Jupiter Edge+ CSB Bank Mastercard",
+    "issuer": "CSB Bank",
+    "network": "Mastercard",
+    "palette": ["#272343", "#58456e"],
+    "accent": "#f5cc66",
+    "annualFee": "No annual fee",
+    "annualFeeAmount": 0,
+    "joiningFee": "₹999 for the add-on; current offer may waive it",
+    "joiningFeeAmount": 999,
+    "lifetimeFree": false,
+    "rewardLine": "5% Jewels on eligible spends; 25% Jewels on Jupiter flight and hotel bookings",
+    "highlights": [
+      "Mastercard add-on for an existing Jupiter Edge+ RuPay card; shares its credit limit and monthly bill.",
+      "Zero forex markup; foreign-currency spends do not earn rewards.",
+      "Travel benefits move from RuPay to Mastercard after issuance; the RuPay travel benefit then ceases."
+    ],
+    "exclusions": [
+      "Foreign-currency spends do not earn Jewels.",
+      "Jewels are reward units; redemption value depends on the selected category and current terms."
+    ],
+    "bestFor": ["travel", "international"],
+    "feeType": "worth",
+    "minSpend": "mid",
+    "creditReq": "good",
+    "rating": 4,
+    "ratingBasis": "Neutral editorial baseline, not a customer rating.",
+    "applyUrl": "https://jupiter.money/edge-plus-upi-rupay-credit-card/",
+    "sourceUrls": [
+      "https://jupiter.money/edge-plus-upi-rupay-credit-card/",
+      "https://jupiter.money/edge-csb-terms-conditions/"
+    ],
+    "verifiedOn": "2026-11-07",
+    "active": true,
+    "applicationsOpen": true,
+    "secured": false,
+    "coBrandPartner": "Jupiter",
+    "availabilityNote": "Add-on for eligible existing Edge+ RuPay cardholders through Jupiter; issuer approval and current in-app availability apply.",
+    "forexMarkup": "0% markup; foreign-currency spends do not earn rewards.",
+    "termsNote": "Official terms list a ₹999 Mastercard add-on joining fee; the live Jupiter page currently advertises a limited-period ₹0 joining offer. Confirm the amount shown in-app before issuance.",
+    "editorial": {
+      "summary": "The Edge+ Mastercard is a travel-focused add-on for existing Edge+ RuPay cardholders, with zero forex markup and Jupiter travel rewards. Its ₹999 listed joining fee may be waived by the current offer.",
+      "idealFor": ["Existing Edge+ RuPay cardholders who book travel through Jupiter or need a zero-forex add-on."],
+      "strengths": ["Zero forex markup and 25% Jewels on eligible Jupiter flight and hotel bookings."],
+      "tradeoffs": ["Requires an existing Edge+ RuPay card; foreign-currency spends do not earn rewards and the joining fee offer can change."],
+      "verdict": "Consider the Mastercard add-on for Jupiter travel bookings and international purchases after checking its current joining fee and benefit terms.",
+      "alternatives": []
+    },
+    "imageUrl": "/cards/csb-jupiter-edge-plus-mastercard-ef8c9b8a02.webp",
+    "imageSourceUrl": "https://jupiter.money/assets/images/website-v2/l1-pages/credit-card/revamp/mc-card.webp"
   }
 ]

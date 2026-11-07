@@ -2,6 +2,8 @@
 
 Each card carries its own `verifiedOn` date. Catalogue and issuer totals are calculated from the current data rather than maintained in this document. Products distributed by fintech co-brand partners are included when the issuing bank is identified; paused products remain available for reference but are excluded from new recommendations.
 
+Jupiter Edge CSB RuPay and the Edge+ Mastercard add-on are separate catalogue records with distinct official artwork, network, fees and reward terms. The Mastercard add-on is available only to eligible Edge+ RuPay cardholders. Its official terms list a ₹999 joining fee while Jupiter's current public page advertises a limited-period waiver; see the source links in the catalogue and artwork provenance file.
+
 ## Data and interpretation
 
 - `backend/cards_catalog.json` holds issuer facts, official product links, citations and the verification date. Descriptions are original summaries; reviewed official artwork is hosted locally with provenance in `docs/catalog-artwork-sources.json`.

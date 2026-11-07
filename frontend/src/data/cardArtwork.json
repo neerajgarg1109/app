@@ -56,6 +56,7 @@
   "axis-axis-bank-kwik-credit-card": "/cards/axis-axis-bank-kwik-credit-card-379da5a37f.webp",
   "axis-axis-bank-shoppers-stop-credit-card": "/cards/axis-axis-bank-shoppers-stop-credit-card-75d608c590.webp",
   "axis-flipkart-axis-bank-super-elite-credit-card": "/cards/axis-flipkart-axis-bank-super-elite-credit-card-f635aeb927.jpg",
+  "axis-google-pay-flex-axis-bank-credit-card": "/cards/axis-google-pay-flex-axis-bank-credit-card-4aa6fce356.png",
   "axis-indianoil-premium-credit-card": "/cards/axis-indianoil-premium-credit-card-cdab7f9fb7.webp",
   "axis-indigo-axis-bank-credit-card": "/cards/axis-indigo-axis-bank-credit-card-28b46b3477.webp",
   "axis-indigo-axis-bank-premium-credit-card": "/cards/axis-indigo-axis-bank-premium-credit-card-7332055cdf.webp",
@@ -242,5 +243,7 @@
   "pnb-kiwi-credit-card": "/cards/pnb-kiwi-credit-card-5f5ea0f124.png",
   "sbm-paisabazaar-paisa-plus-credit-card": "/cards/sbm-paisabazaar-paisa-plus-credit-card-9cc985fb79.webp",
   "sbm-niyo-global-credit-card": "/cards/sbm-niyo-global-credit-card-20483b7c0a.webp",
-  "sbm-magnet-credit-card": "/cards/sbm-magnet-credit-card-d1b2760eb2.webp"
+  "sbm-magnet-credit-card": "/cards/sbm-magnet-credit-card-d1b2760eb2.webp",
+  "csb-jupiter-edge-rupay": "/cards/csb-jupiter-edge-rupay-extracted.png",
+  "csb-jupiter-edge-plus-mastercard": "/cards/csb-jupiter-edge-plus-mastercard-ef8c9b8a02.webp"
 }

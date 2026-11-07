@@ -916,5 +916,40 @@
     ],
     "reviewedOn": "2026-10-31",
     "review": "Visually checked exact official issuer product artwork. Converted to WebP with proportions and transparency preserved."
+  },
+  {
+    "id": "axis-google-pay-flex-axis-bank-credit-card",
+    "page": "https://www.axis.bank.in/cards/credit-card/google-pay-flex-axis-bank-credit-card",
+    "source": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/google-pay-flex-credit-card-1366x400.png",
+    "filename": "axis-google-pay-flex-axis-bank-credit-card-4aa6fce356.png",
+    "size": [
+      198,
+      314
+    ],
+    "reviewedOn": "2026-10-31",
+    "review": "Lossless crop of exact card face from official desktop banner; crop left=879, top=55, width=198, height=314. No redrawing or upscaling."
+  },
+  {
+    "id": "csb-jupiter-edge-plus-mastercard",
+    "page": "https://jupiter.money/edge-csb-rupay-credit-card/",
+    "source": "https://jupiter.money/assets/images/website-v2/l1-pages/credit-card/revamp/mc-card.webp",
+    "filename": "csb-jupiter-edge-plus-mastercard-ef8c9b8a02.webp",
+    "size": [
+      1449,
+      1734
+    ],
+    "reviewedOn": "2026-10-31",
+    "sha256": "ef8c9b8a02b6ba83003b2d248e5573f51d87b38c479c7e14b53221cb3123b0fd",
+    "review": "Official Jupiter Edge+ CSB Bank Mastercard artwork. Source bytes preserved and attached only to the Mastercard add-on entry."
+  },
+  {
+    "id": "csb-jupiter-edge-rupay",
+    "page": "https://jupiter.money/edge-csb-rupay-credit-card/",
+    "source": "https://jupiter.money/assets/images/credit-card/rupay-switch-cvp.lottie",
+    "filename": "csb-jupiter-edge-rupay-extracted.png",
+    "size": [422, 660],
+    "reviewedOn": "2026-11-07",
+    "sha256": "6fbd1343129b0cbe4bd61410739a6af20b3a371bb21bbe2c9a6cfa9a12110afc",
+    "review": "Transparent still extracted from Jupiter's official RuPay card-switch animation at the full-card frame. The animation includes the Edge CSB Bank RuPay face; the original animation and SVG extraction are retained in output/artwork for provenance."
   }
 ]

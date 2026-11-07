@@ -9,6 +9,7 @@ import uuid
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 from itertools import product
+from pathlib import Path
 from urllib.parse import urlparse
 
 import httpx
@@ -17,6 +18,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from cards_seed import CARDS, CATALOG_QUERY, DEMO_IDS, RECOMMENDABLE_QUERY, recommend_cards, seed_cards
 from restricted_access import restricted_access
+
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def database_client_for_tests(mongo_url):
@@ -202,6 +205,25 @@ def test_catalog_has_sourced_unique_real_cards():
             assert parsed.scheme == "https" and parsed.hostname
             assert parsed.hostname not in {"example.com", "www.example.com"}
             assert parsed.username is None
+
+
+def test_jupiter_edge_variants_keep_distinct_network_facts_and_artwork():
+    cards = {card['id']: card for card in CARDS}
+    rupay = cards['csb-jupiter-edge-rupay']
+    mastercard = cards['csb-jupiter-edge-plus-mastercard']
+    assert rupay['network'] == 'RuPay' and 'original Edge' in rupay['highlights'][0]
+    assert mastercard['network'] == 'Mastercard'
+    assert '₹999' in mastercard['joiningFee'] and mastercard['annualFeeAmount'] == 0
+    assert 'zero forex' in mastercard['highlights'][1].lower()
+    assert rupay['imageUrl'] != mastercard['imageUrl']
+    assert rupay['imageSourceUrl'].endswith('rupay-switch-cvp.lottie')
+    assert 'mc-card.webp' in mastercard['imageSourceUrl']
+    provenance = {item['id']: item for item in json.loads((ROOT / 'docs/catalog-artwork-sources.json').read_text())}
+    for card in (rupay, mastercard):
+        item = provenance[card['id']]
+        asset = ROOT / 'frontend/public' / card['imageUrl'].lstrip('/')
+        assert asset.is_file()
+        assert hashlib.sha256(asset.read_bytes()).hexdigest() == item['sha256']
 
 
 def test_card_fact_edits_require_editorial_confirmation():
@@ -696,13 +718,13 @@ def test_restricted_cards_do_not_enter_general_quiz_but_history_is_resolvable():
 
 def test_expansion_preserves_existing_92_and_adds_distinct_products():
     # Preserve the original products; baseline includes the targeted issuer-source
-    # corrections recorded in docs/catalog-fact-checks-2026-10-26.json.
+    # corrections and explicit 18% GST fee wording.
     frozen = [
         {key: value for key, value in card.items() if key not in {"imageUrl", "imageSourceUrl", "editorial", "homepagePlacement", "applyUrlOverride", "applyLinkStatus", "applyPartner", "applyCampaignId"}}
         for card in CARDS[:92]
     ]
     encoded = json.dumps(frozen, sort_keys=True, ensure_ascii=False).encode()
-    assert hashlib.sha256(encoded).hexdigest() == "2e50e9e673f435cdc4f6f836d9d663076af5a878bd14d1a0d0693a7321d6d421"
+    assert hashlib.sha256(encoded).hexdigest() == "cb2974e21a5b1c8b2d4299732b2787acfee9ebef92e038719ed5604cecb2bbc5"
     batch = [c for c in CARDS if c.get("catalogBatch") == "expansion-100-2026-10-09"]
     assert len(batch) == 100
     # A '+' distinguishes actual Plus tiers and must survive name normalization.

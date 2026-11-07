@@ -21,8 +21,8 @@ test("calculates a spend scenario without collecting contact details", async () 
   calculateCardValue.mockResolvedValue({
     monthlySpend: 40000, annualSpend: 480000,
     results: [{
-      card: { id: "cashback", name: "Cashback Card", issuer: "Test Bank", rewardLine: "5% eligible online cashback", applyUrl: "https://bank.example/apply" },
-      valueEstimate: { netLow: 5000, netHigh: 8000, grossLow: 6000, grossHigh: 9000, effectiveAnnualFee: 1000, feeWaived: false },
+      card: { id: "cashback", name: "Cashback Card", issuer: "Test Bank", rewardLine: "5% eligible online cashback", applyUrl: "https://bank.example/apply", joiningFeeAmount: 999 },
+      valueEstimate: { netLow: 5000, netHigh: 8000, grossLow: 6000, grossHigh: 9000, effectiveAnnualFee: 1000, feeWaived: false, firstYearBenefitsValue: 500, loungeValue: 700, economicsCoverage: 60, economicsQuality: "medium" },
     }],
   });
   const container = document.createElement("div");
@@ -35,6 +35,11 @@ test("calculates a spend scenario without collecting contact details", async () 
   expect(calculateCardValue).toHaveBeenCalledWith(expect.objectContaining({ online: 40000, dining: 0 }));
   expect(container.textContent).toContain("Cashback Card");
   expect(container.textContent).toContain("₹5,000–₹8,000");
+  expect(container.textContent).toContain("First-year joining fee");
+  expect(container.textContent).toContain("₹999");
+  expect(container.textContent).toContain("Explicit benefits counted");
+  expect(container.textContent).toContain("₹1,200");
+  expect(container.textContent).toContain("Joining fees, GST on fees and interest are not included");
   expect(container.querySelector('input[type="email"]')).toBeNull();
   expect(container.querySelector('input[type="tel"]')).toBeNull();
   await act(async () => root.unmount());

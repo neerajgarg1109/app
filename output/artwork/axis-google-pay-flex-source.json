@@ -1,0 +1,13 @@
+{
+  "card_id": "axis-google-pay-flex-axis-bank-credit-card",
+  "page": "https://www.axis.bank.in/cards/credit-card/google-pay-flex-axis-bank-credit-card",
+  "source": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/google-pay-flex-credit-card-1366x400.png",
+  "method": "Lossless rectangular crop of official banner; no redrawing or upscaling.",
+  "crop": {
+    "left": 879,
+    "top": 55,
+    "width": 198,
+    "height": 314
+  },
+  "output": "axis-google-pay-flex-original-crop.png"
+}
