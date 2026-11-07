@@ -1445,9 +1445,9 @@ async def get_status_checks():
 
 
 DEFAULT_FOOTER_GROUPS = [
-    {"title": "Discover cards", "links": [{"label": "Browse all cards", "url": "/cards"}, {"label": "Card comparisons", "url": "/cards?mode=compare"}, {"label": "New and updated cards", "url": "/updates"}, {"label": "Invite-only cards", "url": "/restricted-cards"}]},
+    {"title": "Discover cards", "links": [{"label": "Browse all cards", "url": "/cards"}, {"label": "Card comparisons", "url": "/cards?mode=compare"}, {"label": "New and updated cards", "url": "/updates"}, {"label": "Invite-only cards", "url": "/guides/invite-only-credit-cards/"}]},
     {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
-    {"title": "Help & research", "links": [{"label": "Reviews and editorials", "url": "/guides/"}, {"label": "Issuer contacts", "url": "/help/issuers"}, {"label": "How to close a card", "url": "/help/issuers"}, {"label": "Credit card guides", "url": "/guides/"}]},
+    {"title": "Help & research", "links": [{"label": "Reviews and editorials", "url": "/guides/"}, {"label": "Issuer contacts", "url": "/help/issuers"}, {"label": "Close a card", "url": "/guides/close-credit-card-india/"}, {"label": "Credit card guides", "url": "/guides/"}]},
     {"title": "About CardIQ", "links": [{"label": "How recommendations work", "url": "/methodology/"}, {"label": "How CardIQ makes money", "url": "/methodology/"}, {"label": "Card catalogue", "url": "/catalog/"}]},
 ]
 SITE_CONTENT_VERSION = 3

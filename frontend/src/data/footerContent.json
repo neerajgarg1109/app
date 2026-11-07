@@ -19,7 +19,7 @@
         },
         {
           "label": "Invite-only cards",
-          "url": "/restricted-cards"
+          "url": "/guides/invite-only-credit-cards/"
         }
       ]
     },
@@ -56,8 +56,8 @@
           "url": "/help/issuers"
         },
         {
-          "label": "How to close a card",
-          "url": "/help/issuers"
+          "label": "Close a card",
+          "url": "/guides/close-credit-card-india/"
         },
         {
           "label": "Credit card guides",

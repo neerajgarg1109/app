@@ -26,8 +26,10 @@ class Document(HTMLParser):
         super().__init__()
         self.title = ""
         self.in_title = False
+        self.in_link = False
         self.meta = {}
         self.links = []
+        self.link_texts = []
         self.feed(source)
 
     def handle_starttag(self, tag, attrs):
@@ -40,14 +42,20 @@ class Document(HTMLParser):
             self.meta["canonical"] = attrs.get("href", "")
         if tag == "a" and attrs.get("href"):
             self.links.append(attrs["href"])
+            self.link_texts.append("")
+            self.in_link = True
 
     def handle_endtag(self, tag):
         if tag == "title":
             self.in_title = False
+        if tag == "a":
+            self.in_link = False
 
     def handle_data(self, data):
         if self.in_title:
             self.title += data
+        if self.in_link and self.link_texts:
+            self.link_texts[-1] += data
 
 
 def generated_pages():
@@ -128,6 +136,9 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_closure_hub_links_to_every_issuer_without_mixing_editorial_topics(self):
         hub = (BUILD / 'guides/close-credit-card-india/index.html').read_text()
+        for phrase in ('seven working days', '₹500 per calendar day', 'netbanking', 'ticket or service-request number', 'Principal Nodal Officer', 'cms.rbi.org.in'):
+            self.assertIn(phrase.lower(), hub.lower())
+        self.assertIn('RBI Master Direction', hub)
         for path in (BUILD / 'guides').glob('close-*/index.html'):
             if path.parent.name != 'close-credit-card-india':
                 self.assertIn(f'{ORIGIN}/guides/{path.parent.name}/', hub)
@@ -287,6 +298,10 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn('.customer-footer .customer-footer-grid', source, path)
             self.assertIn(f'src="{ORIGIN}/public-footer.js"', source, path)
         self.assertTrue((BUILD / "public-footer.js").exists())
+        guide_footer = Document((BUILD / 'guides/close-credit-card-india/index.html').read_text())
+        links = dict(zip(guide_footer.link_texts, guide_footer.links))
+        self.assertEqual(links['Close a card'], ORIGIN + '/guides/close-credit-card-india/')
+        self.assertEqual(links['Invite-only cards'], ORIGIN + '/guides/invite-only-credit-cards/')
 
     def test_every_card_has_substantial_sourced_editorial_content(self):
         pages = list((BUILD / "cards").glob("*/index.html"))

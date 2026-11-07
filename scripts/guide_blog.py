@@ -105,6 +105,18 @@ def render_article(post, posts, origin, share):
     body = re.sub(r'^<h1>.*?</h1><p>.*?</p>', '', post['body'], count=1, flags=re.S)
     closing = post['category'] == 'Card management'
     if post['slug'] == 'close-credit-card-india':
+        body += '''<h2>RBI’s seven-working-day closure rule</h2>
+<p>Under the RBI’s credit-card directions, an issuer must honour a closure request within seven working days, subject to the cardholder paying all dues. If dues remain, the seven-working-day period is counted after excluding the time taken by the cardholder to clear them.</p>
+<p>If the issuer misses the deadline, it must pay ₹500 per calendar day of delay until closure, provided there is no outstanding balance in the account. The rule applies to the issuer; keep evidence of when your complete request was received and when any dues were cleared.</p>
+<h2>Make a request you can prove</h2>
+<ol><li>Pay the full outstanding balance and save the payment confirmation. Redeem rewards that may expire and move recurring payments to another method.</li>
+<li>Submit the closure request through an official channel offered by your issuer, such as its helpline, dedicated email, IVR, website, netbanking (internet banking) or mobile app. The RBI says issuers must provide multiple channels and must not insist on post or another method that delays receipt. Use contact details on the issuer’s official website.</li>
+<li>Save a copy of the request, delivery confirmation, timestamp, ticket or service-request number, and any reply. A phone call can help you locate the right channel, but do not rely on a call alone; ask for written confirmation.</li>
+<li>Ask the issuer to confirm in writing that the card account is closed, the closure date, and that no dues remain. Cut up or securely destroy the physical card only after closure is confirmed.</li></ol>
+<h2>If the issuer does not close the card on time</h2>
+<p>First follow up through the issuer’s grievance-redressal channel, quoting your ticket number and attaching the request and payment records. If unresolved, escalate to the issuer’s Principal Nodal Officer (PNO) using the contact details published by the issuer.</p>
+<p>If the issuer rejects your complaint, gives an unsatisfactory response, or does not respond within 30 days of receiving it, you can lodge a complaint under the RBI Integrated Ombudsman Scheme through the <a href="https://cms.rbi.org.in/" target="_blank" rel="noopener noreferrer">RBI Complaint Management System (CMS)</a>. Include your correspondence, request timestamp, ticket number, payment proof and the issuer’s response (if any). The RBI scheme is cost-free for customers of covered regulated entities.</p>
+<p><strong>Official reference:</strong> <a href="https://rbi.org.in/scripts/BS_ViewMasDirections.aspx?id=13155" target="_blank" rel="noopener noreferrer">RBI Master Direction – Credit Card and Debit Card: Issuance and Conduct Directions</a>. Check the current direction and your issuer’s published process before acting.</p>'''
         issuer_guides = [p for p in posts if p['category'] == 'Card management' and p['slug'] != post['slug']]
         body += '<h2>Find your issuer’s closure guide</h2><ul>' + ''.join(
             f'<li><a href="{escape(p["url"])}">{escape(p["title"])}</a></li>' for p in issuer_guides
