@@ -261,9 +261,17 @@ for card in CARDS:
     related_categories = [category for category in CATEGORIES if category_match(card, category)
                           and category_counts[category['id']] >= 3]
     body += product_research(card, related_categories, ORIGIN, slug(issuer))
+    # The verdict is shown in the page body; do not expose the catalog's
+    # neutral 4.0 placeholder as a Review rating.
+    review_body = (editorial.get("verdict") or editorial.get("summary")
+                   or f'{name}: {card.get("rewardLine", "")}. {card.get("termsNote", "")}'.strip())
+    fee_specification = (
+        f'Joining fee: {fee_copy(card, "joiningFee")}; '
+        f'Annual fee: {fee_copy(card)}'
+    )
     schema = {"@context": "https://schema.org", "@graph": [
         {"@type": "WebPage", "name": f"{name} review", "description": description, "url": canonical, "inLanguage": "en-IN", "dateModified": card.get("verifiedOn")},
-        {"@type": "CreditCard", "name": name, "provider": {"@type": "Organization", "name": issuer}, "areaServed": "IN", "feesAndCommissionsSpecification": card.get("termsNote", "Confirm fees and conditions with the issuer."), "description": description, "url": canonical, **({"image": image_url} if image_url else {})},
+        {"@type": ["CreditCard", "FinancialProduct"], "name": name, "brand": {"@type": "BankOrCreditUnion", "name": issuer}, "provider": {"@type": "Organization", "name": issuer}, "areaServed": "IN", "feesAndCommissionsSpecification": fee_specification, "description": description, "url": canonical, "review": {"@type": "Review", "reviewBody": review_body, "author": {"@type": "Organization", "name": "CardIQ"}, "publisher": {"@type": "Organization", "name": "CardIQ"}}, **({"image": image_url} if image_url else {})},
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Credit cards", "item": f"{ORIGIN}/catalog/"},
             {"@type": "ListItem", "position": 2, "name": issuer, "item": f"{ORIGIN}/issuers/{slug(issuer)}/"},

@@ -320,6 +320,25 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertNotIn('\"@type\": \"Product\"', source)
             self.assertNotRegex(source.lower(), r"likely to meet|guaranteed approval|approval odds")
 
+    def test_every_card_has_financial_product_and_written_review_schema(self):
+        pages = list((BUILD / "cards").glob("*/index.html"))
+        self.assertEqual(len(pages), len(CARD_IDS))
+        for path in pages:
+            source = path.read_text()
+            schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S)[1])
+            product = next(node for node in schema["@graph"] if "CreditCard" in node.get("@type", []))
+            self.assertIn("FinancialProduct", product["@type"], path)
+            self.assertEqual(product["brand"]["@type"], "BankOrCreditUnion", path)
+            self.assertIn("Joining fee:", product["feesAndCommissionsSpecification"], path)
+            self.assertIn("Annual fee:", product["feesAndCommissionsSpecification"], path)
+            review = product["review"]
+            self.assertEqual(review["@type"], "Review", path)
+            self.assertTrue(review["reviewBody"], path)
+            self.assertEqual(review["author"]["name"], "CardIQ", path)
+            self.assertEqual(review["publisher"]["name"], "CardIQ", path)
+            self.assertNotIn("reviewRating", review, path)
+            self.assertIn(html.escape(review["reviewBody"]), source, path)
+
     def test_titles_descriptions_and_canonicals_are_unique(self):
         canonical_docs = [doc for path, doc in self.documents.items() if doc.meta["canonical"] == f"{ORIGIN}/{path.parent.relative_to(BUILD).as_posix()}/"]
         titles = [doc.title for doc in canonical_docs]
