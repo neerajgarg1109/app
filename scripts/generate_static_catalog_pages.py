@@ -454,7 +454,7 @@ methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 <h2>Sources and updates</h2><p>Fees, rewards, caps, exclusions and availability are documented from issuing-bank pages, key-fact statements, terms, and official co-brand partner pages. Every card shows its source links and the date its details were checked. Issuer terms remain authoritative.</p>
 <h2>Editorial analysis</h2><p>CardIQ maintains a structured editorial assessment for every card: our take, who it suits, key strengths, trade-offs, verdict and useful alternatives. Editors review this layer when material card facts change. It does not use customer contact information, represent approval odds or replace financial advice.</p>
 <h2>Recommendations and revenue</h2><p>Quiz matches use customer-selected priorities and catalogue attributes. Issuers cannot pay to increase a match score. Application approval, credit limits and final product terms are decided by the issuing bank.</p>
-<h2>Corrections</h2><p>Benefits can change. Customers should verify the linked issuer terms before applying and can report outdated information from a CardIQ result page.</p>
+<h2>Corrections</h2><p>Benefits can change. Customers should verify the linked issuer terms before applying and can <a href="mailto:hi@findmybest.cards">email our editorial team</a> to report outdated information.</p>
 <p class="muted">Methodology reviewed 17 October 2026.</p>'''
 write(Path("methodology"), page("CardIQ editorial methodology and disclosures", "Learn how CardIQ sources card facts, generates editorial analysis, ranks recommendations and separates issuer revenue from match scores.", f"{ORIGIN}/methodology/", f"{ORIGIN}/#/cards", methodology_body))
 

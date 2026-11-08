@@ -38,6 +38,7 @@ export default function CustomerFooter() {
           ))}
         </div>
         <div className="customer-footer-notice">© {new Date().getFullYear()} CardIQ. {CONTENT.notice}</div>
+        <div className="footer-contact-note"><p>Found an outdated fee or reward cap? For editorial feedback, corrections, or affiliate network correspondence, reach out to our editorial team at <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</p></div>
       </div>
     </footer>
     </>

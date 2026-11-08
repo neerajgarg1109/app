@@ -16,6 +16,9 @@
 .customer-footer li{display:block;margin:0;padding:0;line-height:1.65}
 .customer-footer li+li{margin-top:10px}
 .customer-footer .customer-footer-notice{margin-top:32px;border-top:1px solid #e4e2f1;padding-top:20px;color:#5d6478;font-size:11px;line-height:1.65}
+.customer-footer .footer-contact-note{margin-top:12px;color:#5d6478;font-size:12px;line-height:1.65}
+.customer-footer .footer-contact-note p{margin:0}
+.customer-footer .footer-contact-note a{text-decoration:underline;text-underline-offset:2px}
 @media(max-width:1023px){.customer-footer .customer-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.customer-footer .customer-footer-about{grid-column:1/-1}}
 @media(max-width:639px){.customer-footer .customer-footer-grid{grid-template-columns:minmax(0,1fr);gap:28px}.customer-footer .customer-footer-inner{padding-top:32px;padding-bottom:32px}}
 
