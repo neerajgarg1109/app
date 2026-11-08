@@ -20,7 +20,8 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             params=parse_qs(urlparse(response.headers['location']).query)
             assert params['campaign']==['keep']
             assert params['subid']==['original']
-            assert params['cardiq_subid']==['verdict_box_card_a_sbi-cashback-vs-hdfc-millennia']
+            assert params['cardiq_subid']==['verdict_box_card_a']
+            assert params['subid2']==['sbi-cashback-vs-hdfc-millennia']
             event=await server.db.apply_events.find_one({'card_id':card['id']})
             assert event['placement_id']=='verdict_box_card_a'
             assert event['comparison_slug']=='sbi-cashback-vs-hdfc-millennia'
@@ -29,6 +30,7 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             response=await client.get('/api/go/compare-card?subid=list_card&source=best-cashback-credit-cards-india')
             assert response.status_code==302
             assert parse_qs(urlparse(response.headers['location']).query)['source']==['best-cashback-credit-cards-india']
+            assert parse_qs(urlparse(response.headers['location']).query)['subid2']==['best-cashback-credit-cards-india']
             event=await server.db.apply_events.find_one({'placement_id':'list_card'})
             assert event['source_page']=='best-cashback-credit-cards-india'
             assert event['tracking_sub_id']=='list_card_best-cashback-credit-cards-india'
@@ -37,6 +39,9 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             event=await server.db.apply_events.find_one({'placement_id':'calculator_result_row'})
             assert event['source_page']=='calculator'
             assert event['tracking_sub_id']=='calculator_result_row_calculator'
+            calc_params=parse_qs(urlparse(response.headers['location']).query)
+            assert calc_params['cardiq_subid']==['calculator_result_row']
+            assert calc_params['subid2']==['calculator']
             assert (await client.get('/api/go/compare-card?subid=list_card&source=https://evil.example')).status_code==422
             for placement in ('card_page_hero', 'card_page_verdict', 'card_page_sticky'):
                 response=await client.get('/api/go/compare-card?subid='+placement+'&source=compare-card')
@@ -45,9 +50,11 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
                 assert event['source_page']=='compare-card'
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyUrlOverride':'https://partner.example/apply?campaign=keep'}})
             response=await client.get('/api/go/compare-card?subid=list_card&pair=priority-pair&source=catalog')
-            assert parse_qs(urlparse(response.headers['location']).query)['subid']==['list_card_priority-pair']
+            pair query
             response=await client.get('/api/go/compare-card')
-            assert parse_qs(urlparse(response.headers['location']).query)['subid']==['direct_click_cardiq-site']
+            default_params=parse_qs(urlparse(response.headers['location']).query)
+            assert default_params['subid']==['default_click']
+            assert default_params['subid2']==['direct']
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyUrlOverride':'https://example.com/cardiq-demo/compare-card','applyLinkStatus':'testing'}})
             response=await client.get('/api/go/compare-card?subid=direct_click')
             assert response.headers['location']=='https://issuer.example/card'
@@ -56,6 +63,7 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             assert response.headers['location']=='https://issuer.example/card'
             assert (await client.get('/api/go/compare-card?subid=unknown')).status_code==422
             assert (await client.get('/api/go/compare-card?pair=https://evil.example')).status_code==422
+            assert (await client.get('/api/go/compare-card?subid2=https://evil.example')).status_code==422
             assert (await client.get('/api/go/missing')).status_code==404
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applicationsOpen':False}})
             assert (await client.get('/api/go/compare-card')).status_code==409
