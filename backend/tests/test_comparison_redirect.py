@@ -30,18 +30,18 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
             response=await client.get('/api/go/compare-card?subid=list_card&source=best-cashback-credit-cards-india')
             assert response.status_code==302
             assert parse_qs(urlparse(response.headers['location']).query)['source']==['best-cashback-credit-cards-india']
-            assert parse_qs(urlparse(response.headers['location']).query)['subid2']==['best-cashback-credit-cards-india']
             event=await server.db.apply_events.find_one({'placement_id':'list_card'})
             assert event['source_page']=='best-cashback-credit-cards-india'
             assert event['tracking_sub_id']=='list_card_best-cashback-credit-cards-india'
+            assert parse_qs(urlparse(response.headers['location']).query)['subid2']==['best-cashback-credit-cards-india']
             response=await client.get('/api/go/compare-card?subid=calculator_result_row&source=calculator')
             assert response.status_code==302
             event=await server.db.apply_events.find_one({'placement_id':'calculator_result_row'})
             assert event['source_page']=='calculator'
             assert event['tracking_sub_id']=='calculator_result_row_calculator'
-            calc_params=parse_qs(urlparse(response.headers['location']).query)
-            assert calc_params['cardiq_subid']==['calculator_result_row']
-            assert calc_params['subid2']==['calculator']
+            params=parse_qs(urlparse(response.headers['location']).query)
+            assert params['cardiq_subid']==['calculator_result_row']
+            assert params['subid2']==['calculator']
             assert (await client.get('/api/go/compare-card?subid=list_card&source=https://evil.example')).status_code==422
             for placement in ('card_page_hero', 'card_page_verdict', 'card_page_sticky'):
                 response=await client.get('/api/go/compare-card?subid='+placement+'&source=compare-card')
@@ -50,11 +50,14 @@ def test_comparison_redirect_preserves_attribution_and_falls_back(monkeypatch):
                 assert event['source_page']=='compare-card'
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyUrlOverride':'https://partner.example/apply?campaign=keep'}})
             response=await client.get('/api/go/compare-card?subid=list_card&pair=priority-pair&source=catalog')
-            pair query
+            params=parse_qs(urlparse(response.headers['location']).query)
+            assert params['subid']==['list_card']
+            assert params['subid2']==['catalog']
+            assert params['pair']==['priority-pair']
             response=await client.get('/api/go/compare-card')
-            default_params=parse_qs(urlparse(response.headers['location']).query)
-            assert default_params['subid']==['default_click']
-            assert default_params['subid2']==['direct']
+            params=parse_qs(urlparse(response.headers['location']).query)
+            assert params['subid']==['default_click']
+            assert params['subid2']==['direct']
             await server.db.cards.update_one({'id':card['id']},{'$set':{'applyUrlOverride':'https://example.com/cardiq-demo/compare-card','applyLinkStatus':'testing'}})
             response=await client.get('/api/go/compare-card?subid=direct_click')
             assert response.headers['location']=='https://issuer.example/card'
