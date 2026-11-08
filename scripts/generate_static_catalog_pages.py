@@ -6,6 +6,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import quote
@@ -227,15 +228,33 @@ directed_alternatives = {
     for alternative in (card.get("editorial") or {}).get("alternatives", [])
     if alternative.get("id") in cards_by_id
 }
-comparison_pairs = sorted({
+approved_comparison_pairs = sorted({
     tuple(sorted((left, right)))
     for left, right in directed_alternatives
     if left != right and (right, left) in directed_alternatives
 })
+if approved_comparison_pairs:
+    node = os.environ.get("CARDIQ_NODE_BIN") or shutil.which("node")
+    if not node:
+        raise RuntimeError("Node.js is required to generate the approved comparison routes")
+    generated = subprocess.run(
+        [node, str(ROOT / "scripts" / "generate_comparison_routes.js")],
+        input=json.dumps(approved_comparison_pairs),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=ROOT,
+    )
+    comparison_pairs = json.loads(generated.stdout)
+else:
+    comparison_pairs = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
 card_comparisons = {card['id']: [] for card in CARDS}
 seen_comparisons = set()
-for comparison_slug, left_id, right_id in ([(row['slug'], row['cardA'], row['cardB']) for row in TOP_COMPARISONS] + [(f'{a}-vs-{b}', a, b) for a,b in comparison_pairs]):
+for comparison_slug, left_id, right_id in (
+    [(row['slug'], row['cardA'], row['cardB']) for row in TOP_COMPARISONS]
+    + [(row['pairSlug'], row['cardA'], row['cardB']) for row in comparison_pairs]
+):
     primary = priority_by_pair.get(frozenset((left_id, right_id)))
     comparison_slug = primary['slug'] if primary else comparison_slug
     if comparison_slug in seen_comparisons:
@@ -305,7 +324,7 @@ for category in CATEGORIES:
 comparison_links = []
 comparison_posts = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
-comparison_routes = [(f"{left}-vs-{right}", left, right, None) for left,right in comparison_pairs]
+comparison_routes = [(row['pairSlug'], row['cardA'], row['cardB'], None) for row in comparison_pairs]
 comparison_routes += [(row['slug'], row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS]
 comparison_canonicals = []
 comparison_styles = (ROOT / 'scripts/templates/comparison.css').read_text()
@@ -459,12 +478,14 @@ methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 write(Path("methodology"), page("CardIQ editorial methodology and disclosures", "Learn how CardIQ sources card facts, generates editorial analysis, ranks recommendations and separates issuer revenue from match scores.", f"{ORIGIN}/methodology/", f"{ORIGIN}/#/cards", methodology_body))
 
 calculator_body = f'''<h1>Credit card value calculator for India</h1>
-<p>Estimate annual rewards after annual fees using your monthly spending. No login required.</p>
-<section class="card" aria-label="Card value calculator">
-<script>function resizeCardIqCalculator(frame){{const doc=frame.contentDocument;if(!doc)return;const root=doc.getElementById('root');if(!root)return;const resize=()=>{{const content=root.firstElementChild;if(!content)return;const height=Math.ceil(content.getBoundingClientRect().height);if(height>0)frame.style.height=height+'px'}};resize();new ResizeObserver(resize).observe(root);setTimeout(resize,500)}}</script>
-<iframe title="CardIQ credit card value calculator" src="{ORIGIN}/#/calculator?embedded=1" loading="eager" scrolling="no" onload="resizeCardIqCalculator(this)" style="display:block;width:100%;height:520px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
+<p>Compare Indian credit cards using your own monthly spending instead of headline reward rates. Enter approximate spending for online shopping, dining, travel, fuel, international purchases and everything else. No login or contact details are required.</p>
+<section class="card" aria-labelledby="calculator-tool-title"><h2 id="calculator-tool-title">Calculate your card value</h2>
+<p class="muted">Enter a typical month of spending below. The calculator uses CardIQ’s current catalogue and the same calculation model as the main app.</p>
+<script>function resizeCardIqCalculator(frame){{const resize=()=>{{const doc=frame.contentDocument;if(!doc)return;frame.style.height=Math.max(760,doc.documentElement.scrollHeight,doc.body.scrollHeight)+'px'}};resize();new ResizeObserver(resize).observe(frame.contentDocument.body);setTimeout(resize,500)}}</script>
+<iframe title="CardIQ credit card value calculator" src="{ORIGIN}/#/calculator?embedded=1" loading="eager" scrolling="no" onload="resizeCardIqCalculator(this)" style="display:block;width:100%;height:760px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
 <p><a href="{ORIGIN}/#/calculator">Open the calculator in a full page</a></p></section>
-<p class="muted">Results are estimates. Reward caps, exclusions, redemption choices and issuer terms can change actual value; confirm current terms with the issuer.</p>'''
+<h2>What the estimate considers</h2><ul><li>Your annualised card spending</li><li>How well each card’s documented categories match your spending</li><li>Published annual fees and fee-waiver thresholds</li><li>Explicitly priced welcome or milestone benefits</li><li>Your expected airport-lounge use</li></ul>
+<h2>What can change the result</h2><p>Merchant classification, monthly reward caps, excluded transactions, redemption choices and issuer rule changes can reduce actual value. CardIQ therefore shows an editorial range rather than promising an exact return. The issuing bank’s current terms remain authoritative.</p>'''
 write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))
 
 sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
