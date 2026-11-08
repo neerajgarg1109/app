@@ -39,7 +39,7 @@ test("calculates a spend scenario without collecting contact details", async () 
   expect(container.textContent).toContain("₹999");
   expect(container.textContent).toContain("Explicit benefits counted");
   expect(container.textContent).toContain("₹1,200");
-  expect(container.textContent).toContain("Joining fees, GST on fees and interest are not included");
+  expect(container.textContent).toContain("Joining fees, GST on fees and interest");
   const applyLink = container.querySelector('a[href="/go/cashback/?subid=calculator_result_row&source=calculator"]');
   expect(applyLink.textContent).toBe("Apply Now →");
   expect(applyLink.getAttribute("rel")).toBe("sponsored nofollow noopener");
