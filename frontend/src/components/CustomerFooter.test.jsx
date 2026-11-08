@@ -19,7 +19,8 @@ test("exposes customer discovery, comparison, support and disclosure links", asy
   const root = createRoot(container);
   await act(async () => root.render(<CustomerFooter />));
   const links = Array.from(container.querySelectorAll("a")).map((link) => link.textContent);
-  expect(links).toEqual(expect.arrayContaining(["Browse all cards", "Card comparisons", "Reviews and editorials", "Close a card", "Invite-only cards", "Annual value calculator", "How CardIQ makes money"]));
+  expect(links).toEqual(expect.arrayContaining(["Browse all cards", "Card comparisons", "Reviews and editorials", "Close a card", "Invite-only cards", "Annual value calculator", "Reward & Transfer Calculator", "How CardIQ makes money"]));
+  expect(container.querySelector('a[href="/reward-calculator"]')?.textContent).toBe("Reward & Transfer Calculator");
   expect(container.textContent).not.toContain("may earn a commission");
   await act(async () => root.unmount());
 });
