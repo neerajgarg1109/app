@@ -32,7 +32,7 @@ export default function CustomerFooter() {
             <section key={group.title} aria-labelledby={`footer-group-${index}`}>
               <h2 id={`footer-group-${index}`}>{group.title}</h2>
               <ul>{group.links.map(({ label, url: storedUrl }) => <li key={`${label}-${storedUrl}`}>
-                {isSpaDestination(localSpaRoute(footerRoute(storedUrl)) || footerRoute(storedUrl)) ? <Link to={localSpaRoute(footerRoute(storedUrl)) || footerRoute(storedUrl)}>{label}</Link> : <a href={publicDestination(footerRoute(storedUrl))}>{label}</a>}
+                {localSpaRoute(footerRoute(storedUrl)) ? <Link to={localSpaRoute(footerRoute(storedUrl))}>{label}</Link> : isSpaDestination(footerRoute(storedUrl)) ? <Link to={footerRoute(storedUrl)}>{label}</Link> : <a href={publicDestination(footerRoute(storedUrl))}>{label}</a>}
               </li>)}</ul>
             </section>
           ))}
@@ -46,7 +46,7 @@ export default function CustomerFooter() {
 }
 
 function isSpaDestination(url) {
-  return [ "/wallet-optimizer", "/reward-calculator", "/alerts", "/help/issuers", "/cards", "/calculator", "/updates", "/restricted-cards"].some((path) => url.startsWith(path));
+  return url === "/reward-calculator" || [ "/wallet-optimizer", "/alerts", "/help/issuers", "/cards", "/calculator", "/updates", "/restricted-cards"].some((path) => url.startsWith(path));
 }
 
 function localSpaRoute(url) {
@@ -54,6 +54,7 @@ function localSpaRoute(url) {
   if (url === "/compare/") return "/cards?mode=compare";
   if (url === "/catalog/") return "/cards";
   if (url === "/calculator/") return "/calculator";
+  if (url === "/reward-calculator/") return "/reward-calculator";
   if (url === "/lounges/") return "/cards?category=travel";
   if (url === "/guides/" || url.startsWith("/guides/new-credit-cards/")) return "/updates";
   if (url.startsWith("/guides/invite-only-credit-cards/")) return "/restricted-cards";
@@ -69,5 +70,5 @@ function publicDestination(url) {
 }
 
 function footerRoute(url) {
-  return ({"/": "/", "/cards": "/catalog/", "/cards?mode=compare": "/compare/", "/calculator": "/calculator/", "/updates": "/guides/new-credit-cards/", "/restricted-cards": "/guides/invite-only-credit-cards/"})[url] || url;
+  return ({"/": "/", "/cards": "/catalog/", "/cards?mode=compare": "/compare/", "/calculator": "/calculator/", "/reward-calculator": "/reward-calculator/", "/updates": "/guides/new-credit-cards/", "/restricted-cards": "/guides/invite-only-credit-cards/"})[url] || url;
 }

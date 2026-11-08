@@ -31,7 +31,7 @@ test("invalid destinations leave the existing footer intact", async () => {
 });
 
  test("static footer maps catalogue, calculator and research navigation to crawlable routes", async () => {
-  const routes = {"/cards": "/catalog/", "/calculator": "/calculator/", "/reward-calculator": "/#/reward-calculator", "/updates": "/guides/new-credit-cards/", "/restricted-cards": "/guides/invite-only-credit-cards/"};
+  const routes = {"/cards": "/catalog/", "/calculator": "/calculator/", "/reward-calculator": "/reward-calculator/", "/updates": "/guides/new-credit-cards/", "/restricted-cards": "/guides/invite-only-credit-cards/"};
   run(jest.fn().mockResolvedValue({ok: true, json: async () => ({footer_groups: [{title: "Discover", links: Object.keys(routes).map(url => ({label: url, url}))}]})}));
   await flush();
   expect(Array.from(document.querySelectorAll('a')).map(a => a.href)).toEqual(Object.values(routes).map(url => "https://findmybest.cards" + url));

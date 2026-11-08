@@ -93,6 +93,7 @@ def clean_generated_routes():
     shutil.rmtree(BUILD / "categories", ignore_errors=True)
     shutil.rmtree(BUILD / "issuers", ignore_errors=True)
     shutil.rmtree(BUILD / "calculator", ignore_errors=True)
+    shutil.rmtree(BUILD / "reward-calculator", ignore_errors=True)
     shutil.rmtree(BUILD / "compare", ignore_errors=True)
     shutil.rmtree(BUILD / "updates", ignore_errors=True)
     shutil.rmtree(BUILD / "lounges", ignore_errors=True)
@@ -486,7 +487,16 @@ calculator_body = f'''<h1>Credit card value calculator for India</h1>
 <p class="muted">Results are estimates. Reward caps, exclusions, redemption choices and issuer terms can change actual value; confirm current terms with the issuer.</p>'''
 write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))
 
-sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
+reward_calculator_body = f'''<h1>Reward &amp; transfer partner calculator</h1>
+<p>Compare estimated transaction rewards for cards you already hold, including illustrative airline and hotel transfer valuations.</p>
+<section class="card" aria-label="Reward and transfer partner calculator">
+<script>function resizeRewardCalculator(frame){{const doc=frame.contentDocument;if(!doc)return;const root=doc.getElementById('root');if(!root)return;const resize=()=>{{const content=root.firstElementChild;if(!content)return;const height=Math.ceil(content.getBoundingClientRect().height);if(height>0)frame.style.height=height+'px'}};resize();new ResizeObserver(resize).observe(root);setTimeout(resize,500)}}</script>
+<iframe title="Reward and transfer partner calculator" src="{ORIGIN}/#/reward-calculator?embedded=1" loading="eager" scrolling="no" onload="resizeRewardCalculator(this)" style="display:block;width:100%;height:760px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
+<p><a href="{ORIGIN}/#/reward-calculator">Open the calculator in the CardIQ app</a></p></section>
+<p class="muted">Values are estimates based on listed catalogue terms. Actual earning rates, caps, exclusions and transfer availability depend on the card and issuer; confirm current terms before spending.</p>'''
+write(Path("reward-calculator"), page("Reward & Transfer Calculator for credit card holders | CardIQ", "Compare estimated points, cashback and airline or hotel transfer values for a transaction on cards you already hold.", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/#/reward-calculator", reward_calculator_body))
+
+sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
 sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug, *_ in guides]
 sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug in editorial_guide_slugs + closure_guide_slugs]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]

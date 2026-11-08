@@ -59,11 +59,19 @@ class Document(HTMLParser):
 
 
 def generated_pages():
-    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator", BUILD / "compare", BUILD / "updates", BUILD / "lounges", BUILD / "restricted-cards", BUILD / "guides"]
+    roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator", BUILD / "reward-calculator", BUILD / "compare", BUILD / "updates", BUILD / "lounges", BUILD / "restricted-cards", BUILD / "guides"]
     return [path for root in roots for path in root.glob("*/index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
 
 
 class StaticCatalogTests(unittest.TestCase):
+    def test_reward_calculator_has_its_own_clean_indexable_route(self):
+        source = (BUILD / "reward-calculator" / "index.html").read_text()
+        document = Document(source)
+        self.assertEqual(document.meta["canonical"], ORIGIN + "/reward-calculator/")
+        self.assertIn("Reward &amp; Transfer Calculator", source)
+        self.assertIn(f'src="{ORIGIN}/#/reward-calculator?embedded=1"', source)
+        self.assertIn(ORIGIN + "/reward-calculator/", (BUILD / "sitemap.xml").read_text())
+
     def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
         pages = list((BUILD / 'compare').glob('*/index.html'))
         self.assertGreater(len(pages), 0)
