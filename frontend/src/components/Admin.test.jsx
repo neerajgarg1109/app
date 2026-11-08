@@ -9,6 +9,8 @@ import {
 jest.mock("../api", () => ({
   getAdminLeads: jest.fn(), getAdminInsights: jest.fn(), getAdminCards: jest.fn(),
   getAdminCardReviews: jest.fn(), updateAdminCardApplyLink: jest.fn(),
+  getAdminIssuerSourceChanges: jest.fn(), checkAdminIssuerSources: jest.fn(),
+  getAdminIssuerSourceScan: jest.fn(), reviewAdminIssuerSourceChange: jest.fn(),
   createAdminCard: jest.fn(), updateAdminCard: jest.fn(), publishAdminCard: jest.fn(),
   discardAdminCardDraft: jest.fn(), getAdminCardHistory: jest.fn(), rollbackAdminCard: jest.fn(),
   archiveAdminCard: jest.fn(), previewAdminCardRecommendation: jest.fn(), exportAdminCards: jest.fn(),
@@ -60,6 +62,7 @@ describe("Admin partner-link workflow", () => {
     getAdminCards.mockResolvedValue({ role: "owner", cards: [card] });
     getAdminCardReviews.mockResolvedValue({ reviews: [] });
     require("../api").getAdminApplyLinkHealth.mockResolvedValue({ links: [], failed: 0 });
+    require("../api").getAdminIssuerSourceChanges.mockResolvedValue({ changes: [], pending: 0, sources_monitored: 0, sources_failing: 0, failed_source_details: [], last_checked_at: null });
     require("../api").getAdminSiteContent.mockResolvedValue({ footer_groups: [{ title: "Discover", links: [{ label: "Cards", url: "/cards" }] }], featured_cards: [] });
     updateAdminCardApplyLink.mockResolvedValue({
       custom_apply_url: "https://partner.example/live", effective_apply_url: "https://partner.example/live",
@@ -128,5 +131,24 @@ describe("Admin partner-link workflow", () => {
     await act(async () => click(container, "Cards").click());
     await act(async () => click(container, "Reset").click());
     expect(updateAdminCardApplyLink).toHaveBeenCalledWith("owner-token", "cashback-card", null);
+  });
+
+  test("shows a new issuer card announcement in Source watch", async () => {
+    require("../api").getAdminIssuerSourceChanges.mockResolvedValue({
+      changes: [{ change_id: "a".repeat(64), change_type: "new_card_announcement", issuer: "Alpha Bank",
+        announcement_title: "Alpha Bank launches the Horizon Credit Card",
+        announcement_url: "https://alpha.example/news/horizon", detected_at: "2026-11-08T00:00:00Z",
+        diff_note: "Confirm the issuer announcement." }],
+      pending: 1, sources_monitored: 5, sources_failing: 0, failed_source_details: [], last_checked_at: null,
+    });
+    await act(async () => root.render(<Admin />));
+    await act(async () => setInput(container.querySelector('input[type="password"]'), "owner-token"));
+    await act(async () => click(container, "Unlock dashboard").click());
+    await act(async () => click(container, "Source watch1").click());
+
+    expect(container.textContent).toContain("New card announcement found");
+    expect(container.textContent).toContain("Alpha Bank launches the Horizon Credit Card");
+    expect(container.textContent).toContain("Read issuer announcement");
+    expect(container.querySelector('a[href="https://alpha.example/news/horizon"]')).toBeTruthy();
   });
 });

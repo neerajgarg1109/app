@@ -3,7 +3,7 @@ import { Loader2, Lock, RefreshCw, Mail, Phone, CreditCard, Download, BarChart3,
 import Logo from "./Logo";
 import CardArtworkEditor from "./CardArtworkEditor";
 import CreditCardVisual from "./CreditCardVisual";
-import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert, checkAdminApplyLinks, getAdminApplyLinkHealth, importAdminReconciliation, getAdminSiteContent, updateAdminSiteContent } from "../api";
+import { getAdminLeads, getAdminInsights, getAdminCards, createAdminCard, updateAdminCard, publishAdminCard, discardAdminCardDraft, getAdminCardHistory, rollbackAdminCard, archiveAdminCard, previewAdminCardRecommendation, exportAdminCards, importAdminCards, updateAdminCardApplyLink, leadsCsvUrl, sendReminders, getAdminCardReviews, moderateAdminCardReview, sendAdminReviewReminders, sendAdminCardAlert, checkAdminApplyLinks, getAdminApplyLinkHealth, getAdminIssuerSourceChanges, checkAdminIssuerSources, getAdminIssuerSourceScan, reviewAdminIssuerSourceChange, importAdminReconciliation, getAdminSiteContent, updateAdminSiteContent } from "../api";
 import { catalogQualityIssues } from "../catalogQuality";
 import SiteContentEditor from "./SiteContentEditor";
 
@@ -54,6 +54,8 @@ export default function Admin() {
   const [alertDraft, setAlertDraft] = useState({ card_id: "", title: "", summary: "", source_url: "", idempotency_key: "", change_type: "benefit-change", effective_date: "" });
   const [alertMsg, setAlertMsg] = useState(null);
   const [linkHealth, setLinkHealth] = useState({ links: [], failed: 0 });
+  const [sourceWatch, setSourceWatch] = useState({ changes: [], pending: 0, sources_monitored: 0, sources_failing: 0, failed_source_details: [], last_checked_at: null });
+  const [sourceWatchMsg, setSourceWatchMsg] = useState(null);
   const [siteContent, setSiteContent] = useState(null);
   const [savingContent, setSavingContent] = useState(false);
   const importInput = useRef(null);
@@ -83,6 +85,7 @@ export default function Admin() {
       setLinkDrafts(Object.fromEntries((catalog.cards || []).map((card) => [card.id, linkDraft(card)])));
       setAuthed(true);
       localStorage.setItem("ciq_admin", t);
+      getAdminIssuerSourceChanges(t).then(setSourceWatch).catch(() => {});
     } catch (e) {
       const status = e.response?.status;
       setError(status === 401 ? "Invalid admin key."
@@ -252,6 +255,42 @@ export default function Admin() {
     finally { setSending(false); }
   };
 
+  const loadSourceWatch = async () => {
+    try { setSourceWatch(await getAdminIssuerSourceChanges(token)); }
+    catch (e) { setSourceWatchMsg({ type: "error", text: e.response?.data?.detail || "Could not load issuer source changes." }); }
+  };
+
+  const runIssuerSourceCheck = async () => {
+    setSending(true); setSourceWatchMsg(null);
+    try {
+      const started = await checkAdminIssuerSources(token);
+      let result = started;
+      for (let attempt = 0; attempt < 300 && ["queued", "running"].includes(result.status); attempt += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        result = await getAdminIssuerSourceScan(token, started.scan_id);
+      }
+      if (result.status === "completed") {
+        setSourceWatchMsg({ type: "success", text: `Checked ${result.sources_checked} card terms sources and ${result.announcement_sources_checked || 0} issuer announcement listings: ${result.changed} source changes and ${result.new_announcements || 0} new card announcements queued; ${result.failed + (result.announcement_sources_failed || 0)} sources could not be checked.` });
+      } else if (result.status === "skipped") {
+        setSourceWatchMsg({ type: "success", text: result.error || "Another API process is already checking issuer sources." });
+      } else if (result.status === "failed") {
+        setSourceWatchMsg({ type: "error", text: result.error || "Issuer source scan failed." });
+      } else {
+        setSourceWatchMsg({ type: "success", text: "The scan is still running in the background. Refresh this section in a moment for its results." });
+      }
+      await loadSourceWatch();
+    } catch (e) { setSourceWatchMsg({ type: "error", text: e.response?.data?.detail || "Issuer source scan failed." }); }
+    finally { setSending(false); }
+  };
+
+  const reviewIssuerSource = async (change, status) => {
+    try {
+      await reviewAdminIssuerSourceChange(token, change.change_id, status);
+      setSourceWatchMsg({ type: "success", text: status === "verified" ? "Change verified and marked for editorial follow-up." : "Source changed, but no card-term change was found." });
+      await loadSourceWatch();
+    } catch (e) { setSourceWatchMsg({ type: "error", text: e.response?.data?.detail || "Could not update source review." }); }
+  };
+
   const importReconciliation = async (file) => {
     try {
       const text = await file.text();
@@ -334,11 +373,12 @@ export default function Admin() {
 
       <div className="ciq-container ciq-container--admin">
         <div className="mb-3 flex justify-end"><span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide" style={{ background: "#eef0ec", color: "var(--ciq-ink-soft)" }}>{adminRole} access</span></div>
-        <nav className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border bg-white p-1.5 sm:grid-cols-8" style={{ borderColor: "var(--ciq-line)" }} aria-label="Admin sections">
+        <nav className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border bg-white p-1.5 sm:grid-cols-9" style={{ borderColor: "var(--ciq-line)" }} aria-label="Admin sections">
           {[
             { key: "overview", label: "Overview", icon: LayoutDashboard },
             { key: "issuers", label: "Issuers", icon: Building2 },
             { key: "health", label: "Health", icon: Activity },
+            { key: "sources", label: "Source watch", icon: Search },
             { key: "reviews", label: "Reviews", icon: MessageSquare },
             { key: "alerts", label: "Alerts", icon: Send },
             { key: "links", label: "Cards", icon: CreditCard },
@@ -347,7 +387,7 @@ export default function Admin() {
           ].map(({ key, label, icon: Icon }) => (
             <button
               key={key}
-              onClick={() => setActiveSection(key)}
+              onClick={() => { setActiveSection(key); if (key === "sources") loadSourceWatch(); }}
               aria-current={activeSection === key ? "page" : undefined}
               className="ciq-press flex items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-xs font-semibold sm:text-sm"
               style={{
@@ -355,7 +395,7 @@ export default function Admin() {
                 color: activeSection === key ? "#fff" : "var(--ciq-ink-soft)",
               }}
             >
-              <Icon className="h-4 w-4" /> <span>{label}</span>
+              <Icon className="h-4 w-4" /> <span>{label}</span>{key === "sources" && sourceWatch.pending > 0 && <span className="rounded-full px-1.5 py-0.5 text-[10px] font-bold" style={{ background: activeSection === key ? "#fff" : "#fff3cd", color: "#8a5b00" }}>{sourceWatch.pending}</span>}
             </button>
           ))}
         </nav>
@@ -494,6 +534,30 @@ export default function Admin() {
             {healthIssues.map(({ card, issue }, index) => <div key={`${card.id}-${issue}-${index}`} className="flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5" style={{ borderColor: "var(--ciq-line)" }}><div><div className="text-sm font-semibold">{card.name}</div><div className="text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{card.issuer}</div></div><div className="flex items-center gap-2"><span className="text-xs font-semibold" style={{ color: "#9a6700" }}>{issue}</span>{canEdit && <button onClick={() => { setEditingCard(card); }} className="rounded-lg border px-2 py-1 text-xs" style={{ borderColor: "var(--ciq-line)" }}>Fix</button>}</div></div>)}
           </div>
           <div className="mt-6 border-t pt-5" style={{ borderColor: "var(--ciq-line)" }}><div className="flex flex-wrap items-center justify-between gap-3"><div><h3 className="font-display text-base font-extrabold">Application-link health</h3><p className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{linkHealth.links.length} destinations checked · {linkHealth.failed} currently failing. Failed live partner links fall back to the official issuer URL.</p></div>{canPublish && <button onClick={runLinkChecks} disabled={sending} className="rounded-xl px-3 py-2 text-sm font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>{sending ? "Checking…" : "Check all links"}</button>}</div><div className="mt-3 space-y-2">{linkHealth.links.filter((item) => !item.healthy).map((item) => <div key={item.card_id} className="rounded-xl border p-3 text-sm" style={{ borderColor: "#e4b5b1" }}><strong>{item.card_name}</strong><span className="ml-2 text-xs" style={{ color: "#a33b35" }}>{item.link_type} link failed{item.status_code ? ` (${item.status_code})` : ""}</span></div>)}</div></div>
+        </section>}
+
+        {activeSection === "sources" && <section className="rounded-3xl border bg-white p-4 md:p-5" style={{ borderColor: "var(--ciq-line)" }}>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div><div className="flex items-center gap-2"><Search className="h-5 w-5" style={{ color: "var(--ciq-teal-600)" }} /><h2 className="font-display text-lg font-extrabold">Issuer source watch</h2></div>
+              <p className="mt-1 max-w-2xl text-xs" style={{ color: "var(--ciq-ink-soft)" }}>Official card terms are checked for content changes, and issuer announcement listings are checked for newly appearing card launches. Signals require editorial review; CardIQ never changes published facts or emails subscribers automatically.</p></div>
+            {canPublish && <button onClick={runIssuerSourceCheck} disabled={sending} className="rounded-xl px-3 py-2 text-sm font-semibold text-white disabled:opacity-50" style={{ background: "var(--ciq-teal-600)" }}>{sending ? "Checking sources…" : "Check sources now"}</button>}
+          </div>
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            <div className="rounded-xl p-3" style={{ background: "#f7f8f6" }}><div className="font-display text-lg font-extrabold">{sourceWatch.sources_monitored}</div><div className="text-[10px] uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>Unique sources monitored</div></div>
+            <div className="rounded-xl p-3" style={{ background: sourceWatch.pending ? "#fff3cd" : "#f7f8f6" }}><div className="font-display text-lg font-extrabold">{sourceWatch.pending}</div><div className="text-[10px] uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>Changes awaiting review</div></div>
+            <div className="rounded-xl p-3" style={{ background: sourceWatch.sources_failing ? "#fdeceb" : "#f7f8f6" }}><div className="font-display text-lg font-extrabold">{sourceWatch.sources_failing}</div><div className="text-[10px] uppercase tracking-wide" style={{ color: "var(--ciq-ink-soft)" }}>Sources unavailable</div></div>
+          </div>
+          <p className="mt-2 text-[11px]" style={{ color: "var(--ciq-ink-soft)" }}>Last check: {sourceWatch.last_checked_at ? new Date(sourceWatch.last_checked_at).toLocaleString() : "No completed check yet. The first scan establishes a baseline."}</p>
+          {sourceWatchMsg && <p className="mt-3 text-sm" style={{ color: sourceWatchMsg.type === "error" ? "#b4433f" : "var(--ciq-teal)" }}>{sourceWatchMsg.text}</p>}
+          {sourceWatch.sources_failing > 0 && <details className="mt-3"><summary className="cursor-pointer text-xs font-semibold">Show unavailable sources ({sourceWatch.sources_failing})</summary><div className="mt-2 space-y-2">{sourceWatch.failed_source_details.map((item) => <div key={item.source_url} className="rounded-xl border p-3 text-xs" style={{ borderColor: "#e4b5b1" }}><a className="break-all underline" href={item.source_url} target="_blank" rel="noopener noreferrer">{item.source_url}</a><div className="mt-1" style={{ color: "#a33b35" }}>{item.last_error}</div></div>)}</div></details>}
+          <div className="mt-4 space-y-3">{sourceWatch.changes.length === 0 && <Empty />}{sourceWatch.changes.map((change) => <article key={change.change_id} className="rounded-2xl border p-4" style={{ borderColor: "var(--ciq-line)" }}>
+            <div className="flex flex-wrap items-start justify-between gap-2"><div><div className="text-sm font-bold">{change.change_type === "new_card_announcement" ? "New card announcement found" : "Issuer source content changed"}</div><div className="mt-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{new Date(change.detected_at).toLocaleString()} · {change.issuer || change.content_type || "document"}</div></div><span className="rounded-full px-2 py-1 text-[10px] font-bold uppercase" style={{ background: "#fff3cd", color: "#8a5b00" }}>Review needed</span></div>
+            {change.change_type === "new_card_announcement" ? <div className="mt-3 text-sm font-semibold">{change.announcement_title}</div> : <div className="mt-3 space-y-1 text-xs" style={{ color: "var(--ciq-ink-soft)" }}>{(change.cards || []).map((card) => <div key={card.card_id}><strong>{card.card_name}</strong> — {card.issuer}</div>)}</div>}
+            <a className="mt-3 inline-block break-all text-xs underline" href={change.announcement_url || change.final_url || change.source_url} target="_blank" rel="noopener noreferrer">{change.change_type === "new_card_announcement" ? "Read issuer announcement" : "Open issuer source"}</a>
+            <div className="mt-3 text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{change.diff_note || (change.change_type === "new_card_announcement" ? "Confirm whether this is a newly announced credit card and verify product facts from official sources." : "Content fingerprint changed. Review the issuer document to identify whether card terms changed.")}</div>
+            {change.diff_preview ? <details className="mt-3"><summary className="cursor-pointer text-xs font-semibold">Show text diff preview</summary><pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap rounded-xl p-3 text-[11px]" style={{ background: "#f7f8f6", color: "var(--ciq-ink)" }}>{change.diff_preview}</pre></details> : <p className="mt-2 text-[10px]" style={{ color: "var(--ciq-ink-soft)" }}>{change.diff_note || "No text diff is available for this source."}</p>}
+            {canEdit && <div className="mt-3 flex flex-wrap gap-2"><button onClick={() => reviewIssuerSource(change, "verified")} className="rounded-lg px-3 py-1.5 text-xs font-semibold text-white" style={{ background: "var(--ciq-teal-600)" }}>{change.change_type === "new_card_announcement" ? "New card confirmed" : "Terms change verified"}</button><button onClick={() => reviewIssuerSource(change, "not_material")} className="rounded-lg border px-3 py-1.5 text-xs font-semibold" style={{ borderColor: "var(--ciq-line)" }}>{change.change_type === "new_card_announcement" ? "Not a new card" : "No term change"}</button></div>}
+          </article>)}</div>
         </section>}
 
         {activeSection === "reviews" && <section className="rounded-3xl border bg-white p-4 md:p-5" style={{ borderColor: "var(--ciq-line)" }}>

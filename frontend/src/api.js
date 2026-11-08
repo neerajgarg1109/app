@@ -178,6 +178,27 @@ export async function getAdminApplyLinkHealth(token) {
   return data;
 }
 
+export async function getAdminIssuerSourceChanges(token, status = "pending") {
+  const { data } = await http.get("/admin/issuer-source-changes", { params: { status }, headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function checkAdminIssuerSources(token) {
+  const { data } = await http.post("/admin/check-issuer-sources", {}, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function getAdminIssuerSourceScan(token, scanId) {
+  const { data } = await http.get(`/admin/issuer-source-scans/${encodeURIComponent(scanId)}`, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
+export async function reviewAdminIssuerSourceChange(token, changeId, status, reviewNote = "") {
+  const { data } = await http.post(`/admin/issuer-source-changes/${encodeURIComponent(changeId)}/review`,
+    { status, review_note: reviewNote }, { headers: { "X-Admin-Token": token } });
+  return data;
+}
+
 export async function importAdminReconciliation(token, rows) {
   const { data } = await http.post("/admin/reconciliation-import", rows, { headers: { "X-Admin-Token": token } });
   return data;

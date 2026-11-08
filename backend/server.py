@@ -27,6 +27,7 @@ from cards_seed import CARDS, seed_cards, recommend_cards, card_economics_profil
 from card_images import normalize_card_image, validate_card_image_url, MAX_IMAGE_BYTES
 from restricted_access import restricted_access
 from email_transport import deliver_email, EmailConfigurationError, EmailDeliveryError
+from issuer_source_monitor import run_issuer_source_check
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -40,6 +41,8 @@ else:
     client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 _link_monitor_task = None
+_issuer_source_monitor_task = None
+_issuer_source_scan_tasks = set()
 
 
 async def _ensure_product_event_index():
@@ -56,15 +59,29 @@ async def _ensure_product_event_index():
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Initialize database state and background work using FastAPI's lifespan API."""
-    global _link_monitor_task
+    global _link_monitor_task, _issuer_source_monitor_task
     await seed_cards(db)
     await _ensure_product_event_index()
     await db.product_events.create_index("created_at", name="product_event_created_at")
     await db.partner_conversions.create_index("external_id", unique=True, name="unique_partner_conversion")
     await db.partner_conversions.create_index("created_at", name="partner_conversion_created_at")
     await db.apply_link_checks.create_index([("card_id", 1), ("checked_at", -1)], name="apply_link_check_card_date")
+    await db.issuer_source_watch.create_index("source_id", unique=True, name="unique_issuer_source_watch")
+    await db.issuer_announcement_watch.create_index("source_id", unique=True, name="unique_issuer_announcement_watch")
+    await db.issuer_source_changes.create_index([("status", 1), ("detected_at", -1)], name="issuer_source_change_review_queue")
+    await db.issuer_source_changes.create_index([("source_id", 1), ("current_digest", 1), ("status", 1)],
+                                               unique=True, partialFilterExpression={"status": "pending"},
+                                               name="unique_pending_source_version")
+    await db.issuer_source_scan_jobs.update_many({"active": True}, {"$set": {
+        "status": "interrupted", "active": False, "error": "API restarted before the source scan completed",
+    }})
+    await db.issuer_source_scan_jobs.create_index("active", unique=True,
+                                                 partialFilterExpression={"active": True},
+                                                 name="one_active_issuer_source_scan")
     if os.environ.get("ENABLE_APPLY_LINK_MONITOR", "true").lower() == "true":
         _link_monitor_task = asyncio.create_task(_link_monitor_loop())
+    if os.environ.get("ENABLE_ISSUER_SOURCE_MONITOR", "true").lower() == "true":
+        _issuer_source_monitor_task = asyncio.create_task(_issuer_source_monitor_loop())
     logger.info("cardIQ card catalog seeded")
     try:
         yield
@@ -76,6 +93,19 @@ async def lifespan(_app: FastAPI):
             except asyncio.CancelledError:
                 pass
             _link_monitor_task = None
+        if _issuer_source_monitor_task:
+            _issuer_source_monitor_task.cancel()
+            try:
+                await _issuer_source_monitor_task
+            except asyncio.CancelledError:
+                pass
+            _issuer_source_monitor_task = None
+        pending_scans = list(_issuer_source_scan_tasks)
+        for task in pending_scans:
+            task.cancel()
+        if pending_scans:
+            await asyncio.gather(*pending_scans, return_exceptions=True)
+        _issuer_source_scan_tasks.clear()
         client.close()
 
 
@@ -412,6 +442,18 @@ class AdminCardAlertSendIn(BaseModel):
     def validate_effective_date(cls, value: Optional[str]) -> Optional[str]:
         if value and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
             raise ValueError("Effective date must use YYYY-MM-DD")
+        return value
+
+
+class IssuerSourceReviewIn(BaseModel):
+    status: str
+    review_note: str = Field(default="", max_length=1000)
+
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, value: str) -> str:
+        if value not in {"verified", "not_material"}:
+            raise ValueError("Choose verified or not_material")
         return value
 
 
@@ -1818,6 +1860,112 @@ async def apply_link_health(x_admin_token: Optional[str] = Header(None)):
     return {"links": list(latest.values()), "failed": sum(not item.get("healthy") for item in latest.values())}
 
 
+@api_router.get("/admin/issuer-source-changes")
+async def admin_issuer_source_changes(status: str = Query("pending", pattern="^(pending|verified|not_material|all)$"),
+                                      limit: int = Query(100, ge=1, le=500),
+                                      x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    query = {} if status == "all" else {"status": status}
+    changes = await db.issuer_source_changes.find(query, {"_id": 0}).sort("detected_at", -1).to_list(limit)
+    watch_query = {"source_id": {"$exists": True}}
+    announcement_query = {"source_id": {"$exists": True}}
+    total_sources = await db.issuer_source_watch.count_documents(watch_query) + await db.issuer_announcement_watch.count_documents(announcement_query)
+    failed_sources = await db.issuer_source_watch.count_documents({**watch_query, "last_error": {"$ne": None}}) + await db.issuer_announcement_watch.count_documents({**announcement_query, "last_error": {"$ne": None}})
+    failed_details = await db.issuer_source_watch.find(
+        {**watch_query, "last_error": {"$ne": None}},
+        {"_id": 0, "source_url": 1, "cards": 1, "last_error": 1, "checked_at": 1},
+    ).sort("checked_at", -1).to_list(100)
+    announcement_failures = await db.issuer_announcement_watch.find(
+        {**announcement_query, "last_error": {"$ne": None}},
+        {"_id": 0, "source_url": 1, "issuer": 1, "last_error": 1, "checked_at": 1},
+    ).sort("checked_at", -1).to_list(100)
+    failed_details.extend(announcement_failures)
+    latest = await db.issuer_source_watch.find_one(watch_query, {"_id": 0, "checked_at": 1}, sort=[("checked_at", -1)])
+    latest_announcement = await db.issuer_announcement_watch.find_one(announcement_query, {"_id": 0, "checked_at": 1}, sort=[("checked_at", -1)])
+    pending = await db.issuer_source_changes.count_documents({"status": "pending"})
+    return {"changes": changes, "pending": pending, "sources_monitored": total_sources,
+            "sources_failing": failed_sources, "failed_source_details": failed_details,
+            "last_checked_at": max(filter(None, [(latest or {}).get("checked_at"),
+                                                   (latest_announcement or {}).get("checked_at")]), default=None)}
+
+
+@api_router.post("/admin/check-issuer-sources", status_code=202)
+async def check_issuer_sources(x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token, "publisher")
+    active = await db.issuer_source_scan_jobs.find_one({"active": True}, {"_id": 0})
+    if active:
+        return {"scan_id": active["scan_id"], "status": active["status"]}
+    scan_id = str(uuid.uuid4())
+    job = {"scan_id": scan_id, "status": "queued", "active": True,
+           "created_at": datetime.now(timezone.utc)}
+    try:
+        await db.issuer_source_scan_jobs.insert_one({"_id": scan_id, **job})
+    except DuplicateKeyError:
+        active = await db.issuer_source_scan_jobs.find_one({"active": True}, {"_id": 0})
+        if active:
+            return {"scan_id": active["scan_id"], "status": active["status"]}
+        raise
+    task = asyncio.create_task(_process_issuer_source_scan(scan_id))
+    _issuer_source_scan_tasks.add(task)
+    task.add_done_callback(_issuer_source_scan_tasks.discard)
+    return {"scan_id": scan_id, "status": "queued"}
+
+
+async def _process_issuer_source_scan(scan_id: str):
+    await db.issuer_source_scan_jobs.update_one({"scan_id": scan_id},
+                                                {"$set": {"status": "running", "started_at": datetime.now(timezone.utc)}})
+    try:
+        summary = await run_issuer_source_check(db)
+        await db.issuer_source_scan_jobs.update_one({"scan_id": scan_id}, {"$set": {
+            "status": "skipped" if summary.get("skipped") else "completed",
+            "active": False, "completed_at": datetime.now(timezone.utc),
+            "error": summary.get("skip_reason"),
+            "sources_checked": summary["sources_checked"], "changed": summary["changed"],
+            "baseline": summary["baseline"], "unchanged": summary["unchanged"], "failed": summary["failed"],
+            "announcement_sources_checked": summary["announcement_sources_checked"],
+            "new_announcements": summary["new_announcements"],
+            "announcement_sources_failed": summary["announcement_sources_failed"],
+            "announcement_results": summary["announcement_results"],
+            "changed_sources": [item for item in summary["results"] if item["status"] == "changed"][:50],
+            "failed_sources": [item for item in summary["results"] if item["status"] == "error"][:50],
+        }})
+    except asyncio.CancelledError:
+        await db.issuer_source_scan_jobs.update_one({"scan_id": scan_id},
+                                                    {"$set": {"status": "interrupted", "active": False}})
+        raise
+    except Exception as error:
+        logger.error("Manual issuer source scan failed: %s", error)
+        await db.issuer_source_scan_jobs.update_one({"scan_id": scan_id}, {"$set": {
+            "status": "failed", "active": False, "completed_at": datetime.now(timezone.utc),
+            "error": str(error)[:300],
+        }})
+
+
+@api_router.get("/admin/issuer-source-scans/{scan_id}")
+async def get_issuer_source_scan(scan_id: str, x_admin_token: Optional[str] = Header(None)):
+    _require_admin(x_admin_token)
+    scan = await db.issuer_source_scan_jobs.find_one({"scan_id": scan_id}, {"_id": 0})
+    if not scan:
+        raise HTTPException(status_code=404, detail="Source scan not found")
+    return scan
+
+
+@api_router.post("/admin/issuer-source-changes/{change_id}/review")
+async def review_issuer_source_change(change_id: str, payload: IssuerSourceReviewIn,
+                                     x_admin_token: Optional[str] = Header(None)):
+    role = _require_admin(x_admin_token, "editor")
+    if not re.fullmatch(r"[a-f0-9]{64}", change_id):
+        raise HTTPException(status_code=404, detail="Source change not found")
+    result = await db.issuer_source_changes.update_one(
+        {"change_id": change_id, "status": "pending"},
+        {"$set": {"status": payload.status, "review_note": payload.review_note.strip(),
+                  "reviewed_at": datetime.now(timezone.utc), "reviewed_role": role}},
+    )
+    if not result.modified_count:
+        raise HTTPException(status_code=404, detail="Pending source change not found")
+    return {"status": payload.status, "change_id": change_id}
+
+
 @api_router.post("/admin/reconciliation-import")
 async def reconciliation_import(rows: List[ReconciliationRowIn], x_admin_token: Optional[str] = Header(None)):
     _require_admin(x_admin_token, "publisher")
@@ -2157,6 +2305,27 @@ async def _link_monitor_loop():
             logger.info("Application-link monitor checked %s destinations; %s failed; %s auto-paused", summary["checked"], summary["failed"], summary["auto_paused"])
         except Exception as error:
             logger.error("Application-link monitor failed: %s", error)
+        await asyncio.sleep(interval)
+
+
+async def _issuer_source_monitor_loop():
+    await asyncio.sleep(420)
+    interval = max(1, int(os.environ.get("ISSUER_SOURCE_MONITOR_HOURS", "24"))) * 3600
+    while True:
+        try:
+            summary = await run_issuer_source_check(db)
+            if summary.get("skipped"):
+                logger.info("Issuer source monitor skipped: %s", summary.get("skip_reason"))
+                await asyncio.sleep(interval)
+                continue
+            logger.info("Issuer source monitor checked %s card sources and %s announcement listings; "
+                        "%s card sources changed, %s new card announcements found, %s card sources failed, "
+                        "%s announcement listings failed",
+                        summary["sources_checked"], summary["announcement_sources_checked"],
+                        summary["changed"], summary["new_announcements"], summary["failed"],
+                        summary["announcement_sources_failed"])
+        except Exception as error:
+            logger.error("Issuer source monitor failed: %s", error)
         await asyncio.sleep(interval)
 
 logging.basicConfig(

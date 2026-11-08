@@ -38,3 +38,9 @@ services:
       - key: CORS_ORIGINS
         scope: RUN_TIME
         value: https://findmybest.cards,https://www.findmybest.cards,https://neerajgarg1109.github.io
+      - key: ENABLE_ISSUER_SOURCE_MONITOR
+        scope: RUN_TIME
+        value: "true"
+      - key: ISSUER_SOURCE_MONITOR_HOURS
+        scope: RUN_TIME
+        value: "24"
