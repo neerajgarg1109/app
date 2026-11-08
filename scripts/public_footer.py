@@ -16,7 +16,7 @@ def destination(origin, url):
     static = {'/cards': '/catalog/', '/cards?mode=compare': '/compare/', '/calculator': '/calculator/', '/updates': '/guides/new-credit-cards/', '/restricted-cards': '/guides/invite-only-credit-cards/'}
     if url in static:
         return origin + static[url]
-    spa = url == '/' or any(url.startswith(path) for path in ('/cards', '/updates', '/restricted-cards', '/calculator', '/wallet-optimizer', '/alerts', '/help/issuers'))
+    spa = url == '/' or any(url.startswith(path) for path in ('/cards', '/updates', '/restricted-cards', '/calculator', '/reward-calculator', '/wallet-optimizer', '/alerts', '/help/issuers'))
     return origin + ('/#' + url if spa else url)
 
 
