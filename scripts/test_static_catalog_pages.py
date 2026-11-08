@@ -291,7 +291,7 @@ class StaticCatalogTests(unittest.TestCase):
     def test_every_generated_page_has_the_same_complete_footer(self):
         content = json.loads((ROOT / "frontend/src/data/footerContent.json").read_text())
         from public_footer import destination
-        expected = {ORIGIN + "/"} | {destination(ORIGIN, link["url"]) for group in content["groups"] for link in group["links"]}
+        expected = {ORIGIN + "/", "mailto:hi@findmybest.cards"} | {destination(ORIGIN, link["url"]) for group in content["groups"] for link in group["links"]}
         for path in self.pages:
             source = path.read_text()
             footers = re.findall(r'<footer[^>]*aria-label="Site footer"[^>]*>(.*?)</footer>', source, re.S)
