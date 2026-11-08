@@ -74,7 +74,7 @@ export default function ValueCalculator() {
         <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl text-white" style={{ background: "linear-gradient(145deg,#604ee8,#0e9e98)" }}><Calculator className="h-6 w-6" /></span>
         <div className="mt-4 text-xs font-bold uppercase tracking-wider" style={{ color: "var(--ciq-teal)" }}>No sign-up required</div>
         <h1 className="mt-2 font-display text-3xl font-extrabold">Credit card value calculator</h1>
-        <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Compare estimated annual card rewards and fees using your monthly spending.</p>
+        <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed" style={{ color: "var(--ciq-ink-soft)" }}>Compare estimated card rewards after annual fees using your monthly spending.</p>
       </section>}
 
       <form onSubmit={submit} className="mt-7 rounded-3xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>
