@@ -492,9 +492,9 @@ reward_calculator_body = f'''<h1>Reward &amp; transfer partner calculator</h1>
 <section class="card" aria-label="Reward and transfer partner calculator">
 <script>function resizeRewardCalculator(frame){{const doc=frame.contentDocument;if(!doc)return;const root=doc.getElementById('root');if(!root)return;const resize=()=>{{const content=root.firstElementChild;if(!content)return;const height=Math.ceil(content.getBoundingClientRect().height);if(height>0)frame.style.height=height+'px'}};resize();new ResizeObserver(resize).observe(root);setTimeout(resize,500)}}</script>
 <iframe title="Reward and transfer partner calculator" src="{ORIGIN}/#/reward-calculator?embedded=1" loading="eager" scrolling="no" onload="resizeRewardCalculator(this)" style="display:block;width:100%;height:760px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
-<p><a href="{ORIGIN}/#/reward-calculator">Open the calculator in the CardIQ app</a></p></section>
+</section>
 <p class="muted">Values are estimates based on listed catalogue terms. Actual earning rates, caps, exclusions and transfer availability depend on the card and issuer; confirm current terms before spending.</p>'''
-write(Path("reward-calculator"), page("Reward & Transfer Calculator for credit card holders | CardIQ", "Compare estimated points, cashback and airline or hotel transfer values for a transaction on cards you already hold.", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/#/reward-calculator", reward_calculator_body))
+write(Path("reward-calculator"), page("Reward & Transfer Calculator for credit card holders | CardIQ", "Compare estimated points, cashback and airline or hotel transfer values for a transaction on cards you already hold.", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/reward-calculator/", reward_calculator_body))
 
 sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
 sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug, *_ in guides]

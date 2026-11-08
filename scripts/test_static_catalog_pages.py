@@ -70,6 +70,7 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertEqual(document.meta["canonical"], ORIGIN + "/reward-calculator/")
         self.assertIn("Reward &amp; Transfer Calculator", source)
         self.assertIn(f'src="{ORIGIN}/#/reward-calculator?embedded=1"', source)
+        self.assertNotIn(f'href="{ORIGIN}/#/reward-calculator"', source)
         self.assertIn(ORIGIN + "/reward-calculator/", (BUILD / "sitemap.xml").read_text())
 
     def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
