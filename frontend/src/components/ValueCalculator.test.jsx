@@ -73,12 +73,14 @@ test("budget presets fill their spend buckets and calculate immediately", async 
   container.remove();
 });
 
-test("removes duplicate navigation and full-screen spacing when embedded", async () => {
+test("removes duplicate navigation and page introduction when embedded", async () => {
   mockSearch = "?embedded=1";
   const container = document.createElement("div");
   const root = createRoot(container);
   await act(async () => root.render(<ValueCalculator />));
   expect(container.querySelector("header")).toBeNull();
+  expect(container.querySelector("h1")).toBeNull();
+  expect(container.querySelector(".pt-4.text-center")).toBeNull();
   expect(container.firstChild.className).toContain("pb-4");
   expect(container.firstChild.className).not.toContain("min-h-screen");
   await act(async () => root.unmount());

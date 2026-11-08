@@ -459,9 +459,8 @@ methodology_body = '''<h1>How CardIQ researches and ranks credit cards</h1>
 write(Path("methodology"), page("CardIQ editorial methodology and disclosures", "Learn how CardIQ sources card facts, generates editorial analysis, ranks recommendations and separates issuer revenue from match scores.", f"{ORIGIN}/methodology/", f"{ORIGIN}/#/cards", methodology_body))
 
 calculator_body = f'''<h1>Credit card value calculator for India</h1>
-<p>Compare Indian credit cards using your own monthly spending instead of headline reward rates. Enter approximate spending for online shopping, dining, travel, fuel, international purchases and everything else. No login or contact details are required.</p>
-<section class="card" aria-labelledby="calculator-tool-title"><h2 id="calculator-tool-title">Calculate your card value</h2>
-<p class="muted">Enter a typical month of spending below. The calculator uses CardIQ’s current catalogue and the same calculation model as the main app.</p>
+<p>Estimate annual card rewards against fees using your monthly spending. No login or contact details are required.</p>
+<section class="card" aria-label="Card value calculator">
 <script>function resizeCardIqCalculator(frame){{const resize=()=>{{const doc=frame.contentDocument;if(!doc)return;frame.style.height=Math.max(760,doc.documentElement.scrollHeight,doc.body.scrollHeight)+'px'}};resize();new ResizeObserver(resize).observe(frame.contentDocument.body);setTimeout(resize,500)}}</script>
 <iframe title="CardIQ credit card value calculator" src="{ORIGIN}/#/calculator?embedded=1" loading="eager" scrolling="no" onload="resizeCardIqCalculator(this)" style="display:block;width:100%;height:760px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
 <p><a href="{ORIGIN}/#/calculator">Open the calculator in a full page</a></p></section>
