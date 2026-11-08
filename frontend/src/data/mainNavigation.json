@@ -16,6 +16,10 @@
     "href": "/calculator/"
   },
   {
+    "label": "Reward & Transfer Calculator",
+    "to": "/reward-calculator"
+  },
+  {
     "label": "Lounges & Forex",
     "href": "/lounges/"
   },
