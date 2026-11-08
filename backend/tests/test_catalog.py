@@ -65,7 +65,12 @@ def test_site_content_upgrade_replaces_legacy_match_copy_without_losing_links():
     assert upgraded["footer_groups"][0]["links"] == [
         {"label": "Find my best card", "url": "/"},
         {"label": "Annual value calculator", "url": "/calculator"},
+        {"label": "Reward & Transfer Calculator", "url": "/reward-calculator"},
     ]
+    assert server.DEFAULT_FOOTER_GROUPS[1]["links"][2] == {
+        "label": "Reward & Transfer Calculator", "url": "/reward-calculator"
+    }
+
 
 
 def test_public_card_uses_only_live_partner_links_and_hides_campaign_metadata():
