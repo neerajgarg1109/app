@@ -461,8 +461,8 @@ write(Path("methodology"), page("CardIQ editorial methodology and disclosures", 
 calculator_body = f'''<h1>Credit card value calculator for India</h1>
 <p>Estimate annual rewards after annual fees using your monthly spending. No login required.</p>
 <section class="card" aria-label="Card value calculator">
-<script>function resizeCardIqCalculator(frame){{const resize=()=>{{const doc=frame.contentDocument;if(!doc)return;frame.style.height=Math.max(760,doc.documentElement.scrollHeight,doc.body.scrollHeight)+'px'}};resize();new ResizeObserver(resize).observe(frame.contentDocument.body);setTimeout(resize,500)}}</script>
-<iframe title="CardIQ credit card value calculator" src="{ORIGIN}/#/calculator?embedded=1" loading="eager" scrolling="no" onload="resizeCardIqCalculator(this)" style="display:block;width:100%;height:760px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
+<script>function resizeCardIqCalculator(frame){{const doc=frame.contentDocument;if(!doc)return;const root=doc.getElementById('root');if(!root)return;const resize=()=>{{const content=root.firstElementChild;if(!content)return;const height=Math.ceil(content.getBoundingClientRect().height);if(height>0)frame.style.height=height+'px'}};resize();new ResizeObserver(resize).observe(root);setTimeout(resize,500)}}</script>
+<iframe title="CardIQ credit card value calculator" src="{ORIGIN}/#/calculator?embedded=1" loading="eager" scrolling="no" onload="resizeCardIqCalculator(this)" style="display:block;width:100%;height:520px;overflow:hidden;border:1px solid #e4e2f1;border-radius:16px;background:white"></iframe>
 <p><a href="{ORIGIN}/#/calculator">Open the calculator in a full page</a></p></section>
 <p class="muted">Results are estimates. Reward caps, exclusions, redemption choices and issuer terms can change actual value; confirm current terms with the issuer.</p>'''
 write(Path("calculator"), page("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories.", f"{ORIGIN}/calculator/", f"{ORIGIN}/#/calculator", calculator_body))
