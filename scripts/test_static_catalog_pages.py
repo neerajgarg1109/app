@@ -404,7 +404,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / "calculator" / "index.html").read_text().lower()
         for phrase in ("credit card value calculator for india", "annual fees", "reward caps", "no login"):
             self.assertIn(phrase, source)
-         self.assertIn('title="cardiq credit card value calculator"', source)
+        self.assertIn('title="cardiq credit card value calculator"', source)
         self.assertIn(f'src="{ORIGIN}/#/calculator?embedded=1"', source)
         self.assertIn('scrolling="no"', source)
         self.assertIn("resizeobserver", source)
