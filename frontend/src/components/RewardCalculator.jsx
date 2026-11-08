@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowLeftRight, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { calculateCardRewards, getCards } from "../api";
 import CustomerNav from "./CustomerNav";
 import Logo from "./Logo";
@@ -17,6 +17,8 @@ const REDEMPTIONS = [
 const money = (value) => value == null ? "—" : `₹${Number(value).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 
 export default function RewardCalculator() {
+  const { search } = useLocation();
+  const embedded = new URLSearchParams(search).get("embedded") === "1";
   const [cards, setCards] = useState([]);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState([]);
@@ -47,8 +49,8 @@ export default function RewardCalculator() {
   };
 
   return <div className="ciq-shell min-h-screen pb-16">
-    <header className="ciq-container ciq-container--wide flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}><ArrowLeft className="mr-1 inline h-4 w-4" /> Home</Link></header>
-    <CustomerNav />
+    {!embedded && <header className="ciq-container ciq-container--wide flex items-center justify-between py-5"><Logo size="md" /><Link to="/" className="rounded-full border bg-white px-3 py-2 text-sm font-semibold" style={{ borderColor: "var(--ciq-line)" }}><ArrowLeft className="mr-1 inline h-4 w-4" /> Home</Link></header>}
+    {!embedded && <CustomerNav />}
     <main className="ciq-container max-w-3xl">
       <section className="pt-4 text-center"><ArrowLeftRight className="mx-auto h-10 w-10" style={{ color: "var(--ciq-teal)" }} /><h1 className="mt-3 font-display text-3xl font-extrabold">Reward &amp; transfer partner calculator</h1><p className="mt-2 text-sm" style={{ color: "var(--ciq-ink-soft)" }}>Compare estimated rewards for cards you already hold.</p></section>
       <form onSubmit={submit} className="mt-6 space-y-4 rounded-3xl border bg-white p-5" style={{ borderColor: "var(--ciq-line)" }}>

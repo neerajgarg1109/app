@@ -12,7 +12,7 @@ CSS = '''.main-navigation{display:block;width:100%;max-width:1280px;margin:14px 
 
 def render_navigation(origin, canonical, journal=False):
     path = urlparse(canonical).path
-    active = '/guides/' if path.startswith(('/guides','/updates','/restricted-cards')) else '/compare/' if path.startswith('/compare') else '/calculator/' if path.startswith('/calculator') else '/lounges/' if path.startswith('/lounges') else '/catalog/' if path.startswith(('/cards','/catalog','/issuers','/categories')) else '/' 
+    active = '/guides/' if path.startswith(('/guides','/updates','/restricted-cards')) else '/compare/' if path.startswith('/compare') else '/reward-calculator/' if path.startswith('/reward-calculator') else '/calculator/' if path.startswith('/calculator') else '/lounges/' if path.startswith('/lounges') else '/catalog/' if path.startswith(('/cards','/catalog','/issuers','/categories')) else '/' 
     links = []
     for item in ITEMS:
         target = item.get('to') or item['href']

@@ -10,7 +10,7 @@ export default function CustomerNav({ onHome } = {}) {
       <div className="grid grid-cols-2 gap-2 pb-2 sm:flex sm:flex-wrap">
         {NAV_ITEMS.map((item) => {
           const current = location.pathname;
-          const active = item.to === "/reward-calculator" ? current === "/reward-calculator" : item.href === "/" ? current === "/" : item.href === "/catalog/" ? current.startsWith("/cards") : item.href === "/calculator/" ? current.startsWith("/calculator") : false;
+          const active = item.href === "/reward-calculator/" ? current === "/reward-calculator" : item.href === "/" ? current === "/" : item.href === "/catalog/" ? current.startsWith("/cards") : item.href === "/calculator/" ? current.startsWith("/calculator") : false;
           const localRoute = process.env.NODE_ENV === "development" ? localRouteFor(item.href) : null;
           const className = "ciq-press rounded-xl border bg-white px-3 py-2 text-center text-xs font-semibold sm:rounded-full sm:text-sm";
           const style = {
@@ -33,6 +33,7 @@ function localRouteFor(destination) {
     "/compare/": "/cards?mode=compare",
     "/catalog/": "/cards",
     "/calculator/": "/calculator",
+    "/reward-calculator/": "/reward-calculator",
     "/lounges/": "/cards?category=travel",
     "/guides/": "/updates",
   })[destination] || null;
