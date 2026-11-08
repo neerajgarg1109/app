@@ -6,6 +6,7 @@ import json
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import quote
@@ -227,15 +228,33 @@ directed_alternatives = {
     for alternative in (card.get("editorial") or {}).get("alternatives", [])
     if alternative.get("id") in cards_by_id
 }
-comparison_pairs = sorted({
+approved_comparison_pairs = sorted({
     tuple(sorted((left, right)))
     for left, right in directed_alternatives
     if left != right and (right, left) in directed_alternatives
 })
+if approved_comparison_pairs:
+    node = os.environ.get("CARDIQ_NODE_BIN") or shutil.which("node")
+    if not node:
+        raise RuntimeError("Node.js is required to generate the approved comparison routes")
+    generated = subprocess.run(
+        [node, str(ROOT / "scripts" / "generate_comparison_routes.js")],
+        input=json.dumps(approved_comparison_pairs),
+        text=True,
+        capture_output=True,
+        check=True,
+        cwd=ROOT,
+    )
+    comparison_pairs = json.loads(generated.stdout)
+else:
+    comparison_pairs = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
 card_comparisons = {card['id']: [] for card in CARDS}
 seen_comparisons = set()
-for comparison_slug, left_id, right_id in ([(row['slug'], row['cardA'], row['cardB']) for row in TOP_COMPARISONS] + [(f'{a}-vs-{b}', a, b) for a,b in comparison_pairs]):
+for comparison_slug, left_id, right_id in (
+    [(row['slug'], row['cardA'], row['cardB']) for row in TOP_COMPARISONS]
+    + [(row['pairSlug'], row['cardA'], row['cardB']) for row in comparison_pairs]
+):
     primary = priority_by_pair.get(frozenset((left_id, right_id)))
     comparison_slug = primary['slug'] if primary else comparison_slug
     if comparison_slug in seen_comparisons:
@@ -305,7 +324,7 @@ for category in CATEGORIES:
 comparison_links = []
 comparison_posts = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
-comparison_routes = [(f"{left}-vs-{right}", left, right, None) for left,right in comparison_pairs]
+comparison_routes = [(row['pairSlug'], row['cardA'], row['cardB'], None) for row in comparison_pairs]
 comparison_routes += [(row['slug'], row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS]
 comparison_canonicals = []
 comparison_styles = (ROOT / 'scripts/templates/comparison.css').read_text()
