@@ -35,6 +35,10 @@
           "url": "/calculator"
         },
         {
+          "label": "Reward & Transfer Calculator",
+          "url": "/reward-calculator"
+        },
+        {
           "label": "Which card should I use?",
           "url": "/wallet-optimizer"
         },
