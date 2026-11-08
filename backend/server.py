@@ -1635,11 +1635,11 @@ async def get_status_checks():
 
 DEFAULT_FOOTER_GROUPS = [
     {"title": "Discover cards", "links": [{"label": "Browse all cards", "url": "/cards"}, {"label": "Card comparisons", "url": "/cards?mode=compare"}, {"label": "New and updated cards", "url": "/updates"}, {"label": "Invite-only cards", "url": "/guides/invite-only-credit-cards/"}]},
-    {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
+    {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Reward & Transfer Calculator", "url": "/reward-calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
     {"title": "Help & research", "links": [{"label": "Reviews and editorials", "url": "/guides/"}, {"label": "Issuer contacts", "url": "/help/issuers"}, {"label": "Close a card", "url": "/guides/close-credit-card-india/"}, {"label": "Credit card guides", "url": "/guides/"}]},
     {"title": "About CardIQ", "links": [{"label": "How recommendations work", "url": "/methodology/"}, {"label": "How CardIQ makes money", "url": "/methodology/"}, {"label": "Card catalogue", "url": "/catalog/"}]},
 ]
-SITE_CONTENT_VERSION = 3
+SITE_CONTENT_VERSION = 4
 
 
 def _default_site_content() -> dict:
@@ -1667,6 +1667,12 @@ def _upgrade_site_content(content: dict) -> dict:
         }
         for group in content.get("footer_groups", [])
     ]
+    tools_group = next((group for group in upgraded["footer_groups"] if group.get("title") == "Tools"), None)
+    if tools_group is None:
+        tools_group = {"title": "Tools", "links": []}
+        upgraded["footer_groups"].append(tools_group)
+    if not any(link.get("url") == "/reward-calculator" for link in tools_group.get("links", [])):
+        tools_group.setdefault("links", []).append({"label": "Reward & Transfer Calculator", "url": "/reward-calculator"})
     return upgraded
 
 
