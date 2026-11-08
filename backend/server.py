@@ -9,12 +9,13 @@ import re
 import ipaddress
 import logging
 import httpx
+import math
 from html import escape
 from html.parser import HTMLParser
 from urllib.parse import urlparse, parse_qsl, urlencode, urlunparse
 from pathlib import Path
 from pydantic import BaseModel, Field, EmailStr, field_validator
-from typing import List, Dict, Optional, Any
+from typing import List, Dict, Optional, Any, Literal
 import uuid
 import secrets
 import asyncio
@@ -372,6 +373,94 @@ class PurchaseOptimizerIn(BaseModel):
         if value not in {"online", "dining", "travel", "fuel", "grocery", "international", "upi", "other"}:
             raise ValueError("Unsupported purchase category")
         return value
+
+
+class RewardCalculatorIn(BaseModel):
+    card_ids: List[str] = Field(min_length=1, max_length=10, description="Cards in the user's wallet")
+    category: str = Field(description="Transaction category")
+    amount: float = Field(gt=0, le=10_000_000, description="Transaction amount in INR")
+    redemption_preference: Literal["transfer_partner", "statement_credit", "voucher"] = "transfer_partner"
+
+    @field_validator("card_ids")
+    @classmethod
+    def validate_card_ids(cls, value: List[str]) -> List[str]:
+        ids = list(dict.fromkeys(item.strip() for item in value if item.strip()))
+        if not ids:
+            raise ValueError("Choose at least one card")
+        if len(ids) > 10:
+            raise ValueError("Choose no more than 10 cards")
+        return ids
+
+    @field_validator("category")
+    @classmethod
+    def validate_reward_category(cls, value: str) -> str:
+        value = value.strip().lower()
+        if value not in {"dining", "travel", "shopping", "utility", "fuel", "international", "upi", "grocery", "other"}:
+            raise ValueError("Unsupported transaction category")
+        return value
+
+    @field_validator("amount")
+    @classmethod
+    def validate_finite_amount(cls, value: float) -> float:
+        if not math.isfinite(value):
+            raise ValueError("Enter a finite transaction amount")
+        return value
+
+
+REWARD_VALUE_MULTIPLIERS = {
+    "transfer_partner": 0.80,
+    "voucher": 0.40,
+    "statement_credit": 0.25,
+}
+REWARD_CATEGORY_TERMS = {
+    "dining": {"dining", "restaurant", "food"},
+    "travel": {"travel", "airline", "flight", "hotel"},
+    "shopping": {"online", "shopping", "retail"},
+    "utility": {"utility", "utilities", "bill", "recharge"},
+    "fuel": {"fuel", "petrol", "diesel"},
+    "international": {"international", "forex", "foreign"},
+    "upi": {"upi"},
+    "grocery": {"grocery", "groceries", "supermarket"},
+    "other": set(),
+}
+
+
+def _documented_reward_rate(reward_line: str, category: str) -> Optional[Dict[str, Any]]:
+    """Return a rate only when one published reward clause clearly applies."""
+    clauses = [part.strip() for part in re.split(r"[.;\n]", reward_line or "") if part.strip()]
+    applicable = []
+    terms = REWARD_CATEGORY_TERMS[category]
+    for clause in clauses:
+        lower = clause.lower()
+        words = set(re.findall(r"[a-z]+", lower))
+        has_category = bool(words & terms)
+        generic = "eligible purchases" in lower and not any(
+            words & category_terms for name, category_terms in REWARD_CATEGORY_TERMS.items()
+            if name != "other"
+        )
+        if category == "other":
+            if not generic:
+                continue
+        elif not has_category and not generic:
+            continue
+
+        # Multiple rates in one clause (including tiered rates) are ambiguous.
+        percentages = re.findall(r"(?<![\w.])(\d+(?:\.\d+)?)\s*%", lower)
+        point_rates = re.findall(
+            r"(?<![\w.])(\d+(?:\.\d+)?)\s*(?:(?:points?|miles?)\s+)?per\s+₹\s*(\d+(?:,\d{3})*(?:\.\d+)?)",
+            lower,
+        ) if re.search(r"\b(?:points?|miles?)\b", lower) else []
+        if len(percentages) + len(point_rates) != 1:
+            continue
+        if percentages:
+            applicable.append({"type": "cashback", "rate": float(percentages[0]), "clause": clause})
+        else:
+            count, denominator = point_rates[0]
+            applicable.append({"type": "points", "rate": float(count),
+                                "denominator": float(denominator.replace(",", "")), "clause": clause})
+    if len(applicable) != 1:
+        return None
+    return applicable[0]
 
 
 class ApplyClickIn(BaseModel):
@@ -1314,6 +1403,58 @@ async def optimize_purchase(payload: PurchaseOptimizerIn):
         "methodology": "Ranks only the cards you selected using documented category tags and sourced benefit text. It does not promise an exact reward because merchant coding, caps and exclusions can change the outcome."}
 
 
+@api_router.post("/tools/reward-calculator")
+async def calculate_reward_returns(payload: RewardCalculatorIn):
+    ids = list(dict.fromkeys(payload.card_ids))
+    cards = await db.cards.find({"id": {"$in": ids}, **CATALOG_QUERY}, {"_id": 0}).to_list(10)
+    if len(cards) != len(ids):
+        raise HTTPException(status_code=404, detail="One or more selected cards are unavailable")
+
+    results = []
+    for stored in cards:
+        card = _card_for_client(stored)
+        reward_line = card.get("rewardLine") or ""
+        rate = _documented_reward_rate(reward_line, payload.category)
+        valuations = {key: None for key in REWARD_VALUE_MULTIPLIERS}
+        points_earned = None
+        return_percentage = None
+        reward_type = "unavailable"
+        if rate and rate["type"] == "points":
+            points_earned = round(payload.amount * rate["rate"] / rate["denominator"], 2)
+            valuations = {key: round(points_earned * multiplier, 2)
+                          for key, multiplier in REWARD_VALUE_MULTIPLIERS.items()}
+            return_percentage = round(valuations[payload.redemption_preference] / payload.amount * 100, 2)
+            reward_type = "points"
+            rationale = f"Based on the catalog rate: {rate['clause']}. Point values use illustrative redemption assumptions."
+        elif rate and rate["type"] == "cashback":
+            direct_value = round(payload.amount * rate["rate"] / 100, 2)
+            valuations = {key: direct_value for key in REWARD_VALUE_MULTIPLIERS}
+            return_percentage = rate["rate"]
+            reward_type = "cashback"
+            rationale = f"Based on the catalog rate: {rate['clause']}. Actual caps, exclusions and eligibility apply."
+        else:
+            rationale = "The catalog does not contain one unambiguous earning rate for this card and category, so no estimate is shown."
+
+        results.append({
+            "card_id": card["id"], "card_name": card["name"], "issuer": card["issuer"],
+            "reward_type": reward_type, "reward_currency": card.get("rewardCurrency"),
+            "rate": rate["rate"] if rate else None,
+            "rate_denominator": rate.get("denominator") if rate else None,
+            "points_earned": points_earned, "valuations": valuations,
+            "effective_value_inr": valuations[payload.redemption_preference],
+            "return_percentage": return_percentage, "rationale": rationale,
+        })
+    results.sort(key=lambda item: (item["effective_value_inr"] is not None,
+                                   item["effective_value_inr"] or 0), reverse=True)
+    return {
+        "category": payload.category, "amount": payload.amount,
+        "redemption_preference": payload.redemption_preference,
+        "assumptions": {"transfer_partner": 0.80, "voucher": 0.40, "statement_credit": 0.25,
+                        "note": "Illustrative INR per point assumptions supplied for comparison; issuer and transfer-partner redemption terms vary."},
+        "results": results,
+    }
+
+
 @api_router.post("/quiz/submit")
 async def submit_quiz(payload: QuizSubmitIn):
     cards = await db.cards.find(RECOMMENDABLE_QUERY, {"_id": 0}).to_list(None)
@@ -1494,11 +1635,11 @@ async def get_status_checks():
 
 DEFAULT_FOOTER_GROUPS = [
     {"title": "Discover cards", "links": [{"label": "Browse all cards", "url": "/cards"}, {"label": "Card comparisons", "url": "/cards?mode=compare"}, {"label": "New and updated cards", "url": "/updates"}, {"label": "Invite-only cards", "url": "/guides/invite-only-credit-cards/"}]},
-    {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
+    {"title": "Tools", "links": [{"label": "Find my best card", "url": "/"}, {"label": "Annual value calculator", "url": "/calculator"}, {"label": "Reward & Transfer Calculator", "url": "/reward-calculator"}, {"label": "Which card should I use?", "url": "/wallet-optimizer"}, {"label": "Card change alerts", "url": "/alerts"}]},
     {"title": "Help & research", "links": [{"label": "Reviews and editorials", "url": "/guides/"}, {"label": "Issuer contacts", "url": "/help/issuers"}, {"label": "Close a card", "url": "/guides/close-credit-card-india/"}, {"label": "Credit card guides", "url": "/guides/"}]},
     {"title": "About CardIQ", "links": [{"label": "How recommendations work", "url": "/methodology/"}, {"label": "How CardIQ makes money", "url": "/methodology/"}, {"label": "Card catalogue", "url": "/catalog/"}]},
 ]
-SITE_CONTENT_VERSION = 3
+SITE_CONTENT_VERSION = 4
 
 
 def _default_site_content() -> dict:
@@ -1526,6 +1667,12 @@ def _upgrade_site_content(content: dict) -> dict:
         }
         for group in content.get("footer_groups", [])
     ]
+    tools_group = next((group for group in upgraded["footer_groups"] if group.get("title") == "Tools"), None)
+    if tools_group is None:
+        tools_group = {"title": "Tools", "links": []}
+        upgraded["footer_groups"].append(tools_group)
+    if not any(link.get("url") == "/reward-calculator" for link in tools_group.get("links", [])):
+        tools_group.setdefault("links", []).append({"label": "Reward & Transfer Calculator", "url": "/reward-calculator"})
     return upgraded
 
 

@@ -224,6 +224,11 @@ export async function optimizePurchase(payload) {
   return data;
 }
 
+export async function calculateCardRewards(payload) {
+  const { data } = await http.post("/tools/reward-calculator", payload);
+  return data;
+}
+
 export async function getCardUpdates() {
   const { data } = await http.get("/card-updates");
   return data;

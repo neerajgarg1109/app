@@ -13,6 +13,7 @@ import IssuerHelp from "./components/IssuerHelp";
 import CardAlerts from "./components/CardAlerts";
 import CardAlertUnsubscribe from "./components/CardAlertUnsubscribe";
 import PurchaseOptimizer from "./components/PurchaseOptimizer";
+import RewardCalculator from "./components/RewardCalculator";
 import CardUpdates from "./components/CardUpdates";
 import RestrictedCards from "./components/RestrictedCards";
 import CustomerFooter from "./components/CustomerFooter";
@@ -199,6 +200,7 @@ function App() {
           <Route path="/alerts" element={<CardAlerts />} />
           <Route path="/alerts/unsubscribe" element={<CardAlertUnsubscribe />} />
           <Route path="/wallet-optimizer" element={<PurchaseOptimizer />} />
+          <Route path="/reward-calculator" element={<RewardCalculator />} />
           <Route path="/updates" element={<CardUpdates />} />
           <Route path="/restricted-cards" element={<RestrictedCards />} />
         </Routes>

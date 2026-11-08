@@ -65,7 +65,11 @@ def test_site_content_upgrade_replaces_legacy_match_copy_without_losing_links():
     assert upgraded["footer_groups"][0]["links"] == [
         {"label": "Find my best card", "url": "/"},
         {"label": "Annual value calculator", "url": "/calculator"},
+        {"label": "Reward & Transfer Calculator", "url": "/reward-calculator"},
     ]
+    assert server.DEFAULT_FOOTER_GROUPS[1]["links"][2] == {
+        "label": "Reward & Transfer Calculator", "url": "/reward-calculator"
+    }
 
 
 def test_public_card_uses_only_live_partner_links_and_hides_campaign_metadata():
@@ -342,6 +346,26 @@ def test_migration_and_api_round_trip(monkeypatch):
                 assert wallet.status_code == 200 and len(wallet.json()["results"]) == 2
                 assert wallet.json()["results"][0]["economicsQuality"] in {"limited", "medium", "high"}
                 assert (await api.post("/api/tools/purchase-optimizer", json={"card_ids": [], "category": "online", "amount": 100})).status_code == 422
+                rewards = await api.post("/api/tools/reward-calculator", json={
+                    "card_ids": ["sbi-prime"], "category": "dining", "amount": 10000,
+                    "redemption_preference": "transfer_partner",
+                })
+                assert rewards.status_code == 200
+                reward = rewards.json()["results"][0]
+                assert reward["points_earned"] == 1000
+                assert reward["valuations"] == {"transfer_partner": 800.0, "voucher": 400.0, "statement_credit": 250.0}
+                assert reward["effective_value_inr"] == 800.0
+                assert server._documented_reward_rate(
+                    "2 points per ₹100 domestic and 4 per ₹100 international eligible spend", "international"
+                ) is None
+                unavailable = await api.post("/api/tools/reward-calculator", json={
+                    "card_ids": [CARDS[0]["id"]], "category": "shopping", "amount": 1000,
+                })
+                assert unavailable.status_code == 200
+                assert unavailable.json()["results"][0]["effective_value_inr"] is None
+                assert (await api.post("/api/tools/reward-calculator", json={"card_ids": [], "category": "dining", "amount": 100})).status_code == 422
+                assert (await api.post("/api/tools/reward-calculator", json={"card_ids": ["sbi-prime"], "category": "dining", "amount": 0})).status_code == 422
+                assert (await api.post("/api/tools/reward-calculator", json={"card_ids": ["missing-card"], "category": "dining", "amount": 100})).status_code == 404
                 managed_payload = {
                     "name": "Admin Test Card", "issuer": "Test Bank", "variants": ["Visa", "RuPay"],
                     "network": "Visa", "rewardLine": "Test rewards", "applyUrl": "https://bank.example.org/card",
