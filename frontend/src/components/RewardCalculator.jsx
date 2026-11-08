@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ArrowLeftRight, Search } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { calculateCardRewards, getCards } from "../api";
 import CustomerNav from "./CustomerNav";
 import Logo from "./Logo";
@@ -17,8 +17,8 @@ const REDEMPTIONS = [
 const money = (value) => value == null ? "—" : `₹${Number(value).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 
 export default function RewardCalculator() {
-  const { search } = useLocation();
-  const embedded = new URLSearchParams(search).get("embedded") === "1";
+  const hashQuery = typeof window === "undefined" ? "" : window.location.hash.split("?")[1] || "";
+  const embedded = new URLSearchParams(hashQuery).get("embedded") === "1";
   const [cards, setCards] = useState([]);
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState([]);
