@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ArrowRight, ShieldCheck, Timer, BellOff, PhoneCall, Sparkles, Search, GitCompare, Newspaper, Building2, Calculator, LockKeyhole, BookOpen } from "lucide-react";
+import { ArrowRight, ShieldCheck, Timer, BellOff, PhoneCall, Sparkles, Search, GitCompare, Newspaper, Building2, Calculator, LockKeyhole, BookOpen, ArrowLeftRight } from "lucide-react";
 import Logo from "./Logo";
 import { TRUST_POINTS } from "../mock/mock";
 import { getCards, getCardUpdates, getResult, getSiteContent } from "../api";
@@ -22,6 +22,7 @@ const PRIMARY_INTENTS = [
 const MORE_INTENTS = [
   { title: HOME_COPY.tools[2].title, text: HOME_COPY.tools[2].text, icon: Calculator, to: "/calculator" },
   { title: HOME_COPY.tools[3].title, text: HOME_COPY.tools[3].text, icon: Calculator, to: "/wallet-optimizer" },
+  { title: "Reward & transfer partner calculator", text: "Estimate points and compare illustrative redemption values for cards you hold.", icon: ArrowLeftRight, to: "/reward-calculator" },
   { title: "Explore restricted-access cards", text: "Understand invite-only, relationship and special-channel cards.", icon: LockKeyhole, to: "/restricted-cards" },
   { title: "Browse by issuer", text: "See every catalogued card from each issuer.", icon: Building2, to: "/cards?browse=issuers" },
   { title: "Issuer help & card closure", text: "Use verified official support and closure channels.", icon: PhoneCall, to: "/help/issuers" },

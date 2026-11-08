@@ -32,7 +32,7 @@ export default function CustomerFooter() {
             <section key={group.title} aria-labelledby={`footer-group-${index}`}>
               <h2 id={`footer-group-${index}`}>{group.title}</h2>
               <ul>{group.links.map(({ label, url: storedUrl }) => <li key={`${label}-${storedUrl}`}>
-                {isSpaDestination(footerRoute(storedUrl)) ? <Link to={footerRoute(storedUrl)}>{label}</Link> : <a href={publicDestination(footerRoute(storedUrl))}>{label}</a>}
+                {isSpaDestination(localSpaRoute(footerRoute(storedUrl)) || footerRoute(storedUrl)) ? <Link to={localSpaRoute(footerRoute(storedUrl)) || footerRoute(storedUrl)}>{label}</Link> : <a href={publicDestination(footerRoute(storedUrl))}>{label}</a>}
               </li>)}</ul>
             </section>
           ))}
@@ -46,7 +46,19 @@ export default function CustomerFooter() {
 }
 
 function isSpaDestination(url) {
-  return [ "/wallet-optimizer", "/alerts", "/help/issuers"].some((path) => url.startsWith(path));
+  return [ "/wallet-optimizer", "/reward-calculator", "/alerts", "/help/issuers", "/cards", "/calculator", "/updates", "/restricted-cards"].some((path) => url.startsWith(path));
+}
+
+function localSpaRoute(url) {
+  if (process.env.NODE_ENV !== "development") return null;
+  if (url === "/compare/") return "/cards?mode=compare";
+  if (url === "/catalog/") return "/cards";
+  if (url === "/calculator/") return "/calculator";
+  if (url === "/lounges/") return "/cards?category=travel";
+  if (url === "/guides/" || url.startsWith("/guides/new-credit-cards/")) return "/updates";
+  if (url.startsWith("/guides/invite-only-credit-cards/")) return "/restricted-cards";
+  if (url.startsWith("/guides/how-to-close-a-credit-card/")) return "/help/issuers";
+  return null;
 }
 
 function publicDestination(url) {
