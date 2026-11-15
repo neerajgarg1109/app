@@ -1,5 +1,28 @@
 [
   {
+    "slug": "amazon-pay-icici-vs-axis-ace",
+    "aliases": [
+      "axis-ace-vs-amazon-pay-icici"
+    ],
+    "cardA": "icici-amazon-pay-credit-card",
+    "cardB": "axis-axis-bank-ace-credit-card",
+    "title": "Amazon Pay ICICI vs Axis ACE (2026): Rewards, Cashback & Fees",
+    "h1": "Amazon Pay ICICI vs Axis Bank ACE: Which Everyday Rewards Card Fits You?",
+    "note": "Amazon Pay ICICI has no joining or annual fee and credits rewards to Amazon Pay balance; its listed rates vary by eligible Amazon purchase and Prime status. Axis ACE charges ₹499 + 18% GST annually, waived after ₹2 lakh eligible annual spend, and its 5% Google Pay bills and 4% Swiggy, Zomato and Ola cashback share a ₹500 statement cap. Compare your actual eligible merchants, exclusions and reward redemption before choosing; these rewards are not directly equivalent.",
+    "verdicts": [
+      [
+        "You regularly make eligible Amazon purchases and can use the rewards credited to Amazon Pay balance.",
+        "You value no joining fee and no annual fee.",
+        "Your spending fits the card’s Amazon, partner-merchant and other eligible purchase categories."
+      ],
+      [
+        "You use eligible Google Pay bill payments on Android or eligible Swiggy, Zomato and Ola purchases.",
+        "The shared ₹500 statement cap on the 5% and 4% categories fits your monthly spending.",
+        "You can justify the ₹499 + 18% GST annual fee or meet the ₹2 lakh eligible annual spend waiver threshold."
+      ]
+    ]
+  },
+  {
     "slug": "hdfc-infinia-vs-axis-magnus",
     "aliases": [
       "axis-magnus-vs-hdfc-infinia"
