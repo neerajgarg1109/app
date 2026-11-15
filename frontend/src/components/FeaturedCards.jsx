@@ -13,7 +13,10 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
     .map((item) => byId.get(item.card_id)).find((card) => card && card.active !== false && card.applicationsOpen !== false)
     || activeCards.find((card) => card.applicationLinkType === "partner" && card.applicationsOpen !== false);
   const promotedCard = partnerCard || activeCards.find((card) => card.id === "sbi-cashback-sbi");
+  const configuredLaunch = activeCards.filter((card) => card.homepagePlacement?.active && card.homepagePlacement.type !== "partner" && card.applicationsOpen !== false)
+    .sort((left, right) => Number(right.homepagePlacement.priority || 0) - Number(left.homepagePlacement.priority || 0))[0];
   const liveLaunch = activeCards.find((card) => card.id === "hdfc-swiggy-ornge-hdfc-bank-credit-card" && card.applicationsOpen !== false)
+    || configuredLaunch
     || updates.filter((item) => item.change_type === "launch").map((item) => byId.get(item.card_id)).find((card) => card && card.applicationsOpen !== false);
   const activeNews = news.filter((item) => item.active && ["announcement", "upcoming"].includes(item.status));
   const announcement = activeNews.find((item) => item.status === "announcement");
@@ -23,6 +26,8 @@ export default function FeaturedCards({ cards = [], updates = [], placements = n
     recordProductEvent("apply_clicked");
   };
   const cardSummary = (card) => card.editorial?.summary || card.rewardLine || "Review the card’s current fees, benefits and eligibility.";
+  const liveLaunchLabel = liveLaunch?.homepagePlacement?.label || "Live launch";
+  const liveLaunchSummary = liveLaunch?.homepagePlacement?.summary || (liveLaunch ? cardSummary(liveLaunch) : "");
   const liveLaunchLabel = liveLaunch?.homepagePlacement?.label || "Live launch";
   const liveLaunchSummary = liveLaunch?.homepagePlacement?.summary || (liveLaunch ? cardSummary(liveLaunch) : "");
   const renderNews = (item, label, variant) => item ? <article className="ciq-highlight-article">
