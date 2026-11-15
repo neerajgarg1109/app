@@ -54,6 +54,11 @@ def slug(value):
     return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
 
 
+def reverse_comparison_slug(value):
+    parts = value.split("-vs-") if isinstance(value, str) else []
+    return f"{parts[1]}-vs-{parts[0]}" if len(parts) == 2 else None
+
+
 def social_links(title, canonical):
     text = quote(f"{title} — CardIQ", safe="")
     url = quote(canonical, safe="")
