@@ -13,7 +13,7 @@ BY_ID = {c['id']:c for c in CARDS}
 
 class ComparisonEngineTests(unittest.TestCase):
     def test_priority_routes_reference_real_products(self):
-        self.assertEqual(len(TOP_COMPARISONS),22)
+        self.assertEqual(len(TOP_COMPARISONS),23)
         self.assertEqual(len({row['slug'] for row in TOP_COMPARISONS}),len(TOP_COMPARISONS))
         for row in TOP_COMPARISONS:
             a,b=BY_ID[row['cardA']],BY_ID[row['cardB']]
