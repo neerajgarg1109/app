@@ -19,7 +19,7 @@ test("keeps upcoming news visible without adding an unlaunched product to the ca
   const root = createRoot(container);
   const news = [{ id: "preview", issuer: "Bank C", cardName: "Future Card", headline: "Future card announced", status: "upcoming", statusLabel: "Coming soon", summary: "Issuer preview.", availabilityNote: "Launch date not announced.", sourceUrl: "https://bank.example/announcement", verifiedOn: "2026-10-26", active: true }];
   await act(async () => root.render(<FeaturedCards cards={[]} news={news} />));
-  expect(container.textContent).toContain("Latest news");
+  expect(container.textContent).toContain("News & rule updates");
   expect(container.textContent).toContain("Future Card");
   expect(container.textContent).not.toContain("New launches");
   expect(container.textContent).not.toContain("Apply now");
