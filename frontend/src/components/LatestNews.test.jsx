@@ -9,12 +9,13 @@ test("shows the sourced ICICI announcement without presenting it as an open appl
   const container = document.createElement("div");
   const root = createRoot(container);
   await act(async () => root.render(<LatestNews items={CARD_NEWS} />));
-  expect(container.textContent).toContain("Latest news");
-  expect(container.textContent).toContain("1838 Reserve");
+  expect(container.textContent).toContain("News & rule updates");
+  expect(container.textContent).toContain("ICICI shares details of 1838 Reserve");
   expect(container.textContent).toContain("Invitation only");
   expect(container.textContent).toContain("Currently listed by ICICI Bank; invitation required");
   expect(container.textContent).not.toContain("Apply now");
   expect(container.textContent).not.toContain("Coming soon");
+  expect(container.textContent).toContain("hi@findmybest.cards");
   const source = container.querySelector("a");
   expect(source.getAttribute("href")).toBe(CARD_NEWS[0].sourceUrl);
   expect(source.getAttribute("rel")).toContain("noopener");
