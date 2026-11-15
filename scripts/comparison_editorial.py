@@ -87,7 +87,7 @@ def render_comparison(slug, left, right):
         return f'₹{value:,.0f}'
     rows = ''.join(f'<tr><th scope="row">{escape(label)}</th><td>{amount(a, 0)}</td><td>{amount(b, 1)}</td></tr>' for label, a, b in examples(slug))
     sources = ''.join(f'<li><a href="{escape(url, quote=True)}">{escape(label)}</a></li>' for label, url in review['sources'])
-    caption = 'Illustrative gross rewards before card fees and tax' if review['unit'] == 'mixed' else f'Gross {review["unit"]} before fees and taxes'
+    caption = 'Illustrative gross rewards before fees and taxes' if review['unit'] == 'mixed' else f'Gross {review["unit"]} before fees and taxes'
     checked = review.get('checked', CHECKED)
     return f'''<section aria-labelledby="detailed-decision"><h2 id="detailed-decision">Which card fits which spending pattern?</h2><p>{escape(review['summary'])}</p>
 <h3>When to choose {escape(left['name'])}</h3><p>{escape(review['left'])}</p>
