@@ -488,7 +488,7 @@ for support in ISSUER_SUPPORT:
 for post in guide_posts:
     write(Path("guides") / post["slug"], render_blog_article(post, guide_posts, ORIGIN, social_links(post["title"], post["url"])))
 write(Path("guides"), render_blog_index(guide_posts + comparison_posts, ORIGIN, social_links("CardIQ Journal", f"{ORIGIN}/guides/")))
-write(Path("guides/news"), render_news_archive(ORIGIN))
+write(Path("guides/news"), render_news_archive(ORIGIN, social_links("CardIQ news archive", f"{ORIGIN}/guides/news/")) )
 
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category_title(category))}</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)

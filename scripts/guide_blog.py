@@ -87,10 +87,10 @@ def news_section(origin, archive=False):
     return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">{heading} <span>&amp; rule updates</span></h2><p>{subtitle}</p></div>{archive_link}</div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Issuer terms control; check the notice for your specific card. <span>Editorial corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</span></p></section>'''
 
 
-def render_news_archive(origin):
+def render_news_archive(origin, share=''):
     description = "CardIQ’s source-linked archive of credit card launches, fee changes, reward revisions and issuer notices."
     schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Credit card news and rule updates | CardIQ", "description": description, "url": f"{origin}/guides/news/"}
-    content = f'<section class="journal-hero wrap"><p class="eyebrow">THE CARDIQ NEWS DESK</p><h1>Card news <span>&amp; updates</span></h1><p class="hero-description">{escape(description)}</p></section><div class="wrap journal-content">{news_section(origin, archive=True)}<section class="editorial-note"><p>Issuer terms are authoritative. Found an update? <a href="mailto:hi@findmybest.cards">Contact CardIQ editorial</a>.</p></section></div>'
+    content = f'<section class="journal-hero wrap"><p class="eyebrow">THE CARDIQ NEWS DESK</p><h1>Card news <span>&amp; updates</span></h1><p class="hero-description">{escape(description)}</p></section><div class="wrap journal-content">{news_section(origin, archive=True)}{share}<section class="editorial-note"><p>Issuer terms are authoritative. Found an update? <a href="mailto:hi@findmybest.cards">Contact CardIQ editorial</a>.</p></section></div>'
     return shell("Credit card news and rule updates | CardIQ", description, f"{origin}/guides/news/", content, origin, schema)
 
 
