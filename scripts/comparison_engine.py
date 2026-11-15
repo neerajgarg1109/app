@@ -2,6 +2,7 @@
 import json
 import hashlib
 import re
+from datetime import date
 from decimal import Decimal, ROUND_HALF_UP
 from html import escape
 from pathlib import Path
@@ -12,7 +13,7 @@ DATA = Path(__file__).with_name('data')
 TOP_COMPARISONS = json.loads((DATA / 'top_comparisons.json').read_text())
 PRIORITY = {row['slug']: row for row in TOP_COMPARISONS}
 MITC = json.loads((DATA / 'comparison_mitc.json').read_text()) if (DATA / 'comparison_mitc.json').exists() else {}
-YEAR = 2026
+YEAR = date.today().year
 CATEGORIES = {'online': 'Online shopping', 'upi': 'UPI / QR', 'dining': 'Dining / groceries', 'travel': 'Travel / forex', 'utilities': 'Utilities'}
 RULES = {
     'sbi-cashback-sbi': {'online': [.05, 2000], 'upi': [0, 0], 'utilities': [0, 0]},
@@ -103,9 +104,9 @@ def generateComparisonSeoMeta(cardA, cardB, customOverride=None, origin='https:/
     if 'rupay' in text or 'upi' in text: suffix = 'RuPay: Best for UPI Scan & Pay Cashback?'
     elif cardA['issuer'] == cardB['issuer']: suffix = f'Which {cardA["issuer"]} Card Should You Apply For?'
     elif any(c.get('annualFeeAmount') == 0 for c in (cardA, cardB)) and any(c.get('annualFeeAmount', 0) > 0 for c in (cardA, cardB)):
-        suffix = f'Is the ₹{max(c.get("annualFeeAmount", 0) for c in (cardA,cardB))} + 18% GST Fee Worth It in 2026?'
+        suffix = f'Is the ₹{max(c.get("annualFeeAmount", 0) for c in (cardA,cardB))} + 18% GST Fee Worth It in {YEAR}?'
     elif any(t in text for t in ('travel', 'forex', 'miles')): suffix = 'Forex Markup, Lounge Rules & Winner'
-    else: suffix = '(2026): Real ₹ Cashback & Capping Math'
+    else: suffix = f'({YEAR}): Real ₹ Cashback & Capping Math'
     title = custom.get('title') or f'{a} vs {b}: {suffix}'
     if not custom.get('title') and len(title) >= 65:
         # Retain distinguishable product names before dropping the optional formula suffix.
