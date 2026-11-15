@@ -22,6 +22,7 @@
   },
   {
     "slug": "hdfc-swiggy-vs-airtel-axis",
+    "aliases": ["airtel-axis-vs-swiggy-hdfc"],
     "cardA": "hdfc-swiggy-hdfc-bank-credit-card",
     "cardB": "axis-airtel-axis-bank-credit-card",
     "title": "HDFC Swiggy vs Airtel Axis (2026): Monthly Capping & Bill Math",

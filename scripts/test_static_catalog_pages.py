@@ -121,6 +121,13 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertEqual(document.meta["canonical"], f"{ORIGIN}/compare/sbi-cashback-vs-hdfc-millennia/")
         self.assertNotIn(f"<loc>{ORIGIN}/compare/sbi-cashback-sbi-vs-hdfc-millennia/</loc>", (BUILD / "sitemap.xml").read_text())
 
+    def test_airtel_swiggy_alias_uses_exact_catalog_cards_and_preferred_canonical(self):
+        alias = BUILD / "compare" / "airtel-axis-vs-swiggy-hdfc" / "index.html"
+        self.assertTrue(alias.is_file())
+        document = Document(alias.read_text())
+        self.assertEqual(document.meta["canonical"], f"{ORIGIN}/compare/hdfc-swiggy-vs-airtel-axis/")
+        self.assertNotIn(f"<loc>{ORIGIN}/compare/airtel-axis-vs-swiggy-hdfc/</loc>", (BUILD / "sitemap.xml").read_text())
+
     def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
         pages = list((BUILD / 'compare').glob('*/index.html'))
         self.assertGreater(len(pages), 0)
