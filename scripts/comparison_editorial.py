@@ -1,4 +1,4 @@
-"""Three source-reviewed comparisons with bounded, reproducible examples."""
+"""Source-reviewed comparisons with bounded, reproducible examples."""
 from decimal import Decimal
 from html import escape
 
@@ -6,6 +6,7 @@ CHECKED = '2026-10-29'
 FLIPKART = 'axis-flipkart-axisbank-credit-card-vs-sbi-flipkart-sbi-card'
 NEU = 'hdfc-tata-neu-plus-vs-sbi-tata-neu-plus-sbi-card'
 FOOD = 'axis-axis-bank-ace-credit-card-vs-hdfc-swiggy-ornge-hdfc-bank-credit-card'
+TATA_SBI = 'hdfc-tata-neu-infinity-vs-sbi-cashback-sbi'
 
 
 def earn(spend, rate, cap=None):
@@ -27,6 +28,9 @@ def examples(slug):
         return [('One statement: ₹4,000 qualifying Swiggy purchases + ₹10,000 eligible offline purchases', earn(4000, '.04', 500) + earn(10000, '.015'), earn(4000, '.05', 1500) + earn(10000, '.01', 1000)),
                 ('One statement: ₹20,000 qualifying Swiggy + ₹10,000 online purchases earning ACE base rate and Ornge accelerated rate', earn(20000, '.04', 500) + earn(10000, '.015'), earn(30000, '.05', 1500)),
                 ('One statement: ₹40,000 other eligible offline purchases', earn(40000, '.015'), earn(40000, '.01', 1000))]
+    if slug == TATA_SBI:
+        return [('One month: ₹10,000 eligible non-EMI Tata partner-brand purchase, also eligible for SBI online cashback', earn(10000, '.05'), earn(10000, '.05')),
+                ('One month: ₹10,000 eligible non-Tata online purchase', earn(10000, '.015'), earn(10000, '.05'))]
     return []
 
 
@@ -49,6 +53,16 @@ REVIEWS = {
         'sources': [('HDFC UPI rates, caps and fee schedule', 'https://www.hdfc.bank.in/credit-cards/tata-neu-plus-hdfc-bank-credit-card'), ('SBI NeuCoin and UPI terms, section 11.3', 'https://www.sbicard.com/sbi-card-en/assets/docs/pdf/ekit-tncs/Tata-Neu-Plus-Booklet.pdf'), ('SBI product terms', 'https://www.sbicard.com/en/personal/credit-cards/tata-neu-plus-sbi-card.html')],
         'unit': 'NeuCoins',
     },
+    TATA_SBI: {
+        'summary': 'Both cards can show a 5% headline, but they reward different baskets. Tata Neu Infinity earns NeuCoins on eligible non-EMI Tata partner-brand purchases; SBI Cashback earns statement cashback on eligible online purchases. Redemption flexibility and merchant eligibility decide which rate matters to you.',
+        'left': 'Choose Tata Neu Infinity if a meaningful share of your spend is at eligible Tata partner brands and you will use NeuCoins on eligible Tata purchases. Non-Tata eligible retail earns 1.5% NeuCoins. The ₹1,499 + GST annual fee has a ₹3 lakh renewal-waiver threshold. NeuCoins are not cash, and HDFC says that from 25 November 2026 cardholders must claim them in the Tata Neu app; minimum claim and expiry rules apply.',
+        'right': 'Choose SBI Cashback if your eligible online spend is spread across merchants and you prefer statement cashback. It earns 5% online, capped at ₹2,000 per statement cycle, and 1% offline, also capped at ₹2,000; total cashback is capped at ₹4,000 per cycle. The ₹999 + GST annual fee has a ₹2 lakh renewal-waiver threshold.',
+        'rules': 'HDFC’s 5% rate is for non-EMI purchases at eligible Tata partner brands and is credited as NeuCoins; 1 NeuCoin can provide ₹1 savings on eligible Tata Neu redemptions, not a bank cash credit. From 25 November 2026, HDFC requires a manual claim in Tata Neu, with at least 100 NeuCoins per claim, up to three claims daily, a 12-month claim window, and another 12 months of validity after transfer to the Tata Neu account. SBI’s online cashback is subject to merchant/category exclusions and a ₹2,000 online cap each statement cycle. Both renewal waivers depend on eligible annual spend as defined by the issuer.',
+        'caveat': 'The examples assume the purchase qualifies for both cards’ stated category, unused reward caps, no EMI, no refund, and one reward period. Actual merchant classification and eligible Tata partner lists can change the result. HDFC values are NeuCoins with an indicated eligible Tata redemption value, not cash; timing, claim thresholds, expiry, redemption availability, fees, GST and transaction rounding are excluded from the example arithmetic.',
+        'sources': [('HDFC Tata Neu Infinity rewards, fees, redemption and claim rules', 'https://www.hdfc.bank.in/credit-cards/tata-neu-infinity-hdfc-bank-credit-card'), ('HDFC Tata Neu Infinity terms and conditions', 'https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/tata-neu-infinity-credit-card/pdf/tata_neu_infinity_card_tnc.pdf'), ('SBI Cashback Card fees and waiver threshold (MITC)', 'https://www.sbicard.com/en/most-important-terms-and-conditions.page'), ('SBI Cashback Card reward caps and exclusions (effective 1 April 2026)', 'https://www.sbicard.com/sbi-card-en/assets/docs/pdf/cashback-revised.pdf'), ('SBI Cashback Card product page', 'https://www.sbicard.com/en/personal/credit-cards/cashback-sbi-card.html')],
+        'unit': 'mixed',
+        'checked': '2026-11-15',
+    },
     FOOD: {
         'summary': 'ACE combines eligible Android Google Pay bills with food-delivery rewards. Swiggy Ornge focuses on qualifying Swiggy and selected online purchases. The shared caps and minimum transaction amounts matter more than comparing 4% with 5% in isolation.',
         'left': 'Choose ACE when eligible Google Pay bills or ordinary purchases are a larger part of your spending. Its 5% bills and 4% partner tiers share a ₹500 statement cap; other eligible purchases earn 1.5%. The Google Pay bill benefit requires Android.',
@@ -65,14 +79,20 @@ def render_comparison(slug, left, right):
     review = REVIEWS.get(slug)
     if not review:
         return ''
-    def amount(value):
-        return f'{value:,.0f} NeuCoins' if review['unit'] == 'NeuCoins' else f'₹{value:,.0f}'
-    rows = ''.join(f'<tr><th scope="row">{escape(label)}</th><td>{amount(a)}</td><td>{amount(b)}</td></tr>' for label, a, b in examples(slug))
+    def amount(value, side):
+        if review['unit'] == 'NeuCoins':
+            return f'{value:,.0f} NeuCoins'
+        if review['unit'] == 'mixed':
+            return f'{value:,.0f} NeuCoins (up to ₹{value:,.0f} eligible Tata savings)' if side == 0 else f'₹{value:,.0f} cashback'
+        return f'₹{value:,.0f}'
+    rows = ''.join(f'<tr><th scope="row">{escape(label)}</th><td>{amount(a, 0)}</td><td>{amount(b, 1)}</td></tr>' for label, a, b in examples(slug))
     sources = ''.join(f'<li><a href="{escape(url, quote=True)}">{escape(label)}</a></li>' for label, url in review['sources'])
+    caption = 'Illustrative gross rewards before card fees and tax' if review['unit'] == 'mixed' else f'Gross {review["unit"]} before fees and taxes'
+    checked = review.get('checked', CHECKED)
     return f'''<section aria-labelledby="detailed-decision"><h2 id="detailed-decision">Which card fits which spending pattern?</h2><p>{escape(review['summary'])}</p>
 <h3>When to choose {escape(left['name'])}</h3><p>{escape(review['left'])}</p>
 <h3>When to choose {escape(right['name'])}</h3><p>{escape(review['right'])}</p>
 <h3>The limits that change the answer</h3><p>{escape(review['rules'])}</p>
 <h2>Worked spending examples</h2><p>Illustrative eligible spending, calculated from the linked issuer rules. These are examples, not personalised return estimates.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Worked spending examples"><table><caption>Gross {escape(review['unit'])} before fees and taxes</caption><thead><tr><th scope="col">Spending assumption</th><th scope="col">{escape(left['name'])}</th><th scope="col">{escape(right['name'])}</th></tr></thead><tbody>{rows}</tbody></table></div>
-<p>{escape(review['caveat'])}</p><h2>Sources for this comparison</h2><p class="muted">Comparison terms reviewed <time datetime="{CHECKED}">{CHECKED}</time>. Card summaries retain their own verification dates. Product terms can change.</p><ul>{sources}</ul></section>'''
+<div class="table-scroll" tabindex="0" role="region" aria-label="Worked spending examples"><table><caption>{escape(caption)}</caption><thead><tr><th scope="col">Spending assumption</th><th scope="col">{escape(left['name'])}</th><th scope="col">{escape(right['name'])}</th></tr></thead><tbody>{rows}</tbody></table></div>
+<p>{escape(review['caveat'])}</p><h2>Sources for this comparison</h2><p class="muted">Comparison terms reviewed <time datetime="{escape(checked)}">{escape(checked)}</time>. Card summaries retain their own verification dates. Product terms can change.</p><ul>{sources}</ul></section>'''

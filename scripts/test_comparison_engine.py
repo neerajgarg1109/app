@@ -12,9 +12,9 @@ BY_ID = {c['id']:c for c in CARDS}
 
 
 class ComparisonEngineTests(unittest.TestCase):
-    def test_twenty_distinct_priority_routes_reference_real_products(self):
-        self.assertEqual(len(TOP_COMPARISONS),20)
-        self.assertEqual(len({row['slug'] for row in TOP_COMPARISONS}),20)
+    def test_priority_routes_reference_real_products(self):
+        self.assertEqual(len(TOP_COMPARISONS),21)
+        self.assertEqual(len({row['slug'] for row in TOP_COMPARISONS}),len(TOP_COMPARISONS))
         for row in TOP_COMPARISONS:
             a,b=BY_ID[row['cardA']],BY_ID[row['cardB']]
             meta=generateComparisonSeoMeta(a,b,row)

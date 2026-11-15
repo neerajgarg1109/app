@@ -235,11 +235,11 @@ class StaticCatalogTests(unittest.TestCase):
         from comparison_engine import TOP_COMPARISONS, comparison_excerpt
         source = (BUILD / 'guides/index.html').read_text()
         cards = re.findall(r'<article class="post-card".*?</article>', source, re.S)
-        self.assertGreater(len(cards), 20)
-        for card, priority in zip(cards[:20], TOP_COMPARISONS):
+        self.assertGreater(len(cards), len(TOP_COMPARISONS))
+        for card, priority in zip(cards[:len(TOP_COMPARISONS)], TOP_COMPARISONS):
             self.assertIn('/compare/' + priority['slug'] + '/', card)
             self.assertIn('Popular Comparison', card)
-        self.assertNotIn('Popular Comparison', ''.join(cards[20:]))
+        self.assertNotIn('Popular Comparison', ''.join(cards[len(TOP_COMPARISONS):]))
         snippets = []
         for row in TOP_COMPARISONS:
             excerpt = comparison_excerpt(CARDS_BY_ID[row['cardA']], CARDS_BY_ID[row['cardB']])
@@ -247,7 +247,7 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn('annual fee', excerpt)
             self.assertNotIn('See dated issuer sources and a spending scenario', excerpt)
             snippets.append(excerpt)
-        self.assertEqual(len(set(snippets)), 20)
+        self.assertEqual(len(set(snippets)), len(TOP_COMPARISONS))
         self.assertNotIn('/#/updates', source)
         self.assertNotIn('/#/restricted-cards', source)
         hydration = (BUILD / 'public-footer.js').read_text()
@@ -341,7 +341,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / 'compare/index.html').read_text()
         listing = re.search(r'<ul>(.*?)</ul>', source, re.S).group(1)
         links = Document(listing).links
-        self.assertEqual(links[:20], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
+        self.assertEqual(links[:len(TOP_COMPARISONS)], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
         for path in self.pages:
             relative = path.relative_to(BUILD).as_posix()
             if not relative.startswith(('catalog/', 'categories/', 'issuers/', 'guides/')):

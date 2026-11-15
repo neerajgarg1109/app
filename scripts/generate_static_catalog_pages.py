@@ -380,7 +380,7 @@ comparison_posts.sort(key=lambda post: (0, priority_order[post['slug']]) if post
 comparison_links = [f'<li><a href="{post["url"]}">{html.escape(post["title"])}</a></li>' for post in comparison_posts]
 
 compare_description = f"Browse {len(comparison_canonicals)} maintained Indian credit card comparisons with fees, reward scenarios, exclusions and issuer sources."
-compare_body = f'<h1>Indian credit card comparisons</h1><p>{html.escape(compare_description)}</p><p class="muted">Twenty priority matchups and maintained editorial pairings. Estimates do not guarantee approval or savings.</p><ul>{"".join(comparison_links)}</ul>'
+compare_body = f'<h1>Indian credit card comparisons</h1><p>{html.escape(compare_description)}</p><p class="muted">Priority matchups and maintained editorial pairings. Estimates do not guarantee approval or savings.</p><ul>{"".join(comparison_links)}</ul>'
 write(Path('compare'), page('Compare Indian credit cards side by side | CardIQ',compare_description,f'{ORIGIN}/compare/',f'{ORIGIN}/#/cards?mode=compare',compare_body))
 
 # Static-host bridge: the backend makes the authoritative destination decision and records placement.
