@@ -106,6 +106,13 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertEqual(webpage["description"], document.meta["description"], path)
         self.assertGreaterEqual(COMPARISON_SEO_YEAR, 2026)
 
+    def test_legacy_sbi_hdfc_comparison_slug_resolves_to_preferred_canonical(self):
+        alias = BUILD / "compare" / "sbi-cashback-sbi-vs-hdfc-millennia" / "index.html"
+        self.assertTrue(alias.is_file())
+        document = Document(alias.read_text())
+        self.assertEqual(document.meta["canonical"], f"{ORIGIN}/compare/sbi-cashback-vs-hdfc-millennia/")
+        self.assertNotIn(f"<loc>{ORIGIN}/compare/sbi-cashback-sbi-vs-hdfc-millennia/</loc>", (BUILD / "sitemap.xml").read_text())
+
     def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
         pages = list((BUILD / 'compare').glob('*/index.html'))
         self.assertGreater(len(pages), 0)
