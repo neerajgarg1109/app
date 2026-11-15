@@ -1,55 +1,7 @@
 [
   {
-    "slug": "amazon-pay-icici-vs-axis-ace",
-    "aliases": [
-      "axis-ace-vs-amazon-pay-icici"
-    ],
-    "cardA": "icici-amazon-pay-credit-card",
-    "cardB": "axis-axis-bank-ace-credit-card",
-    "title": "Amazon Pay ICICI vs Axis ACE (2026): Rewards, Cashback & Fees",
-    "h1": "Amazon Pay ICICI vs Axis Bank ACE: Which Everyday Rewards Card Fits You?",
-    "note": "Amazon Pay ICICI has no joining or annual fee and credits rewards to Amazon Pay balance; its listed rates vary by eligible Amazon purchase and Prime status. Axis ACE charges ₹499 + 18% GST annually, waived after ₹2 lakh eligible annual spend, and its 5% Google Pay bills and 4% Swiggy, Zomato and Ola cashback share a ₹500 statement cap. Compare your actual eligible merchants, exclusions and reward redemption before choosing; these rewards are not directly equivalent.",
-    "verdicts": [
-      [
-        "You regularly make eligible Amazon purchases and can use the rewards credited to Amazon Pay balance.",
-        "You value no joining fee and no annual fee.",
-        "Your spending fits the card’s Amazon, partner-merchant and other eligible purchase categories."
-      ],
-      [
-        "You use eligible Google Pay bill payments on Android or eligible Swiggy, Zomato and Ola purchases.",
-        "The shared ₹500 statement cap on the 5% and 4% categories fits your monthly spending.",
-        "You can justify the ₹499 + 18% GST annual fee or meet the ₹2 lakh eligible annual spend waiver threshold."
-      ]
-    ]
-  },
-  {
-    "slug": "hdfc-infinia-vs-axis-magnus",
-    "aliases": [
-      "axis-magnus-vs-hdfc-infinia"
-    ],
-    "cardA": "hdfc-infinia-credit-card",
-    "cardB": "axis-axis-bank-magnus-credit-card",
-    "title": "HDFC Infinia vs Axis Magnus (2026): Fees, Rewards & Lounge Conditions",
-    "h1": "HDFC Bank INFINIA vs Axis Bank MAGNUS: Which Premium Travel Card Fits You?",
-    "note": "Both cards list a ₹12,500 + 18% GST annual fee. INFINIA’s renewal fee reversal requires ₹10 lakh of qualifying annual spend; standard MAGNUS lists ₹25 lakh, while the Burgundy variant differs. Compare reward earning, redemption, lounge conditions and invitation eligibility using the issuer terms—this page does not assign cash value to reward points.",
-    "verdicts": [
-      [
-        "INFINIA is available by invitation to select HDFC Bank customers; the issuer determines eligibility.",
-        "You can use its Premium Reward Points and SmartBuy benefits under the current terms.",
-        "The ₹10 lakh qualifying annual spend threshold for renewal fee reversal fits your spending."
-      ],
-      [
-        "You prefer Axis Bank MAGNUS and can use its EDGE points and travel benefits under the current terms.",
-        "You can meet the standard card’s ₹25 lakh qualifying annual spend threshold for renewal fee waiver.",
-        "Check whether your offer is standard MAGNUS or a Burgundy variant, since terms differ."
-      ]
-    ]
-  },
-  {
     "slug": "sbi-cashback-vs-hdfc-millennia",
-    "aliases": [
-      "sbi-cashback-sbi-vs-hdfc-millennia"
-    ],
+    "aliases": ["sbi-cashback-sbi-vs-hdfc-millennia"],
     "cardA": "sbi-cashback-sbi",
     "cardB": "hdfc-millennia-credit-card",
     "title": "SBI Cashback vs HDFC Millennia (2026): 5% Cashback Math & Winner",
@@ -70,9 +22,7 @@
   },
   {
     "slug": "hdfc-swiggy-vs-airtel-axis",
-    "aliases": [
-      "airtel-axis-vs-swiggy-hdfc"
-    ],
+    "aliases": ["airtel-axis-vs-swiggy-hdfc"],
     "cardA": "hdfc-swiggy-hdfc-bank-credit-card",
     "cardB": "axis-airtel-axis-bank-credit-card",
     "title": "HDFC Swiggy vs Airtel Axis (2026): Monthly Capping & Bill Math",
@@ -88,10 +38,16 @@
     "note": "Flipkart partner cashback has quarterly caps. Amazon rewards are Amazon Pay balance, not statement cash. Neither is universally uncapped."
   },
   {
+    "slug": "sbi-cashback-vs-amazon-pay-icici",
+    "cardA": "sbi-cashback-sbi",
+    "cardB": "icici-amazon-pay-credit-card",
+    "title": "SBI Cashback vs Amazon Pay ICICI: Is the ₹999 + 18% GST Fee Worth It?",
+    "h1": "SBI Cashback vs Amazon Pay ICICI: Universal 5% vs Lifetime Free",
+    "note": "For eligible non-Amazon online purchases earning 1% on Amazon Pay ICICI versus 5% on SBI, the illustrative fee-only break-even is ₹2,455.88/month before SBI renewal waiver, caps, rounding and other spending. ₹20,000/month is not the break-even."
+  },
+  {
     "slug": "tata-neu-infinity-vs-sbi-cashback",
-    "aliases": [
-      "sbi-cashback-vs-tata-neu-infinity"
-    ],
+    "aliases": ["sbi-cashback-vs-tata-neu-infinity"],
     "cardA": "hdfc-tata-neu-infinity",
     "cardB": "sbi-cashback-sbi",
     "title": "Tata Neu Infinity vs SBI Cashback (2026): NeuCoins or Cash?",
@@ -109,14 +65,6 @@
         "You are comfortable with ₹999 + 18% GST and the ₹2 lakh annual renewal-waiver threshold."
       ]
     ]
-  },
-  {
-    "slug": "sbi-cashback-vs-amazon-pay-icici",
-    "cardA": "sbi-cashback-sbi",
-    "cardB": "icici-amazon-pay-credit-card",
-    "title": "SBI Cashback vs Amazon Pay ICICI: Is the ₹999 + 18% GST Fee Worth It?",
-    "h1": "SBI Cashback vs Amazon Pay ICICI: Universal 5% vs Lifetime Free",
-    "note": "For eligible non-Amazon online purchases earning 1% on Amazon Pay ICICI versus 5% on SBI, the illustrative fee-only break-even is ₹2,455.88/month before SBI renewal waiver, caps, rounding and other spending. ₹20,000/month is not the break-even."
   },
   {
     "slug": "hsbc-live-plus-vs-airtel-axis",

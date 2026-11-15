@@ -53,6 +53,15 @@ REVIEWS = {
         'sources': [('HDFC UPI rates, caps and fee schedule', 'https://www.hdfc.bank.in/credit-cards/tata-neu-plus-hdfc-bank-credit-card'), ('SBI NeuCoin and UPI terms, section 11.3', 'https://www.sbicard.com/sbi-card-en/assets/docs/pdf/ekit-tncs/Tata-Neu-Plus-Booklet.pdf'), ('SBI product terms', 'https://www.sbicard.com/en/personal/credit-cards/tata-neu-plus-sbi-card.html')],
         'unit': 'NeuCoins',
     },
+    FOOD: {
+        'summary': 'ACE combines eligible Android Google Pay bills with food-delivery rewards. Swiggy Ornge focuses on qualifying Swiggy and selected online purchases. The shared caps and minimum transaction amounts matter more than comparing 4% with 5% in isolation.',
+        'left': 'Choose ACE when eligible Google Pay bills or ordinary purchases are a larger part of your spending. Its 5% bills and 4% partner tiers share a ₹500 statement cap; other eligible purchases earn 1.5%. The Google Pay bill benefit requires Android.',
+        'right': 'Choose Ornge when eligible Swiggy and listed online purchases dominate. Their 5% tier shares a ₹1,500 billing-cycle cap; its 1% other tier is capped at ₹1,000. The checked terms require at least ₹249 per 5% transaction and ₹100 per 1% transaction.',
+        'rules': 'Swiggy Ornge is distinct from Swiggy BLCK and the older Swiggy HDFC card. Use its own 15 October 2026 terms. Eligible online merchant/MCC lists determine the 5% rate. ACE and Ornge have different excluded categories; neither headline rate applies to every payment. Compare renewal-waiver spending separately from reward eligibility.',
+        'caveat': 'Examples use one statement period, unused caps and transactions meeting both issuers’ minimums and category rules. The online purchases in row two must qualify for Ornge’s 5% while earning only ACE’s 1.5% base rate. No Google Pay bill spend is included in these paired examples. Figures are gross cashback before membership fees, taxes, reversals and transaction rounding; welcome memberships are not assigned a cash value.',
+        'sources': [('Axis ACE reward rates, combined cap and Android condition', 'https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-ace-credit-card-tncs.pdf?sfvrsn=a3effc42_6'), ('HDFC Ornge terms published 15 October 2026', 'https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/swiggy-ornge-hdfc-bank-credit-card/pdf/tncs-swiggy-ornge-hdfc-bank-credit-card-15102026.pdf'), ('HDFC Ornge fees and availability', 'https://www.hdfc.bank.in/credit-cards/swiggy-ornge-hdfc-bank-credit-card')],
+        'unit': 'cashback',
+    },
     TATA_SBI: {
         'summary': 'Both cards can show a 5% headline, but they reward different baskets. Tata Neu Infinity earns NeuCoins on eligible non-EMI Tata partner-brand purchases; SBI Cashback earns statement cashback on eligible online purchases. Redemption flexibility and merchant eligibility decide which rate matters to you.',
         'left': 'Choose Tata Neu Infinity if a meaningful share of your spend is at eligible Tata partner brands and you will use NeuCoins on eligible Tata purchases. Non-Tata eligible retail earns 1.5% NeuCoins. The ₹1,499 + GST annual fee has a ₹3 lakh renewal-waiver threshold. NeuCoins are not cash, and HDFC says that from 25 November 2026 cardholders must claim them in the Tata Neu app; minimum claim and expiry rules apply.',
@@ -62,15 +71,6 @@ REVIEWS = {
         'sources': [('HDFC Tata Neu Infinity rewards, fees, redemption and claim rules', 'https://www.hdfc.bank.in/credit-cards/tata-neu-infinity-hdfc-bank-credit-card'), ('HDFC Tata Neu Infinity terms and conditions', 'https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/tata-neu-infinity-credit-card/pdf/tata_neu_infinity_card_tnc.pdf'), ('SBI Cashback Card fees and waiver threshold (MITC)', 'https://www.sbicard.com/en/most-important-terms-and-conditions.page'), ('SBI Cashback Card reward caps and exclusions (effective 1 April 2026)', 'https://www.sbicard.com/sbi-card-en/assets/docs/pdf/cashback-revised.pdf'), ('SBI Cashback Card product page', 'https://www.sbicard.com/en/personal/credit-cards/cashback-sbi-card.html')],
         'unit': 'mixed',
         'checked': '2026-11-15',
-    },
-    FOOD: {
-        'summary': 'ACE combines eligible Android Google Pay bills with food-delivery rewards. Swiggy Ornge focuses on qualifying Swiggy and selected online purchases. The shared caps and minimum transaction amounts matter more than comparing 4% with 5% in isolation.',
-        'left': 'Choose ACE when eligible Google Pay bills or ordinary purchases are a larger part of your spending. Its 5% bills and 4% partner tiers share a ₹500 statement cap; other eligible purchases earn 1.5%. The Google Pay bill benefit requires Android.',
-        'right': 'Choose Ornge when eligible Swiggy and listed online purchases dominate. Their 5% tier shares a ₹1,500 billing-cycle cap; its 1% other tier is capped at ₹1,000. The checked terms require at least ₹249 per 5% transaction and ₹100 per 1% transaction.',
-        'rules': 'Swiggy Ornge is distinct from Swiggy BLCK and the older Swiggy HDFC card. Use its own 15 October 2026 terms. Eligible online merchant/MCC lists determine the 5% rate. ACE and Ornge have different excluded categories; neither headline rate applies to every payment. Compare renewal-waiver spending separately from reward eligibility.',
-        'caveat': 'Examples use one statement period, unused caps and transactions meeting both issuers’ minimums and category rules. The online purchases in row two must qualify for Ornge’s 5% while earning only ACE’s 1.5% base rate. No Google Pay bill spend is included in these paired examples. Figures are gross cashback before membership fees, taxes, reversals and transaction rounding; welcome memberships are not assigned a cash value.',
-        'sources': [('Axis ACE reward rates, combined cap and Android condition', 'https://www.axis.bank.in/docs/default-source/default-document-library/axis-bank-ace-credit-card-tncs.pdf?sfvrsn=a3effc42_6'), ('HDFC Ornge terms published 15 October 2026', 'https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/swiggy-ornge-hdfc-bank-credit-card/pdf/tncs-swiggy-ornge-hdfc-bank-credit-card-15102026.pdf'), ('HDFC Ornge fees and availability', 'https://www.hdfc.bank.in/credit-cards/swiggy-ornge-hdfc-bank-credit-card')],
-        'unit': 'cashback',
     },
 }
 
@@ -87,7 +87,7 @@ def render_comparison(slug, left, right):
         return f'₹{value:,.0f}'
     rows = ''.join(f'<tr><th scope="row">{escape(label)}</th><td>{amount(a, 0)}</td><td>{amount(b, 1)}</td></tr>' for label, a, b in examples(slug))
     sources = ''.join(f'<li><a href="{escape(url, quote=True)}">{escape(label)}</a></li>' for label, url in review['sources'])
-    caption = 'Illustrative gross rewards before fees and taxes' if review['unit'] == 'mixed' else f'Gross {review["unit"]} before fees and taxes'
+    caption = 'Illustrative gross rewards before card fees and tax' if review['unit'] == 'mixed' else f'Gross {review["unit"]} before fees and taxes'
     checked = review.get('checked', CHECKED)
     return f'''<section aria-labelledby="detailed-decision"><h2 id="detailed-decision">Which card fits which spending pattern?</h2><p>{escape(review['summary'])}</p>
 <h3>When to choose {escape(left['name'])}</h3><p>{escape(review['left'])}</p>

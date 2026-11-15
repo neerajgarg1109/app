@@ -72,7 +72,6 @@ def test_site_content_upgrade_replaces_legacy_match_copy_without_losing_links():
     }
 
 
-
 def test_public_card_uses_only_live_partner_links_and_hides_campaign_metadata():
     server = importlib.import_module("server")
     official_url = "https://issuer.example/card"

@@ -1,0 +1,14 @@
+{
+  "release": "8efddc56a19e48d8f1dd2c5441e5b3932f691086",
+  "sbi_page_ctas": 3,
+  "matching_comparisons": 3,
+  "calculator_link": true,
+  "redirects": {
+    "card_page_hero": 302,
+    "card_page_verdict": 302,
+    "card_page_sticky": 302
+  },
+  "frontend_workflow": "https://github.com/neerajgarg1109/app/actions/runs/41004054401",
+  "operations_workflow": "https://github.com/neerajgarg1109/app/actions/runs/41004054468",
+  "workflows": "success"
+}

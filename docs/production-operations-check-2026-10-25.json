@@ -1,0 +1,40 @@
+{
+  "stages": [
+    {
+      "concurrency": 1,
+      "requests": 20,
+      "errors": [],
+      "median_ms": 93,
+      "p95_ms": 490,
+      "max_ms": 583,
+      "elapsed_seconds": 3.39
+    },
+    {
+      "concurrency": 2,
+      "requests": 20,
+      "errors": [],
+      "median_ms": 89,
+      "p95_ms": 479,
+      "max_ms": 540,
+      "elapsed_seconds": 1.58
+    },
+    {
+      "concurrency": 4,
+      "requests": 20,
+      "errors": [],
+      "median_ms": 84,
+      "p95_ms": 537,
+      "max_ms": 635,
+      "elapsed_seconds": 1.25
+    }
+  ],
+  "catalogue": {
+    "cards": 261,
+    "missing_image": 93,
+    "economics_quality": {
+      "medium": 51,
+      "limited": 210
+    }
+  },
+  "scope": "60 maximum read-only requests; at most four concurrent. Not a peak-capacity or soak test."
+}

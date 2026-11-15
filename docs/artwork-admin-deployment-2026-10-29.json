@@ -1,0 +1,37 @@
+{
+  "ready": {
+    "status": 200
+  },
+  "openapi": {
+    "status": 200,
+    "image_routes_present": true,
+    "initial_observation": "Previous instance still serving schema during rollout; new routes subsequently confirmed by route-specific responses.",
+    "final_schema_confirmed": true
+  },
+  "cards": {
+    "status": 200,
+    "count": 267,
+    "with_artwork": 239,
+    "amex_image": "/cards/amex-smart-earn-credit-card-311d95de3d.webp"
+  },
+  "comparison": {
+    "status": 200,
+    "artwork_present": true
+  },
+  "home": {
+    "status": 200,
+    "admin_upload_bundle": true
+  },
+  "images": {
+    "checked": 36,
+    "matching": 36,
+    "failures": []
+  },
+  "release": "b48b8b1a61010af45fce6c3d0d08cc9430d9abba",
+  "date": "2026-10-29",
+  "frontend_workflow": "https://github.com/neerajgarg1109/app/actions/runs/40922992493",
+  "operations_workflow": "https://github.com/neerajgarg1109/app/actions/runs/40922992595",
+  "workflow_conclusion": "success",
+  "public_image_missing_status": 404,
+  "unauthenticated_upload_status": 401
+}

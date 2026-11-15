@@ -1,0 +1,95 @@
+{
+  "release": "34d75a333c7b24826542012745f4e0a4dc6afef7",
+  "priority_pages": [
+    {
+      "url": "https://findmybest.cards/compare/sbi-cashback-vs-hdfc-millennia/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/hdfc-swiggy-vs-airtel-axis/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/amazon-pay-icici-vs-flipkart-axis/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/sbi-cashback-vs-amazon-pay-icici/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/hsbc-live-plus-vs-airtel-axis/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/scapia-axis-vs-au-ixigo/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/axis-atlas-vs-hdfc-regalia-gold/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/axis-atlas-vs-amex-platinum-travel/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/au-ixigo-vs-idfc-first-wow/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/scapia-axis-vs-idfc-first-mayura/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/tata-neu-infinity-vs-kiwi-rupay/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/tata-neu-plus-vs-tata-neu-infinity/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/hdfc-millennia-vs-tata-neu-infinity/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/icici-coral-rupay-vs-indusind-platinum-rupay/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/jupiter-edge-csb-vs-kiwi-rupay/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/sbi-simplyclick-vs-sbi-simplysave/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/axis-myzone-vs-axis-neo/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/icici-sapphiro-vs-hdfc-regalia-gold/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/idfc-first-wealth-vs-indusind-tiger/",
+      "status": 200
+    },
+    {
+      "url": "https://findmybest.cards/compare/hdfc-diners-privilege-vs-regalia-gold/",
+      "status": 200
+    }
+  ],
+  "sitemap_urls": 459,
+  "api_cards": 268,
+  "new_csb_card": true,
+  "frontend_workflow": "https://github.com/neerajgarg1109/app/actions/runs/40927647345",
+  "operations_workflow": "https://github.com/neerajgarg1109/app/actions/runs/40927647330",
+  "workflow_conclusion": "success",
+  "api_redirect_status": 302,
+  "api_redirect_destination": "https://www.sbicard.com/en/personal/credit-cards/cashback-sbi-card.html",
+  "api_redirect_noindex": true,
+  "handoff_published": false
+}

@@ -1,0 +1,11 @@
+{
+  "release": "2af5ee095489340d5bc92bd0545b515d5f3d6210",
+  "guides_status": 200,
+  "priority_order_verified": 20,
+  "popular_badges": 20,
+  "unique_excerpts": 20,
+  "static_header_footer_links": true,
+  "footer_hydration_mapping": true,
+  "workflow": "https://github.com/neerajgarg1109/app/actions/runs/41001220674",
+  "workflow_conclusion": "success"
+}

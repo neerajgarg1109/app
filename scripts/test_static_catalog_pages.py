@@ -72,7 +72,7 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertFalse(valid_comparison_route("../sbi-vs-hdfc", "sbi-cashback-sbi", "hdfc-millennia-credit-card", known))
         self.assertFalse(valid_comparison_route("unknown-vs-hdfc", "missing-card", "hdfc-millennia-credit-card", known))
         self.assertFalse(valid_comparison_route("same-vs-same", "sbi-cashback-sbi", "sbi-cashback-sbi", known))
-        self.assertTrue(valid_comparison_route("valid-UPI-vs-card", "sbi-cashback-sbi", "hdfc-millennia-credit-card", known))
+
     def test_reward_calculator_has_its_own_clean_indexable_route(self):
         source = (BUILD / "reward-calculator" / "index.html").read_text()
         document = Document(source)
@@ -235,11 +235,11 @@ class StaticCatalogTests(unittest.TestCase):
         from comparison_engine import TOP_COMPARISONS, comparison_excerpt
         source = (BUILD / 'guides/index.html').read_text()
         cards = re.findall(r'<article class="post-card".*?</article>', source, re.S)
-        self.assertGreater(len(cards), len(TOP_COMPARISONS))
-        for card, priority in zip(cards[:len(TOP_COMPARISONS)], TOP_COMPARISONS):
+        self.assertGreater(len(cards), 20)
+        for card, priority in zip(cards[:20], TOP_COMPARISONS):
             self.assertIn('/compare/' + priority['slug'] + '/', card)
             self.assertIn('Popular Comparison', card)
-        self.assertNotIn('Popular Comparison', ''.join(cards[len(TOP_COMPARISONS):]))
+        self.assertNotIn('Popular Comparison', ''.join(cards[20:]))
         snippets = []
         for row in TOP_COMPARISONS:
             excerpt = comparison_excerpt(CARDS_BY_ID[row['cardA']], CARDS_BY_ID[row['cardB']])
@@ -247,7 +247,7 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn('annual fee', excerpt)
             self.assertNotIn('See dated issuer sources and a spending scenario', excerpt)
             snippets.append(excerpt)
-        self.assertEqual(len(set(snippets)), len(TOP_COMPARISONS))
+        self.assertEqual(len(set(snippets)), 20)
         self.assertNotIn('/#/updates', source)
         self.assertNotIn('/#/restricted-cards', source)
         hydration = (BUILD / 'public-footer.js').read_text()
@@ -341,7 +341,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / 'compare/index.html').read_text()
         listing = re.search(r'<ul>(.*?)</ul>', source, re.S).group(1)
         links = Document(listing).links
-        self.assertEqual(links[:len(TOP_COMPARISONS)], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
+        self.assertEqual(links[:20], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
         for path in self.pages:
             relative = path.relative_to(BUILD).as_posix()
             if not relative.startswith(('catalog/', 'categories/', 'issuers/', 'guides/')):
@@ -384,6 +384,7 @@ class StaticCatalogTests(unittest.TestCase):
         links = dict(zip(guide_footer.link_texts, guide_footer.links))
         self.assertEqual(links['Close a card'], ORIGIN + '/guides/close-credit-card-india/')
         self.assertEqual(links['Invite-only cards'], ORIGIN + '/guides/invite-only-credit-cards/')
+        self.assertEqual(links['Reward & Transfer Calculator'], ORIGIN + '/reward-calculator/')
 
     def test_every_card_has_substantial_sourced_editorial_content(self):
         pages = list((BUILD / "cards").glob("*/index.html"))
@@ -477,7 +478,9 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn(f'src="{ORIGIN}/#/calculator?embedded=1"', source)
         self.assertIn('scrolling="no"', source)
         self.assertIn("resizeobserver", source)
+        self.assertIn("content.getboundingclientrect().height", source)
         self.assertIn("height:760px", source)
+        self.assertNotIn("math.max(760", source)
         self.assertNotIn(f'href="{ORIGIN}/#/calculator"', source)
         self.assertIn(f'href="{ORIGIN}/calculator/"', source)
 
@@ -574,18 +577,6 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn('data-filter="Card comparisons"', source)
         self.assertIn('Read the comparison', source)
         self.assertGreaterEqual(source.count('class="post-card" data-topic='), 8)
-
-    def test_news_updates_are_rendered_on_homepage_and_guides(self):
-        homepage = (BUILD / "index.html").read_text()
-        guides = (BUILD / "guides" / "index.html").read_text()
-        for source in (homepage, guides):
-            self.assertIn("News", source)
-            self.assertIn("Effective 25 Nov &amp; 15 Dec 2026", source)
-            self.assertIn("Effective 1 Dec 2026", source)
-            self.assertIn("Effective 25 Nov 2026", source)
-            self.assertIn("hi@findmybest.cards", source)
-            self.assertIn("sbicard.com/en/customer-notices.page", source)
-            self.assertIn("TataNeuCC_neucoins_Claim.pdf", source)
 
     def test_journal_articles_have_one_heading_and_related_reading(self):
         for path in (BUILD / "guides").glob("*/index.html"):

@@ -1,0 +1,4372 @@
+[
+  {
+    "check": "card:sbi-cashback-sbi",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-elite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-simplyclick",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-simplysave",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-bpcl",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-bpcl-octane",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-air-india-signature",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-pulse",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-titan",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-atlas-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-ace-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-flipkart-axisbank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-airtel-axis-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-indianoil-axis-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-select-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-my-zone-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-neo-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-magnus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-horizon-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-rewards-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-fibe-axis-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-privilege",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-amazon-pay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-sapphiro-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-rubyx-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-coral-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-platinum-chip-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-hpcl-super-saver",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-hpcl-coral-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-emeralde-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-emeralde-private-metal-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-emirates-rubyx-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-emirates-sapphiro",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-makemytrip-makemytrip-icici-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-millennia",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-wealth",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-wow",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-hpcl-power-fuel-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-power-plus",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-metal-credit-card-ashva",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-metal-credit-card-mayura",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-metal-credit-card-gaj",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-swyp-emi-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-secured-rupay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-wow-black-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:amex-platinum-travel-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:amex-membership-rewards-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:amex-smart-earn-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-tata-neu-infinity",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-tata-neu-plus",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-freecharge-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-freecharge-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-kwik-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-axis-bank-shoppers-stop-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-flipkart-axis-bank-super-elite-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-google-pay-flex-axis-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-indianoil-premium-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-indigo-axis-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-indigo-axis-bank-premium-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-lic-axis-bank-platinum-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-lic-axis-bank-signature-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-miles-more-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-my-zone-easy-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-privilege-easy-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-samsung-axis-bank-signature-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-scapia-axis-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-spicejet-axis-bank-voyage-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:axis-spicejet-axis-bank-voyage-black-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-altura-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-altura-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-ananta-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-cheq-au-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-ixigo-au-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-laksya-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-lit-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-nomo-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-paytm-au-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-prathama-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-swipeup-program-xcite-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-swipeup-program-xcite-ace-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-swipeup-program-xcite-ultra-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-tejas-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-vetta-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-zenith-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-zenith-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:au-instapay",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-celesta-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-imperio-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-signet-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-wave",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-shaurya-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-shaurya-select-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-apollo-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-apollo-sbi-card-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-air-india-sbi-platinum-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-sbi-card-unnati",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-irctc-premier-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-irctc-sbi-platinum-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-doctors-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-doctors-ima-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-phonepe-sbi-card-purple",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-phonepe-sbi-card-select-black",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-reliance-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-reliance-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-paytm-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-paytm-sbi-card-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-krisflyer-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-krisflyer-sbi-card-apex",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-tata-neu-plus-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-tata-neu-infinity-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-indigo-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-indigo-sbi-card-elite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-google-pay-flex-sbicard",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-flipkart-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-sbi-card-miles",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-sbi-card-miles-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-sbi-card-miles-elite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-bom-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-bom-simplysave-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-uco-bank-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-uco-bank-simplysave-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-psb-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-psb-simplysave-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-city-union-bank-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-city-union-bank-simplysave-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-karnataka-bank-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-karnataka-bank-simplysave-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-south-indian-bank-sbi-card-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-south-indian-bank-simplysave-sbi-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbi-uco-bank-sbi-card-elite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-apex",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-aspire-banking",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-signature-banking",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-cookies",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-icon",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-indianoil-rbl-bank",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-indianoil-rbl-bank-xtra",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-irctc-rbl-bank",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-jalsa",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-platinum-maxima",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-platinum-maxima-plus",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-platinum-delight",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-bankbazaar-savemax-pro",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-patanjali-vishisht",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-patanjali-swarn",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-play",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-quick-pay",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-shoppers-stop-gold",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-shoppers-stop-platinum",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-rbl-bank-shoppers-stop-black",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-shoprite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-tvs-credit-rbl-bank",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-tvs-credit-rbl-bank-gold",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-world-safari",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-world-safari-lite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-world-safari-plus",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-classic",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-FIRSTPrivateCreditCard",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-diamond-reserve-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-hello-cashback-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-quantum-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-indigo-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idfc-lic-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-adani-icici-credit-card-platinum-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-adani-icici-credit-card-signature-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-csk-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-emirates-emeralde-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-parakram-cards-parakram",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-parakram-cards-parakram-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:icici-times-black-icici-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-legend-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-nexxt-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-pinnacle-world-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-tiger-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-eazydiner-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-eazydiner-platinum-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-platinum-visa-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-platinum-rupay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-jio-bp-mobility-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-CRED-IndusInd-Bank-ruPay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indusind-samman-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hsbc-live-plus",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hsbc-travelone",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hsbc-premier",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hsbc-taj",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hsbc-visa-platinum",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hsbc-rupay-cashback-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-kotak-cashback-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-kotak-air-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-league-platinum-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-millennia-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-moneyback-plus-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-freedom-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-phonepe-hdfc-bank-uno-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-phonepe-hdfc-bank-ultimo-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-infinia-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-diners-club-black-metal-edition-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-pixel-play-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-pixel-go-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-hdfc-bank-upi-rupay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-regalia-gold-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-diners-privilege-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-swiggy-hdfc-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-swiggy-ornge-hdfc-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-swiggy-blck-hdfc-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-marriott-bonvoy-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-indianoil-hdfc-bank-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:hdfc-irctc-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-rupay-platinum",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-rupay-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-rupay-millennial",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-visa-classic",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-visa-gold",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-visa-platinum",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:punjab-national-bank-pnb-visa-signature",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-eterna",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-etihad-guest-premium",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-etihad-guest",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-premier",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-tiara",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-cashback",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-easy",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-snapdeal-bobcard",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-hpcl-energie-bobcard",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-irctc-bobcard",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-scapia",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-uni-goldx",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-one",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:bobcard-bobcard-prime",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idbi-bank-idbi-bank-aspire-platinum",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idbi-bank-idbi-bank-royale-signature",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idbi-bank-idbi-bank-euphoria-world",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:idbi-bank-idbi-bank-imperium-platinum",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-marquee",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-reserv",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-elite",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-select",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-ace",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-wellness",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-wellness-plus",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:yes-bank-yes-bank-rupay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:sbm-kredit-pe",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:rbl-salaryse-up",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:cub-salaryse-level-up",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:cub-salaryse-level-up-virtual",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:pnb-zaggle-twin",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-one",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-scapia",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:federal-paisabazaar-paisaback",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:indian-bank-one",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:utkarsh-supermoney-supercard",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-indigo-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-indigo-premium-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-white-reserve-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-upi-rupay-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-white-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-zen-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "card:kotak-811-dream-different-credit-card",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:calculator/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-parakram-cards-parakram-select-5fc07361c3.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-phonepe-sbi-card-purple-1edb110b43.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-adani-icici-credit-card-platinum-card-bda37f483b.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-platinum-maxima-plus-4bed30cf68.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-lic-axis-bank-platinum-credit-card-ca7e3b4265.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-swiggy-ornge-hdfc-bank-credit-card-375ff2216a.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bpcl-82813f40fa.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-apollo-sbi-card-fb89b589b4.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-marriott-bonvoy-credit-card-2dab3f649c.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-tata-neu-plus-sbi-card-3d2d5fdd3e.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-krisflyer-sbi-card-1151a81f2b.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-pinnacle-world-credit-card-80388fc29e.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-league-platinum-card-387d49581e.svg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-tata-neu-infinity-sbi-card-577b074bfe.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-platinum-chip-credit-card-f1850ad552.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-city-union-bank-sbi-card-prime-45b7838e2a.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-811-dream-different-credit-card-818394a743.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-air-india-signature-acee6a9547.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-hello-cashback-credit-card-9a75b4981e.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-legend-credit-card-4ed95c7aa2.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-metal-credit-card-gaj-3ddc11365c.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-eazydiner-credit-card-65c39ba64b.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bom-simplysave-sbi-card-2dc22045e1.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/pnb-zaggle-twin-b2613b6b49.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-swiggy-hdfc-bank-credit-card-27462c06b9.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-millennia-credit-card-1bae1ce562.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-shaurya-sbi-card-4e7f1aedcb.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-wealth-519f4ecdbb.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-indianoil-hdfc-bank-credit-card-feb7fbfdd6.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-samman-credit-card-2625b19ad1.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-miles-elite-260f2ec2f1.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-platinum-rupay-credit-card-6ab25097cd.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-apollo-sbi-card-select-d6e41825b2.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-white-reserve-credit-card-a3eae20116.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emirates-emeralde-credit-card-c1f0936c7c.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-classic-c068870b97.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-select-0c25fbc88a.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-wow-7fa9239a09.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-CRED-IndusInd-Bank-ruPay-credit-card-0cecf3a342.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-hpcl-power-fuel-credit-card-a09a4de0a9.svg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-infinia-credit-card-aa4bf30121.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-parakram-cards-parakram-70eb966dff.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-diners-privilege-credit-card-829e065d14.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-hpcl-coral-credit-card-49f0f97419.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-metal-credit-card-mayura-37372625c6.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-live-plus-baa98b39de.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-regalia-gold-credit-card-30ac509fb6.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-lic-credit-card-5749d36086.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-shoppers-stop-black-3504a9d48f.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-spicejet-axis-bank-voyage-black-credit-card-64c93c7a8e.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-karnataka-bank-simplysave-sbi-card-db96e69e34.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/scapia-axis-bank.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-indianoil-rbl-bank-xtra-a2adbfb7f2.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-freecharge-plus-credit-card-b1946425f6.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-swiggy-blck-hdfc-bank-credit-card-1450f9d864.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-psb-simplysave-sbi-card-7179042ae2.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-reliance-sbi-card-b937fdef24.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-power-plus-a09a4de0a9.svg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-secured-rupay-credit-card-210e37cf60.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-swyp-emi-credit-card-e315ab8589.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-shoprite-2079bf3145.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-rupay-cashback-credit-card-73bd6837b9.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-white-credit-card-0f926c3844.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-world-safari-plus-194214c1fa.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-karnataka-bank-sbi-card-prime-1fac01fc86.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-tata-neu-infinity-11dcb075ed.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-air-india-sbi-platinum-card-473be9930c.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-tiger-credit-card-4387960d3a.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-neo-credit-card-09bd6ded19.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-krisflyer-sbi-card-apex-c83ea370b5.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-kotak-air-plus-credit-card-2def5b1119.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-cashback-plus.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-city-union-bank-simplysave-sbi-card-b208821b92.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-coral-credit-card-f9fd7d132c.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-apex-a9ffb08071.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-paytm-sbi-card-d5df32f3bb.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-prime-77edc29dd7.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-irctc-credit-card-565495c9cc.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-tvs-credit-rbl-bank-230e34aee9.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-indianoil-premium-credit-card-cdab7f9fb7.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-taj-47a71636a1.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-jalsa-8b09d5ecea.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-reliance-sbi-card-prime-764b1fe57a.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-world-safari-edec778f23.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-diamond-reserve-credit-card-cd1fd624d9.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-select-credit-card-fa4c9886d2.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-tvs-credit-rbl-bank-gold-edf1e3bcb4.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emeralde-credit-card-4bd30d1ab3.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-unnati-481ab6410c.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-indigo-credit-card-a7800e9ee6.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-metal-credit-card-ashva-29cd113de4.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emeralde-private-metal-credit-card-4eadb0c91d.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emirates-rubyx-credit-card-39e213a712.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-simplysave-d259cd7f3b.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-doctors-ima-sbi-card-571953c873.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-miles-prime-ea131fcd84.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-indigo-credit-card-80e31fa6ff.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-eazydiner-platinum-credit-card-b4c9df25d2.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/amex-membership-rewards-credit-card-07b77ca791.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-indigo-sbi-card-b7eb2c14b1.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-adani-icici-credit-card-signature-credit-card-e835ddc7ca.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-phonepe-hdfc-bank-uno-credit-card-88392cf932.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-shoppers-stop-platinum-3504a9d48f.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-phonepe-hdfc-bank-ultimo-credit-card-88392cf932.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-tata-neu-plus-0339a7bbe0.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-world-safari-lite-a19b6d9f79.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-shoppers-stop-credit-card-75d608c590.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-aspire-banking-6c7e69913b.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-indigo-sbi-card-elite-61086bfd25.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-times-black-icici-credit-card-2e4449557e.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-pixel-play-credit-card-42a61e6974.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-swipeup-program-xcite-ultra-credit-card-b5a4fdcf37.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-zen-credit-card-c140dc472a.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-spicejet-axis-bank-voyage-credit-card-ec02068410.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-pulse-6f4cb807f9.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-rubyx-credit-card-07f9a3394b.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-makemytrip-makemytrip-icici-credit-card-5465c9eb31.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-signature-banking-337bd80273.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-miles-3382ef6283.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-privilege-4bb15ca9fa.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-simplyclick-15583cad60.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-hpcl-super-saver-ed20e72a13.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-google-pay-flex-sbicard-3a63c01bef.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-phonepe-sbi-card-select-black-8008231b11.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-jio-bp-mobility-credit-card-443f8a1bb9.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-travelone-14d9209afd.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-amazon-pay-credit-card-646c9091eb.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-irctc-rbl-bank-7cf2a2a7c7.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-samsung-axis-bank-signature-credit-card-60fbc47e71.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-irctc-premier-card-09d319b44d.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-FIRSTPrivateCreditCard-383970cd10.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-atlas-credit-card-304fda7627.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-magnus-credit-card-72d8242607.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-platinum-visa-credit-card-4f8194ebdc.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-uco-bank-sbi-card-elite-3cede30d50.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-indigo-premium-credit-card-22878019c8.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-psb-sbi-card-prime-e5dca2f90f.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-visa-platinum-1db73a9eab.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-sapphiro-card-75225a9666.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-paytm-sbi-card-select-9d7256d2e0.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-swipeup-program-xcite-ace-credit-card-2725026a2d.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bpcl-octane-9d9266e5ab.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-flipkart-sbi-card-21446ac56b.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-nexxt-credit-card-e876405c15.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-indianoil-rbl-bank-bff9a3c3f1.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-cashback-sbi-4e51aa2cff.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-kwik-credit-card-379da5a37f.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-wow-black-credit-card-553701cc73.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-premier-298c09011f.jpg",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-titan-d0c7727b79.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-diners-club-black-metal-edition-credit-card-7463c7c6db.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-miles-more-credit-card-75e70d367a.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-millennia-7700d89cf8.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-irctc-sbi-platinum-card-10c202fed4.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-uco-bank-simplysave-sbi-card-6257bc3141.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-hdfc-bank-upi-rupay-credit-card-87bb182a25.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bom-sbi-card-prime-b5afad882b.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-shoppers-stop-gold-3504a9d48f.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emirates-sapphiro-695a4cf0a3.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-salaryse-up-7fa0df26b4.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-freecharge-credit-card-247034af4d.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-elite-cbb212885f.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-platinum-maxima-ac03b3938b.webp",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-uco-bank-sbi-card-prime-48d72a7774.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-south-indian-bank-simplysave-sbi-card-e70b2023c4.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-south-indian-bank-sbi-card-prime-5adfcfcde5.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-shaurya-select-sbi-card-d297ed7073.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-doctors-sbi-card-fa9c9dcc91.png",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:catalog/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:methodology/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:updates/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:lounges/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:restricted-cards/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-coral-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-tata-neu-infinity-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-privilege-easy-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idbi-bank-idbi-bank-aspire-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-parakram-cards-parakram-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-nomo-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-air-india-sbi-platinum-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-city-union-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-visa-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-uco-bank-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-my-zone-easy-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-lic-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bpcl-octane/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-snapdeal-bobcard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-kwik-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-etihad-guest-premium/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-shaurya-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indian-bank-one/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emeralde-private-metal-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-airtel-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-power-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-psb-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-swyp-emi-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-indigo-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-scapia/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-scapia/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-phonepe-sbi-card-purple/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-lic-axis-bank-signature-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-world-safari-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-zenith-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-eterna/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-nexxt-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-metal-credit-card-mayura/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bpcl/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-tata-neu-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-indigo-premium-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-vetta-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-lic-axis-bank-platinum-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idbi-bank-idbi-bank-euphoria-world/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-premier/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-cashback-sbi/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-swipeup-program-xcite-ultra-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-taj/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-samman-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-indianoil-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emirates-emeralde-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-diners-privilege-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-ixigo-au-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-irctc-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-psb-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-tata-neu-infinity/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-signet-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-marriott-bonvoy-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-simplysave/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-adani-icici-credit-card-platinum-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-paisabazaar-paisaback/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-pixel-go-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-kotak-cashback-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-csk-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-lit-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-pulse/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-eazydiner-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-freecharge-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-select-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-miles-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-atlas-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-instapay/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-one/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-zen-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-flipkart-axisbank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-hpcl-super-saver/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-metal-credit-card-gaj/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-eazydiner-platinum-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-indianoil-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-white-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-quantum-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-paytm-au-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-platinum-maxima-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emirates-rubyx-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-reserv/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-miles-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/pnb-zaggle-twin/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-swiggy-ornge-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-moneyback-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-paytm-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-swipeup-program-xcite-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/amex-smart-earn-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-rupay-millennial/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-811-dream-different-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-amazon-pay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-regalia-gold-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-quick-pay/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-krisflyer-sbi-card-apex/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-doctors-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bom-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emirates-sapphiro/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-flipkart-axis-bank-super-elite-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-FIRSTPrivateCreditCard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-krisflyer-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-rewards-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-cashback/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-sapphiro-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-easy/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-diamond-reserve-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-visa-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-travelone/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-platinum-maxima/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-simplyclick/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-irctc-rbl-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-google-pay-flex-sbicard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-flipkart-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-league-platinum-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-adani-icici-credit-card-signature-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-swiggy-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-shoppers-stop-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-imperio-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-magnus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-hello-cashback-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-jio-bp-mobility-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-pinnacle-world-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-apex/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-irctc-bobcard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-spicejet-axis-bank-voyage-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-prathama-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-platinum-rupay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-freedom-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-rubyx-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-signature-banking/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-ace-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-google-pay-flex-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-south-indian-bank-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-shoppers-stop-black/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-karnataka-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-hdfc-bank-upi-rupay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-etihad-guest/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-millennia/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-live-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-aspire-banking/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-world-safari/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-indianoil-premium-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-icon/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-indigo-sbi-card-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-legend-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-swipeup-program-xcite-ace-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-reliance-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-wellness/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-uni-goldx/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-ananta-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/amex-membership-rewards-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-swiggy-blck-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-indigo-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-uco-bank-sbi-card-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-reliance-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-rupay-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-white-reserve-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-celesta-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-tiara/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-rupay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-titan/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-indigo-axis-bank-premium-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-hpcl-power-fuel-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-uco-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-indianoil-rbl-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-phonepe-hdfc-bank-uno-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-jalsa/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-tejas-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-platinum-chip-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-emeralde-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-laksya-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-apollo-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-upi-rupay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-neo-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-south-indian-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-secured-rupay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-cookies/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-millennia-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-city-union-bank-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-my-zone-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbm-kredit-pe/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-freecharge-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-platinum-delight/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-world-safari-lite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-fibe-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-visa-classic/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-miles-more-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-indianoil-rbl-bank-xtra/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-infinia-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-scapia-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-bankbazaar-savemax-pro/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-wealth/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-phonepe-sbi-card-select-black/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-apollo-sbi-card-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-play/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/utkarsh-supermoney-supercard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/amex-platinum-travel-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-paytm-sbi-card-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-tiger-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-shoppers-stop-gold/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-pixel-play-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-bom-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/cub-salaryse-level-up-virtual/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-spicejet-axis-bank-voyage-black-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-makemytrip-makemytrip-icici-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-wellness-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-altura-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/kotak-kotak-air-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-privilege/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-hpcl-energie-bobcard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-rupay-cashback-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-tvs-credit-rbl-bank-gold/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-irctc-sbi-platinum-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-indigo-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-hpcl-coral-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-karnataka-bank-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-tvs-credit-rbl-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-phonepe-hdfc-bank-ultimo-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-marquee/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-indigo-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-CRED-IndusInd-Bank-ruPay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-one/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-irctc-premier-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-horizon-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-metal-credit-card-ashva/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-visa-signature/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-miles/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-rupay-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-doctors-ima-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-zenith-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-times-black-icici-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/yes-bank-yes-bank-ace/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-shaurya-select-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/federal-wave/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/icici-parakram-cards-parakram/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-wow-black-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-altura-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-axis-bank-shoppers-stop-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-classic/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/bobcard-bobcard-select/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/punjab-national-bank-pnb-visa-gold/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/cub-salaryse-level-up/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-patanjali-vishisht/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hdfc-diners-club-black-metal-edition-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idbi-bank-idbi-bank-imperium-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/indusind-platinum-visa-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idbi-bank-idbi-bank-royale-signature/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-tata-neu-plus-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/au-cheq-au-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/axis-samsung-axis-bank-signature-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-shoprite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-sbi-card-unnati/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-rbl-bank-patanjali-swarn/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/rbl-salaryse-up/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/idfc-wow/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/hsbc-premier/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:cards/sbi-air-india-signature/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:updates/2026-10-11/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:updates/2026-10-17/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:updates/2026-10-09/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/invite-only-credit-cards/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/best-travel-credit-cards-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/best-first-credit-cards-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/close-sbi-card-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/close-credit-card-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/close-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/best-fuel-credit-cards-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/best-rupay-upi-credit-cards-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/best-cashback-credit-cards-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/best-lifetime-free-credit-cards-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/close-icici-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/new-credit-cards/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:guides/close-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:static/css/main.8930d192.css",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:static/js/main.9b90cb0a.js",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/hdfc-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/rbl-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/au-small-finance-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/hsbc-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/kotak-mahindra-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/sbm-bank-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/idbi-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/federal-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/american-express-india/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/axis-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/bobcard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/indian-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/city-union-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/idfc-first-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/indusind-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/utkarsh-small-finance-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/icici-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/yes-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:issuers/punjab-national-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-fibe-axis-bank-credit-card-vs-hsbc-rupay-cashback-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-metal-credit-card-ashva-vs-kotak-kotak-air-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-hello-cashback-credit-card-vs-idfc-quantum-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-instapay-vs-axis-fibe-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-tejas-credit-card-vs-axis-flipkart-axis-bank-super-elite-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-irctc-rbl-bank-vs-sbi-irctc-sbi-platinum-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-atlas-credit-card-vs-sbi-air-india-signature/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-cookies-vs-rbl-jalsa/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-hdfc-bank-upi-rupay-credit-card-vs-yes-bank-yes-bank-rupay-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-flipkart-axisbank-credit-card-vs-sbi-flipkart-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/cub-salaryse-level-up-virtual-vs-rbl-salaryse-up/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/indusind-legend-credit-card-vs-indusind-tiger-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-rbl-bank-patanjali-swarn-vs-sbi-phonepe-sbi-card-select-black/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-bobcard-prime-vs-idbi-bank-idbi-bank-imperium-platinum/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-aspire-banking-vs-rbl-signature-banking/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-world-safari-vs-sbi-sbi-card-miles-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-horizon-credit-card-vs-sbi-krisflyer-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-metal-credit-card-mayura-vs-sbi-sbi-card-miles-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-swipeup-program-xcite-credit-card-vs-idfc-swyp-emi-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/indusind-CRED-IndusInd-Bank-ruPay-credit-card-vs-sbi-paytm-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idbi-bank-idbi-bank-royale-signature-vs-sbi-doctors-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-tejas-credit-card-vs-hdfc-moneyback-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-samsung-axis-bank-signature-credit-card-vs-sbi-phonepe-sbi-card-select-black/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-swipeup-program-xcite-credit-card-vs-sbi-reliance-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-bobcard-premier-vs-hdfc-diners-privilege-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/punjab-national-bank-pnb-rupay-millennial-vs-rbl-platinum-delight/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-world-safari-lite-vs-sbi-sbi-card-miles/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-indianoil-premium-credit-card-vs-idfc-power-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-freecharge-plus-credit-card-vs-bobcard-snapdeal-bobcard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-times-black-icici-credit-card-vs-idfc-FIRSTPrivateCreditCard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idbi-bank-idbi-bank-euphoria-world-vs-sbi-doctors-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-regalia-gold-credit-card-vs-yes-bank-yes-bank-reserv/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-ace-credit-card-vs-hdfc-swiggy-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-hpcl-coral-credit-card-vs-idfc-hpcl-power-fuel-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-my-zone-credit-card-vs-sbi-apollo-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-tata-neu-plus-vs-sbi-tata-neu-plus-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-phonepe-hdfc-bank-ultimo-credit-card-vs-yes-bank-yes-bank-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-bobcard-eterna-vs-hdfc-regalia-gold-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/federal-paisabazaar-paisaback-vs-sbm-kredit-pe/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-indianoil-premium-credit-card-vs-sbi-bpcl-octane/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbi-bom-sbi-card-prime-vs-sbi-city-union-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-hpcl-energie-bobcard-vs-icici-hpcl-super-saver/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-millennia-vs-indusind-legend-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/federal-paisabazaar-paisaback-vs-utkarsh-supermoney-supercard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-airtel-axis-bank-credit-card-vs-sbi-flipkart-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-my-zone-credit-card-vs-sbi-bom-simplysave-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-magnus-credit-card-vs-icici-emirates-emeralde-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-select-vs-idfc-wealth/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-world-safari-plus-vs-sbi-sbi-card-miles-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbm-kredit-pe-vs-utkarsh-supermoney-supercard/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-prathama-credit-card-vs-rbl-rbl-bank-quick-pay/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-scapia-axis-bank-credit-card-vs-rbl-world-safari-lite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-irctc-bobcard-vs-hdfc-irctc-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-bobcard-one-vs-federal-one/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-instapay-vs-hsbc-rupay-cashback-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbi-city-union-bank-sbi-card-prime-vs-sbi-karnataka-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-swipeup-program-xcite-ultra-credit-card-vs-hdfc-tata-neu-infinity/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-magnus-credit-card-vs-sbi-krisflyer-sbi-card-apex/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-power-plus-vs-sbi-bpcl-octane/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-parakram-cards-parakram-vs-sbi-shaurya-select-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-flipkart-axis-bank-super-elite-credit-card-vs-hdfc-moneyback-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-ixigo-au-credit-card-vs-axis-spicejet-axis-bank-voyage-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-cheq-au-credit-card-vs-axis-axis-bank-kwik-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-emirates-emeralde-credit-card-vs-sbi-krisflyer-sbi-card-apex/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-indigo-axis-bank-premium-credit-card-vs-icici-emirates-sapphiro/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-lit-credit-card-vs-axis-axis-bank-kwik-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-bobcard-eterna-vs-yes-bank-yes-bank-reserv/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-atlas-credit-card-vs-icici-emirates-sapphiro/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-millennia-credit-card-vs-rbl-apex/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-amazon-pay-credit-card-vs-idfc-quantum-plus-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-altura-plus-credit-card-vs-sbi-phonepe-sbi-card-purple/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbi-bom-sbi-card-prime-vs-sbi-karnataka-bank-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-airtel-axis-bank-credit-card-vs-hdfc-pixel-play-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-zenith-plus-credit-card-vs-sbi-uco-bank-sbi-card-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-tvs-credit-rbl-bank-gold-vs-sbi-irctc-premier-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-flipkart-axisbank-credit-card-vs-hdfc-pixel-play-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-zenith-plus-credit-card-vs-sbi-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-irctc-credit-card-vs-rbl-irctc-rbl-bank/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbi-apollo-sbi-card-select-vs-sbi-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-metal-credit-card-mayura-vs-rbl-world-safari-plus/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-ixigo-au-credit-card-vs-axis-scapia-axis-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-rbl-bank-patanjali-vishisht-vs-sbi-phonepe-sbi-card-purple/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-altura-credit-card-vs-indusind-samman-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-emeralde-credit-card-vs-icici-emeralde-private-metal-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-tata-neu-infinity-vs-sbi-reliance-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbi-elite-vs-sbi-uco-bank-sbi-card-elite/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/rbl-jalsa-vs-sbi-cashback-sbi/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/hdfc-millennia-credit-card-vs-idfc-hello-cashback-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/sbi-prime-vs-sbi-reliance-sbi-card-prime/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-paytm-au-credit-card-vs-indusind-pinnacle-world-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/axis-axis-bank-ace-credit-card-vs-hdfc-swiggy-ornge-hdfc-bank-credit-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/idfc-swyp-emi-credit-card-vs-sbi-reliance-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-ananta-credit-card-vs-rbl-platinum-maxima/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/au-altura-plus-credit-card-vs-rbl-rbl-bank-patanjali-vishisht/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/icici-parakram-cards-parakram-select-vs-sbi-shaurya-select-sbi-card/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:compare/bobcard-bobcard-scapia-vs-federal-scapia/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/online-shopping/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/lifetime-free/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/fuel/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/international-lounge/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/fintech/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/hotel/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/health-wellness/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/rent/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/rewards/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/education/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/entertainment/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/student/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/low-fee/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/railway/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/domestic-lounge/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/grocery/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/beginner/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/utilities/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/low-forex/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/cashback/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/rupay-upi/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/dining/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/insurance/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/airline/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/premium/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/travel/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/super-premium/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/secured/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "static:categories/co-branded/index.html",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/cards",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/cards?view=summary",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/restricted-cards",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/site-content",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/card-updates",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/api/admin/cards",
+    "status": 401,
+    "ok": true
+  },
+  {
+    "check": "/api/admin/leads",
+    "status": 401,
+    "ok": true
+  },
+  {
+    "check": "/api/cards/no-such-card-readiness",
+    "status": 404,
+    "ok": true
+  },
+  {
+    "check": "review hash route",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/cards-catalog.json",
+    "status": 200,
+    "ok": true
+  },
+  {
+    "check": "/cards-catalog-summary.json",
+    "status": 200,
+    "ok": true
+  }
+]

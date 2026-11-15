@@ -1,0 +1,12 @@
+{
+  "concurrent_users": 50,
+  "duration_seconds": 60,
+  "journeys": 2187,
+  "failures": 0,
+  "median_ms": 308,
+  "p95_ms": 965,
+  "max_ms": 1395,
+  "scope": "Isolated API constrained to 1 CPU / 512 MiB, real disposable MongoDB 8.0, one-second think time. Not production Atlas/network/geography.",
+  "workflow_run": "https://github.com/neerajgarg1109/app/actions/runs/40194634892",
+  "source_commit": "1e57a37"
+}

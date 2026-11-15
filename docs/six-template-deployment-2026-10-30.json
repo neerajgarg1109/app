@@ -1,0 +1,44 @@
+{
+  "release": "6570ad201697b97ba42e3fba9d41ba954a3035d5",
+  "checks": {
+    "/": {
+      "six_links": true,
+      "no_nav_hash": true,
+      "disclosure": true,
+      "no_duplicate_categories": true,
+      "no_conflicting_tax": true
+    },
+    "/catalog/": {
+      "six_links": true,
+      "no_nav_hash": true,
+      "disclosure": true,
+      "no_duplicate_categories": true,
+      "no_conflicting_tax": true
+    },
+    "/lounges/": {
+      "six_links": true,
+      "no_nav_hash": true,
+      "disclosure": true,
+      "no_duplicate_categories": true,
+      "no_conflicting_tax": true
+    },
+    "/compare/sbi-cashback-vs-hdfc-millennia/": {
+      "six_links": true,
+      "no_nav_hash": true,
+      "disclosure": true,
+      "no_duplicate_categories": true,
+      "no_conflicting_tax": true
+    },
+    "/cards/axis-axis-bank-ace-credit-card/": {
+      "six_links": true,
+      "no_nav_hash": true,
+      "disclosure": true,
+      "no_duplicate_categories": true,
+      "no_conflicting_tax": true
+    }
+  },
+  "airtel_excluded_from_lounges": true,
+  "ace_apply_cta": true,
+  "workflow": "https://github.com/neerajgarg1109/app/actions/runs/41105610729",
+  "operations": "https://github.com/neerajgarg1109/app/actions/runs/41105610687"
+}

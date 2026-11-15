@@ -1,0 +1,286 @@
+{
+  "checked_on": "2026-10-31",
+  "catalogue_cards": 268,
+  "existing_artwork": 239,
+  "missing_at_start": 29,
+  "verified_new_artwork": 5,
+  "promotional_only": 8,
+  "unresolved": 16,
+  "catalogue_changed": false,
+  "deployed": false,
+  "cards": [
+    {
+      "id": "axis-google-pay-flex-axis-bank-credit-card",
+      "name": "Google Pay Flex Axis Bank",
+      "official_page": "https://www.axis.bank.in/cards/credit-card/google-pay-flex-axis-bank-credit-card",
+      "status": "promotional_banner_only",
+      "source": "https://www.axis.bank.in/images/default-source/l4-banner/credit-card/google-pay-flex-credit-card-360x400-w1.webp",
+      "size": [
+        360,
+        400
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "federal-celesta-credit-card",
+      "name": "Federal Bank Celesta",
+      "official_page": "https://www.federal.bank.in/celesta-credit-card",
+      "status": "verified_usable_artwork",
+      "source": "https://www.federal.bank.in/documents/10180/0/Celesta++Master-01.png",
+      "size": [
+        668,
+        1071
+      ],
+      "local_file": ".data/artwork-recheck-2026-10-31/federal-celesta-credit-card-probe-212921.png",
+      "review": "Visually verified exact product name and issuer. Original official asset, no generated artwork."
+    },
+    {
+      "id": "federal-imperio-credit-card",
+      "name": "Federal Bank Imperio",
+      "official_page": "https://www.federal.bank.in/imperio-credit-card",
+      "status": "verified_usable_artwork",
+      "source": "https://www.federal.bank.in/documents/10180/0/Imperio+Master.png",
+      "size": [
+        1075,
+        672
+      ],
+      "local_file": ".data/artwork-recheck-2026-10-31/federal-imperio-credit-card-probe-250674.png",
+      "review": "Visually verified exact product name and issuer. Original official asset, no generated artwork."
+    },
+    {
+      "id": "federal-signet-credit-card",
+      "name": "Federal Bank Signet",
+      "official_page": "https://www.federal.bank.in/signet-credit-card",
+      "status": "verified_usable_artwork",
+      "source": "https://www.federal.bank.in/documents/10180/0/Signet+Master+Card.png",
+      "size": [
+        1070,
+        673
+      ],
+      "local_file": ".data/artwork-recheck-2026-10-31/federal-signet-credit-card-probe-178853.png",
+      "review": "Visually verified exact product name and issuer. Original official asset, no generated artwork."
+    },
+    {
+      "id": "federal-wave",
+      "name": "Federal Bank RuPay Wave",
+      "official_page": "https://www.federal.bank.in/rupay-wave-credit-card",
+      "status": "verified_usable_artwork",
+      "source": "https://www.federal.bank.in/documents/10180/0/wave+rupay+card.png",
+      "size": [
+        2220,
+        1440
+      ],
+      "local_file": ".data/artwork-recheck-2026-10-31/federal-wave-probe-1077530.png",
+      "review": "Visually verified exact product name and issuer. Original official asset, no generated artwork."
+    },
+    {
+      "id": "idfc-quantum-plus-credit-card",
+      "name": "IDFC FIRST Quantum+",
+      "official_page": "https://www.idfcfirst.bank.in/credit-card/quantum-plus-credit-card",
+      "status": "verified_usable_artwork",
+      "source": "https://www.idfcfirst.bank.in/content/dam/idfcfirstbank/images/quantum-cc/Quantum-Banner-1-Updated-002.png",
+      "size": [
+        610,
+        900
+      ],
+      "local_file": ".data/artwork-recheck-2026-10-31/idfc-quantum-plus-credit-card-1.png",
+      "review": "Visually verified exact product name and issuer. Original official asset, no generated artwork."
+    },
+    {
+      "id": "bobcard-bobcard-cashback",
+      "name": "BOBCARD Cashback",
+      "official_page": "https://www.bobcard.co.in/credit-card-types/bobcard-cashback",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "bobcard-hpcl-energie-bobcard",
+      "name": "HPCL ENERGIE BOBCARD",
+      "official_page": "https://www.bobcard.co.in/credit-card-types/hpcl-energie",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "bobcard-irctc-bobcard",
+      "name": "IRCTC BOBCARD",
+      "official_page": "https://www.bobcard.co.in/credit-card-types/irctc",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-aspire-platinum",
+      "name": "IDBI Bank Aspire Platinum",
+      "official_page": "https://www.idbibank.in/aspire-credit-card.aspx",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-royale-signature",
+      "name": "IDBI Bank Royale Signature",
+      "official_page": "https://www.idbibank.in/royale-signature-credit-card.aspx",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-euphoria-world",
+      "name": "IDBI Bank Euphoria World",
+      "official_page": "https://www.idbibank.in/Euphoria-credit-card.aspx",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "idbi-bank-idbi-bank-imperium-platinum",
+      "name": "IDBI Bank Imperium Platinum",
+      "official_page": "https://www.idbibank.in/Imperium-credit-card.aspx",
+      "status": "unresolved",
+      "reason": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)>"
+    },
+    {
+      "id": "yes-bank-yes-bank-marquee",
+      "name": "YES BANK MARQUEE",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/marquee-credit-card",
+      "status": "promotional_banner_only",
+      "source": "https://www.yes.bank.in/sites/web/content/published/api/v1.1/assets/CONT14FBA13D3DB748B79A99634F2C448A88/native/ybl_cc_revamp_marquee_mobile.jpg?download=false",
+      "size": [
+        720,
+        500
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "yes-bank-yes-bank-reserv",
+      "name": "YES BANK RESERV",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/reserv-credit-card",
+      "status": "unresolved",
+      "reason": "HTTP Error 404: Not Found"
+    },
+    {
+      "id": "yes-bank-yes-bank-elite",
+      "name": "YES BANK ELITE+",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/elite-plus-credit-card",
+      "status": "promotional_banner_only",
+      "source": "https://www.yes.bank.in/sites/web/content/published/api/v1.1/assets/CONT453567607A7445E1B081524C528605BB/native/YB-CC-Revamp-MobileBanners-720X500PX-Feb-24.jpg?download=false",
+      "size": [
+        720,
+        500
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "yes-bank-yes-bank-select",
+      "name": "YES BANK SELECT",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/select-credit-card",
+      "status": "promotional_banner_only",
+      "source": "https://www.yes.bank.in/sites/web/content/published/api/v1.1/assets/CONTDA962E0303A54E598D6EC55F8604458E/native/yb_cc_revamp_select_mobile.jpg?download=false",
+      "size": [
+        720,
+        500
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "yes-bank-yes-bank-ace",
+      "name": "YES BANK ACE",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/ace-credit-card",
+      "status": "promotional_banner_only",
+      "source": "https://www.yes.bank.in/sites/web/content/published/api/v1.1/assets/CONT36CD514E2AA544EB82FA77356BFC4CD5/native/yb_cc_revamp_ace_mobile.jpg?download=false",
+      "size": [
+        720,
+        500
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "yes-bank-yes-bank-wellness",
+      "name": "YES BANK Wellness",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/wellness-credit-card",
+      "status": "unresolved",
+      "reason": "HTTP Error 404: Not Found"
+    },
+    {
+      "id": "yes-bank-yes-bank-wellness-plus",
+      "name": "YES BANK Wellness Plus",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/wellness-plus-credit-card",
+      "status": "unresolved",
+      "reason": "HTTP Error 404: Not Found"
+    },
+    {
+      "id": "yes-bank-yes-bank-rupay-credit-card",
+      "name": "YES BANK RuPay Credit Card",
+      "official_page": "https://www.yes.bank.in/personal-banking/yes-individual/cards/credit-cards/rupay-credit-card",
+      "status": "promotional_banner_only",
+      "source": "https://www.yes.bank.in/sites/web/content/published/api/v1.1/assets/CONT24B5498597344641AF65DC9FAF7E8A39/native/YB-UPI-CC-Link-Mobile-%E2%80%93-375x375-px.jpg?download=false",
+      "size": [
+        375,
+        375
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "sbm-kredit-pe",
+      "name": "SBM Kredit.Pe Credit Card",
+      "official_page": "https://www.sbm.bank.in/smart_banking/pdf/Kredit-PE-MITC.pdf",
+      "status": "unresolved",
+      "reason": "Product page returned no usable image candidate."
+    },
+    {
+      "id": "federal-one",
+      "name": "Federal Bank One Credit Card",
+      "official_page": "https://www.federal.bank.in/onecard",
+      "status": "unresolved",
+      "reason": "Product page returned no usable image candidate."
+    },
+    {
+      "id": "federal-scapia",
+      "name": "Federal Bank Scapia Credit Card",
+      "official_page": "https://www.federal.bank.in/scapia",
+      "status": "unresolved",
+      "reason": "Product page returned no usable image candidate."
+    },
+    {
+      "id": "federal-paisabazaar-paisaback",
+      "name": "Federal Paisabazaar Paisaback Credit Card",
+      "official_page": "https://www.federal.bank.in/paisabazaar-federal-cobranded-credit-card",
+      "status": "unresolved",
+      "reason": "Product page returned no usable image candidate."
+    },
+    {
+      "id": "indian-bank-one",
+      "name": "Indian Bank One Credit Card",
+      "official_page": "https://www.indianbank.in/wp-content/uploads/2019/03/Indian-Bank-launches-the-Indian-Bank-One-Co-Branded-Credit-Card-a-tech-enabled-credit-card-powered-by-Visa-and-RuPay.pdf",
+      "status": "unresolved",
+      "reason": "Product page returned no usable image candidate."
+    },
+    {
+      "id": "utkarsh-supermoney-supercard",
+      "name": "Utkarsh super.money superCard",
+      "official_page": "https://www.utkarsh.bank.in/personal/cards/credit-card/supercard",
+      "status": "promotional_banner_only",
+      "source": "https://www.utkarsh.bank.in/assests/banner/Supercard-Mob_Banner.jpg",
+      "size": [
+        376,
+        507
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "kotak-upi-rupay-credit-card",
+      "name": "Kotak UPI RuPay Credit Card",
+      "official_page": "https://www.kotak.bank.in/en/personal-banking/cards/credit-cards/kotak-upi-rupay-credit-card.html",
+      "status": "promotional_banner_only",
+      "source": "https://www.kotak.bank.in/content/dam/Kotak/herosliderbanner/kotak-upi-rupay-credit-card-new-m.jpg",
+      "size": [
+        640,
+        430
+      ],
+      "review": "Downloaded and visually checked; card appears in promotional composition. Not approved as standalone card artwork."
+    },
+    {
+      "id": "csb-jupiter-edge-rupay",
+      "name": "Jupiter Edge CSB Bank RuPay",
+      "official_page": "https://jupiter.money/edge-csb-rupay-credit-card/",
+      "status": "unresolved",
+      "reason": "Candidate was the CSB/edge logo, not card artwork. Current Edge+ imagery cannot be assumed correct for the original Edge product."
+    }
+  ]
+}

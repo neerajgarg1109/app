@@ -1,0 +1,51 @@
+{
+  "release": "15cb932bd5b0d1d48ba092a88787604c997e8984",
+  "workflow": "https://github.com/neerajgarg1109/app/actions/runs/41166459322",
+  "deployment": "success",
+  "checks": [
+    {
+      "path": "/cards/axis-axis-bank-ace-credit-card/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true,
+      "no_duplicate_intro": true
+    },
+    {
+      "path": "/cards/sbi-doctors-ima-sbi-card/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true,
+      "no_duplicate_intro": true
+    },
+    {
+      "path": "/compare/axis-atlas-vs-hdfc-regalia-gold/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true
+    },
+    {
+      "path": "/compare/sbi-cashback-vs-hdfc-millennia/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true
+    },
+    {
+      "path": "/catalog/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true
+    },
+    {
+      "path": "/guides/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true
+    },
+    {
+      "path": "/lounges/",
+      "status": 200,
+      "no_before_gst": true,
+      "six_nav_links": true
+    }
+  ]
+}

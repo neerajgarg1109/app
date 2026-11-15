@@ -1,0 +1,16 @@
+{
+  "release": "fb9b572e3f84b0817df92a6b409888ae94c09531",
+  "priority_order_compare_and_guides": 20,
+  "list_ctas": {
+    "/catalog/": 265,
+    "/guides/best-cashback-credit-cards-india/": 12,
+    "/categories/cashback/": 62,
+    "/issuers/hdfc-bank/": 20
+  },
+  "navigation_static": true,
+  "list_redirect": 302,
+  "frontend_tests": 130,
+  "static_tests": 35,
+  "workflow": "https://github.com/neerajgarg1109/app/actions/runs/41003385822",
+  "operations": "https://github.com/neerajgarg1109/app/actions/runs/41003169987"
+}

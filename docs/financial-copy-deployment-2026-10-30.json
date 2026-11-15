@@ -1,0 +1,14 @@
+{
+  "release": "f3363fc5ff6287716daf37327dcde8c9a9098df0",
+  "checks": {
+    "Want cashback you can use without decoding points?": true,
+    "₹999 + 18% GST": true,
+    "See what you could keep after fees": true,
+    "Start with your usual monthly spend.": true,
+    "Need a different route? Check these alternatives": true,
+    "Check the entry requirements before you apply.": true,
+    "guide_hub_copy": true,
+    "guide_header_label": true
+  },
+  "workflow": "https://github.com/neerajgarg1109/app/actions/runs/41100026695"
+}

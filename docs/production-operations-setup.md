@@ -108,3 +108,30 @@ usage must still be measured on an actual encrypted production archive.
 
 References: [MongoDB backup tooling](https://www.mongodb.com/docs/database-tools/mongodump/),
 [GitHub Actions billing and usage](https://docs.github.com/en/actions/concepts/billing-and-usage).
+
+## Dedicated uptime-monitor configuration
+
+The first observed successful GitHub cron checks were 150 minutes apart, so use
+that workflow only as a supplementary check. Better Stack currently advertises
+10 free monitors with 3-minute checks on its
+[uptime page](https://betterstack.com/uptime). Owner must complete account creation
+and accept its terms; no paid responder, SMS, phone, or other add-on is needed for
+this preparation.
+
+Prepare two HTTPS GET monitors after sign-in:
+
+| Monitor | URL | Success condition | Interval |
+|---|---|---|---|
+| CardIQ website | `https://findmybest.cards/` | HTTP 200; TLS valid | 3 minutes |
+| CardIQ API and MongoDB | `https://api.findmybest.cards/api/ready` | HTTP 200; body contains `"status":"ready"` (allow JSON whitespace) | 3 minutes |
+
+Use the account owner's verified email for notifications. Verify initial healthy
+checks for both. Test the provider's notification route with its test function or
+an isolated failing test URL, never by stopping production. The already received
+GitHub test verifies GitHub delivery only, not Better Stack delivery. Keep the
+backup and reminder workflow gates off until credentials and approvals are ready.
+
+Owner decision (26 October 2026): keep production exports disabled. Preparation
+of the encrypted backup tooling is retained for review; do not enable the backup
+workflow or upload any production archive unless the owner explicitly changes
+that decision.

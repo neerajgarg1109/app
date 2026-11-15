@@ -1,0 +1,51 @@
+{
+  "checks": [
+    {
+      "id": "federal-celesta-credit-card",
+      "image_status": 200,
+      "image_hash_matches": true,
+      "page_status": 200,
+      "page_has_image": true,
+      "api_has_image": true
+    },
+    {
+      "id": "federal-imperio-credit-card",
+      "image_status": 200,
+      "image_hash_matches": true,
+      "page_status": 200,
+      "page_has_image": true,
+      "api_has_image": true
+    },
+    {
+      "id": "federal-signet-credit-card",
+      "image_status": 200,
+      "image_hash_matches": true,
+      "page_status": 200,
+      "page_has_image": true,
+      "api_has_image": true
+    },
+    {
+      "id": "federal-wave",
+      "image_status": 200,
+      "image_hash_matches": true,
+      "page_status": 200,
+      "page_has_image": true,
+      "api_has_image": true
+    },
+    {
+      "id": "idfc-quantum-plus-credit-card",
+      "image_status": 200,
+      "image_hash_matches": true,
+      "page_status": 200,
+      "page_has_image": true,
+      "api_has_image": true
+    }
+  ],
+  "api_cards": 268,
+  "api_artwork": 244,
+  "release": "bb11ab355f71b0a79b41c5ee0f957d5654b51f69",
+  "deployment": "https://github.com/neerajgarg1109/app/actions/runs/41181204842",
+  "operations": "https://github.com/neerajgarg1109/app/actions/runs/41181204834",
+  "deployment_status": "success",
+  "operations_status": "success"
+}

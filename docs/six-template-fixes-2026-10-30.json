@@ -1,0 +1,37 @@
+{
+  "index.html": {
+    "nav_links": 6,
+    "nav_no_hash": true,
+    "disclosure": true,
+    "no_duplicate_categories": true,
+    "no_conflicting_tax": true
+  },
+  "catalog/index.html": {
+    "nav_links": 6,
+    "nav_no_hash": true,
+    "disclosure": true,
+    "no_duplicate_categories": true,
+    "no_conflicting_tax": true
+  },
+  "lounges/index.html": {
+    "nav_links": 6,
+    "nav_no_hash": true,
+    "disclosure": true,
+    "no_duplicate_categories": true,
+    "no_conflicting_tax": true
+  },
+  "compare/sbi-cashback-vs-hdfc-millennia/index.html": {
+    "nav_links": 6,
+    "nav_no_hash": true,
+    "disclosure": true,
+    "no_duplicate_categories": true,
+    "no_conflicting_tax": true
+  },
+  "cards/axis-axis-bank-ace-credit-card/index.html": {
+    "nav_links": 6,
+    "nav_no_hash": true,
+    "disclosure": true,
+    "no_duplicate_categories": true,
+    "no_conflicting_tax": true
+  }
+}
