@@ -12,47 +12,5 @@
     "sourceLabel": "ICICI Bank",
     "verifiedOn": "2026-10-29",
     "active": true
-  },
-  {
-    "id": "icici-card-changes-nov-dec-2026",
-    "cardName": "ICICI Bank credit card changes",
-    "issuer": "ICICI Bank",
-    "headline": "ICICI business-card DCC fee and selected card benefits change",
-    "summary": "From 25 Nov, the DCC fee on selected business, corporate and purchase cards rises from 1% to 3.50%. From 15 Dec, complimentary air-accident insurance ends on Emeralde Private Metal, Times Black, Emeralde, Emeralde Private, Diamant, Sapphiro and Rubyx; the INOX benefit ends on Rubyx, Coral, Expressions, Chennai Super Kings, selected MakeMyTrip cards, HPCL Super Saver and Emirates Rubyx.",
-    "status": "upcoming",
-    "statusLabel": "Effective 25 Nov & 15 Dec 2026",
-    "availabilityNote": "Card-specific changes apply; see ICICI’s notice for the affected product list and other fee updates.",
-    "sourceUrl": "https://www.icici.bank.in/about-us/notice-board",
-    "sourceLabel": "ICICI Bank notice board",
-    "verifiedOn": "2026-11-15",
-    "active": true
-  },
-  {
-    "id": "sbi-card-transport-fuel-fee-dec-2026",
-    "cardName": "SBI Card transport and fuel transaction fees",
-    "issuer": "SBI Card",
-    "headline": "SBI Card adds fees above transport and fuel thresholds",
-    "summary": "From 1 Dec 2026, a 1% fee applies to transportation transactions above ₹30,000 each (MCC 4111, 4784 and 4131). If aggregate fuel transactions exceed ₹50,000 in a billing cycle, a 1% fee applies to total fuel spend (MCC 5172, 5541, 5542 and 5983).",
-    "status": "upcoming",
-    "statusLabel": "Effective 1 Dec 2026",
-    "availabilityNote": "SBI Card identifies the covered transactions by merchant category code (MCC); consult the issuer notice for scope and terms.",
-    "sourceUrl": "https://www.sbicard.com/en/customer-notices.page",
-    "sourceLabel": "SBI Card",
-    "verifiedOn": "2026-11-15",
-    "active": true
-  },
-  {
-    "id": "hdfc-tata-neucoins-claim-nov-2026",
-    "cardName": "Tata Neu HDFC Bank Credit Cards",
-    "issuer": "HDFC Bank",
-    "headline": "Tata Neu HDFC cardholders must claim spend-earned NeuCoins",
-    "summary": "Effective 25 Nov 2026, primary cardholders must claim spend-earned NeuCoins in the Tata Neu app: sign in with the bank-registered mobile number, open NeuCard and choose “Claim NeuCoins.” Claims must be made within 12 months of the statement date; unclaimed coins expire.",
-    "status": "upcoming",
-    "statusLabel": "Effective 25 Nov 2026",
-    "availabilityNote": "New claim flow applies to eligible card-spend NeuCoins. Promotions and welcome benefits keep their own terms; see the bank’s claim and redemption guide.",
-    "sourceUrl": "https://www.hdfc.bank.in/kannada/content/dam/hdfcbankpws/in/en/pdfs/TataNeuCC_neucoins_Claim.pdf",
-    "sourceLabel": "HDFC Bank",
-    "verifiedOn": "2026-11-15",
-    "active": true
   }
 ]
