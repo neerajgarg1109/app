@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 from restricted_access import restricted_access
 from financial_copy import fee_copy
+from comparison_engine import YEAR as COMPARISON_SEO_YEAR
 BUILD = Path(os.environ.get("CARDIQ_BUILD_DIR", ROOT / "frontend" / "build"))
 MANIFEST = json.loads((BUILD / "catalog-manifest.json").read_text())
 CARD_IDS = MANIFEST["card_ids"]
@@ -72,6 +73,38 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn(f'src="{ORIGIN}/#/reward-calculator?embedded=1"', source)
         self.assertNotIn(f'href="{ORIGIN}/#/reward-calculator"', source)
         self.assertIn(ORIGIN + "/reward-calculator/", (BUILD / "sitemap.xml").read_text())
+
+    def test_calculator_routes_have_distinct_metadata_and_clean_canonicals(self):
+        sitemap = (BUILD / "sitemap.xml").read_text()
+        expected = {
+            "calculator": ("Indian credit card value calculator | CardIQ", "Estimate and compare annual credit card rewards after fees using your monthly spending across common Indian purchase categories."),
+            "reward-calculator": ("Reward & Transfer Calculator for credit card holders | CardIQ", "Compare estimated points, cashback and airline or hotel transfer values for a transaction on cards you already hold."),
+        }
+        for route, (title, description) in expected.items():
+            url = f"{ORIGIN}/{route}/"
+            source = (BUILD / route / "index.html").read_text()
+            document = Document(source)
+            self.assertEqual(document.title, title)
+            self.assertEqual(document.meta.get("description"), description)
+            self.assertEqual(document.meta.get("canonical"), url)
+            self.assertIn(f'property="og:url" content="{url}"', source)
+            self.assertIn(f"<loc>{url}</loc>", sitemap)
+
+    def test_comparison_metadata_matches_canonical_and_structured_data(self):
+        for path in (BUILD / "compare").glob("*/index.html"):
+            source = path.read_text()
+            document = Document(source)
+            canonical = document.meta["canonical"]
+            self.assertTrue(canonical.startswith(f"{ORIGIN}/compare/"), path)
+            self.assertTrue(canonical.endswith("/"), path)
+            self.assertTrue(document.title and document.meta.get("description"), path)
+            self.assertIn(f'property="og:url" content="{canonical}"', source, path)
+            schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S)[1])
+            webpage = next(node for node in schema["@graph"] if node.get("@type") == "WebPage")
+            self.assertEqual(webpage["url"], canonical, path)
+            self.assertEqual(webpage["name"], document.title, path)
+            self.assertEqual(webpage["description"], document.meta["description"], path)
+        self.assertGreaterEqual(COMPARISON_SEO_YEAR, 2026)
 
     def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
         pages = list((BUILD / 'compare').glob('*/index.html'))
