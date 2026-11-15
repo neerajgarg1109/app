@@ -2,7 +2,7 @@
 import unittest
 from decimal import Decimal
 
-from comparison_editorial import earn, examples, render_comparison, FLIPKART, NEU, FOOD, REVIEWS
+from comparison_editorial import earn, examples, render_comparison, FLIPKART, NEU, FOOD, REVIEWS, CHECKED
 
 
 class ComparisonExamplesTests(unittest.TestCase):
@@ -21,7 +21,7 @@ class ComparisonExamplesTests(unittest.TestCase):
             source = render_comparison(slug, {'name':'Card A'}, {'name':'Card B'})
             self.assertIn('Sources for this comparison', source)
             self.assertIn('before fees and taxes', source)
-            self.assertIn('2026-10-29', source)
+            self.assertIn(review.get('checked', CHECKED), source)
             self.assertIn('scope="row"', source)
             for _, url in review['sources']:
                 self.assertIn(url.replace('&','&amp;'), source)
