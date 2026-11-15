@@ -326,8 +326,24 @@ comparison_links = []
 comparison_posts = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
 comparison_routes = [(row['pairSlug'], row['cardA'], row['cardB'], None) for row in comparison_pairs]
+for row in comparison_pairs:
+    preferred = priority_by_pair.get(frozenset((row['cardA'], row['cardB'])))
+    canonical_slug = preferred['slug'] if preferred else row['pairSlug']
+    reverse_slug = reverse_comparison_slug(row['pairSlug'])
+    if reverse_slug and reverse_slug != canonical_slug:
+        fallback = {'slug': canonical_slug, 'cardA': row['cardA'], 'cardB': row['cardB']}
+        comparison_routes.append((reverse_slug, row['cardA'], row['cardB'], preferred or fallback))
 comparison_routes += [(row['slug'], row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS]
 comparison_routes += [(alias, row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS for alias in row.get('aliases', [])]
+for row in TOP_COMPARISONS:
+    aliases = [
+        f"{row['cardA']}-vs-{row['cardB']}",
+        f"{row['cardB']}-vs-{row['cardA']}",
+        reverse_comparison_slug(row['slug']),
+        *(row.get('aliases', [])),
+        *(reverse_comparison_slug(alias) for alias in row.get('aliases', [])),
+    ]
+    comparison_routes += [(alias, row['cardA'], row['cardB'], row) for alias in dict.fromkeys(aliases) if alias and alias != row['slug']]
 comparison_canonicals = []
 comparison_styles = (ROOT / 'scripts/templates/comparison.css').read_text()
 shutil.copyfile(ROOT / 'scripts/templates/comparison-calculator.js', BUILD / 'comparison-calculator.js')
