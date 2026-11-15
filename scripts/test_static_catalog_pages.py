@@ -577,11 +577,16 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn('Read the comparison', source)
         self.assertGreaterEqual(source.count('class="post-card" data-topic='), 8)
 
-    def test_news_updates_are_rendered_on_homepage_and_guides(self):
+    def test_news_updates_are_curated_on_homepage_and_detailed_in_archive(self):
         homepage = (BUILD / "index.html").read_text()
+        archive = (BUILD / "guides" / "news" / "index.html").read_text()
         guides = (BUILD / "guides" / "index.html").read_text()
-        for source in (homepage, guides):
-            self.assertIn("News", source)
+        for label in ("Featured card", "Latest live launch", "Announced / upcoming", "Existing card updates"):
+            self.assertIn(label, homepage)
+        self.assertIn(f"{ORIGIN}/guides/news/", homepage)
+        self.assertIn("Show more updates &amp; archives", homepage)
+        self.assertIn("hi@findmybest.cards", homepage)
+        for source in (archive, guides):
             self.assertIn("Effective 25 Nov &amp; 15 Dec 2026", source)
             self.assertIn("Effective 1 Dec 2026", source)
             self.assertIn("Effective 25 Nov 2026", source)
