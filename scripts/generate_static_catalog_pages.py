@@ -327,6 +327,7 @@ comparison_posts = []
 priority_by_pair = {frozenset((row['cardA'], row['cardB'])): row for row in TOP_COMPARISONS}
 comparison_routes = [(row['pairSlug'], row['cardA'], row['cardB'], None) for row in comparison_pairs]
 comparison_routes += [(row['slug'], row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS]
+comparison_routes += [(alias, row['cardA'], row['cardB'], row) for row in TOP_COMPARISONS for alias in row.get('aliases', [])]
 comparison_canonicals = []
 comparison_styles = (ROOT / 'scripts/templates/comparison.css').read_text()
 shutil.copyfile(ROOT / 'scripts/templates/comparison-calculator.js', BUILD / 'comparison-calculator.js')
