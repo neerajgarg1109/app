@@ -128,6 +128,20 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertEqual(document.meta["canonical"], f"{ORIGIN}/compare/hdfc-swiggy-vs-airtel-axis/")
         self.assertNotIn(f"<loc>{ORIGIN}/compare/airtel-axis-vs-swiggy-hdfc/</loc>", (BUILD / "sitemap.xml").read_text())
 
+    def test_reverse_comparison_slugs_resolve_to_the_maintained_canonical(self):
+        aliases = {
+            "hdfc-millennia-vs-sbi-cashback": "sbi-cashback-vs-hdfc-millennia",
+            "airtel-axis-vs-hdfc-swiggy": "hdfc-swiggy-vs-airtel-axis",
+            "axis-airtel-axis-bank-credit-card-vs-hdfc-swiggy-hdfc-bank-credit-card": "hdfc-swiggy-vs-airtel-axis",
+        }
+        sitemap = (BUILD / "sitemap.xml").read_text()
+        for alias_slug, canonical_slug in aliases.items():
+            alias = BUILD / "compare" / alias_slug / "index.html"
+            self.assertTrue(alias.is_file(), alias)
+            document = Document(alias.read_text())
+            self.assertEqual(document.meta["canonical"], f"{ORIGIN}/compare/{canonical_slug}/", alias)
+            self.assertNotIn(f"<loc>{ORIGIN}/compare/{alias_slug}/</loc>", sitemap)
+
     def test_comparisons_and_catalog_lists_show_available_card_artwork(self):
         pages = list((BUILD / 'compare').glob('*/index.html'))
         self.assertGreater(len(pages), 0)
