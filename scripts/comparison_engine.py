@@ -14,9 +14,10 @@ TOP_COMPARISONS = json.loads((DATA / 'top_comparisons.json').read_text())
 PRIORITY = {row['slug']: row for row in TOP_COMPARISONS}
 MITC = json.loads((DATA / 'comparison_mitc.json').read_text()) if (DATA / 'comparison_mitc.json').exists() else {}
 YEAR = date.today().year
-CATEGORIES = {'online': 'Online shopping', 'upi': 'UPI / QR', 'dining': 'Dining / groceries', 'travel': 'Travel / forex', 'utilities': 'Utilities'}
+CATEGORIES = {'online': 'Eligible non-Tata online retail', 'croma-online': 'Eligible online Croma purchase', 'upi': 'UPI / QR', 'dining': 'Eligible dining', 'groceries': 'Eligible groceries', 'travel': 'Eligible travel', 'utilities': 'Eligible non-UPI utility payments'}
 RULES = {
-    'sbi-cashback-sbi': {'online': [.05, 2000], 'upi': [0, 0], 'utilities': [0, 0]},
+    'sbi-cashback-sbi': {'online': [.05, 2000], 'croma-online': [.05, 2000], 'upi': [0, 0], 'utilities': [0, 0]},
+    'hdfc-tata-neu-infinity': {'online': [.015, None], 'croma-online': [.05, 30000], 'dining': [.015, None], 'groceries': [.015, 2000], 'travel': [.015, None], 'utilities': [.015, 2000]},
     'hdfc-millennia-credit-card': {'online': [.05, 1000]},
     'icici-amazon-pay-credit-card': {'online': [.01, None]},
     'axis-flipkart-axisbank-credit-card': {'online': [.05, 4000, 3]},
@@ -26,6 +27,7 @@ RULES = {
     'hdfc-swiggy-ornge-hdfc-bank-credit-card': {'dining': [.05, 1500], 'online': [.05, 1500]},
 }
 ASSUMPTIONS = {
+    'hdfc-tata-neu-infinity': 'Online, dining and travel use the 1.5% base NeuCoin rate on eligible non-Tata retail purchases. Groceries and non-UPI utilities use 1.5% with a ₹2,000 monthly cap each. The Croma scenario assumes an eligible non-EMI Croma purchase and applies 5% NeuCoins. The calculator shows NeuCoins at their ₹1 eligible Tata redemption value, not as cash. Merchant eligibility, per-transaction round-down and the announced manual-claim/expiry rules can change realized value; selected NeuPass promotions are excluded. UPI is not modelled because it depends on the RuPay variant and UPI ID.',
     'hdfc-millennia-credit-card': 'Online scenario means listed 5% merchants only. CashPoints valued at ₹1 for statement redemption; redemption fee, minimum balance and timing are excluded.',
     'icici-amazon-pay-credit-card': 'Online scenario means eligible non-Amazon purchases earning 1%. Rewards are Amazon Pay balance valued at ₹1 per unit, not bank cash. Prime/Amazon 5% is a different basket.',
     'axis-flipkart-axisbank-credit-card': 'Online scenario means eligible Flipkart/Cleartrip purchases only, not all online merchants; ₹4,000 quarterly cap is applied to three equal months.',
@@ -36,6 +38,7 @@ ASSUMPTIONS = {
     'sbi-cashback-sbi': 'Eligible online purchases only; ₹2,000 per statement online cap. UPI network and excluded utility categories do not earn cashback in this model.',
 }
 MODEL_SOURCES = {
+    'hdfc-tata-neu-infinity': ['https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/tata-neu-infinity-credit-card/pdf/tata_neu_infinity_card_tnc.pdf'],
     'sbi-cashback-sbi': ['https://www.sbicard.com/sbi-card-en/assets/docs/pdf/cashback-revised.pdf'],
     'hdfc-millennia-credit-card': ['https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/credit-cards/millennia-credit-card/pdf/terms-and-conditions.pdf'],
     'axis-airtel-axis-bank-credit-card': ['https://www.axis.bank.in/docs/default-source/default-document-library/terms-and-conditions-for-airtel-cbcc-cvp.pdf'],

@@ -1,7 +1,9 @@
 [
   {
     "slug": "sbi-cashback-vs-hdfc-millennia",
-    "aliases": ["sbi-cashback-sbi-vs-hdfc-millennia"],
+    "aliases": [
+      "sbi-cashback-sbi-vs-hdfc-millennia"
+    ],
     "cardA": "sbi-cashback-sbi",
     "cardB": "hdfc-millennia-credit-card",
     "title": "SBI Cashback vs HDFC Millennia (2026): 5% Cashback Math & Winner",
@@ -22,7 +24,9 @@
   },
   {
     "slug": "hdfc-swiggy-vs-airtel-axis",
-    "aliases": ["airtel-axis-vs-swiggy-hdfc"],
+    "aliases": [
+      "airtel-axis-vs-swiggy-hdfc"
+    ],
     "cardA": "hdfc-swiggy-hdfc-bank-credit-card",
     "cardB": "axis-airtel-axis-bank-credit-card",
     "title": "HDFC Swiggy vs Airtel Axis (2026): Monthly Capping & Bill Math",
@@ -36,6 +40,29 @@
     "title": "Amazon Pay ICICI vs Flipkart Axis (2026): LTF vs Paid Cashback",
     "h1": "Amazon Pay ICICI vs Flipkart Axis: Which Shopping Card Wins After Devaluation?",
     "note": "Flipkart partner cashback has quarterly caps. Amazon rewards are Amazon Pay balance, not statement cash. Neither is universally uncapped."
+  },
+  {
+    "slug": "tata-neu-infinity-vs-sbi-cashback",
+    "aliases": [
+      "sbi-cashback-vs-tata-neu-infinity"
+    ],
+    "cardA": "hdfc-tata-neu-infinity",
+    "cardB": "sbi-cashback-sbi",
+    "title": "Tata Neu Infinity vs SBI Cashback (2026): NeuCoins or Cash?",
+    "h1": "Tata Neu Infinity vs SBI Cashback: Tata Rewards or Flexible Cashback?",
+    "note": "The headline 5% rates apply to different eligible baskets. Tata Neu Infinity earns NeuCoins on eligible non-EMI Tata partner-brand purchases; SBI Cashback earns statement cashback on eligible online purchases, subject to its ₹2,000 online cap per statement cycle. Compare redemption flexibility, exclusions and annual fees before choosing.",
+    "verdicts": [
+      [
+        "You regularly buy from eligible Tata Neu partner brands and will redeem NeuCoins on eligible Tata purchases.",
+        "You are comfortable with ₹1,499 + 18% GST and the ₹3 lakh annual renewal-waiver threshold.",
+        "You will track HDFC's NeuCoin claim and expiry rules, including the change effective 25 November 2026."
+      ],
+      [
+        "Your online purchases qualify for SBI's 5% cashback and you prefer statement credit over a Tata-only reward currency.",
+        "The ₹2,000 online cashback cap per statement cycle is enough for your eligible spend.",
+        "You are comfortable with ₹999 + 18% GST and the ₹2 lakh annual renewal-waiver threshold."
+      ]
+    ]
   },
   {
     "slug": "sbi-cashback-vs-amazon-pay-icici",
