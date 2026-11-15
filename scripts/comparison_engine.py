@@ -116,6 +116,17 @@ def generateComparisonSeoMeta(cardA, cardB, customOverride=None, origin='https:/
     return {'title': title, 'metaDescription': f'Compare {a} and {b}: eligible rewards, fee waivers, exclusions and lounge conditions. See dated issuer sources and a spending scenario.', 'h1': custom.get('h1', f'{a} vs {b}: fees, rewards and conditions'), 'canonicalUrl': f'{origin.rstrip("/")}/compare/{slug}/', 'slug': slug}
 
 
+def valid_comparison_route(route_slug, card_a_id, card_b_id, cards_by_id):
+    """Return whether a generated route is a safe path for two known, distinct cards."""
+    if not isinstance(route_slug, str) or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', route_slug, re.IGNORECASE):
+        return False
+    if route_slug.count('-vs-') != 1:
+        return False
+    if not isinstance(card_a_id, str) or not isinstance(card_b_id, str) or card_a_id == card_b_id:
+        return False
+    return card_a_id in cards_by_id and card_b_id in cards_by_id
+
+
 def estimate(card, monthly=20000, category='online', year='renewal'):
     rule = rules_for(card).get(category)
     threshold = waiver(card)

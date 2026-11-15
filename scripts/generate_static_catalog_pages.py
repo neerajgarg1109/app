@@ -13,7 +13,7 @@ from urllib.parse import quote
 from urllib.request import urlopen
 from public_fonts import font_links
 from homepage_copy import render_homepage_copy
-from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page, comparison_excerpt
+from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page, comparison_excerpt, valid_comparison_route
 from comparison_editorial import render_comparison
 from guide_blog import render_index as render_blog_index, render_article as render_blog_article
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
@@ -331,7 +331,14 @@ comparison_routes += [(alias, row['cardA'], row['cardB'], row) for row in TOP_CO
 comparison_canonicals = []
 comparison_styles = (ROOT / 'scripts/templates/comparison.css').read_text()
 shutil.copyfile(ROOT / 'scripts/templates/comparison-calculator.js', BUILD / 'comparison-calculator.js')
+seen_comparison_routes = set()
 for route_slug, left_id, right_id, custom in comparison_routes:
+    if not valid_comparison_route(route_slug, left_id, right_id, cards_by_id):
+        print(f"Skipping malformed or unknown comparison route: {route_slug!r}", file=sys.stderr)
+        continue
+    if route_slug in seen_comparison_routes:
+        continue
+    seen_comparison_routes.add(route_slug)
     primary = custom or priority_by_pair.get(frozenset((left_id, right_id)))
     left, right = (cards_by_id[primary['cardA']], cards_by_id[primary['cardB']]) if primary else (cards_by_id[left_id], cards_by_id[right_id])
     meta = generateComparisonSeoMeta(left, right, primary or {'slug': route_slug}, ORIGIN)

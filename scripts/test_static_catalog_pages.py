@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "backend"))
 from restricted_access import restricted_access
 from financial_copy import fee_copy
-from comparison_engine import YEAR as COMPARISON_SEO_YEAR
+from comparison_engine import YEAR as COMPARISON_SEO_YEAR, valid_comparison_route
 BUILD = Path(os.environ.get("CARDIQ_BUILD_DIR", ROOT / "frontend" / "build"))
 MANIFEST = json.loads((BUILD / "catalog-manifest.json").read_text())
 CARD_IDS = MANIFEST["card_ids"]
@@ -65,6 +65,14 @@ def generated_pages():
 
 
 class StaticCatalogTests(unittest.TestCase):
+    def test_comparison_routes_reject_malformed_or_unknown_parameters(self):
+        known = {"sbi-cashback-sbi": {}, "hdfc-millennia-credit-card": {}}
+        self.assertTrue(valid_comparison_route("sbi-cashback-sbi-vs-hdfc-millennia", "sbi-cashback-sbi", "hdfc-millennia-credit-card", known))
+        self.assertFalse(valid_comparison_route("sbi-cashback-sbi-vs-hdfc-millennia-vs-extra", "sbi-cashback-sbi", "hdfc-millennia-credit-card", known))
+        self.assertFalse(valid_comparison_route("../sbi-vs-hdfc", "sbi-cashback-sbi", "hdfc-millennia-credit-card", known))
+        self.assertFalse(valid_comparison_route("unknown-vs-hdfc", "missing-card", "hdfc-millennia-credit-card", known))
+        self.assertFalse(valid_comparison_route("same-vs-same", "sbi-cashback-sbi", "sbi-cashback-sbi", known))
+        self.assertTrue(valid_comparison_route("valid-UPI-vs-card", "sbi-cashback-sbi", "hdfc-millennia-credit-card", known))
     def test_reward_calculator_has_its_own_clean_indexable_route(self):
         source = (BUILD / "reward-calculator" / "index.html").read_text()
         document = Document(source)
