@@ -68,12 +68,12 @@ def article_card(post, featured=False):
 <a class="read-link" href="{url}">{read_label} <span aria-hidden="true">↗</span></a></div></article>'''
 
 
-def news_section(origin):
+def news_section(origin, archive=False):
     news_path = TEMPLATES.parents[1] / 'frontend/src/data/cardNews.json'
-    items = [item for item in json.loads(news_path.read_text()) if item.get('active') is True]
+    items = [item for item in json.loads(news_path.read_text()) if archive or item.get('active') is True]
     items.sort(key=lambda item: item['verifiedOn'], reverse=True)
     cards = []
-    for item in items[:6]:
+    for item in items[:len(items) if archive else 4]:
         checked = date.fromisoformat(item['verifiedOn'])
         label = checked.strftime('%d %B %Y').lstrip('0')
         post = {'slug': item['id']}
@@ -81,7 +81,17 @@ def news_section(origin):
 <div class="post-card-content"><div class="article-meta"><span>{escape(item['statusLabel'])}</span><time datetime="{checked.isoformat()}">Verified {label}</time></div><h3><a href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">{escape(item['headline'])}</a></h3><p>{escape(item['summary'])}</p><p class="news-caveat">{escape(item['availabilityNote'])}</p><a class="read-link" href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">Read at {escape(item['sourceLabel'])} <span aria-hidden="true">↗</span></a></div></article>''')
     if not cards:
         return ''
-    return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">News <span>&amp; rule updates</span></h2><p>Fee, benefit and rewards changes with links to official sources.</p></div><a class="read-link" href="{origin}/guides/new-credit-cards/">View all updates <span aria-hidden="true">→</span></a></div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Issuer terms control; check the notice for your specific card. <span>Editorial corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</span></p></section>'''
+    archive_link = '' if archive else f'<a class="read-link" href="{origin}/guides/news/">Show more updates &amp; archives →</a>'
+    heading = 'News archive' if archive else 'News'
+    subtitle = 'Issuer announcements and policy updates, with source links.' if archive else 'Fee, benefit and rewards changes with links to official sources.'
+    return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">{heading} <span>&amp; rule updates</span></h2><p>{subtitle}</p></div>{archive_link}</div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Issuer terms control; check the notice for your specific card. <span>Editorial corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</span></p></section>'''
+
+
+def render_news_archive(origin, share=''):
+    description = "CardIQ’s source-linked archive of credit card launches, fee changes, reward revisions and issuer notices."
+    schema = {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Credit card news and rule updates | CardIQ", "description": description, "url": f"{origin}/guides/news/"}
+    content = f'<section class="journal-hero wrap"><p class="eyebrow">THE CARDIQ NEWS DESK</p><h1>Card news <span>&amp; updates</span></h1><p class="hero-description">{escape(description)}</p></section><div class="wrap journal-content">{news_section(origin, archive=True)}{share}<section class="editorial-note"><p>Issuer terms are authoritative. Found an update? <a href="mailto:hi@findmybest.cards">Contact CardIQ editorial</a>.</p></section></div>'
+    return shell("Credit card news and rule updates | CardIQ", description, f"{origin}/guides/news/", content, origin, schema)
 
 
 def render_index(posts, origin, share):

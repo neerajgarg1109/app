@@ -557,6 +557,8 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_article_metadata_identifies_author_publisher_and_page(self):
         for path in (BUILD / "guides").glob("*/index.html"):
+            if path.parent.name == "news":
+                continue
             source = path.read_text()
             schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
             articles = [node for node in schema.get("@graph", [schema]) if node.get("@type") == "Article"]
@@ -575,11 +577,16 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertIn('Read the comparison', source)
         self.assertGreaterEqual(source.count('class="post-card" data-topic='), 8)
 
-    def test_news_updates_are_rendered_on_homepage_and_guides(self):
+    def test_news_updates_are_curated_on_homepage_and_detailed_in_archive(self):
         homepage = (BUILD / "index.html").read_text()
+        archive = (BUILD / "guides" / "news" / "index.html").read_text()
         guides = (BUILD / "guides" / "index.html").read_text()
-        for source in (homepage, guides):
-            self.assertIn("News", source)
+        for label in ("Featured card", "Latest live launch", "Announced / upcoming", "Existing card updates"):
+            self.assertIn(label, homepage)
+        self.assertIn(f"{ORIGIN}/guides/news/", homepage)
+        self.assertIn("Show more updates &amp; archives", homepage)
+        self.assertIn("hi@findmybest.cards", homepage)
+        for source in (archive, guides):
             self.assertIn("Effective 25 Nov &amp; 15 Dec 2026", source)
             self.assertIn("Effective 1 Dec 2026", source)
             self.assertIn("Effective 25 Nov 2026", source)
@@ -589,6 +596,8 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_journal_articles_have_one_heading_and_related_reading(self):
         for path in (BUILD / "guides").glob("*/index.html"):
+            if path.parent.name == "news":
+                continue
             source = path.read_text()
             self.assertEqual(source.count("<h1>"), 1, path)
             self.assertIn('class="reading-wrap"', source)
@@ -634,6 +643,17 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn("https://twitter.com/intent/tweet", source)
             self.assertIn("https://www.facebook.com/sharer/sharer.php", source)
             self.assertIn(encoded, source)
+
+    def test_homepage_has_four_highlight_blocks_and_news_archive(self):
+        homepage = (BUILD / "index.html").read_text()
+        archive = (BUILD / "guides" / "news" / "index.html").read_text()
+        for label in ("Featured card", "Latest live launch", "Announced / upcoming", "Existing card updates"):
+            self.assertIn(label, homepage)
+        self.assertIn(f"{ORIGIN}/guides/news/", homepage)
+        self.assertIn("Show more updates &amp; archives", homepage)
+        self.assertIn("SBI Card adds fees above transport and fuel thresholds", archive)
+        self.assertIn("Tata Neu HDFC cardholders must claim spend-earned NeuCoins", archive)
+        self.assertIn("hi@findmybest.cards", archive)
 
     def test_homepage_has_canonical_metadata_and_a_non_javascript_catalogue_path(self):
         source = (BUILD / "index.html").read_text()

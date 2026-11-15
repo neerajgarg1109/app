@@ -15,7 +15,7 @@ from public_fonts import font_links
 from homepage_copy import render_homepage_copy
 from comparison_engine import TOP_COMPARISONS, generateComparisonSeoMeta, render_comparison_page, comparison_excerpt, valid_comparison_route
 from comparison_editorial import render_comparison
-from guide_blog import render_index as render_blog_index, render_article as render_blog_article
+from guide_blog import render_index as render_blog_index, render_article as render_blog_article, render_news_archive
 from public_navigation import CSS as MAIN_NAV_CSS, render_navigation
 from public_footer import CSS as FOOTER_CSS, render_footer
 from seo_content import CSS as SEO_CSS, product_facts, product_research, category_research, choosing_section, shortlist_matches
@@ -488,6 +488,7 @@ for support in ISSUER_SUPPORT:
 for post in guide_posts:
     write(Path("guides") / post["slug"], render_blog_article(post, guide_posts, ORIGIN, social_links(post["title"], post["url"])))
 write(Path("guides"), render_blog_index(guide_posts + comparison_posts, ORIGIN, social_links("CardIQ Journal", f"{ORIGIN}/guides/")))
+write(Path("guides/news"), render_news_archive(ORIGIN, social_links("CardIQ news archive", f"{ORIGIN}/guides/news/")) )
 
 category_links = "".join(f'<li><a href="{ORIGIN}/categories/{category["id"]}/">{html.escape(category_title(category))}</a></li>' for category in published_categories)
 issuer_links = "".join(f'<li><a href="{ORIGIN}/issuers/{slug(issuer)}/">{html.escape(issuer)} credit cards</a></li>' for issuer in issuers)
@@ -525,7 +526,7 @@ reward_calculator_body = f'''<h1>Reward &amp; transfer partner calculator</h1>
 <p class="muted">Values are estimates based on listed catalogue terms. Actual earning rates, caps, exclusions and transfer availability depend on the card and issuer; confirm current terms before spending.</p>'''
 write(Path("reward-calculator"), page("Reward & Transfer Calculator for credit card holders | CardIQ", "Compare estimated points, cashback and airline or hotel transfer values for a transaction on cards you already hold.", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/reward-calculator/", reward_calculator_body))
 
-sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/"]
+sitemap_urls = [f"{ORIGIN}/", f"{ORIGIN}/catalog/", f"{ORIGIN}/methodology/", f"{ORIGIN}/calculator/", f"{ORIGIN}/reward-calculator/", f"{ORIGIN}/compare/", f"{ORIGIN}/updates/", f"{ORIGIN}/lounges/", f"{ORIGIN}/restricted-cards/", f"{ORIGIN}/guides/", f"{ORIGIN}/guides/news/"]
 sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug, *_ in guides]
 sitemap_urls += [f"{ORIGIN}/guides/{guide_slug}/" for guide_slug in editorial_guide_slugs + closure_guide_slugs]
 sitemap_urls += [f'{ORIGIN}/cards/{card["id"]}/' for card in CARDS]
