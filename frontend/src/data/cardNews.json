@@ -1,5 +1,33 @@
 [
   {
+    "id": "hdfc-bizblack-changes-dec-2026",
+    "cardName": "HDFC BizBlack Metal Credit Card",
+    "issuer": "HDFC Bank",
+    "headline": "HDFC BizBlack revises tax rewards and 5X spend rules",
+    "summary": "From 21 Dec 2026, eligible income-tax and GST payments earn 4 Reward Points per ₹200. Unlocking 5X rewards requires ₹50,000 in qualifying retail spend per statement cycle, excluding tax and GST. From Jan 2027, the ₹5,000 quarterly voucher threshold falls from ₹5 lakh to ₹4 lakh in eligible spend.",
+    "status": "upcoming",
+    "statusLabel": "Effective 21 Dec 2026",
+    "availabilityNote": "The revised quarterly voucher threshold starts in Jan 2027; tax, GST, fuel, rent and EMI payments do not count toward that milestone. Check HDFC’s notice and programme terms for eligibility.",
+    "sourceUrl": "https://www.hdfc.bank.in/content/dam/hdfcbankpws/in/en/personal-banking/discover-products/cards/business-credit-cards/biz-black/pdfs/biz-black-customer-communication-3-nov-2026.pdf",
+    "sourceLabel": "HDFC Bank",
+    "verifiedOn": "2026-11-24",
+    "active": true
+  },
+  {
+    "id": "icici-card-replacement-fee-dec-2026",
+    "cardName": "ICICI Bank credit cards",
+    "issuer": "ICICI Bank",
+    "headline": "ICICI raises most card replacement fees from 11 Dec",
+    "summary": "From 11 Dec 2026, the replacement fee for most ICICI credit cards increases from ₹200 to ₹300, plus GST. Some premium cards have different charges; the notice also revises Priority Pass replacement fees on select cards.",
+    "status": "upcoming",
+    "statusLabel": "Effective 11 Dec 2026",
+    "availabilityNote": "Fees and exceptions vary by card. Confirm the applicable replacement and Priority Pass charges in ICICI Bank’s latest notice and your card terms.",
+    "sourceUrl": "https://www.icici.bank.in/about-us/notice-board",
+    "sourceLabel": "ICICI Bank notice board",
+    "verifiedOn": "2026-11-24",
+    "active": true
+  },
+  {
     "id": "icici-1838-reserve-announcement",
     "cardName": "1838 Reserve ICICI Bank Credit Card",
     "issuer": "ICICI Bank",
