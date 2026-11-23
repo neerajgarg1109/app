@@ -21,7 +21,7 @@ test("shows only the newest sourced update with an archive link", async () => {
   expect(container.textContent).not.toContain("Currently listed by ICICI Bank; invitation required");
   expect(container.textContent).not.toContain("Apply now");
   expect(container.textContent).not.toContain("Coming soon");
-  expect(container.textContent).toContain("hi@findmybest.cards");
+  expect(container.textContent).not.toContain("hi@findmybest.cards");
   const source = container.querySelector(".ciq-news-article h3 a");
   expect(source.getAttribute("href")).toBe(CARD_NEWS[0].sourceUrl);
   expect(source.getAttribute("rel")).toContain("noopener");

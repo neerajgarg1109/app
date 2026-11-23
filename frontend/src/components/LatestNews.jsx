@@ -27,6 +27,5 @@ export default function LatestNews({ items = [] }) {
         </div>
       </article>)}
     </div>
-    <p className="ciq-news-editorial">Issuer terms control · Corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a></p>
   </section>;
 }
