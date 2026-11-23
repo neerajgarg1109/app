@@ -7,7 +7,7 @@ export default function LatestNews({ items = [] }) {
   const news = items
     .filter((item) => item.active && ["upcoming", "announcement"].includes(item.status))
     .sort((a, b) => (b.verifiedOn || "").localeCompare(a.verifiedOn || ""))
-    .slice(0, 2);
+    .slice(0, 1);
   if (!news.length) return null;
 
   return <section aria-labelledby="latest-card-news-title" className="ciq-highlight-panel ciq-news-panel">

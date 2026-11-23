@@ -5,16 +5,16 @@ import CARD_NEWS from "../data/cardNews.json";
 
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
-test("shows a compact preview of the newest sourced updates with an archive link", async () => {
+test("shows only the newest sourced update with an archive link", async () => {
   const container = document.createElement("div");
   const root = createRoot(container);
   await act(async () => root.render(<LatestNews items={CARD_NEWS} />));
   expect(container.textContent).toContain("News & rule updates");
   expect(container.textContent).toContain("ICICI business-card DCC fee and selected card benefits change");
-  expect(container.textContent).toContain("SBI Card adds fees above transport and fuel thresholds");
+  expect(container.textContent).not.toContain("SBI Card adds fees above transport and fuel thresholds");
   expect(container.textContent).not.toContain("Tata Neu HDFC cardholders must claim spend-earned NeuCoins");
   expect(container.textContent).not.toContain("ICICI shares details of 1838 Reserve");
-  expect(container.querySelectorAll(".ciq-news-article")).toHaveLength(2);
+  expect(container.querySelectorAll(".ciq-news-article")).toHaveLength(1);
   expect(container.querySelector('a[href="/guides/news/"]').textContent).toContain("All updates");
   expect(container.textContent).not.toContain("Currently listed by ICICI Bank; invitation required");
   expect(container.textContent).not.toContain("Apply now");
