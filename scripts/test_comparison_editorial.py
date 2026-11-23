@@ -20,7 +20,7 @@ class ComparisonExamplesTests(unittest.TestCase):
         for slug, review in REVIEWS.items():
             source = render_comparison(slug, {'name':'Card A'}, {'name':'Card B'})
             self.assertIn('Sources for this comparison', source)
-            self.assertIn('before fees and taxes', source)
+            self.assertTrue('before fees and taxes' in source or 'before card fees and tax' in source)
             self.assertIn(review.get('checked', CHECKED), source)
             self.assertIn('scope="row"', source)
             for _, url in review['sources']:

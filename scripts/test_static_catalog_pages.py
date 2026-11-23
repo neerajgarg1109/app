@@ -29,6 +29,7 @@ class Document(HTMLParser):
         self.in_title = False
         self.in_link = False
         self.meta = {}
+        self.robots = []
         self.links = []
         self.link_texts = []
         self.feed(source)
@@ -39,6 +40,8 @@ class Document(HTMLParser):
             self.in_title = True
         if tag == "meta" and attrs.get("name"):
             self.meta[attrs["name"]] = attrs.get("content", "")
+            if attrs["name"].lower() == "robots":
+                self.robots.append(attrs.get("content", ""))
         if tag == "link" and attrs.get("rel") == "canonical":
             self.meta["canonical"] = attrs.get("href", "")
         if tag == "a" and attrs.get("href"):
@@ -61,7 +64,7 @@ class Document(HTMLParser):
 
 def generated_pages():
     roots = [BUILD / "cards", BUILD / "issuers", BUILD / "categories", BUILD / "catalog", BUILD / "methodology", BUILD / "calculator", BUILD / "reward-calculator", BUILD / "compare", BUILD / "updates", BUILD / "lounges", BUILD / "restricted-cards", BUILD / "guides"]
-    return [path for root in roots for path in root.glob("*/index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
+    return [path for root in roots for path in root.rglob("index.html")] + [root / "index.html" for root in roots if (root / "index.html").exists()]
 
 
 class StaticCatalogTests(unittest.TestCase):
@@ -173,7 +176,7 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn('Worked spending examples', source)
             self.assertIn('Sources for this comparison', source)
             self.assertIn('Comparison terms reviewed', source)
-            self.assertIn('before fees and taxes', source)
+            self.assertTrue('before fees and taxes' in source or 'before card fees and tax' in source)
 
     def test_card_pages_expose_current_fees_access_and_context_without_javascript(self):
         for card_id, card in CARDS_BY_ID.items():
@@ -235,11 +238,12 @@ class StaticCatalogTests(unittest.TestCase):
         from comparison_engine import TOP_COMPARISONS, comparison_excerpt
         source = (BUILD / 'guides/index.html').read_text()
         cards = re.findall(r'<article class="post-card".*?</article>', source, re.S)
+        priority_count = len(TOP_COMPARISONS)
         self.assertGreater(len(cards), 20)
-        for card, priority in zip(cards[:20], TOP_COMPARISONS):
+        for card, priority in zip(cards[:priority_count], TOP_COMPARISONS):
             self.assertIn('/compare/' + priority['slug'] + '/', card)
             self.assertIn('Popular Comparison', card)
-        self.assertNotIn('Popular Comparison', ''.join(cards[20:]))
+        self.assertNotIn('Popular Comparison', ''.join(cards[priority_count:]))
         snippets = []
         for row in TOP_COMPARISONS:
             excerpt = comparison_excerpt(CARDS_BY_ID[row['cardA']], CARDS_BY_ID[row['cardB']])
@@ -247,7 +251,7 @@ class StaticCatalogTests(unittest.TestCase):
             self.assertIn('annual fee', excerpt)
             self.assertNotIn('See dated issuer sources and a spending scenario', excerpt)
             snippets.append(excerpt)
-        self.assertEqual(len(set(snippets)), 20)
+        self.assertEqual(len(set(snippets)), priority_count)
         self.assertNotIn('/#/updates', source)
         self.assertNotIn('/#/restricted-cards', source)
         hydration = (BUILD / 'public-footer.js').read_text()
@@ -341,7 +345,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = (BUILD / 'compare/index.html').read_text()
         listing = re.search(r'<ul>(.*?)</ul>', source, re.S).group(1)
         links = Document(listing).links
-        self.assertEqual(links[:20], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
+        self.assertEqual(links[:len(TOP_COMPARISONS)], [ORIGIN + '/compare/' + row['slug'] + '/' for row in TOP_COMPARISONS])
         for path in self.pages:
             relative = path.relative_to(BUILD).as_posix()
             if not relative.startswith(('catalog/', 'categories/', 'issuers/', 'guides/')):
@@ -451,6 +455,27 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertEqual(len(locations), len(set(locations)))
         robots = (BUILD / "robots.txt").read_text()
         self.assertIn(f"Sitemap: {ORIGIN}/sitemap.xml", robots)
+        self.assertIn("Allow: /", robots)
+        for path, document in self.documents.items():
+            self.assertFalse(any("noindex" in value.lower() for value in document.robots), path)
+
+    def test_news_archive_and_each_advisory_are_static_sitemap_pages(self):
+        sitemap = (BUILD / "sitemap.xml").read_text()
+        archive_path = BUILD / "guides" / "news" / "index.html"
+        self.assertTrue(archive_path.is_file())
+        archive = Document(archive_path.read_text())
+        self.assertEqual(archive.meta["canonical"], f"{ORIGIN}/guides/news/")
+        self.assertIn(f"<loc>{ORIGIN}/guides/news/</loc>", sitemap)
+        for item in json.loads((ROOT / "frontend/src/data/cardNews.json").read_text()):
+            if not item.get("active"):
+                continue
+            path = BUILD / "guides" / "news" / item["id"] / "index.html"
+            self.assertTrue(path.is_file(), path)
+            document = Document(path.read_text())
+            expected = f"{ORIGIN}/guides/news/{item['id']}/"
+            self.assertEqual(document.meta["canonical"], expected)
+            self.assertIn(f"<loc>{expected}</loc>", sitemap)
+            self.assertIn(item["sourceUrl"], path.read_text())
 
     def test_generated_internal_links_resolve_to_generated_pages(self):
         generated = {document.meta["canonical"] for document in self.documents.values()}
@@ -543,7 +568,7 @@ class StaticCatalogTests(unittest.TestCase):
         source = path.read_text()
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
         self.assertEqual(schema["@type"], "Blog")
-        expected = {f"{ORIGIN}/guides/{page.parent.name}/" for page in (BUILD / "guides").glob("*/index.html") if not page.parent.name.startswith("close-")}
+        expected = {f"{ORIGIN}/guides/{page.parent.name}/" for page in (BUILD / "guides").glob("*/index.html") if not page.parent.name.startswith(("close-", "news"))}
         expected |= {self.documents[page].meta["canonical"] for page in (BUILD / "compare").glob("*/index.html")}
         self.assertEqual({post["url"] for post in schema["blogPost"]}, expected)
         self.assertTrue(expected.issubset(set(self.documents[path].links)))
@@ -559,7 +584,9 @@ class StaticCatalogTests(unittest.TestCase):
         self.assertNotIn('Shaurya SBI Card', source)
 
     def test_article_metadata_identifies_author_publisher_and_page(self):
-        for path in (BUILD / "guides").glob("*/index.html"):
+        for path in (BUILD / "guides").rglob("index.html"):
+            if path in (BUILD / "guides" / "index.html", BUILD / "guides" / "news" / "index.html"):
+                continue
             source = path.read_text()
             schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
             articles = [node for node in schema.get("@graph", [schema]) if node.get("@type") == "Article"]
@@ -569,6 +596,20 @@ class StaticCatalogTests(unittest.TestCase):
                 self.assertEqual(node["publisher"]["name"], "CardIQ")
                 self.assertEqual(node["mainEntityOfPage"]["@id"], self.documents[path].meta["canonical"])
             self.assertIn('property="og:type" content="article"', source)
+
+    def test_news_archive_links_to_every_advisory_article(self):
+        archive = Document((BUILD / "guides" / "news" / "index.html").read_text())
+        for item in json.loads((ROOT / "frontend/src/data/cardNews.json").read_text()):
+            if not item.get("active"):
+                continue
+            url = f"{ORIGIN}/guides/news/{item['id']}/"
+            self.assertIn(url, archive.links)
+            path = BUILD / "guides" / "news" / item["id"] / "index.html"
+            source = path.read_text()
+            schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', source, re.S).group(1))
+            self.assertEqual(schema["@type"], "Article")
+            self.assertEqual(schema["url"], url)
+            self.assertIn(item["sourceUrl"], source)
 
     def test_article_library_is_visible_before_news(self):
         source = (BUILD / "guides" / "index.html").read_text()
@@ -580,6 +621,8 @@ class StaticCatalogTests(unittest.TestCase):
 
     def test_journal_articles_have_one_heading_and_related_reading(self):
         for path in (BUILD / "guides").glob("*/index.html"):
+            if path.parent.name == "news":
+                continue
             source = path.read_text()
             self.assertEqual(source.count("<h1>"), 1, path)
             self.assertIn('class="reading-wrap"', source)

@@ -68,10 +68,15 @@ def article_card(post, featured=False):
 <a class="read-link" href="{url}">{read_label} <span aria-hidden="true">↗</span></a></div></article>'''
 
 
-def news_section(origin):
+def news_items():
     news_path = TEMPLATES.parents[1] / 'frontend/src/data/cardNews.json'
     items = [item for item in json.loads(news_path.read_text()) if item.get('active') is True]
     items.sort(key=lambda item: item['verifiedOn'], reverse=True)
+    return items
+
+
+def news_section(origin):
+    items = news_items()
     cards = []
     for item in items[:6]:
         checked = date.fromisoformat(item['verifiedOn'])
@@ -81,7 +86,37 @@ def news_section(origin):
 <div class="post-card-content"><div class="article-meta"><span>{escape(item['statusLabel'])}</span><time datetime="{checked.isoformat()}">Verified {label}</time></div><h3><a href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">{escape(item['headline'])}</a></h3><p>{escape(item['summary'])}</p><p class="news-caveat">{escape(item['availabilityNote'])}</p><a class="read-link" href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">Read at {escape(item['sourceLabel'])} <span aria-hidden="true">↗</span></a></div></article>''')
     if not cards:
         return ''
-    return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">News <span>&amp; rule updates</span></h2><p>Fee, benefit and rewards changes with links to official sources.</p></div><a class="read-link" href="{origin}/guides/new-credit-cards/">View all updates <span aria-hidden="true">→</span></a></div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Issuer terms control; check the notice for your specific card. <span>Editorial corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</span></p></section>'''
+    return f'''<section class="top-news" aria-labelledby="news-title"><div class="news-heading"><div><p class="eyebrow">THE LATEST FROM ISSUERS</p><h2 id="news-title">News <span>&amp; rule updates</span></h2><p>Fee, benefit and rewards changes with links to official sources.</p></div><a class="read-link" href="{origin}/guides/news/">View all updates <span aria-hidden="true">→</span></a></div><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Dates show when CardIQ checked the source. Issuer terms control; check the notice for your specific card. <span>Editorial corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</span></p></section>'''
+
+
+def render_news_archive(origin, share):
+    items = news_items()
+    cards = []
+    posts = []
+    for item in items:
+        checked = date.fromisoformat(item['verifiedOn'])
+        label = checked.strftime('%d %B %Y').lstrip('0')
+        slug = item['id']
+        canonical = f'{origin}/guides/news/{slug}/'
+        title = item['headline']
+        description = item['summary']
+        body = f'''<h1>{escape(title)}</h1><p>{escape(description)}</p>
+<p class="muted">{escape(item['availabilityNote'])}</p>
+<h2>What changed</h2><p>{escape(item['summary'])}</p>
+<h2>Issuer source</h2><p><a href="{escape(item['sourceUrl'])}" target="_blank" rel="noopener noreferrer">Read the official notice from {escape(item['sourceLabel'])}</a></p>
+<p class="muted">Checked {label}. Issuer terms control; verify the notice for your card. To suggest a correction, email <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</p>'''
+        post = {'slug': slug, 'title': title, 'description': description, 'url': canonical,
+                'destination': item['sourceUrl'], 'body': body, 'category': 'Card updates',
+                'standfirst': description,
+                'schema': {'@context': 'https://schema.org', '@type': 'Article', 'headline': title,
+                           'description': description, 'url': canonical, 'dateModified': checked.isoformat(),
+                           'author': {'@type': 'Organization', 'name': 'CardIQ'},
+                           'publisher': {'@type': 'Organization', 'name': 'CardIQ'}}}
+        posts.append(post)
+        cards.append(f'''<article class="post-card news-card"><div class="post-card-content"><div class="article-meta"><span>{escape(item['statusLabel'])}</span><time datetime="{checked.isoformat()}">Verified {label}</time></div><h2><a href="{canonical}">{escape(title)}</a></h2><p>{escape(description)}</p><a class="read-link" href="{canonical}">Read the update <span aria-hidden="true">→</span></a></div></article>''')
+    content = f'''<section class="journal-hero wrap"><p class="eyebrow">THE CARDIQ JOURNAL</p><h1>Credit card news <span>&amp; rule updates</span></h1><p class="hero-description">Sourced card launches, upcoming changes and issuer notices, with checked dates and links to the original terms.</p></section><div class="wrap journal-content"><section class="article-library"><div class="article-grid">{''.join(cards)}</div><p class="news-disclosure">Issuer terms remain authoritative. Editorial corrections: <a href="mailto:hi@findmybest.cards">hi@findmybest.cards</a>.</p></section><div class="index-share">{share}</div></div>'''
+    schema = {'@context': 'https://schema.org', '@type': 'CollectionPage', 'name': 'Credit card news and rule updates | CardIQ', 'description': 'Sourced Indian credit card announcements and issuer rule changes.', 'url': f'{origin}/guides/news/', 'hasPart': [{'@type': 'Article', 'headline': p['title'], 'description': p['description'], 'url': p['url']} for p in posts]}
+    return shell('Credit card news & rule updates | CardIQ', 'Sourced Indian credit card announcements and issuer rule changes, with verified dates and links to official notices.', f'{origin}/guides/news/', content, origin, schema, '<script>' + (TEMPLATES / 'guide-blog.js').read_text() + '</script>'), posts
 
 
 def render_index(posts, origin, share):
@@ -141,4 +176,5 @@ def render_article(post, posts, origin, share):
             node.setdefault('publisher', {'@type': 'Organization', 'name': 'CardIQ', 'url': f'{origin}/'})
             node.setdefault('mainEntityOfPage', {'@type': 'WebPage', '@id': post['url']})
             node.setdefault('inLanguage', 'en-IN')
-    return shell(post['title'] + ' | CardIQ Guides', post['description'], post['url'], content, origin, schema)
+    title_suffix = ' | CardIQ' if post.get('category') == 'Card updates' else ' | CardIQ Guides'
+    return shell(post['title'] + title_suffix, post['description'], post['url'], content, origin, schema)
